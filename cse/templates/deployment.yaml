@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cse.fullname" . }}
+  labels:
+    {{- include "cse.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cse.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "cse.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "cse.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if eq .Values.appConfig.useSsl "true" }}
+      initContainers:
+        - name: "{{ .Chart.Name }}-init"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command: ['sh', '-c', 'cp /certs/server.* /run/secrets']
+          volumeMounts:
+            - mountPath: /certs
+              name: cse-ssl
+            - mountPath: /run/secrets
+              name: cse-preinstall
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.deployment.port }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: {{ .Values.deployment.port }}
+              {{- if eq .Values.appConfig.useSsl "true" }}
+              scheme: HTTPS
+              {{- else }}
+              scheme: HTTP
+              {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "cse.fullname" . }}
+          env:
+          - name: HMAC_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: cse-hmac-token-secret
+                name: {{ include "cse.fullname" . }}
+          - name: HMAC_TOKEN_ID
+            valueFrom:
+              secretKeyRef:
+                key: cse-hmac-token-id
+                name: {{ include "cse.fullname" . }}
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: cse-secret-key
+                name: {{ include "cse.fullname" . }}
+          {{- if eq .Values.appConfig.useSsl "true" }}
+          volumeMounts:
+            - mountPath: /run/secrets
+              name: cse-preinstall
+              readOnly: true
+          {{- end }}
+      {{- if eq .Values.appConfig.useSsl "true" }}
+      volumes:
+        - name: cse-ssl
+          secret:
+            secretName: {{ include "cse.fullname" . }}
+            defaultMode: 0420
+        - name: cse-preinstall
+          emptyDir: {}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
