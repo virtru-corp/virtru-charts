@@ -56,6 +56,7 @@ spec:
               value: "{{workflow.parameters.buildImage}}"
             - name: chartDirectory
               value: "{{item.directory}}"
+          withParam: "{{inputs.parameters.charts}}"
 
       - - name: get-app-version
           templateRef:
@@ -73,6 +74,16 @@ spec:
               value: "{{workflow.parameters.buildImage}}"
             - name: chartDirectory
               value: "{{item.directory}}"
+          withParam: "{{inputs.parameters.charts}}"
+
+      - - name: create-map
+          outputs:
+            parameters:
+            - name: chart-info-map
+              value: "{{inputs.parameters.charts[item]}}, \"chartVersion\":{{steps.get-chart-version.outputs.result[item]}}, \"appVersion\":{{steps.get-app-version.outputs.result[item]}}"
+          withSequence:
+            start: 0
+            end: 1
 
       - - name: strip-chart-version
           templateRef:
@@ -84,7 +95,8 @@ spec:
             - name: buildImage
               value: "{{workflow.parameters.buildImage}}"
             - name: chartVersion
-              value: "{{steps.get-chart-version.outputs.result}}"
+              value: "{{item.chartVersion}}"
+          withParam: "{{steps.create-map.outputs.parameters.chart-info-map}}"
 
       - - name: helm-set-chart-versions
           templateRef:
@@ -103,15 +115,16 @@ spec:
             - name: chartDirectory
               value: "{{item.directory}}"
             - name: chartVersion
-              value: "{{steps.strip-chart-version.outputs.result}}"
+              value: "{{item.chartVersion}}"
             - name: defaultBranch
               value: main
             - name: dockerTag
-              value: "{{steps.get-app-version.outputs.result}}"
+              value: "{{item.appVersion}}"
             - name: githubOrg
               value: virtru-corp
             - name: githubSecretName
               value: virtru-cloudnative-secrets
+          withParam: "{{steps.create-map.outputs.parameters.chart-info-map}}"
 
       - - name: helm-push
           templateRef:
@@ -130,5 +143,5 @@ spec:
             - name: gitRepoName
               value: "{{workflow.parameters.gitRepoName}}"
             - name: chartVersion
-              value: "{{steps.strip-chart-version.outputs.result}}"
-      withParam: "{{inputs.parameters.charts}}"
+              value: "{{item.chartVersion}}"
+          withParam: "{{steps.create-map.outputs.parameters.chart-info-map}}"
