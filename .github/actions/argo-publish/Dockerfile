@@ -1,5 +1,5 @@
 # Container image that runs your code
-FROM 833190184321.dkr.ecr.us-west-2.amazonaws.com/virtru-builder:0.6
+FROM 833190184321.dkr.ecr.us-west-2.amazonaws.com/virtru-builder:1.0.16
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
