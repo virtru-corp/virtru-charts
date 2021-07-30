@@ -13,7 +13,7 @@ defaults:
 
 on:
   push:
-    branches: [main]
+    branches: [feature/CORE-2736-helm-publish]
 
 jobs:
   argo_submit:
