@@ -1,0 +1,40 @@
+name: publish
+
+env:
+  ARGO_SERVER: "argo.mgmt.virtru.com:443"
+  ARGO_HTTP1: "true"
+  ARGO_SECURE: "true"
+  ARGO_BASE_HREF: "/argo/"
+  ARGO_NAMESPACE: "argo"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  argo_submit:
+    runs-on: ubuntu-latest
+    name: argo submit workflow
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-external-id: GitHubAction
+          role-duration-seconds: 1200
+          role-session-name: virtru-charts-action
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: argo submit publish through development
+        uses: ./.github/actions/argo-publish
