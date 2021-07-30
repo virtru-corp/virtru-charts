@@ -61,6 +61,8 @@ spec:
           - name: gitRepoName
           - name: chartDirectory
           - name: repoSource
+          - name: myInputs
+            value: "{{steps.get-chart-version.outputs.result}}"
       resource:
         action: create
         manifest: |
@@ -72,6 +74,10 @@ spec:
             podGC:
               strategy: OnWorkflowCompletion
             entrypoint: virtru-charts-pipeline
+            arguments:
+              parameters:
+              - name: myInputs
+                value: "{{workflow.parameters.myInputs}}"
             serviceAccountName: argo-events-sa
             templates:
               - name: virtru-chart-publish-pipeline
@@ -120,7 +126,7 @@ spec:
                       - name: buildImage
                         value: "{{inputs.parameters.buildImage}}"
                       - name: chartVersion
-                        value: "{{steps.get-chart-version.outputs.result}}"
+                        value: "{{inputs.parameters.myInputs}}"
           
                 - - name: helm-set-chart-versions
                     templateRef:
