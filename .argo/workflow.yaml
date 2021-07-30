@@ -121,6 +121,7 @@ spec:
                         value: "{{inputs.parameters.buildImage}}"
                       - name: chartVersion
                         value: "{{steps.get-chart-version.outputs.result}}"
+                    depends: get-chart-version.Succeeded
           
                 - - name: helm-set-chart-versions
                     templateRef:
