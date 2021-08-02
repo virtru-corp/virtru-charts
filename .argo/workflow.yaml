@@ -12,12 +12,8 @@ spec:
       value: "{{workflow.parameters.buildImage}}"
     - name: gitRepoName
       value: "{{workflow.parameters.gitRepoName}}"
-    - name: charts
-      value: |
-        [
-          { "directory": "cse" },
-          { "directory": "cks" },
-        ]
+    - name: chartDirectory
+      value: "{{workflow.parameters.chartDirectory}}"
   entrypoint: virtru-charts-pipeline
   serviceAccountName: argo-events-sa
   templates:
@@ -39,10 +35,10 @@ spec:
             - name: credentialSecretName
               value: "virtru-cloudnative-secrets"
 
-      - - name: get-chart-info
+      - - name: get-chart-version
           templateRef:
             name: cwft-helm
-            template: get-chart-info
+            template: get-chart-version
             clusterScope: true
           arguments:
             artifacts:
@@ -54,8 +50,36 @@ spec:
             - name: buildImage
               value: "{{workflow.parameters.buildImage}}"
             - name: chartDirectory
-              value: "{{item.directory}}"
-          withParam: "{{inputs.parameters.charts}}"
+              value: "{{workflow.parameters.chartDirectory}}"
+
+      - - name: get-app-version
+          templateRef:
+            name: cwft-helm
+            template: get-app-version
+            clusterScope: true
+          arguments:
+            artifacts:
+            - name: repo-source
+              from: "{{steps.git-checkout-with-gitops.outputs.artifacts.repo-source}}"
+            parameters:
+            - name: gitRepoName
+              value: "{{workflow.parameters.gitRepoName}}"
+            - name: buildImage
+              value: "{{workflow.parameters.buildImage}}"
+            - name: chartDirectory
+              value: "{{workflow.parameters.chartDirectory}}"
+
+      - - name: strip-chart-version
+          templateRef:
+            name: cwft-helm
+            template: strip-chart-version
+            clusterScope: true
+          arguments:
+            parameters:
+            - name: buildImage
+              value: "{{inputs.parameters.buildImage}}"
+            - name: chartVersion
+              value: "{{steps.get-chart-version.outputs.result}}"
 
       - - name: helm-set-chart-versions
           templateRef:
@@ -72,18 +96,17 @@ spec:
             - name: gitRepoName
               value: "{{workflow.parameters.gitRepoName}}"
             - name: chartDirectory
-              value: "{{item.directory}}"
+              value: "{{workflow.parameters.chartDirectory}}"
             - name: chartVersion
-              value: "{{item.chartVersion}}"
+              value: "{{steps.strip-chart-version.outputs.result}}"
             - name: defaultBranch
               value: main
             - name: dockerTag
-              value: "{{item.appVersion}}"
+              value: "{{steps.get-app-version.outputs.result}}"
             - name: githubOrg
               value: virtru-corp
             - name: githubSecretName
               value: virtru-cloudnative-secrets
-          withItems: "{{steps.get-chart-info.outputs.result}}"
 
       - - name: helm-push
           templateRef:
@@ -98,9 +121,8 @@ spec:
             - name: buildImage
               value: "{{workflow.parameters.buildImage}}"
             - name: chartDirectory
-              value: "{{item.directory}}"
+              value: "{{workflow.parameters.chartDirectory}}"
             - name: gitRepoName
               value: "{{workflow.parameters.gitRepoName}}"
             - name: chartVersion
-              value: "{{item.chartVersion}}"
-          withItems: "{{steps.get-chart-info.outputs.result}}"
+              value: "{{steps.strip-chart-version.outputs.result}}"
