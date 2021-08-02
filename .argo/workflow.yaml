@@ -73,7 +73,7 @@ spec:
             - name: chartVersion
               value: "{{steps.get-chart-version.outputs.result}}"
               value: "{{item.chartVersion}}"
-          withParam: "{{steps.get-chart-info.outputs.result}}"
+          withItems: "{{steps.get-chart-info.outputs.result}}"
 
       - - name: helm-set-chart-versions
           templateRef:
@@ -91,7 +91,7 @@ spec:
               value: virtru-corp
             - name: githubSecretName
               value: virtru-cloudnative-secrets
-          withParam: "{{steps.get-chart-info.outputs.result}}"
+          withItems: "{{steps.get-chart-info.outputs.result}}"
 
       - - name: helm-push
           templateRef:
@@ -111,4 +111,4 @@ spec:
               value: "{{workflow.parameters.gitRepoName}}"
             - name: chartVersion
               value: "{{item.chartVersion}}"
-          withParam: "{{steps.get-chart-info.outputs.result}}"
+          withItems: "{{steps.get-chart-info.outputs.result}}"
