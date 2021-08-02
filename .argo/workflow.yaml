@@ -71,7 +71,6 @@ spec:
             - name: buildImage
               value: "{{workflow.parameters.buildImage}}"
             - name: chartVersion
-              value: "{{steps.get-chart-version.outputs.result}}"
               value: "{{item.chartVersion}}"
           withItems: "{{steps.get-chart-info.outputs.result}}"
 
