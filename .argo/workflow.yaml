@@ -9,7 +9,7 @@ spec:
 #! global to the workflow
     parameters:
     - name: buildImage
-      value: "{{workflow.parameters.buildImage}}"
+      value: "833190184321.dkr.ecr.us-west-2.amazonaws.com/virtru-builder:1.0.16"
     - name: gitRepoName
       value: "{{workflow.parameters.gitRepoName}}"
     - name: chartDirectory
