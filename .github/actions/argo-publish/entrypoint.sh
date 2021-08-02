@@ -8,8 +8,4 @@
 
 aws eks update-kubeconfig --region us-west-2 --name k8s-mgmt
 
-for f in *; do
-    if [ -d "$f" ]; then
-		argo submit -n argo-events ./.argo/workflow.yaml -p gitRepoName=virtru-charts -p chartDirectory=$f --wait --log
-    fi
-done
+argo submit -n argo-events ./.argo/workflow.yaml -p gitRepoName=virtru-charts --wait --log
