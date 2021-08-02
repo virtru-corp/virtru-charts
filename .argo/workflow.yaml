@@ -29,11 +29,11 @@ spec:
         image: python:alpine3.6
         command: [python]
         source: |
-     	  import yaml, semver, json
+          import yaml, semver, json
           with open('/src/{{inputs.parameters.gitRepoName}}/{{inputs.parameters.chartDirectory}}/Chart.yaml') as f:
-          	chart_yaml = yaml.load(f, Loader=yaml.FullLoader)
-          	info_json = {'directory':'{{inputs.parameters.chartDirectory}}', 'chartVersion':chart_yaml['version'], 'appVersion':chart_yaml['appVersion']}
-          	json.dumps(info_json)
+            chart_yaml = yaml.load(f, Loader=yaml.FullLoader)
+            info_json = {'directory':'{{inputs.parameters.chartDirectory}}', 'chartVersion':chart_yaml['version'], 'appVersion':chart_yaml['appVersion']}
+            json.dumps(info_json)
 
     - name: virtru-charts-pipeline
       steps:
