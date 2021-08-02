@@ -77,7 +77,7 @@ spec:
           arguments:
             parameters:
             - name: buildImage
-              value: "{{inputs.parameters.buildImage}}"
+              value: "{{workflow.parameters.buildImage}}"
             - name: chartVersion
               value: "{{steps.get-chart-version.outputs.result}}"
 
