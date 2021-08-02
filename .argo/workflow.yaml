@@ -73,7 +73,6 @@ spec:
 
       - - name: helm-set-chart-versions
           templateRef:
-@@ -103,15 +115,16 @@ spec:
             - name: chartDirectory
               value: "{{item.directory}}"
             - name: chartVersion
