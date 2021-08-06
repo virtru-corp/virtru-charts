@@ -60,7 +60,7 @@ spec:
           arguments:
             artifacts:
             - name: repo-source
-              from: "{{steps.helm-set-chart-versions.outputs.artifacts.repo-source}}"
+              from: "{{steps.git-checkout-with-gitops.outputs.artifacts.repo-source}}"
             parameters:
             - name: buildImage
               value: "{{workflow.parameters.buildImage}}"
@@ -69,4 +69,4 @@ spec:
             - name: gitRepoName
               value: "{{workflow.parameters.gitRepoName}}"
             - name: chartVersion
-              value: "{{steps.strip-chart-version.outputs.result}}"
+              value: "{{steps.get-chart-version.outputs.result}}"
