@@ -7,7 +7,6 @@ metadata:
     {{- include "cks.labels" . | nindent 4 }}
 data:
   AUTH_TOKEN_STORAGE_IN_MEMORY_ENCODING: base64
-  AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON: {{ .Values.virtruAuth.authTokenJson }}
   AUTH_TOKEN_STORAGE_TYPE: in-memory
   BOOT_CHECKER_NOKEYS_RULE: importPEM
   LOG_LEVEL: DEBUG
