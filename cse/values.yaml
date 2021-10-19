@@ -27,8 +27,10 @@ serviceAccount:
 
 podAnnotations: {}
 
-testPodAnnotations:
-  helm.sh/hook: test
+testerPod:
+  enabled: true
+  annotations:
+    helm.sh/hook: test
 
 podSecurityContext: {}
   # fsGroup: 2000
