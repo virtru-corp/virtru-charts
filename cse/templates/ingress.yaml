@@ -34,7 +34,7 @@ spec:
           pathType: ImplementationSpecific
           backend:
             service:
-              name: cse
+              name: {{ $fullName }}
               port:
                 number: {{ .Values.service.port }}
   {{- end }}

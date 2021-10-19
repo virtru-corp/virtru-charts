@@ -1,8 +1,9 @@
+{{- if .Values.testerPod.enabled -}}
 apiVersion: v1
 kind: Pod
 metadata:
   name: "{{ include "cse.fullname" . }}-test-connection"
-  {{- with .Values.testPodAnnotations }}
+  {{- with .Values.testerPod.annotations }}
   annotations:
     {{- toYaml . | nindent 8 }}
   {{- end }}
@@ -15,3 +16,4 @@ spec:
       command: ['wget']
       args: ['{{ include "cse.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
+{{- end }}
