@@ -1,0 +1,18 @@
+apiVersion: v2
+name: opentdf
+description: A parent chart for opentdf microservices
+type: application
+version: 0.9.0
+maintainers:
+  - name: Virtru
+    url: https://virtru.com
+icon: https://inxmad4bw31barrx17wec71c-wpengine.netdna-ssl.com/wp-content/uploads/2018/12/o_efa1e48d0db5ebc8-4.png
+dependencies:
+  - name: attributes
+    version: 0.1.0
+  - name: claims
+    version: 0.1.0
+  - name: entitlement
+    version: 0.1.0
+  - name: key-access
+    version: 0.1.0
