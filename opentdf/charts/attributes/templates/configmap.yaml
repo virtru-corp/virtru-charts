@@ -9,10 +9,11 @@ data:
   SERVER_CORS_ORIGINS: {{ .Values.corsOrigins }}
   POSTGRES_HOST: {{ .Values.postgres.host }}
   POSTGRES_USER: {{ .Values.postgres.user }}
+{{/*  POSTGRES_PASSWORD in secrets*/}}
   POSTGRES_DATABASE: {{ .Values.postgres.database }}
   POSTGRES_SCHEMA: {{ .Values.postgres.schema }}
   OIDC_CLIENT_ID: {{ .Values.oidc.clientId }}
-  OIDC_CLIENT_SECRET: {{ .Values.oidc.clientSecret }}
+{{/*  OIDC_CLIENT_SECRET in secrets */}}
   OIDC_SERVER_URL: {{ .Values.oidc.serverUrl }}
   OIDC_AUTHORIZATION_URL: {{ .Values.oidc.authorizationUrl }}
   OIDC_TOKEN_URL: {{ .Values.oidc.tokenUrl }}

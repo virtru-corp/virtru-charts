@@ -7,11 +7,12 @@ attributes:
     host: opentdf-postgresql
     port: 5432
     user: tdf_attribute_manager
+#    password: in secrets
     database: tdf_database
     schema: tdf_attribute
   oidc:
     clientId: tdf-attributes
-    clientSecret: myclientsecret
+#    clientSecret: in secrets
     realm: tdf
 #    trailing / is required
     serverUrl: http://opentdf-keycloak/auth/
@@ -36,6 +37,7 @@ claims:
     host: opentdf-postgresql
     port: 5432
     user: tdf_entitlement_reader
+#    password: in secrets
     database: tdf_database
     schema: tdf_entitlement
   ingress:
@@ -58,11 +60,12 @@ entitlement:
     host: opentdf-postgresql
     port: 5432
     user: tdf_entitlement_manager
+#    password: in secrets
     database: tdf_database
     schema: tdf_entitlement
   oidc:
     clientId: tdf-entitlement
-    clientSecret: myclientsecret
+#    clientSecret: in secrets
     realm: tdf
 #    trailing / is required
     serverUrl: http://opentdf-keycloak/auth/
@@ -81,9 +84,9 @@ entitlement:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
 
 key-access:
+  #    keys in secrets
   endpoints:
     easHost: http://opentdf-attributes:4020
-    statsdHost: opentdf-statsd
     oidcPubkeyEndpoint: http://opentdf-keycloak
   ingress:
     enabled: true

@@ -5,5 +5,6 @@ metadata:
 data:
   POSTGRES_HOST: {{ .Values.postgres.host }}
   POSTGRES_USER: {{ .Values.postgres.user }}
+{{/*  POSTGRES_PASSWORD in secrets*/}}
   POSTGRES_DATABASE: {{ .Values.postgres.database }}
   POSTGRES_SCHEMA: {{ .Values.postgres.schema }}
