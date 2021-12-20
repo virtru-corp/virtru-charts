@@ -13,7 +13,7 @@ spec:
               - name: buildImage
                 value: '{{workflow.parameters.buildImage}}'
           templateRef:
-            name: cwft-misc
+            name: cwft-ci
             template: workflow-links
             clusterScope: true    
 
@@ -61,7 +61,7 @@ spec:
               - name: gitRepoName
                 value: '{{inputs.parameters.appRepoDir}}'
               - name: chartPath
-                value: 'cks/'
+                value: '{{inputs.parameters.chartDir}}'
               - name: chartVersion
                 value: '{{steps.get-chart-version.outputs.result}}'
           templateRef:
