@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+  templates:
+  - name: main
+    steps:
+      - - name: workflow-links
+          arguments:
+            parameters:
+              - name: buildImage
+                value: '{{workflow.parameters.buildImage}}'
+          templateRef:
+            name: cwft-misc
+            template: workflow-links
+            clusterScope: true    
+
+      - - name: checkout
+          arguments:
+            parameters:
+            - name: appRepoDir
+              value: '{{workflow.parameters.appRepoDir}}'
+            - name: appRepoUrl
+              value: '{{workflow.parameters.appRepoUrl}}'
+            - name: branch
+              value: '{{workflow.parameters.branch}}'
+            - name: buildImage
+              value: '{{workflow.parameters.buildImage}}'
+          templateRef:
+            name: cwft-git
+            template: git-checkout-with-gitops
+            clusterScope: true
+
+      - - name: get-chart-version
+          arguments:
+            artifacts:
+              - name: repo-source
+                from: '{{steps.set-chart-versions.outputs.artifacts.repo-source}}'
+            parameters:
+              - name: gitRepoName
+                value: '{{inputs.parameters.appRepoDir}}'
+              - name: buildImage
+                value: '{{inputs.parameters.buildImage}}'
+              - name: chartDirectory
+                value: 'cks/'
+          templateRef:
+            name: cwft-helm
+            template: helm-publish-chart
+            clusterScope: true
+
+      - - name: publish-helm-chart
+          arguments:
+            artifacts:
+              - name: repo-source
+                from: '{{steps.set-chart-versions.outputs.artifacts.repo-source}}'
+            parameters:
+              - name: buildImage
+                value: '{{inputs.parameters.buildImage}}'
+              - name: gitRepoName
+                value: '{{inputs.parameters.appRepoDir}}'
+              - name: chartPath
+                value: 'cks/'
+              - name: chartVersion
+                value: '{{steps.get-chart-version.outputs.result}}'
+          templateRef:
+            name: cwft-helm
+            template: helm-publish-chart
+            clusterScope: true
