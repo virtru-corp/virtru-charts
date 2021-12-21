@@ -58,7 +58,7 @@ spec:
             parameters:
               - name: buildImage
                 value: '{{workflow.parameters.buildImage}}'
-              - name: gitRepoName
+              - name: appRepoDir
                 value: '{{workflow.parameters.appRepoDir}}'
               - name: chartPath
                 value: 'cks/'
