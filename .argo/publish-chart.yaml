@@ -63,7 +63,7 @@ spec:
               - name: chartDir
                 value: 'cks/'
               - name: chartRepoUrl
-                value: '{{workflow.parameters.chartRepoUrl}}'
+                value: 'https://chartmuseum.mgmt-green.virtru.com'
           templateRef:
             name: cwft-helm
             template: helm-publish-chart
