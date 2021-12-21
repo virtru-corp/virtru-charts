@@ -37,7 +37,7 @@ spec:
           arguments:
             artifacts:
               - name: repo-source
-                from: '{{steps.set-chart-versions.outputs.artifacts.repo-source}}'
+                from: '{{steps.checkout.outputs.artifacts.repo-source}}'
             parameters:
               - name: gitRepoName
                 value: '{{workflow.parameters.appRepoDir}}'
@@ -54,7 +54,7 @@ spec:
           arguments:
             artifacts:
               - name: repo-source
-                from: '{{steps.set-chart-versions.outputs.artifacts.repo-source}}'
+                from: '{{steps.checkout.outputs.artifacts.repo-source}}'
             parameters:
               - name: buildImage
                 value: '{{workflow.parameters.buildImage}}'
