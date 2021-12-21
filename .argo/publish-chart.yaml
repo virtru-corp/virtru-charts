@@ -39,15 +39,15 @@ spec:
               - name: repo-source
                 from: '{{steps.checkout.outputs.artifacts.repo-source}}'
             parameters:
-              - name: gitRepoName
+              - name: appRepoDir
                 value: '{{workflow.parameters.appRepoDir}}'
               - name: buildImage
                 value: '{{workflow.parameters.buildImage}}'
-              - name: chartDirectory
+              - name: chartDir
                 value: 'cks/'
           templateRef:
             name: cwft-helm
-            template: helm-publish-chart
+            template: helm-get-chart-version
             clusterScope: true
 
       - - name: publish-helm-chart
@@ -56,14 +56,14 @@ spec:
               - name: repo-source
                 from: '{{steps.checkout.outputs.artifacts.repo-source}}'
             parameters:
-              - name: buildImage
-                value: '{{workflow.parameters.buildImage}}'
               - name: appRepoDir
                 value: '{{workflow.parameters.appRepoDir}}'
-              - name: chartPath
+              - name: buildImage
+                value: '{{workflow.parameters.buildImage}}'
+              - name: chartDir
                 value: 'cks/'
-              - name: chartVersion
-                value: '{{steps.get-chart-version.outputs.result}}'
+              - name: chartRepoUrl
+                value: '{{workflow.parameters.chartRepoUrl}}'
           templateRef:
             name: cwft-helm
             template: helm-publish-chart
