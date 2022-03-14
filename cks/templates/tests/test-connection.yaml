@@ -1,9 +1,8 @@
-{{- if .Values.testerPod.enabled -}}
 apiVersion: v1
 kind: Pod
 metadata:
   name: "{{ include "cks.fullname" . }}-test-connection"
-  {{- with .Values.testerPod.annotations }}
+  {{- with .Values.testPodAnnotations }}
   annotations:
     {{- toYaml . | nindent 8 }}
   {{- end }}
@@ -16,4 +15,3 @@ spec:
       command: ['wget']
       args: ['{{ include "cks.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
-{{- end }}
