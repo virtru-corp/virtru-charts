@@ -1,0 +1,58 @@
+{{- if eq .Values.gatewayModes.outboundDlp.enabled true }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    app: gateway
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
+data:
+  GATEWAY_MODE: "dlp"
+  GATEWAY_TOPOLOGY: "outbound"
+  GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
+  GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
+  GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
+  GATEWAY_HOSTNAME: {{ .Values.standardConfig.gatewayHostname }}
+  GATEWAY_ORGANIZATION_DOMAIN: {{ .Values.standardConfig.primaryMailingDomain }}
+  GATEWAY_TRANSPORT_MAPS: {{ .Values.standardConfig.gatewayTransportMaps | quote }}
+  GATEWAY_RELAY_ADDRESSES: {{ .Values.standardConfig.inboundRelayAddresses }}
+  MAX_QUEUE_LIFETIME: {{ .Values.additionalConfig.maxQueueLifetime }}
+  MAX_BACKOFF_TIME: {{ .Values.additionalConfig.maxBackoffTime }}
+  MIN_BACKOFF_TIME: {{ .Values.additionalConfig.minBackoffTime }}
+  QUEUE_RUN_DELAY: {{ .Values.additionalConfig.queueRunDelay }}
+  GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
+  GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
+  GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
+  GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
+  GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
+  GATEWAY_DECRYPT_THEN_ENCRYPT: {{ .Values.additionalConfig.decryptThenEncrypt | quote }}
+  GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
+  GATEWAY_SMTP_USE_TLS: {{ .Values.additionalConfig.smtpUseTls | quote }}
+  {{- if eq .Values.additionalConfig.smtpTlsComplianceDownstream.enabled true }}
+  GATEWAY_SMTP_TLS_COMPLIANCE_DOWNSTREAM: {{ .Values.additionalConfig.smtpTlsComplianceDownstream.compliance }}
+  {{- end}}
+  {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
+  GATEWAY_SMTP_SASL_ENABLED_DOWNSTREAM: "1"
+  GATEWAY_SMTP_SASL_SECURITY_OPTIONS: {{ .Values.additionalConfig.saslAuth.smtpDownstream.securityOptions }}
+  {{- end }}
+  GATEWAY_SMTPD_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpdSecurityLevel }}
+  GATEWAY_SMTPD_USE_TLS: {{ .Values.additionalConfig.smtpdUseTls | quote }}
+  {{- if eq .Values.additionalConfig.smtpdTlsComplianceUpstream.enabled true }}
+  GATEWAY_SMTPD_TLS_COMPLIANCE_UPSTREAM: {{ .Values.additionalConfig.smtpdTlsComplianceUpstream.compliance }}
+  {{- end}}
+  {{- if eq .Values.additionalConfig.saslAuth.smtpdUpstream.enabled true }}
+  GATEWAY_SMTPD_SASL_ENABLED: "1"
+  GATEWAY_SMTPD_SASL_MECHANISMS: {{ .Values.additionalConfig.saslAuth.smtpdUpstream.mechanisms }}
+  {{- end }}
+  {{- if eq .Values.additionalConfig.tlsPolicyMaps.enabled true }}
+  GATEWAY_SMTP_TLS_POLICY_MAPS: {{ .Values.additionalConfig.tlsPolicyMaps.policyMaps }}
+  {{- end }}
+  {{- if eq .Values.additionalConfig.headers.xHeaderAuthEnabled true }}
+  GATEWAY_XHEADER_AUTH_ENABLED: "1"
+  {{- end }}
+  {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
+  GATEWAY_DKIM_DOMAINS: {{ .Values.additionalConfig.dkimSigning.dkimDomains }}
+  {{- end }}
+{{- end }}
+
+
+

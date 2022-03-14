@@ -1,0 +1,23 @@
+{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+  labels:
+    {{- include "gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.gatewayModes.outboundDecrypt.port }}
+      targetPort: {{ .Values.service.port }}
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+{{- end }}
