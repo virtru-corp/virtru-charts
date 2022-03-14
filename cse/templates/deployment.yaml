@@ -20,10 +20,6 @@ spec:
       labels:
         {{- include "cse.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "cse.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -56,25 +52,6 @@ spec:
               {{- else }}
               scheme: HTTP
               {{- end }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 300
-            failureThreshold: 2
-            successThreshold: 1
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: {{ .Values.deployment.port }}
-              {{- if eq .Values.appConfig.useSsl "true" }}
-              scheme: HTTPS
-              {{- else }}
-              scheme: HTTP
-              {{- end }}
-            initialDelaySeconds: 40
-            periodSeconds: 10
-            timeoutSeconds: 300
-            failureThreshold: 2
-            successThreshold: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           envFrom:
@@ -91,6 +68,18 @@ spec:
               secretKeyRef:
                 key: cse-hmac-token-id
                 name: {{ include "cse.fullname" . }}
+          {{- if eq .Values.appConfig.useCks "true" }}
+          - name: CKS_HMAC_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: cks-hmac-token-secret
+                name: {{ include "cse.fullname" . }}
+          - name: CKS_HMAC_TOKEN_ID
+            valueFrom:
+              secretKeyRef:
+                key: cks-hmac-token-id
+                name: {{ include "cse.fullname" . }}
+          {{- end }}
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
@@ -107,7 +96,7 @@ spec:
         - name: cse-ssl
           secret:
             secretName: {{ include "cse.fullname" . }}
-            defaultMode: 0420
+            defaultMode: 420
         - name: cse-preinstall
           emptyDir: {}
       {{- end }}

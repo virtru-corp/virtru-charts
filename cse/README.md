@@ -29,3 +29,7 @@ All of these values should be base64-encoded.
 The parameter `jwtKaclsUrl` will also need to be updated to use the DNS name assigned to your cluster. This parameter is not base64-encoded.
 
 You will also need to add your Virtru-provided hmac tokens to `values.yaml`, as well as your own SSL certificate and private key.
+
+## Notes
+
+1. If using `useSsl: true`, you may need to create an ingress (`ingress.enabled: true`) and ensure that the hostname attached to the ingress matches the hostname in your SSL cert.
