@@ -101,6 +101,15 @@ standardConfig:
   inboundRelayAddresses: 0.0.0.0/0
 
 additionalConfig:
+  saslAuth:
+    smtpDownstream:
+      enabled: true
+      securityOptions: noanonymous
+      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
+    smtpdUpstream:
+      enabled: false
+      mechanisms: PLAIN
+      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
   dkimSigning:
     enabled: false
     dkimDomains: gw._domainkey.example.com
@@ -118,15 +127,6 @@ additionalConfig:
   smtpTlsComplianceDownstream:
     enabled: false
     compliance: MEDIUM
-  saslAuth:
-    smtpDownstream:
-      enabled: true
-      securityOptions: noanonymous
-      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
-    smtpdUpstream:
-      enabled: false
-      mechanisms: PLAIN
-      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
   headers:
     xHeaderAuthEnabled: false
     xHeaderAuthSecret: "123456789"
