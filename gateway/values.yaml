@@ -110,6 +110,9 @@ additionalConfig:
       enabled: false
       mechanisms: PLAIN
       accounts: smtp-relay.gmail.com=>service-account@example.com=>password
+  headers:
+    xHeaderAuthEnabled: true
+    xHeaderAuthSecret: "123456789"
   dkimSigning:
     enabled: false
     dkimDomains: gw._domainkey.example.com
@@ -127,9 +130,6 @@ additionalConfig:
   smtpTlsComplianceDownstream:
     enabled: false
     compliance: MEDIUM
-  headers:
-    xHeaderAuthEnabled: false
-    xHeaderAuthSecret: "123456789"
   cks:
     keyProvider: CKS
     sessionKeyExpiry: "360"
