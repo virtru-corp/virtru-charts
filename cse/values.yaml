@@ -109,9 +109,9 @@ appSecrets:
   secretKey: "secretkey:<base64-encoded-secret-key>"
   ssl:
     privateKey: |
-        "<your private key>"
+      <your private key>
     certificate: |
-        "<your certificate>"
+      <your certificate>
   cksHmac:
     tokenId: "fake-cks-hmac-token" 
     tokenSecret: "fake-cks-hmac-secret" 
