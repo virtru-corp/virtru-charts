@@ -1,12 +1,12 @@
-{{- if eq .Values.gatewayModes.outboundEncrypt.enabled true }}
+{{- if eq .Values.gatewayModes.outboundDlp.enabled true }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
   labels:
     app: gateway
-  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
 data:
-  GATEWAY_MODE: "encrypt-everything"
+  GATEWAY_MODE: "dlp"
   GATEWAY_TOPOLOGY: "outbound"
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
   GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
@@ -46,7 +46,7 @@ data:
   {{- if eq .Values.additionalConfig.tlsPolicyMaps.enabled true }}
   GATEWAY_SMTP_TLS_POLICY_MAPS: {{ .Values.additionalConfig.tlsPolicyMaps.policyMaps }}
   {{- end }}
-  {{- if eq .Values.additionalConfig.headers.xHeaderAuthEnabled true }}
+  {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
   {{- end }}
   {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}

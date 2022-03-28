@@ -94,17 +94,17 @@ tolerations: []
 
 affinity: {}
 
-virtruKeys:
-  name: cks-keys
-  mountPath: /app/keys
-  data:
-    rsa001pub: |
-      <your public key>
-    rsa001pem: |
-      <your private key>
-    
-virtruAuth:
-  name: hmac-auth
-  data:
-    # base64-encoded json block containing hmac token
-    authTokenJson: <your auth token json value>
+appSecrets:
+  virtruKeys:
+    name: cks-keys
+    mountPath: /app/keys
+    data:
+      rsa001pub: |
+        <your public key>
+      rsa001pem: |
+        <your private key>
+      
+  virtruAuth:
+    name: hmac-auth
+    data:
+      authTokenJson: <your auth token json value>

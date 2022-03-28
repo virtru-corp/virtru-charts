@@ -1,13 +1,13 @@
-{{- if eq .Values.gatewayModes.inboundDecrypt.enabled true }}
+{{- if eq .Values.gatewayModes.outboundEncrypt.enabled true }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
   labels:
     app: gateway
-  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundDecrypt.name }}
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
 data:
-  GATEWAY_MODE: "decrypt-everything"
-  GATEWAY_TOPOLOGY: "inbound"
+  GATEWAY_MODE: "encrypt-everything"
+  GATEWAY_TOPOLOGY: "outbound"
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
   GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
   GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
@@ -24,10 +24,9 @@ data:
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
+  GATEWAY_DECRYPT_THEN_ENCRYPT: {{ .Values.additionalConfig.decryptThenEncrypt | quote }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
   GATEWAY_SMTP_USE_TLS: {{ .Values.additionalConfig.smtpUseTls | quote }}
-  GATEWAY_REPLACEMENT_FROM_ENABLED: {{ .Values.additionalConfig.replaceFromEnabled | quote }}
-  GATEWAY_DECRYPT_PERSISTENT_PROTECTED_ATTACHMENTS: {{ .Values.additionalConfig.decryptPfpFiles | quote }}
   {{- if eq .Values.additionalConfig.smtpTlsComplianceDownstream.enabled true }}
   GATEWAY_SMTP_TLS_COMPLIANCE_DOWNSTREAM: {{ .Values.additionalConfig.smtpTlsComplianceDownstream.compliance }}
   {{- end}}
@@ -47,7 +46,7 @@ data:
   {{- if eq .Values.additionalConfig.tlsPolicyMaps.enabled true }}
   GATEWAY_SMTP_TLS_POLICY_MAPS: {{ .Values.additionalConfig.tlsPolicyMaps.policyMaps }}
   {{- end }}
-  {{- if eq .Values.additionalConfig.headers.xHeaderAuthEnabled true }}
+  {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
   {{- end }}
   {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}

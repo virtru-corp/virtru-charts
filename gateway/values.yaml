@@ -62,23 +62,23 @@ autoscaling:
 gatewayModes:
   outboundEncrypt:
     enabled: true
-    name: oe-9001
+    name: outbound-encrypt
     port: 9001
   outboundDecrypt:
     enabled: false
-    name: od-9002
+    name: outbound-decrypt
     port: 9002
   inboundEncrypt:
     enabled: false
-    name: ie-9003
+    name: inbound-encrypt
     port: 9003
   inboundDecrypt:
     enabled: false
-    name: id-9004
+    name: inbound-decrypt
     port: 9004
   outboundDlp:
     enabled: false
-    name: dlp-out-9005
+    name: outbound-dlp
     port: 9005
 
 
@@ -92,27 +92,39 @@ gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 standardConfig:
   gatewayHostname: gw.example.com
   primaryMailingDomain: exmample.com
-  amplitudeToken: <your-amplitude-token>
-  gatewayApiTokenName: <your-api-token>
-  gatewayApiSecret: <your-api-secret>
+  # Next hop for Virtru gateway, typical mail flow is:
+  # mail server => Virtru gateway => back to your mail server => final delivery
   gatewayTransportMaps: "*=>[smtp-relay.gmail.com]:587"
   # See README.md for Google or Microsoft relaying IPs,
   # default is open and to lock down firewall on the VPC
   inboundRelayAddresses: 0.0.0.0/0
+  headers:
+    xHeaderAuthEnabled: true
+    #Secret managed in appSecrets section
+
+appSecrets:
+  amplitudeToken: <your-amplitude-token>
+  gatewayApiTokenName: <your-api-token>
+  gatewayApiSecret: <your-api-secret>
+  saslAuth:
+    smtpDownstream:
+      #Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
+      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
+    smtpdUpstream:
+      #Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
+      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
+  headers:
+    #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
+    xHeaderAuthSecret: "123456789"
 
 additionalConfig:
   saslAuth:
     smtpDownstream:
       enabled: true
       securityOptions: noanonymous
-      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
     smtpdUpstream:
       enabled: false
       mechanisms: PLAIN
-      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
-  headers:
-    xHeaderAuthEnabled: true
-    xHeaderAuthSecret: "123456789"
   dkimSigning:
     enabled: false
     dkimDomains: gw._domainkey.example.com
