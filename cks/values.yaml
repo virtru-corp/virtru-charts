@@ -99,12 +99,10 @@ appSecrets:
     name: cks-keys
     mountPath: /app/keys
     data:
-      rsa001pub: |
-        <your public key>
-      rsa001pem: |
-        <your private key>
+      rsa001pub: <your base64 encoded public key>
+      rsa001pem: <your base64 encoded private key>
       
   virtruAuth:
     name: hmac-auth
     data:
-      authTokenJson: <your auth token json value>
+      authTokenJson: <your base64 encoded auth token json value>

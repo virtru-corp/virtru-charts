@@ -25,7 +25,7 @@ serviceAccount:
 podAnnotations: {}
 
 testerPod:
-  enabled: true
+  enabled: false
   annotations:
     helm.sh/hook: test
 
@@ -108,10 +108,8 @@ appSecrets:
     tokenSecret: "fake-hmac-secret"
   secretKey: "secretkey:<base64-encoded-secret-key>"
   ssl:
-    privateKey: |
-      <your private key>
-    certificate: |
-      <your certificate>
+    privateKey: <base64 private rsa key>
+    certificate: <base64 private ssl cert>
   cksHmac:
     tokenId: "fake-cks-hmac-token" 
     tokenSecret: "fake-cks-hmac-secret" 

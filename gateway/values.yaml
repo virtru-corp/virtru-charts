@@ -103,19 +103,19 @@ standardConfig:
     #Secret managed in appSecrets section
 
 appSecrets:
-  amplitudeToken: <your-amplitude-token>
-  gatewayApiTokenName: <your-api-token>
-  gatewayApiSecret: <your-api-secret>
+  amplitudeToken: <your-base64-encoded-amplitude-token>
+  gatewayApiTokenName: <your-base64-encoded-api-token>
+  gatewayApiSecret: <your-base64-encoded-api-secret>
   saslAuth:
     smtpDownstream:
       #Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
-      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
+      accounts: <your base64 encoded auth path smtp-relay.gmail.com=>service-account@example.com=>password>
     smtpdUpstream:
       #Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
-      accounts: smtp-relay.gmail.com=>service-account@example.com=>password
+      accounts: <your base64 encoded auth path smtp-relay.gmail.com=>service-account@example.com=>password>
   headers:
     #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
-    xHeaderAuthSecret: "123456789"
+    xHeaderAuthSecret: "<your base64 encoded auth secret 123456789>"
 
 additionalConfig:
   saslAuth:
