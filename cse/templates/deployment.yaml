@@ -107,7 +107,7 @@ spec:
         - name: cse-ssl
           secret:
             secretName: {{ include "cse.fullname" . }}
-            defaultMode: 0420
+            defaultMode: 420
         - name: cse-preinstall
           emptyDir: {}
       {{- end }}
