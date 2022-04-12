@@ -94,9 +94,9 @@ affinity: {}
 appConfig:
   accountsUrl: "https://api.virtru.com/accounts/api"
   acmUrl: "https://api.virtru.com/acm/api"
-  jwksAuthnIssuers: "eyAidmlydHJ1LXRlc3QiOiAiaHR0cDovL2p3dC5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsL2p3ay5qc29uIiB9Cg=="
-  jwksAuthzIssuers: "eyAidmlydHJ1LXRlc3QiOiAiaHR0cDovL2p3dC5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsL2p3ay5qc29uIiB9Cg=="
-  jwtAud: "eyJhdXRobiI6InZpcnRydS10ZXN0IiwiYXV0aHoiOiJ2aXJ0cnUtdGVzdCJ9Cg=="
+  jwksAuthnIssuers: "base64 encoded authn issuers object"
+  jwksAuthzIssuers: "eyAiZ3N1aXRlY3NlLXRva2VuaXNzdWVyLWRyaXZlQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3NlcnZpY2VfYWNjb3VudHMvdjEvandrL2dzdWl0ZWNzZS10b2tlbmlzc3Vlci1kcml2ZUBzeXN0ZW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImdzdWl0ZWNzZS10b2tlbmlzc3Vlci1tZWV0QHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3NlcnZpY2VfYWNjb3VudHMvdjEvandrL2dzdWl0ZWNzZS10b2tlbmlzc3Vlci1tZWV0QHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIiwiZ3N1aXRlY3NlLXRva2VuaXNzdWVyLWNhbGVuZGFyQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3NlcnZpY2VfYWNjb3VudHMvdjEvandrL2dzdWl0ZWNzZS10b2tlbmlzc3Vlci1jYWxlbmRhckBzeXN0ZW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIgfQo="
+  jwtAud: "base64 encoded jwt audience object"
   jwtKaclsUrl: "https://cse-example.local"
   processNumberOverride: "5"
   useSsl: "true"
@@ -104,12 +104,12 @@ appConfig:
 
 appSecrets:
   hmac:
-    tokenId: "fake-hmac-token"
-    tokenSecret: "fake-hmac-secret"
+    tokenId: "provided-by-virtru-base64-encoded"
+    tokenSecret: "provided-by-virtru-base64-encoded"
   secretKey: "secretkey:<base64-encoded-secret-key>"
   ssl:
     privateKey: <base64 private rsa key>
     certificate: <base64 private ssl cert>
   cksHmac:
-    tokenId: "fake-cks-hmac-token" 
-    tokenSecret: "fake-cks-hmac-secret" 
+    tokenId: "from-your-cks-base64-encoded" 
+    tokenSecret: "from-your-cks-base64-encoded" 
