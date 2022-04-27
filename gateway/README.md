@@ -104,7 +104,7 @@ And there should be public endpoints you can use when relaying mail to your new 
 A full list of Virtru-specific variables in `values.yaml` can be found below:
 
 | `values.yaml` | [Virtru Documentation value](https://support.virtru.com/hc/en-us/articles/115015789888-Customer-Hosted-Environment-Variables) |
-| - | - |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `gatewayHostname` | `GATEWAY_HOSTNAME` |
 | `primaryMailingDomain` | `GATEWAY_ORGANIZATION_DOMAIN` |
 | `gatewayTransportMaps` | `GATEWAY_TRANSPORT_MAPS` |
@@ -142,6 +142,6 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 ### `inboundRelayAddresses` values for Gmail and Office 365
 
 | Mail Provider | CIDR Blocks |
-| - | - |
+| ------------- | ----------- |
 | Gmail | 35.190.247.0/24,64.233.160.0/19,66.102.0.0/20,66.249.80.0/20,72.14.192.0/18,74.125.0.0/16,108.177.8.0/21,173.194.0.0/16,209.85.128.0/17,216.58.192.0/19,216.239.32.0/19,172.217.0.0/19,172.217.32.0/20,172.217.128.0/19,172.217.160.0/20,172.217.192.0/19,108.177.96.0/19,35.191.0.0/16,130.211.0.0/22 |
 | Office 365 | 23.103.132.0/22,23.103.136.0/21,23.103.144.0/20,23.103.198.0/23,23.103.200.0/22,23.103.212.0/22,40.92.0.0/14,40.107.0.0/17,40.107.128.0/18,52.100.0.0/14,65.55.88.0/24,65.55.169.0/24,94.245.120.64/26,104.47.0.0/17,104.212.58.0/23,134.170.132.0/24,134.170.140.0/24,157.55.234.0/24,157.56.110.0/23,157.56.112.0/24,207.46.51.64/26,207.46.100.0/24,207.46.163.0/24,213.199.154.0/24,213.199.180.128/26,216.32.180.0/23 |
