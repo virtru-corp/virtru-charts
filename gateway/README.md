@@ -64,6 +64,8 @@ To start, create a directory named `gateway-secrets`, and within that directory,
   touch gateway-xheader-auth-secret
   touch gateway-sasl-auth-upstream
   touch gateway-sasl-auth-downstream
+  # Navigate back to your working directory for your helm chart
+  cd ..
   ```
 
 Edit the values of each of these files to be the plaintext value of your respective secrets.
