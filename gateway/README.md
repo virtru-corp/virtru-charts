@@ -31,7 +31,7 @@ The first step will be to determine which gateway modes and functions you wish t
 
 ### Create secrets
 
-There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for you Kubernetes clusters, we recommend creating a secret manually outside of the context of this chart, which will then be referenced in your `values.yaml` file.
+There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for your Kubernetes clusters, we recommend creating a secret manually outside of the context of this chart, which will then be referenced in your `values.yaml` file.
 
 #### Creating a secret manually
 
