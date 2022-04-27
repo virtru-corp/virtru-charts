@@ -49,6 +49,22 @@ To start, create a directory named `gateway-secrets`, and within that directory,
     * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
   * If using SASL authentication downstream
     * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
+  To quickly create this directory and all of these files, copy and paste the following code block:
+
+  ```
+  # Make the secrets directory and navigate to it
+  mkdir gateway-secrets
+  cd gateway-secrets
+  # Create the files
+  # Required files
+  touch gateway-amplitude-api-key
+  touch gateway-api-token-name
+  touch gateway-api-token-secret
+  # Config specific files
+  touch gateway-xheader-auth-secret
+  touch gateway-sasl-auth-upstream
+  touch gateway-sasl-auth-downstream
+  ```
 
 Edit the values of each of these files to be the plaintext value of your respective secrets.
 
