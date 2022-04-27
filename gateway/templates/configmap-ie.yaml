@@ -24,21 +24,24 @@ data:
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
+  {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
-  GATEWAY_SMTP_USE_TLS: {{ .Values.additionalConfig.smtpUseTls | quote }}
-  GATEWAY_REPLACEMENT_FROM_ENABLED: {{ .Values.additionalConfig.replaceFromEnabled | quote }}
+  GATEWAY_SMTP_USE_TLS: "1"
   {{- if eq .Values.additionalConfig.smtpTlsComplianceDownstream.enabled true }}
   GATEWAY_SMTP_TLS_COMPLIANCE_DOWNSTREAM: {{ .Values.additionalConfig.smtpTlsComplianceDownstream.compliance }}
-  {{- end}}
+  {{- end }}
+  {{- end }}
   {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
   GATEWAY_SMTP_SASL_ENABLED_DOWNSTREAM: "1"
   GATEWAY_SMTP_SASL_SECURITY_OPTIONS: {{ .Values.additionalConfig.saslAuth.smtpDownstream.securityOptions }}
   {{- end }}
+  {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTPD_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpdSecurityLevel }}
-  GATEWAY_SMTPD_USE_TLS: {{ .Values.additionalConfig.smtpdUseTls | quote }}
+  GATEWAY_SMTPD_USE_TLS: "1"
   {{- if eq .Values.additionalConfig.smtpdTlsComplianceUpstream.enabled true }}
   GATEWAY_SMTPD_TLS_COMPLIANCE_UPSTREAM: {{ .Values.additionalConfig.smtpdTlsComplianceUpstream.compliance }}
-  {{- end}}
+  {{- end }}
+  {{- end }}
   {{- if eq .Values.additionalConfig.saslAuth.smtpdUpstream.enabled true }}
   GATEWAY_SMTPD_SASL_ENABLED: "1"
   GATEWAY_SMTPD_SASL_MECHANISMS: {{ .Values.additionalConfig.saslAuth.smtpdUpstream.mechanisms }}
@@ -49,8 +52,9 @@ data:
   {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
   {{- end }}
-  {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
-  GATEWAY_DKIM_DOMAINS: {{ .Values.additionalConfig.dkimSigning.dkimDomains }}
+  {{- if eq .Values.cacheSmtpConnections.enabled true }}
+  GATEWAY_SMTP_CACHE_CONNECTIONS: "1"
+  GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT: {{ .Values.cacheSmtpConnections.connectionCacheTimeLimit }}
   {{- end }}
 {{- end }}
 

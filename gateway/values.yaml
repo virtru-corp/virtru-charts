@@ -100,44 +100,29 @@ standardConfig:
   inboundRelayAddresses: 0.0.0.0/0
   headers:
     xHeaderAuthEnabled: true
-    #Secret managed in appSecrets section
-
-appSecrets:
-  amplitudeToken: <your-base64-encoded-amplitude-token>
-  gatewayApiTokenName: <your-base64-encoded-api-token>
-  gatewayApiSecret: <your-base64-encoded-api-secret>
-  saslAuth:
-    smtpDownstream:
-      #Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
-      accounts: <your base64 encoded auth path smtp-relay.gmail.com=>service-account@example.com=>password>
-    smtpdUpstream:
-      #Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
-      accounts: <your base64 encoded auth path smtp-relay.gmail.com=>service-account@example.com=>password>
-  headers:
-    #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
-    xHeaderAuthSecret: "<your base64 encoded auth secret 123456789>"
+    #Secret managed in externally created secret
+  secrets:
+    name: gateway-secrets
+  
 
 additionalConfig:
   saslAuth:
     smtpDownstream:
-      enabled: true
+      enabled: false
       securityOptions: noanonymous
     smtpdUpstream:
       enabled: false
       mechanisms: PLAIN
-  dkimSigning:
-    enabled: false
-    dkimDomains: gw._domainkey.example.com
   maxQueueLifetime: 5m
   maxBackoffTime: 45s
   minBackoffTime: 30s
   queueRunDelay: 30s
-  smtpdUseTls: "1"
+  smtpdUseTls: true
   smtpdSecurityLevel: opportunistic
   smtpdTlsComplianceUpstream:
     enabled: false
     compliance: MEDIUM
-  smtpUseTls: "1"
+  smtpUseTls: true
   smtpSecurityLevel: opportunistic
   smtpTlsComplianceDownstream:
     enabled: false
@@ -154,3 +139,6 @@ additionalConfig:
   decryptThenEncrypt: "0"
   proxyProtocol: "0"
   verboseLogging: "0"
+  cacheSmtpConnections:
+    enabled: true
+    connectionCacheTimeLimit: 5s
