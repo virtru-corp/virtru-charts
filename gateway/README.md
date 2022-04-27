@@ -44,11 +44,11 @@ To start, create a directory named `gateway-secrets`, and within that directory,
   * `gateway-api-token-secret` - Provided by Virtru
 * Optional (configuration specific)
   * If using X Header Authentication (default `true`)
-    * `gateway-xheader-auth-secret` - The secret value to be added in your headers before sending mail to the gateway
+    * `gateway-xheader-auth-secret` - The secret value to be added in your headers before sending mail to the gateway (example: `123456789` would mean you have to have a header on every email sent to the gateway of `X-Header-Virtru-Auth:123456789`)
   * If using SASL authentication upstream
-    * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop
+    * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
   * If using SASL authentication downstream
-    * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway
+    * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
 
 Edit the values of each of these files to be the plaintext value of your respective secrets.
 
