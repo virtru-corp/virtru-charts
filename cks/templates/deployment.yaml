@@ -56,14 +56,14 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-          - mountPath: {{ .Values.virtruKeys.mountPath }}
-            name: {{ .Values.virtruKeys.name }}
+          - mountPath: {{ .Values.appSecrets.virtruKeys.mountPath }}
+            name: {{ .Values.appSecrets.virtruKeys.name }}
             readOnly: true
       volumes:
-      - name: {{ .Values.virtruKeys.name }}
+      - name: {{ .Values.appSecrets.virtruKeys.name }}
         secret:
           defaultMode: 420
-          secretName: {{ .Values.virtruKeys.name }}
+          secretName: {{ .Values.appSecrets.virtruKeys.name }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
