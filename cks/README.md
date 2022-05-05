@@ -55,8 +55,8 @@ To quickly create this directory structure and the right files, run the followin
 
 Edit the values of each of these files to be the plaintext value of your respective secrets:
 
-| Filename | Value |
-| -------- | ----- |
+| Filename | Value from CKS setup script |
+| -------- | --------------------------- |
 | `hmac-auth/AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` | `env/cks.env => AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` |
 | `cks-keys/rsa001.pub` | `keys/rsa001.pub` |
 | `cks-keys/rsa001.pem` | `keys/rsa001.pem` |
