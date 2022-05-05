@@ -101,6 +101,7 @@ appConfig:
   processNumberOverride: "5"
   useSsl: "true"
   useCks: "false"
+  cksUrl: "https://cks-example.local"
 
 appSecrets:
   hmac:
@@ -111,5 +112,5 @@ appSecrets:
     privateKey: <base64 private rsa key>
     certificate: <base64 private ssl cert>
   cksHmac:
-    tokenId: "from-your-cks-base64-encoded" 
-    tokenSecret: "from-your-cks-base64-encoded" 
+    tokenId: "from-your-cks" 
+    tokenSecret: "from-your-cks" 
