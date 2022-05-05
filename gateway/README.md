@@ -5,7 +5,7 @@
 This Helm chart will deploy Virtru's email gateway. This chart can support deploying multiple different gateway modes and functions.
 
 ### Assumptions
-* The namespace for the deployment is `virtru-test`
+* The namespace for the deployment is `virtru`
 * The secrets directory is created in the same working directory for the helm chart
 
 ## Prerequisites
@@ -49,30 +49,12 @@ To start, create a directory named `gateway-secrets`, and within that directory,
     * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
   * If using SASL authentication downstream
     * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
-  To quickly create this directory and all of these files, copy and paste the following code block:
-
-  ```
-  # Make the secrets directory and navigate to it
-  mkdir gateway-secrets
-  cd gateway-secrets
-  # Create the files
-  # Required files
-  touch gateway-amplitude-api-key
-  touch gateway-api-token-name
-  touch gateway-api-token-secret
-  # Config specific files
-  touch gateway-xheader-auth-secret
-  touch gateway-sasl-auth-upstream
-  touch gateway-sasl-auth-downstream
-  # Navigate back to your working directory for your helm chart
-  cd ..
-  ```
 
 Edit the values of each of these files to be the plaintext value of your respective secrets.
 
 To create a Kubernetes secret from this directory, run the following command:
 ```
-kubectl create secret -n virtru-test generic gateway-secrets --from-file="./gateway-secrets"
+kubectl create secret -n virtru generic gateway-secrets --from-file="./gateway-secrets"
 ```
 
 ### Updating `values.yaml` file
@@ -103,7 +85,7 @@ You may, depending on your mail routing needs, wish to update a few values in th
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your gateway(s). An example command is listed below:
 ```
-helm install -n virtru-test -f ./values.yaml gateway ./
+helm install -n virtru -f ./values.yaml gateway ./
 ```
 
 
@@ -111,7 +93,7 @@ helm install -n virtru-test -f ./values.yaml gateway ./
 
 Refer to standard documentation for Gateway configuration. You can get your endpoints to set as smart hosts by running the following command:
 ```
-kubectl -n virtru-test get services
+kubectl -n virtru get services
 ```
 And there should be public endpoints you can use when relaying mail to your new gateways.
 

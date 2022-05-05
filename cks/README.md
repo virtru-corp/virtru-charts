@@ -1,57 +1,88 @@
 # CKS Deployment via Helm
 
-To deploy CKS with Helm, you will first need to create the following secrets:
+## Overview
 
-Create a `secret.yaml` containing the following:
+This Helm chart will deploy Virtru's Customer Key Server (CKS).
 
+### Assumptions
+* The namespace for the deployment is `virtru`
+* The secrets directory is created in the same working directory for the helm chart
+
+## Prerequisites
+
+These are the requirements before getting started with this chart:
+* Virtru provisioned organization with licenses for your email users.
+* Kubernetes cluster provisioned in the environment of your choosing. Links to common cloud provider documentation below.
+  * [AWS cluster creation](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
+  * [GCP cluster creation](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster)
+  * [Azure cluster creation](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough-portal)
+* [Helm is installed](https://helm.sh/docs/intro/install/) on your terminal.
+* Your terminal is connected to your Kubernetes cluster and ready to use `kubectl`
+* You have a CA signed certificate provisioned for your CKS FQDN
+* You have generated an RSA keypair and CKS Auth token on your local machine
+
+## Installation Steps
+
+### Create secrets
+
+There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for your Kubernetes clusters, we recommend creating a secret manually outside of the context of this chart, which will then be referenced in your `values.yaml` file.
+
+#### Creating a secret manually
+
+The instructions will generally follow the [Kubernetes documentation here](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/). The commands in this section are suggestions based on a very standard configuration for the Virtru CKS.
+
+To start, create a directory named `cks-secrets`, and within that directory, create two directories inside of `cks-secrets` with the following names:
+* `hmac-auth`
+* `cks-keys`
+
+Inside of `hmac-auth`, create a file called `AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON`, and inside of `cks-keys`, create two files for your RSA public/private keypairs called `rsa001.pub` and `rsa001.pem`.
+
+To quickly create this directory structure and the right files, run the following code block:
 ```
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: virtru-keys
-type: Opaque
-data:
-  rsa001.pem: <your private key> 
-  rsa001.pub: <your public key>
+  # Make the secrets directory and navigate to it
+  mkdir cks-secrets
+  cd cks-secrets
+  # Create the subdirectories
+  mkdir hmac-auth
+  mkdir cks-keys
+  # Create the files inside each subdirectory
+  touch hmac-auth/AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
+  touch cks-keys/rsa001.pub
+  touch cks-keys/rsa001.pem
+  # Navigate back to your working directory for your helm chart
+  cd ..
+  ```
+
+Edit the values of each of these files to be the plaintext value of your respective secrets:
+
+| Filename | Value |
+| -------- | ----- |
+| `hmac-auth/AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` | `env/cks.env => AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` |
+| `cks-keys/rsa001.pub` | `keys/rsa001.pub` |
+| `cks-keys/rsa001.pem` | `keys/rsa001.pem` |
+
+To create your Kubernetes secrets from these directories, run the following commands:
 ```
-
-and apply using the command `kubectl apply -n <your namespace> -f secret.yaml`.
-
-Then run the following command to add your Docker login credentials:
-
+kubectl create secret -n virtru generic cks-keys --from-file="./cks-secrets/cks-keys"
+kubectl create secret -n virtru generic hmac-auth --from-file="./cks-secrets/hmac-auth"
 ```
-kubectl create secret docker-registry regcred --docker-username=<your dockerhub username> --docker-password="<your dockerhub password>" --docker-email=<your dockerhub email>
+### Updating `values.yaml` file
+
+This section will detail potential changes that you will need to make to your `values.yaml` file.
+
+#### `ingress`
+
+To serve traffic appropriately, you must have an ingress controller for your CKS service. This is enabled by default, but you will need to update the host under `ingress.hosts.host` to match the FQDN of your CKS.
+
+You may also need to add annotations for your ingress to use your CA signed certificate. 
+
+#### `appSecrets`
+
+The values for `appSecrets.virtruAuth.name` and `appSecrets.virtruKeys.name` should match the secret names you created for your HMAC auth and RSA keypairs.
+
+### Installing the CKS
+
+Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your CKS. An example command is listed below:
 ```
-
-You will also need to add your base64-encoded auth token to the `values.yaml` file under `virtruAuth.authTokenJson`.
-
-The auth token and an initial RSA key pair are provisioned by the [CKS setup wizard](https://github.com/virtru/cks-setup-wizard/).
-
-## Minikube
-
-You can easily install CKS in minikube using the default `values.yaml` settings and running `helm install cks cks` from inside the directory holding the helm chart.
-
-Run the commands specified in the command output to set up port fowarding and test that the service is working by running
-
-```
-curl http://127.0.0.1:8080/status
-```
-
-## GKE
-
-To deploy CKS in GKE, you will need to modify some of the parameters in `values.yaml` to create an `Ingress` resource and deploy the service behind a load balancer.
-
-In particular, you will need to modify `service.type` to be `LoadBalancer` and set `ingress.enabled` to `true`. You will also need to either update the hostname for the ingress to use your domain or omit the host field to wildcard the domain and use the IP Google assigns when it creates the load balancer. See more ingress configuration options in the [kubernetes docs](https://kubernetes.io/docs/concepts/services-networking/ingress/). You should then be able to run `helm install cks cks` to deploy the service.
-
-To verify that the service is up and running, run 
-
-```
-curl http://<your load balancer's public ip>/status
-```
-
-For Virtru deployments, to further verify functionality, configure SSL in front of the service (e.g. via an HTTPS frontend), and run the following:
-
-```
-docker run --rm virtru/cks-tool:v1.1.0 --hostname <your load balancer's public ip> --port 443 --hmac_id <your hmac token id> --hmac_secret <your hmac token secret> -n 1  --validate_crypto
+helm install -n virtru -f ./values.yaml cks ./
 ```
