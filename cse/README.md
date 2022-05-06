@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Helm chart will deploy Virtru's key management server for Google Client Side Encryption..
+This Helm chart will deploy Virtru's key management server for Google Client Side Encryption.
 
 ### Assumptions
 * The namespace for the deployment is `virtru`
@@ -35,10 +35,16 @@ This section will detail potential changes that you will need to make to your `v
 #### `appConfig`
 
 * `jwksAuthnIssuers` - A base-64 encoded map of accepted Authentication issuer ids (from the authentication JWT) to the URL where the issuer publishes its JSON Web Keyset. This is dictated via the IDP. In the example provided it is Google OAuth
-  * Example in plaintext: `{ "https://accounts.google.com": "https://www.googleapis.com/oauth2/v3/certs" }`
+  * Example command to base-64 encode: 
+    * ```
+        echo '{ "https://accounts.google.com": "https://www.googleapis.com/oauth2/v3/certs" }' | base64
+        ``` 
 * `jwksAuthzIssuers` - A base-64 encoded map of accepted Authorization issuer ids (from the authorization JWT) to the URL where the issuer publishes its JSON Web Keyset. This is dictated by Google and is filled out by default
 * `jwtAud` - A base-64 encoded JSON map of JWT audiences for authorization and authentication. The `authz` audience, which is sent by Google, will always be  `cse-authorization`, but the `authn` audience will be configured through the customer’s IDP. In the example provided the `authn` audience is Google OAuth
-  * Example in plaintext: `{ "authn": "00000000000000000.apps.googleusercontent.com", "authz":"cse-authorization" }`
+  * Example command to base-64 encode: 
+    * ```
+        echo '{ "authn": "00000000000000000.apps.googleusercontent.com", "authz":"cse-authorization" }' | base64
+        ```
 * `jwtKaclsUrl` - URL for your CSE service. This should match the SSL certificate provisioned in the previous steps
 * `useCks` - Default false. Switch to true if using a Virtru CKS in tandem with your CSE KMS
 *  `cksUrl` - Leave as default if not using CKS. If using CKS, this is the FQDN of your running CKS service (example: `https://cks.example.com`)
@@ -50,7 +56,11 @@ In the `appSecrets` section, the `hmac`, `secretKey`, and `cksHmac` (if using CK
 * `hmac.tokenId` - Provided by Virtru
 * `hmac.tokenSecret` - Provided by Virtru
 * `secretKey` - A named, base-64 encoded key for CSE encryption. Required if not using CKS. Format is `mykeyname:base64encodedkey`. See example below:
-  * Example: If your key's decoded value is `testkey`, your `secretKey` value should be `mysupersecretkey:dGVzdGtleQo=`, where `dGVzdGtleQo=` is `testkey` base-64 encoded.
+  * If your key's decoded value is `testkey`, your `secretKey` value should be `mysupersecretkey:dGVzdGtleQo=`, where `dGVzdGtleQo=` is `testkey` base-64 encoded.
+  * Example command to get a randomly generated key into a local TXT file:
+    * ```
+        echo "my-key-name:$(openssl rand 32 | base64)" 2>&1 | tee cseSecret.txt
+        ```
 * `ssl.privateKey` - Your certificate's private key, base-64 encoded
 * `ssl.certificate` - Your certificate's cert chain, base-64 encoded
 * `cksHmac.tokenId` - The `tokenId` from your CKS configuration (only used if `useCks` is set to true)
