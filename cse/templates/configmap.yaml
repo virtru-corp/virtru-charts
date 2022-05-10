@@ -15,6 +15,6 @@ data:
   PROCESS_NUMBER_OVERRIDE: "{{ .Values.appConfig.processNumberOverride }}"
   USE_SSL: "{{ .Values.appConfig.useSsl }}"
   USE_CKS: "{{ .Values.appConfig.useCks }}"
-  {{- if eq .Values.appConfig.useCks true }}
+  {{- if eq .Values.appConfig.useCks "true" }}
   CKS_URL: "{{ .Values.appConfig.cksUrl }}"
   {{- end }}
