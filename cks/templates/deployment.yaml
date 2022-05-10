@@ -36,7 +36,7 @@ spec:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
           - secretRef:
-              name: {{ .Values.virtruAuth.name }}
+              name: {{ .Values.appSecrets.virtruAuth.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
