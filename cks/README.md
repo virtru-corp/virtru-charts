@@ -74,7 +74,10 @@ This section will detail potential changes that you will need to make to your `v
 
 To serve traffic appropriately, you must have an ingress controller for your CKS service. This is enabled by default, but you will need to update the host under `ingress.hosts.host` to match the FQDN of your CKS.
 
-You may also need to add annotations for your ingress to use your CA signed certificate. 
+Depending on your environment, you will need to add annotations to:
+* Apply your CA signed certificate 
+* Designate load balancer configurations
+* Expose your load balancer to the internet
 
 #### `appSecrets`
 
