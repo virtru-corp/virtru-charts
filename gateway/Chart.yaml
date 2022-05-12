@@ -1,6 +1,6 @@
 apiVersion: v2
-name: cse
+name: gateway
 description: A Helm chart for Kubernetes
 type: application
-version: 0.7.0
-appVersion: v4.0.1
+version: 1.6.0
+appVersion: 2.23.0

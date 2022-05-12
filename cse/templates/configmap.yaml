@@ -8,10 +8,13 @@ metadata:
 data:
   ACCOUNTS_URL: {{ .Values.appConfig.accountsUrl }}
   ACM_URL: {{ .Values.appConfig.acmUrl }}
-  JWKS_AUTHZ_ISSUERS: {{ .Values.appConfig.jwksAuthzIssuers }}
   JWKS_AUTHN_ISSUERS: {{ .Values.appConfig.jwksAuthnIssuers }}
+  JWKS_AUTHZ_ISSUERS: {{ .Values.appConfig.jwksAuthzIssuers }}
   JWT_AUD: {{ .Values.appConfig.jwtAud }}
   JWT_KACLS_URL: {{ .Values.appConfig.jwtKaclsUrl }}
   PROCESS_NUMBER_OVERRIDE: "{{ .Values.appConfig.processNumberOverride }}"
   USE_SSL: "{{ .Values.appConfig.useSsl }}"
-  USE_CKS: "false"
+  USE_CKS: "{{ .Values.appConfig.useCks }}"
+  {{- if eq .Values.appConfig.useCks "true" }}
+  CKS_URL: "{{ .Values.appConfig.cksUrl }}"
+  {{- end }}

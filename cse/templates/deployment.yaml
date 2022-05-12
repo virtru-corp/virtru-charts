@@ -20,10 +20,6 @@ spec:
       labels:
         {{- include "cse.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "cse.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -91,11 +87,25 @@ spec:
               secretKeyRef:
                 key: cse-hmac-token-id
                 name: {{ include "cse.fullname" . }}
+          {{- if eq .Values.appConfig.useCks "true" }}
+          - name: CKS_HMAC_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: cks-hmac-token-secret
+                name: {{ include "cse.fullname" . }}
+          - name: CKS_HMAC_TOKEN_ID
+            valueFrom:
+              secretKeyRef:
+                key: cks-hmac-token-id
+                name: {{ include "cse.fullname" . }}
+          {{- end }}
+          {{- if eq .Values.appConfig.useCks "false" }}
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
                 key: cse-secret-key
                 name: {{ include "cse.fullname" . }}
+          {{- end }}
           {{- if eq .Values.appConfig.useSsl "true" }}
           volumeMounts:
             - mountPath: /run/secrets

@@ -1,0 +1,129 @@
+{{- if eq .Values.gatewayModes.outboundEncrypt.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+  labels:
+    {{- include "gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+      app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "gateway.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+        app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "gateway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: cert-generator
+          image: alpine:latest
+          # todo move this into a bash script? or remove apk add bash from the below line
+          command: ['sh', '-c', "apk update && apk upgrade && apk add bash openssl && openssl genrsa -out /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}/client.key 2048 && openssl req -new -key /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}/client.key -x509 -subj /CN={{ .Values.standardConfig.gatewayHostname }} -days 3650 -out /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}/client.pem"]
+          volumeMounts:
+          - name: cert-dir
+            mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
+      containers:
+        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - name: cert-dir
+            mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          envFrom:
+          - configMapRef:
+              name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+          env:
+          - name: GATEWAY_AMPLITUDE_API_KEY
+            valueFrom:
+              secretKeyRef:
+                key: gateway-amplitude-api-key
+                name: {{ .Values.standardConfig.secrets.name }}
+          - name: GATEWAY_API_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: gateway-api-token-secret
+                name: {{ .Values.standardConfig.secrets.name }}
+          - name: GATEWAY_API_TOKEN_NAME
+            valueFrom:
+              secretKeyRef:
+                key: gateway-api-token-name
+                name: {{ .Values.standardConfig.secrets.name }}
+          {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
+          - name: GATEWAY_SMTP_SASL_ACCOUNTS
+            valueFrom:
+              secretKeyRef:
+                key: gateway-sasl-auth-downstream
+                name: {{ .Values.standardConfig.secrets.name }}
+          {{- end }}
+          {{- if eq .Values.additionalConfig.saslAuth.smtpdUpstream.enabled true }}
+          - name: GATEWAY_SMTPD_SASL_ACCOUNTS
+            valueFrom:
+              secretKeyRef:
+                key: gateway-sasl-auth-upstream
+                name: {{ .Values.standardConfig.secrets.name }}
+          {{- end }}
+          {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
+          - name: GATEWAY_XHEADER_AUTH_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: gateway-xheader-auth-secret
+                name: {{ .Values.standardConfig.secrets.name }}
+          {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: 25
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 20
+          livenessProbe:
+            tcpSocket:
+              port: 25
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2
+            timeoutSeconds: 60
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: cert-dir
+        emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

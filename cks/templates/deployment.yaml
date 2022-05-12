@@ -27,10 +27,6 @@ spec:
       labels:
         {{- include "cks.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "cks.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -39,12 +35,8 @@ spec:
           envFrom:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
-          env:
-          - name: AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
-            valueFrom:
-              secretKeyRef:
-                key: virtru-auth
-                name: {{ include "cks.fullname" . }}
+          - secretRef:
+              name: {{ .Values.appSecrets.virtruAuth.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -64,19 +56,14 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-          - mountPath: {{ .Values.virtruKeys.mountPath }}
-            name: {{ .Values.virtruKeys.name }}
+          - mountPath: {{ .Values.appSecrets.virtruKeys.mountPath }}
+            name: {{ .Values.appSecrets.virtruKeys.name }}
             readOnly: true
       volumes:
-      - name: {{ .Values.virtruKeys.name }}
+      - name: {{ .Values.appSecrets.virtruKeys.name }}
         secret:
           defaultMode: 420
-          items:
-          - key: {{ .Values.virtruKeys.data.privateKey }}
-            path: {{ .Values.virtruKeys.data.privateKey }}
-          - key: {{ .Values.virtruKeys.data.publicKey }}
-            path: {{ .Values.virtruKeys.data.publicKey }}
-          secretName: {{ .Values.virtruKeys.name }}
+          secretName: {{ .Values.appSecrets.virtruKeys.name }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
