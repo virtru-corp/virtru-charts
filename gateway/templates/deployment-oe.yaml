@@ -86,7 +86,7 @@ spec:
                 key: gateway-sasl-auth-upstream
                 name: {{ .Values.standardConfig.secrets.name }}
           {{- end }}
-          {{- if eq .Values.additionalConfig.headers.xHeaderAuthEnabled true }}
+          {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
           - name: GATEWAY_XHEADER_AUTH_SECRET
             valueFrom:
               secretKeyRef:

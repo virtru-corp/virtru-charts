@@ -105,8 +105,8 @@ appConfig:
 
 appSecrets:
   hmac:
-    tokenId: "provided-by-virtru-base64-encoded"
-    tokenSecret: "provided-by-virtru-base64-encoded"
+    tokenId: "provided-by-virtru"
+    tokenSecret: "provided-by-virtru"
   secretKey: "secretkey:<base64-encoded-secret-key>"
   ssl:
     privateKey: <base64 private rsa key>

@@ -99,11 +99,13 @@ spec:
                 key: cks-hmac-token-id
                 name: {{ include "cse.fullname" . }}
           {{- end }}
+          {{- if eq .Values.appConfig.useCks "false" }}
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
                 key: cse-secret-key
                 name: {{ include "cse.fullname" . }}
+          {{- end }}
           {{- if eq .Values.appConfig.useSsl "true" }}
           volumeMounts:
             - mountPath: /run/secrets

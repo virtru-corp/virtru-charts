@@ -11,5 +11,5 @@ data:
   PORT: "{{ .Values.deployment.port }}"
   BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: "/run/secrets/rsa001.pub"
   BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: "/run/secrets/rsa001.pem"
-  KEY_PROVIDER_PATH: {{ .Values.virtruKeys.mountPath }}
+  KEY_PROVIDER_PATH: {{ .Values.appSecrets.virtruKeys.mountPath }}
   KEY_PROVIDER_TYPE: "file"

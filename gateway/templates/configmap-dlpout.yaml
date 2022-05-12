@@ -52,9 +52,9 @@ data:
   {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
   {{- end }}
-  {{- if eq .Values.cacheSmtpConnections.enabled true }}
+  {{- if eq .Values.additionalConfig.cacheSmtpConnections.enabled true }}
   GATEWAY_SMTP_CACHE_CONNECTIONS: "1"
-  GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT: {{ .Values.cacheSmtpConnections.connectionCacheTimeLimit }}
+  GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT: {{ .Values.additionalConfig.cacheSmtpConnections.connectionCacheTimeLimit }}
   {{- end }}
 {{- end }}
 
