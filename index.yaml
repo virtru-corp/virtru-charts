@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  cks:
+  - apiVersion: v2
+    appVersion: v1.3.4
+    created: "2022-04-13T15:11:30.453888-04:00"
+    description: A service for Virtru customers who wish to manage their own keys
+    digest: 1f76abd54abd487ec9e78b8d8482f4ded7e31d64cde73601b1292502090bac03
+    name: cks
+    type: application
+    urls:
+    - cks-0.6.1.tgz
+    version: 0.6.1
+  cse:
+  - apiVersion: v2
+    appVersion: v4.0.1
+    created: "2022-04-13T15:11:30.454718-04:00"
+    description: A Helm chart for Kubernetes
+    digest: b12fbcf538bffe037d5b119b3ab0f9654fb13afa11fb8b42f1a5e166adc43545
+    name: cse
+    type: application
+    urls:
+    - cse-0.6.0.tgz
+    version: 0.6.0
+generated: "2022-04-13T15:11:30.452888-04:00"
