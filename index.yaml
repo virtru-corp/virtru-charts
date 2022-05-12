@@ -3,18 +3,18 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2022-05-12T15:38:00.386654-04:00"
+    created: "2022-05-12T15:48:53.434412-04:00"
     description: A service for Virtru customers who wish to manage their own keys
-    digest: 6eebde4ad8658d4ed5fa72a4f88cefbeb970607a564033d0200aba711d1f9dcd
+    digest: cc765314cf692d8aaeeeecb3bc3ab5db86d678f3a0db57af8a3bd5b247d33131
     name: cks
     type: application
     urls:
-    - cks-0.8.0.tgz
-    version: 0.8.0
+    - cks-0.7.0.tgz
+    version: 0.7.0
   cse:
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2022-05-12T15:38:00.387779-04:00"
+    created: "2022-05-12T15:48:53.437461-04:00"
     description: A Helm chart for Kubernetes
     digest: 549cd6979933a12d25c829f9398ef099f77f09758629fb5f045bb41ad839fd43
     name: cse
@@ -25,7 +25,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.23.0
-    created: "2022-05-12T15:38:00.390036-04:00"
+    created: "2022-05-12T15:48:53.439333-04:00"
     description: A Helm chart for Kubernetes
     digest: e9d153dc3dd9b52ea832e587c82d77dbd231ad773304f29c1e6343a7ac716d28
     name: gateway
@@ -33,4 +33,4 @@ entries:
     urls:
     - gateway-1.6.0.tgz
     version: 1.6.0
-generated: "2022-05-12T15:38:00.384651-04:00"
+generated: "2022-05-12T15:48:53.433364-04:00"
