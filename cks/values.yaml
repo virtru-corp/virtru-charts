@@ -97,6 +97,14 @@ affinity: {}
 appSecrets:
   virtruAuth:
     name: hmac-auth
+    data:
+      authTokenJson: testing
+      
   virtruKeys:
     name: cks-keys
     mountPath: /app/keys
+    data:
+      rsa001.pub: sometext
+      rsa001.pem: sometext
+      rsa002.pub: anotherkey
+      rsa002.pem: anotherkey
