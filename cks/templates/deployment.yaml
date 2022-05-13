@@ -36,7 +36,11 @@ spec:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
           - secretRef:
+              {{- if .Values.externalSecrets.virtruAuth.enabled false }}
               name: {{ .Values.appSecrets.virtruAuth.name }}
+              {{- else -}}
+              name: {{ .Values.externalSecrets.virtruAuth.name}}
+              {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -55,15 +59,30 @@ spec:
             timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.externalSecrets.virtruKeys.enabled false }}
           volumeMounts:
           - mountPath: {{ .Values.appSecrets.virtruKeys.mountPath }}
             name: {{ .Values.appSecrets.virtruKeys.name }}
             readOnly: true
+          {{- else -}}
+          volumeMounts:
+          - mountPath: /app/keys
+            name: {{ .Values.externalSecrets.virtruKeys.name}}
+            readOnly: true
+          {{- end }}
+      {{- if .Values.externalSecrets.virtruKeys.enabled false }}
       volumes:
       - name: {{ .Values.appSecrets.virtruKeys.name }}
         secret:
           defaultMode: 420
           secretName: {{ .Values.appSecrets.virtruKeys.name }}
+      {{- else -}}
+      volumes:
+      - name: {{ .Values.externalSecrets.virtruKeys.name }}
+        secret:
+          defaultMode: 420
+          secretName: {{ .Values.externalSecrets.virtruKeys.name }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

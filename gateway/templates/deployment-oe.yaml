@@ -61,37 +61,61 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: gateway-amplitude-api-key
+                {{- if eq .Values.externalSecrets.enabled false }}
                 name: {{ .Release.Name }}-secrets
+                {{- else -}}
+                name: {{ .Values.externalSecrets.secretName }}
+                {{- end }}
           - name: GATEWAY_API_TOKEN_SECRET
             valueFrom:
               secretKeyRef:
                 key: gateway-api-token-secret
+                {{- if eq .Values.externalSecrets.enabled false }}
                 name: {{ .Release.Name }}-secrets
+                {{- else -}}
+                name: {{ .Values.externalSecrets.secretName }}
+                {{- end }}
           - name: GATEWAY_API_TOKEN_NAME
             valueFrom:
               secretKeyRef:
                 key: gateway-api-token-name
+                {{- if eq .Values.externalSecrets.enabled false }}
                 name: {{ .Release.Name }}-secrets
+                {{- else -}}
+                name: {{ .Values.externalSecrets.secretName }}
+                {{- end }}
           {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
           - name: GATEWAY_SMTP_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: gateway-sasl-auth-downstream
+                {{- if eq .Values.externalSecrets.enabled false }}
                 name: {{ .Release.Name }}-secrets
+                {{- else -}}
+                name: {{ .Values.externalSecrets.secretName }}
+                {{- end }}
           {{- end }}
           {{- if eq .Values.additionalConfig.saslAuth.smtpdUpstream.enabled true }}
           - name: GATEWAY_SMTPD_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: gateway-sasl-auth-upstream
+                {{- if eq .Values.externalSecrets.enabled false }}
                 name: {{ .Release.Name }}-secrets
+                {{- else -}}
+                name: {{ .Values.externalSecrets.secretName }}
+                {{- end }}
           {{- end }}
           {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
           - name: GATEWAY_XHEADER_AUTH_SECRET
             valueFrom:
               secretKeyRef:
                 key: gateway-xheader-auth-secret
+                {{- if eq .Values.externalSecrets.enabled false }}
                 name: {{ .Release.Name }}-secrets
+                {{- else -}}
+                name: {{ .Values.externalSecrets.secretName }}
+                {{- end }}
           {{- end }}
           readinessProbe:
             tcpSocket:
