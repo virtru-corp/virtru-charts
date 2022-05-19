@@ -31,31 +31,9 @@ The first step will be to determine which gateway modes and functions you wish t
 
 ### Create secrets
 
-There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for your Kubernetes clusters, we recommend creating a secret manually outside of the context of this chart, which will then be referenced in your `values.yaml` file.
+There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for your Kubernetes clusters, you can create secrets by using the `appSecrets` section of the `values.yaml` file.
 
-#### Creating a secret manually
-
-The instructions will generally follow the [Kubernetes documentation here](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/). The commands in this section are suggestions based on a very standard configuration for the Virtru gateway.
-
-To start, create a directory named `gateway-secrets`, and within that directory, create files with each of the following names:
-* Required
-  * `gateway-amplitude-api-key` - Provided by Virtru
-  * `gateway-api-token-name` - Provided by Virtru
-  * `gateway-api-token-secret` - Provided by Virtru
-* Optional (configuration specific)
-  * If using X Header Authentication (default `true`)
-    * `gateway-xheader-auth-secret` - The secret value to be added in your headers before sending mail to the gateway (example: `123456789` would mean you have to have a header on every email sent to the gateway of `X-Header-Virtru-Auth:123456789`)
-  * If using SASL authentication upstream
-    * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
-  * If using SASL authentication downstream
-    * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
-
-Edit the values of each of these files to be the plaintext value of your respective secrets.
-
-To create a Kubernetes secret from this directory, run the following command:
-```
-kubectl create secret -n virtru generic gateway-secrets --from-file="./gateway-secrets"
-```
+**Please note we strongly advise you consider using an external secrets manager. Creating secrets via the `values.yaml` is a default option to help get your gateway up and running more quickly.**
 
 ### Updating `values.yaml` file
 
@@ -73,11 +51,26 @@ For each gateway use case identified above, ensure that the specific mode's `ena
 * `inboundRelayAddresses` - Determine IPs you wish to allow traffic into the gateway container from (default is open at the container level and to build firewall rules to only allow specific source IPs into the pod)
   * Default values for Gmail and Office 365 sending IPs included in the **Reference** section at the bottom of this document
 * `headers.xHeaderAuthEnabled` - Defaults to true. If enabled, you must also set xHeaderAuthSecret and add the secret value to messages prior to hitting the gateway
-*  `secrets.name` - The name of the secret you created in the previous steps (default `gateway-secrets`)
+
+#### `appSecrets`
+
+Set the values based on the information below:
+
+* Required
+  * `gateway-amplitude-api-key` - Provided by Virtru
+  * `gateway-api-token-name` - Provided by Virtru
+  * `gateway-api-token-secret` - Provided by Virtru
+* Optional (configuration specific)
+  * If using X Header Authentication (default `true`)
+    * `gateway-xheader-auth-secret` - The secret value to be added in your headers before sending mail to the gateway (example: `123456789` would mean you have to have a header on every email sent to the gateway of `X-Header-Virtru-Auth:123456789`)
+  * If using SASL authentication upstream
+    * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
+  * If using SASL authentication downstream
+    * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
 
 #### `additionalConfig` 
 
-You may, depending on your mail routing needs, wish to update a few values in this section. Below are a few of the primary variables you may wish to adjust:
+You may, depending on your email needs, wish to update a few values in this section. Below are a few of the primary variables you may wish to adjust:
 * `saslAuth.smtpDownstream.enabled` - This will enable SASL auth for your next hop. If you choose to enable this, you will need to create the `gateway-sasl-auth-upstream` file in your secret detailed above
 * `decryptThenEncrypt` - If you are using a multi gateway approach (ex: decrypt email => Scan content => re-encrypt email), this should be set to 1 (true)
 

@@ -94,19 +94,6 @@ tolerations: []
 
 affinity: {}
 
-# Update the enabled values to true and input the secret names containing 
-# your hmac-auth and cks-keys if you wish to create these secrets externally
-# and link them to your deployment here. If you choose to do so, you may leave
-# the appSecrets section below with the placeholder values.
-
-externalSecrets:
-  virtruAuth:
-    enabled: false
-    name: hmac-auth
-  virtruKeys: 
-    enabled: false
-    name: cks-keys
-
 # By default, you can create secrets using the keys below.
 # Important note: Creating secrets in this way is not best practice.
 # While a simpler approach with fewer variables, it is recommended you use

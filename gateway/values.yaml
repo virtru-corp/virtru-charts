@@ -100,16 +100,7 @@ standardConfig:
   inboundRelayAddresses: 0.0.0.0/0
   headers:
     xHeaderAuthEnabled: true
-    # Secret managed in appSecrets.headers or via external secret.
-
-# Update the enabled value to true and input the secret name containing 
-# your gateway secret values if you wish to create these secrets externally
-# and link them to your deployment here. If you choose to do so, you may leave
-# the appSecrets section below with the placeholder values.
-
-externalSecrets:
-  enabled: false
-  secretName: gateway-secrets
+    # Secret managed in appSecrets.headers
 
 # By default, you can create secrets using the keys below.
 # Important note: Creating secrets in this way is not best practice.
@@ -118,19 +109,19 @@ externalSecrets:
 # info.
 
 appSecrets:
-  amplitudeToken: <your-base64-encoded-amplitude-token>
-  gatewayApiTokenName: <your-base64-encoded-api-token>
-  gatewayApiSecret: <your-base64-encoded-api-secret>
+  amplitudeToken: <your-amplitude-token>
+  gatewayApiTokenName: <your-api-token>
+  gatewayApiSecret: <your-api-secret>
   saslAuth:
     smtpDownstream:
       #Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
-      accounts: <your base64 encoded auth path smtp-relay.gmail.com=>service-account@example.com=>password>
+      accounts: <your auth path smtp-relay.gmail.com=>service-account@example.com=>password>
     smtpdUpstream:
       #Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
-      accounts: <your base64 encoded auth path smtp-relay.gmail.com=>service-account@example.com=>password>
+      accounts: <your auth path smtp-relay.gmail.com=>service-account@example.com=>password>
   headers:
     #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
-    xHeaderAuthSecret: "<your base64 encoded auth secret 123456789>"
+    xHeaderAuthSecret: "<your auth secret 123456789>"
   
   
 
