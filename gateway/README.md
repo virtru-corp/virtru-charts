@@ -78,7 +78,7 @@ You may, depending on your email needs, wish to update a few values in this sect
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your gateway(s). An example command is listed below:
 ```
-helm install -n virtru -f ./values.yaml gateway ./
+helm install -n virtru -f ./values.yaml gateway ./ --create-namespace
 ```
 
 

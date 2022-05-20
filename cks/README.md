@@ -60,5 +60,5 @@ You can have multiple RSA keypairs on your CKS as long as they follow the naming
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your CKS. An example command is listed below:
 ```
-helm install -n virtru -f ./values.yaml cks ./
+helm install -n virtru -f ./values.yaml cks ./ --create-namespace
 ```

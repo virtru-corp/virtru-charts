@@ -70,7 +70,7 @@ In the `appSecrets` section, the `hmac`, `secretKey`, and `cksHmac` (if using CK
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your CSE. An example command is listed below:
 ```
-helm install -n virtru -f ./values.yaml cse ./
+helm install -n virtru -f ./values.yaml cse ./ --create-namespace
 ```
 
 
