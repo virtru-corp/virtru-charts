@@ -114,7 +114,3 @@ appSecrets:
         rsa001 public key
       rsa001.pem: |
         rsa001 private key
-      rsa002.pub: |
-        rsa002 public key
-      rsa002.pem: |
-        rsa002 private key

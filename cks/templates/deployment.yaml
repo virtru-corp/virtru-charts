@@ -63,7 +63,7 @@ spec:
       - name: {{ .Values.appSecrets.virtruKeys.name }}
         secret:
           defaultMode: 420
-          secretName: {{ default .Values.appSecrets.virtruKeys.name }}
+          secretName: {{ .Values.appSecrets.virtruKeys.name }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
