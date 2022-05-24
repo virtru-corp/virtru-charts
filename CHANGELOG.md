@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Secrets in values.yaml
   - Iterate through multiple keys for secret creation in CKS keys
   - Readme updates
+- CD-786 ([#34](https://github.com/virtru-corp/virtru-charts/pull/34)): _patch_
+  - Update comments in `values.yaml`
 ## [1.2.0](https://github.com/virtru-corp/virtru-charts/compare/1.1.0...1.2.0)
 - CD-786 ([#26](https://github.com/virtru-corp/virtru-charts/pull/26)): _minor_
   - Add Gateway charts, updates for CSE and CKS charts
