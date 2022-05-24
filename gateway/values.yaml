@@ -103,10 +103,9 @@ standardConfig:
     # Secret managed in appSecrets.headers
 
 # By default, you can create secrets using the keys below.
-# Important note: Creating secrets in this way is not best practice.
+# Important note: Creating secrets in this way is a default option.
 # While a simpler approach with fewer variables, it is recommended you use
-# a third party secret storage option. Please see README.md for more
-# info.
+# a third party secret storage option.
 
 appSecrets:
   amplitudeToken: <your-amplitude-token>
