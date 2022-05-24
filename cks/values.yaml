@@ -111,6 +111,6 @@ appSecrets:
     mountPath: /app/keys
     data:
       rsa001.pub: |
-        rsa001 public key
+        <rsa001 public key>
       rsa001.pem: |
-        rsa001 private key
+        <rsa001 private key>
