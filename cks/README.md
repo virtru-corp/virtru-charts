@@ -25,47 +25,10 @@ These are the requirements before getting started with this chart:
 
 ### Create secrets
 
-There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for your Kubernetes clusters, we recommend creating a secret manually outside of the context of this chart, which will then be referenced in your `values.yaml` file.
+There are a number of ways that Kubernetes secrets can be managed. If you do not have an existing external secret manager for your Kubernetes clusters, you can create secrets by using the `appSecrets` section of the `values.yaml` file.
 
-#### Creating a secret manually
+**Please note we strongly advise you consider using an external secrets manager. Creating secrets via the `values.yaml` is a default option to help get your CKS up and running more quickly.**
 
-The instructions will generally follow the [Kubernetes documentation here](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/). The commands in this section are suggestions based on a very standard configuration for the Virtru CKS.
-
-To start, create a directory named `cks-secrets`, and within that directory, create two directories inside of `cks-secrets` with the following names:
-* `hmac-auth`
-* `cks-keys`
-
-Inside of `hmac-auth`, create a file called `AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON`, and inside of `cks-keys`, create two files for your RSA public/private keypairs called `rsa001.pub` and `rsa001.pem`.
-
-To quickly create this directory structure and the right files, run the following code block:
-```
-  # Make the secrets directory and navigate to it
-  mkdir cks-secrets
-  cd cks-secrets
-  # Create the subdirectories
-  mkdir hmac-auth
-  mkdir cks-keys
-  # Create the files inside each subdirectory
-  touch hmac-auth/AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
-  touch cks-keys/rsa001.pub
-  touch cks-keys/rsa001.pem
-  # Navigate back to your working directory for your helm chart
-  cd ..
-  ```
-
-Edit the values of each of these files to be the plaintext value of your respective secrets:
-
-| Filename | Value from CKS setup script |
-| -------- | --------------------------- |
-| `hmac-auth/AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` | `env/cks.env => AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` |
-| `cks-keys/rsa001.pub` | `keys/rsa001.pub` |
-| `cks-keys/rsa001.pem` | `keys/rsa001.pem` |
-
-To create your Kubernetes secrets from these directories, run the following commands:
-```
-kubectl create secret -n virtru generic cks-keys --from-file="./cks-secrets/cks-keys"
-kubectl create secret -n virtru generic hmac-auth --from-file="./cks-secrets/hmac-auth"
-```
 ### Updating `values.yaml` file
 
 This section will detail potential changes that you will need to make to your `values.yaml` file.
@@ -81,11 +44,21 @@ Depending on your environment, you will need to add annotations to:
 
 #### `appSecrets`
 
-The values for `appSecrets.virtruAuth.name` and `appSecrets.virtruKeys.name` should match the secret names you created for your HMAC auth and RSA keypairs.
+Update your secrets to match the values from your local CKS config as mapped below.
+
+| Filename | Value from CKS setup script |
+| -------- | --------------------------- |
+| `hmac-auth` | `env/cks.env => AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` |
+| `rsa001.pub` | `keys/rsa001.pub` |
+| `rsa001.pem` | `keys/rsa001.pem` |
+
+You can have multiple RSA keypairs on your CKS as long as they follow the naming convention rsa###.pub and rsa###.pem for all public/private keypairs.
+
+**Note: Indentation matters for a multiline string, ensure proper indentation for your CKS keys secrets.**
 
 ### Installing the CKS
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your CKS. An example command is listed below:
 ```
-helm install -n virtru -f ./values.yaml cks ./
+helm install -n virtru -f ./values.yaml cks ./ --create-namespace
 ```

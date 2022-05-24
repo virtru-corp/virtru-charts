@@ -3,7 +3,17 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2022-05-12T15:48:53.434412-04:00"
+    created: "2022-05-24T10:00:40.125936-04:00"
+    description: A service for Virtru customers who wish to manage their own keys
+    digest: 53f1d6063b8a87f4be5750c9c51b1d2372cea92c42bf32ced750b94653e03f65
+    name: cks
+    type: application
+    urls:
+    - cks-0.7.1.tgz
+    version: 0.7.1
+  - apiVersion: v2
+    appVersion: v1.4.4
+    created: "2022-05-24T10:00:40.124527-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: cc765314cf692d8aaeeeecb3bc3ab5db86d678f3a0db57af8a3bd5b247d33131
     name: cks
@@ -11,10 +21,20 @@ entries:
     urls:
     - cks-0.7.0.tgz
     version: 0.7.0
+  - apiVersion: v2
+    appVersion: v1.3.4
+    created: "2022-05-24T10:00:40.123406-04:00"
+    description: A service for Virtru customers who wish to manage their own keys
+    digest: 1f76abd54abd487ec9e78b8d8482f4ded7e31d64cde73601b1292502090bac03
+    name: cks
+    type: application
+    urls:
+    - cks-0.6.1.tgz
+    version: 0.6.1
   cse:
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2022-05-12T15:48:53.437461-04:00"
+    created: "2022-05-24T10:00:40.128089-04:00"
     description: A Helm chart for Kubernetes
     digest: 549cd6979933a12d25c829f9398ef099f77f09758629fb5f045bb41ad839fd43
     name: cse
@@ -22,10 +42,30 @@ entries:
     urls:
     - cse-0.7.0.tgz
     version: 0.7.0
+  - apiVersion: v2
+    appVersion: v4.0.1
+    created: "2022-05-24T10:00:40.12706-04:00"
+    description: A Helm chart for Kubernetes
+    digest: b12fbcf538bffe037d5b119b3ab0f9654fb13afa11fb8b42f1a5e166adc43545
+    name: cse
+    type: application
+    urls:
+    - cse-0.6.0.tgz
+    version: 0.6.0
   gateway:
   - apiVersion: v2
     appVersion: 2.23.0
-    created: "2022-05-12T15:48:53.439333-04:00"
+    created: "2022-05-24T10:00:40.132446-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 11e7f624a74b1d34d22b213781622acb30b87cc7fdf4637b413bf26fd6cbe170
+    name: gateway
+    type: application
+    urls:
+    - gateway-1.6.1.tgz
+    version: 1.6.1
+  - apiVersion: v2
+    appVersion: 2.23.0
+    created: "2022-05-24T10:00:40.131011-04:00"
     description: A Helm chart for Kubernetes
     digest: e9d153dc3dd9b52ea832e587c82d77dbd231ad773304f29c1e6343a7ac716d28
     name: gateway
@@ -33,4 +73,4 @@ entries:
     urls:
     - gateway-1.6.0.tgz
     version: 1.6.0
-generated: "2022-05-12T15:48:53.433364-04:00"
+generated: "2022-05-24T10:00:40.122077-04:00"

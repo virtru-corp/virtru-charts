@@ -100,9 +100,29 @@ standardConfig:
   inboundRelayAddresses: 0.0.0.0/0
   headers:
     xHeaderAuthEnabled: true
-    #Secret managed in externally created secret
-  secrets:
-    name: gateway-secrets
+    # Secret managed in appSecrets.headers
+
+# By default, you can create secrets using the keys below.
+# Important note: Creating secrets in this way is not best practice.
+# While a simpler approach with fewer variables, it is recommended you use
+# a third party secret storage option. Please see README.md for more
+# info.
+
+appSecrets:
+  amplitudeToken: <your-amplitude-token>
+  gatewayApiTokenName: <your-api-token>
+  gatewayApiSecret: <your-api-secret>
+  saslAuth:
+    smtpDownstream:
+      #Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
+      accounts: <your auth path smtp-relay.gmail.com=>service-account@example.com=>password>
+    smtpdUpstream:
+      #Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
+      accounts: <your auth path smtp-relay.gmail.com=>service-account@example.com=>password>
+  headers:
+    #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
+    xHeaderAuthSecret: "<your auth secret 123456789>"
+  
   
 
 additionalConfig:
