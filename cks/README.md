@@ -5,12 +5,14 @@
 This Helm chart will deploy Virtru's Customer Key Server (CKS).
 
 ### Assumptions
+
 * The namespace for the deployment is `virtru`
 * The secrets directory is created in the same working directory for the helm chart
 
 ## Prerequisites
 
 These are the requirements before getting started with this chart:
+
 * Virtru provisioned organization with licenses for your email users.
 * Kubernetes cluster provisioned in the environment of your choosing. Links to common cloud provider documentation below.
   * [AWS cluster creation](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
@@ -38,7 +40,8 @@ This section will detail potential changes that you will need to make to your `v
 To serve traffic appropriately, you must have an ingress controller for your CKS service. This is enabled by default, but you will need to update the host under `ingress.hosts.host` to match the FQDN of your CKS.
 
 Depending on your environment, you will need to add annotations to:
-* Apply your CA signed certificate 
+
+* Apply your CA signed certificate
 * Designate load balancer configurations
 * Expose your load balancer to the internet
 
@@ -59,6 +62,7 @@ You can have multiple RSA keypairs on your CKS as long as they follow the naming
 ### Installing the CKS
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your CKS. An example command is listed below:
-```
+
+```sh
 helm install -n virtru -f ./values.yaml cks ./ --create-namespace
-```
+``
