@@ -2,15 +2,20 @@
 
 ## Overview
 
-This Helm chart will deploy Virtru's key management server for Google Client Side Encryption.
+This Helm chart will deploy Virtru's key management server for Google Client Side Encryption. You can read this documentation on Virtru's support site here:
+
+* [Kubernetes Prerequisites](https://support.virtru.com/hc/en-us/articles/5747194158999-Client-Side-Encryption-Kubernetes-cluster)
+* [CSE Helm Deployment](https://support.virtru.com/hc/en-us/articles/5746813541911-Client-Side-Encryption-install-Kubernetes)
 
 ### Assumptions
+
 * The namespace for the deployment is `virtru`
 * The secrets directory is created in the same working directory for the helm chart
 
 ## Prerequisites
 
 These are the requirements before getting started with this chart:
+
 * Virtru provisioned organization with licenses for your email users.
 * Kubernetes cluster provisioned in the environment of your choosing. Links to common cloud provider documentation below.
   * [AWS cluster creation](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
@@ -20,6 +25,7 @@ These are the requirements before getting started with this chart:
 * Your terminal is connected to your Kubernetes cluster and ready to use `kubectl`
 
 ## Installation Steps
+
 ### Configure IDP
 
 To use Google's CSE service, you must have a 3rd party identity provider configured to authenticate users to the CSE service. Documentation on Google's requirements can be found [here](https://support.google.com/a/answer/10743588?hl=en).
@@ -35,10 +41,12 @@ This section will detail potential changes that you will need to make to your `v
 #### `appConfig`
 
 * `jwksAuthnIssuers` - A base-64 encoded map of accepted Authentication issuer ids (from the authentication JWT) to the URL where the issuer publishes its JSON Web Keyset. This is dictated via the IDP. In the example provided it is Google OAuth
-  * Example command to base-64 encode: 
-    * ```
+  * Example command to base-64 encode:
+
+    * ```sh
         echo '{ "https://accounts.google.com": "https://www.googleapis.com/oauth2/v3/certs" }' | base64
         ``` 
+
 * `jwksAuthzIssuers` - A base-64 encoded map of accepted Authorization issuer ids (from the authorization JWT) to the URL where the issuer publishes its JSON Web Keyset. This is dictated by Google and is filled out by default
 * `jwtAud` - A base-64 encoded JSON map of JWT audiences for authorization and authentication. The `authz` audience, which is sent by Google, will always be  `cse-authorization`, but the `authn` audience will be configured through the customer’s IDP. In the example provided the `authn` audience is Google OAuth
   * Example command to base-64 encode: 
