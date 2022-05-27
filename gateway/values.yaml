@@ -121,6 +121,11 @@ appSecrets:
   headers:
     #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
     xHeaderAuthSecret: "<your auth secret 123456789>"
+  dkimSigning:
+    publicKey: |
+      <dkim-public-key>
+    privateKey: |
+      <dkim-private-key>
   
   
 
@@ -161,3 +166,6 @@ additionalConfig:
   cacheSmtpConnections:
     enabled: true
     connectionCacheTimeLimit: 5s
+  dkimSigning:
+    enabled: false
+    selector: gw

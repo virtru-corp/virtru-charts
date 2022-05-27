@@ -2,15 +2,20 @@
 
 ## Overview
 
-This Helm chart will deploy Virtru's email gateway. This chart can support deploying multiple different gateway modes and functions.
+This Helm chart will deploy Virtru's email gateway. This chart can support deploying multiple different gateway modes and functions. You can read this documentation on Virtru's support site here:
+
+* [Kubernetes Prerequisites](https://support.virtru.com/hc/en-us/articles/5747171304855-Customer-Hosted-Kubernetes-cluster)
+* [Gateway Helm Deployment](https://support.virtru.com/hc/en-us/articles/5746773139479-Customer-Hosted-Install-Kubernetes)
 
 ### Assumptions
+
 * The namespace for the deployment is `virtru`
 * The secrets directory is created in the same working directory for the helm chart
 
 ## Prerequisites
 
 These are the requirements before getting started with this chart:
+
 * Virtru provisioned organization with licenses for your email users.
 * Kubernetes cluster provisioned in the environment of your choosing. Links to common cloud provider documentation below.
   * [AWS cluster creation](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
@@ -20,9 +25,11 @@ These are the requirements before getting started with this chart:
 * Your terminal is connected to your Kubernetes cluster and ready to use `kubectl`
 
 ## Installation Steps
+
 ### Use cases
 
 The first step will be to determine which gateway modes and functions you wish to utilize. The options are as follows:
+
 * Outbound Encrypt (default option)
 * Outbound Decrypt
 * Outbound DLP (leverage Virtru's content scanning and DLP engine to determine if emails should be encrypted and if any additional security options should be leveraged)
@@ -67,27 +74,34 @@ Set the values based on the information below:
     * `gateway-sasl-auth-upstream` - The auth path for your SMTP authentication to the next hop (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
   * If using SASL authentication downstream
     * `gateway-sasl-auth-downstream` - The auth path for your SMTP authentication from the previous hop to the Virtru gateway (example: `smtp-relay.gmail.com=>gateway-service-account@example.com=>appSpecificPassword`)
+  * If using DKIM signing
+    * `publicKey` - The public key from your DKIM record in your DNS
+    * `privateKey` - The private key matching your DKIM record's public key
 
-#### `additionalConfig` 
+#### `additionalConfig`
 
 You may, depending on your email needs, wish to update a few values in this section. Below are a few of the primary variables you may wish to adjust:
+
 * `saslAuth.smtpDownstream.enabled` - This will enable SASL auth for your next hop. If you choose to enable this, you will need to create the `gateway-sasl-auth-upstream` file in your secret detailed above
 * `decryptThenEncrypt` - If you are using a multi gateway approach (ex: decrypt email => Scan content => re-encrypt email), this should be set to 1 (true)
+* `dkimSigning` - If you wish to have the gateway DKIM sign your emails, set enabled to `true`. You must have a public DKIM record for the selector you choose with a public key that matches the keys inputted into `appSecrets.dkimSigning`
 
 ### Installing the gateway
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your gateway(s). An example command is listed below:
-```
+
+```sh
 helm install -n virtru -f ./values.yaml gateway ./ --create-namespace
 ```
-
 
 ### Additional Config to go live
 
 Refer to standard documentation for Gateway configuration. You can get your endpoints to set as smart hosts by running the following command:
-```
+
+```sh
 kubectl -n virtru get services
 ```
+
 And there should be public endpoints you can use when relaying mail to your new gateways.
 
 ## Reference
@@ -131,6 +145,8 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `verboseLogging` | `GATEWAY_VERBOSE_LOGGING` |
 | `cacheSmtpConnections.enabled` | `GATEWAY_SMTP_CACHE_CONNECTIONS` |
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
+| `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
+| `dkimSigning.selector` | Generates the subdomain for `GATEWAY_DKIM_DOMAINS` (`<dkimSigning.selector>._domainkey.primaryMailingDomain`)
 
 ### `inboundRelayAddresses` values for Gmail and Office 365
 

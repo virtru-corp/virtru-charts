@@ -50,6 +50,8 @@ spec:
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
+          - name: dkim-dir
+            mountPath: /etc/opendkim/keys
           ports:
             - containerPort: {{ .Values.service.port }}
               protocol: TCP
@@ -114,6 +116,10 @@ spec:
       volumes:
       - name: cert-dir
         emptyDir: {}
+      - name: dkim-dir
+        secret:
+          defaultMode: 420
+          secretName: {{ .Release.Name }}-dkim-secrets
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

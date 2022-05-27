@@ -57,6 +57,9 @@ data:
   GATEWAY_SMTP_CACHE_CONNECTIONS: "1"
   GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT: {{ .Values.additionalConfig.cacheSmtpConnections.connectionCacheTimeLimit }}
   {{- end }}
+  {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
+  GATEWAY_DKIM_DOMAINS: {{ .Values.additionalConfig.dkimSigning.selector }}._domainkey.{{ .Values.standardConfig.primaryMailingDomain }}
+  {{- end }}
 {{- end }}
 
 
