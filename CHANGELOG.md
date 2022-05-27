@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.2.2](https://github.com/virtru-corp/virtru-charts/compare/1.2.1...1.2.2)
-- CD-855 ([#35](https://github.com/virtru-corp/virtru-charts/pull/35)): _patch_
+- CD-885 ([#35](https://github.com/virtru-corp/virtru-charts/pull/35))([#36](https://github.com/virtru-corp/virtru-charts/pull/36)): _patch_
   - Enable DKIM signing for Gateway chart
 
 ## [1.2.1](https://github.com/virtru-corp/virtru-charts/compare/1.2.0...1.2.1)
