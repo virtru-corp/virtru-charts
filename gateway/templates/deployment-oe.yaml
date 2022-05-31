@@ -60,6 +60,8 @@ spec:
           envFrom:
           - configMapRef:
               name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
+          - configMapRef:
+              name: {{ .Chart.Name }}-base-configs
           env:
           - name: GATEWAY_AMPLITUDE_API_KEY
             valueFrom:
