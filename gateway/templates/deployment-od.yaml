@@ -50,14 +50,18 @@ spec:
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
+          {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
+          {{- end }}
           ports:
             - containerPort: {{ .Values.service.port }}
               protocol: TCP
           envFrom:
           - configMapRef:
               name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+          - configMapRef:
+              name: {{ .Chart.Name }}-base-configs
           env:
           - name: GATEWAY_AMPLITUDE_API_KEY
             valueFrom:
@@ -116,10 +120,12 @@ spec:
       volumes:
       - name: cert-dir
         emptyDir: {}
+      {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
       - name: dkim-dir
         secret:
           defaultMode: 420
           secretName: {{ .Release.Name }}-dkim-secrets
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
