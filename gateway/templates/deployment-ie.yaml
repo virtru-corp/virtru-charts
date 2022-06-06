@@ -54,6 +54,10 @@ spec:
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
           {{- end }}
+          {{- if eq .Values.persistentVolumes.enabled true -}}
+          - name: postfix-dir
+            mountPath: /var/spool/postfix
+          {{- end -}}
           ports:
             - containerPort: {{ .Values.service.port }}
               protocol: TCP
@@ -126,6 +130,11 @@ spec:
           defaultMode: 420
           secretName: {{ .Release.Name }}-dkim-secrets
       {{- end }}
+      {{- if eq .Values.persistentVolumes.enabled true -}}
+      - name: postfix-dir
+        persistentVolumeClaim:
+          claimName: {{ .Values.gatewayModes.inboundEncrypt.name }}-pvc
+      {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
