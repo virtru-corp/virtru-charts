@@ -4,13 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2.3](https://github.com/virtru-corp/virtru-charts/compare/1.2.2...1.2.3)
+- CD-897 ([#37](https://github.com/virtru-corp/virtru-charts/pull/37)): _patch_
+  - Add Persistent Volume Claims for gateway Postfix queues
+
 ## [1.2.2](https://github.com/virtru-corp/virtru-charts/compare/1.2.1...1.2.2)
 - CD-885 ([#35](https://github.com/virtru-corp/virtru-charts/pull/35))([#36](https://github.com/virtru-corp/virtru-charts/pull/36)): _patch_
   - Enable DKIM signing for Gateway chart
 - CD-888 ([#36](https://github.com/virtru-corp/virtru-charts/pull/36)): _patch_
   - Set up configmaps to have a base template for generic values and mode-specific config map templates for mode-specific values
-- CD-897 ([#37](https://github.com/virtru-corp/virtru-charts/pull/37)): _patch_
-  - Set up Persistent Volume Claims for Gateway charts to retain Postfix queues
 
 ## [1.2.1](https://github.com/virtru-corp/virtru-charts/compare/1.2.0...1.2.1)
 - CD-786 ([#33](https://github.com/virtru-corp/virtru-charts/pull/33)): _patch_
