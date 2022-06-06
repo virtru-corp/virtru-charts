@@ -86,7 +86,6 @@ gatewayModes:
 # intact when pods are destroyed and recreated.
 
 persistentVolumes:
-  enabled: true
   volumeSize: 1Gi
 
 # Environment Variables:
