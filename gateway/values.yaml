@@ -84,6 +84,7 @@ gatewayModes:
 # If enabled, this will create a persistent volume for each 
 # enabled gateway mode. This will keep your postfix queue 
 # intact when pods are destroyed and recreated.
+
 persistentVolumes:
   enabled: true
   volumeSize: 1Gi

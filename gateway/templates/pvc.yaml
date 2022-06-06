@@ -1,6 +1,6 @@
-{{- if eq .Values.persistentVolumes.enabled true -}}
+{{- if eq .Values.persistentVolumes.enabled true }}
 ---
-{{- if eq .Values.gatewayModes.outboundEncrypt.enabled true -}}
+{{- if eq .Values.gatewayModes.outboundEncrypt.enabled true }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,12 +9,12 @@ spec:
   storageClassName: standard
   accessModes:
     - ReadWriteOnce
-resources:
-  requests:
-    storage: {{ .Values.persistentVolumes.volumeSize }}
-{{- end -}}
+  resources:
+    requests:
+      storage: {{ toYaml .Values.persistentVolumes.volumeSize }}
+{{- end }}
 ---
-{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true -}}
+{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -23,12 +23,12 @@ spec:
   storageClassName: standard
   accessModes:
     - ReadWriteOnce
-resources:
-  requests:
-    storage: {{ .Values.persistentVolumes.volumeSize }}
-{{- end -}}
+  resources:
+    requests:
+      storage: {{ toYaml .Values.persistentVolumes.volumeSize }}
+{{- end }}
 ---
-{{- if eq .Values.gatewayModes.inboundEncrypt.enabled true -}}
+{{- if eq .Values.gatewayModes.inboundEncrypt.enabled true }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -37,12 +37,12 @@ spec:
   storageClassName: standard
   accessModes:
     - ReadWriteOnce
-resources:
-  requests:
-    storage: {{ .Values.persistentVolumes.volumeSize }}
-{{- end -}}
+  resources:
+    requests:
+      storage: {{ toYaml .Values.persistentVolumes.volumeSize }}
+{{- end }}
 ---
-{{- if eq .Values.gatewayModes.inbounDecrypt.enabled true -}}
+{{- if eq .Values.gatewayModes.inboundDecrypt.enabled true }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -51,12 +51,12 @@ spec:
   storageClassName: standard
   accessModes:
     - ReadWriteOnce
-resources:
-  requests:
-    storage: {{ .Values.persistentVolumes.volumeSize }}
-{{- end -}}
+  resources:
+    requests:
+      storage: {{ toYaml .Values.persistentVolumes.volumeSize }}
+{{- end }}
 ---
-{{- if eq .Values.gatewayModes.outboundDlp.enabled true -}}
+{{- if eq .Values.gatewayModes.outboundDlp.enabled true }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -65,8 +65,8 @@ spec:
   storageClassName: standard
   accessModes:
     - ReadWriteOnce
-resources:
-  requests:
-    storage: {{ .Values.persistentVolumes.volumeSize }}
-{{- end -}}
-{{- end -}}
+  resources:
+    requests:
+      storage: {{ toYaml .Values.persistentVolumes.volumeSize }}
+{{- end }}
+{{- end }}
