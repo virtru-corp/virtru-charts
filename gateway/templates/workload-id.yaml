@@ -1,6 +1,6 @@
 {{- if eq .Values.gatewayModes.inboundDecrypt.enabled true }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundDecrypt.name }}
   labels:
@@ -12,9 +12,8 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundDecrypt.name }}
       app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundDecrypt.name }}
+  serviceName: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundDecrypt.name }}
   replicas: {{ .Values.replicas }}
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
     {{- with .Values.podAnnotations }}

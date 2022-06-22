@@ -1,20 +1,19 @@
-{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
+{{- if eq .Values.gatewayModes.inboundEncrypt.enabled true }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
   labels:
     {{- include "gateway.labels" . | nindent 4 }}
-    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
-    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
-      app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+      app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
+      app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
+  serviceName: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
   replicas: {{ .Values.replicas }}
-  strategy:
-    type: RollingUpdate
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -23,8 +22,8 @@ spec:
     {{- end }}
       labels:
         {{- include "gateway.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
-        app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
+        app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -42,7 +41,7 @@ spec:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
       containers:
-        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -61,7 +60,7 @@ spec:
               protocol: TCP
           envFrom:
           - configMapRef:
-              name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDecrypt.name }}
+              name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundEncrypt.name }}
           - configMapRef:
               name: {{ .Chart.Name }}-base-configs
           env:
@@ -130,7 +129,7 @@ spec:
       {{- end }}
       - name: postfix-dir
         persistentVolumeClaim:
-          claimName: {{ .Values.gatewayModes.outboundDecrypt.name }}-pvc
+          claimName: {{ .Values.gatewayModes.inboundEncrypt.name }}-pvc
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
