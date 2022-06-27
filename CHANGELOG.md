@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.2.3](https://github.com/virtru-corp/virtru-charts/compare/1.2.2...1.2.3)
 - CD-897 ([#37](https://github.com/virtru-corp/virtru-charts/pull/37)): _patch_
-  - Add Persistent Volume Claims for gateway Postfix queues
   - Update workloads to be type `StatefulSet` instead of `Deployment` to accommodate horizontal scaling
+  - Add volumeClaimTemplates to `standard StorageClass`
 
 ## [1.2.2](https://github.com/virtru-corp/virtru-charts/compare/1.2.1...1.2.2)
 - CD-885 ([#35](https://github.com/virtru-corp/virtru-charts/pull/35))([#36](https://github.com/virtru-corp/virtru-charts/pull/36)): _patch_

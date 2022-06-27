@@ -87,6 +87,7 @@ gatewayModes:
 # the size of the volume below.
 
 persistentVolumes:
+  storageClassName: standard
   volumeSize: 1Gi
 
 # Environment Variables:
