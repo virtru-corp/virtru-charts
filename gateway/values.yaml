@@ -81,6 +81,14 @@ gatewayModes:
     name: outbound-dlp
     port: 9005
 
+# This will create a persistent volume for each 
+# enabled gateway mode. This will keep your postfix queue 
+# intact when pods are destroyed and recreated. You can modify
+# the size of the volume below.
+
+persistentVolumes:
+  storageClassName: standard
+  volumeSize: 1Gi
 
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
