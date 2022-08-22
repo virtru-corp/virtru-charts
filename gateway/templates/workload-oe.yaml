@@ -30,7 +30,6 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "gateway.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
         app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundEncrypt.name }}
     spec:
