@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.2.4](https://github.com/virtru-corp/virtru-charts/compare/1.2.3...1.2.4)
 - BACK-828 ([#41](https://github.com/virtru-corp/virtru-charts/pull/41)): _patch_
   - `HorizontalPodAutoscaler` to `v2beta2`
-  - Use `networking.k8s.io/v1 instead of `extensions/v1beta1` unconditionally
+  - Use `networking.k8s.io/v1` instead of `extensions/v1beta1` unconditionally
 
 ## [1.2.3](https://github.com/virtru-corp/virtru-charts/compare/1.2.2...1.2.3)
 - CD-897 ([#37](https://github.com/virtru-corp/virtru-charts/pull/37)): _patch_
