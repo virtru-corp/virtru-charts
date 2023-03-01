@@ -1,0 +1,19 @@
+{{- $storageClassName := .Values.redis.storage.name -}}
+{{- $capacity := .Values.redis.storage.capacity -}}
+{{- range (untilStep 0 (int .Values.redis.replicaCount) 1) }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv{{ . }}
+spec:
+  storageClassName: {{ $storageClassName }}
+  capacity:
+    storage: {{ $capacity }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /storage/data{{ . }}
+
+---
+
+{{- end -}}
