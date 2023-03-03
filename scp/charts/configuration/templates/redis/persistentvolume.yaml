@@ -1,10 +1,14 @@
+{{- if and .Values.redis.enabled -}}
+{{- if and .Values.redis.storage.enabled -}}
 {{- $storageClassName := .Values.redis.storage.name -}}
 {{- $capacity := .Values.redis.storage.capacity -}}
+{{- $namespace :=  .Release.Namespace | quote }}
 {{- range (untilStep 0 (int .Values.redis.replicaCount) 1) }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: local-pv{{ . }}
+  name: {{ $storageClassName }}-pv{{ . }}
+  namespace: {{ $namespace }}
 spec:
   storageClassName: {{ $storageClassName }}
   capacity:
@@ -16,4 +20,6 @@ spec:
 
 ---
 
+{{- end -}}
+{{- end -}}
 {{- end -}}

@@ -3,11 +3,10 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.redis.fullname }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
-{{/*    {{- include "configuration.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}*/}}
-    {{- with .Values.redis.service.labels }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+    app: {{ .Chart.Name }}-{{ .Values.redis.name }}
+    service: {{ .Chart.Name }}-{{ .Values.redis.name }}
   {{- with .Values.redis.service.annotations }}
   annotations:
     {{- range $key, $value := . }}
@@ -19,11 +18,11 @@ spec:
   replicas: {{ .Values.redis.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.redis.name }}
+      app: {{ .Chart.Name }}-{{ .Values.redis.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.redis.name }}
+        app: {{ .Chart.Name }}-{{ .Values.redis.name }}
     spec:
       initContainers:
         - name: config
@@ -51,7 +50,7 @@ spec:
                 echo "slaveof $MASTER 6379" >> /etc/redis/redis.conf
               fi
           volumeMounts:
-            - name: redis-config
+            - name: {{ .Chart.Name }}-{{ .Values.redis.name }}-config
               mountPath: /etc/redis/
             - name: config
               mountPath: /tmp/redis/
@@ -66,14 +65,14 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: redis-config
+            - name: {{ .Chart.Name }}-{{ .Values.redis.name }}-config
               mountPath: /etc/redis/
       volumes:
-        - name: redis-config
+        - name: {{ .Chart.Name }}-{{ .Values.redis.name }}-config
           emptyDir: {}
         - name: config
           configMap:
-            name: redis-config
+            name: {{ .Chart.Name }}-{{ .Values.redis.name }}-config
   volumeClaimTemplates:
     - metadata:
         name: data

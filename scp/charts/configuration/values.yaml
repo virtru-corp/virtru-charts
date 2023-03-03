@@ -14,6 +14,7 @@ redis:
     annotations: {}
     servicePort: 6379
   storage:
+    enabled: true
     name: local-storage
     capacity: 1Gi
 
