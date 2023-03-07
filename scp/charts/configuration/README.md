@@ -4,3 +4,4 @@ A Helm chart fo OpenTDF Configuration, a service for providing configuration to 
 
 This chart requires [Istio](https://istio.io) Service Mesh to be installed.
 
+This chart has a Redis HA dependency from here: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha

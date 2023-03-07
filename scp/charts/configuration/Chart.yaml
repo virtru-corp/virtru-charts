@@ -2,17 +2,22 @@ apiVersion: v2
 name: configuration
 description: A Helm chart fo OpenTDF Configuration, a service for providing configuration to applications and other services.
 type: application
-version: 0.1.0
+version: 0.2.0
 appVersion: 0.0.1
 kubeVersion: ">=1.24.0-0"
 home: https://github.com/opentdf/backend/tree/main/charts/configuration
 icon: https://avatars.githubusercontent.com/u/90051847?s=200&v=4
 sources:
-  - https://github.com/argoproj/argo-helm/tree/main/charts/configuration
-  - https://github.com/argoproj/argo-helm/tree/main/containers/configuration
+  - https://github.com/virtru-corp/virtru-charts/tree/feature/csp/scp/charts/configuration
 keywords:
   - opentdf
   - configuration
+  - PEP
 maintainers:
   - name: opentdf
     url: https://opentdf.io/
+dependencies:
+  - name: redis-ha
+    version: 4.22.4
+    repository: https://dandydeveloper.github.io/charts/
+    condition: redis-ha.enabled
