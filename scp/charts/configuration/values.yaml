@@ -30,7 +30,7 @@ redis-ha:
       save: '""'
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
-    enabled: true
+    enabled: false
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: true
