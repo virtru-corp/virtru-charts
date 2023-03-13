@@ -34,13 +34,13 @@ redis-ha:
       save: '""'
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
-    enabled: true
+    enabled: false
     metrics:
       # -- HAProxy enable prometheus metric scraping
       enabled: false
   image:
     # -- Redis tag
-    tag: 7.0.7-alpine
+    tag: 7.0.9-alpine
 
   ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints:
