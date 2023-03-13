@@ -34,10 +34,10 @@ redis-ha:
       save: '""'
   haproxy:
     # -- Enabled HAProxy LoadBalancing/Proxy
-    enabled: false
+    enabled: true
     metrics:
       # -- HAProxy enable prometheus metric scraping
-      enabled: true
+      enabled: false
   image:
     # -- Redis tag
     tag: 7.0.7-alpine
