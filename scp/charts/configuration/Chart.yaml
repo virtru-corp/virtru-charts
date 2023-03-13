@@ -2,7 +2,7 @@ apiVersion: v2
 name: configuration
 description: A Helm chart fo OpenTDF Configuration, a service for providing configuration to applications and other services.
 type: application
-version: 0.2.0
+version: 0.3.0
 appVersion: 0.0.1
 kubeVersion: ">=1.24.0-0"
 home: https://github.com/opentdf/backend/tree/main/charts/configuration
@@ -18,6 +18,6 @@ maintainers:
     url: https://opentdf.io/
 dependencies:
   - name: redis-ha
-    version: 4.22.4
+    version: 4.23.0
     repository: https://dandydeveloper.github.io/charts/
     condition: redis-ha.enabled
