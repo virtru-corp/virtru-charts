@@ -460,6 +460,13 @@
 
     identify_announce_ip
 
+    if [ -z "${ANNOUNCE_IP}" ]; then
+        echo "setting announce to SERVICE_HOST"
+        echo "${ENTERPRISE_TDF_CONFIGURATION_REDIS_HA_ANNOUNCE_0_SERVICE_HOST}"
+        ANNOUNCE_IP=${ENTERPRISE_TDF_CONFIGURATION_REDIS_HA_ANNOUNCE_0_SERVICE_HOST}
+        echo "  identified announce (${ANNOUNCE_IP})"
+    fi
+
     while [ -z "${ANNOUNCE_IP}" ]; do
         echo "Error: Could not resolve the announce ip for this pod."
         sleep 30
