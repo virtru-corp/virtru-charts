@@ -327,7 +327,8 @@
     identify_announce_ip
 
     if [ -z "${ANNOUNCE_IP}" ]; then
-        "setting announce to SERVICE_HOST"
+        echo "setting announce to SERVICE_HOST"
+        echo "${ENTERPRISE_TDF_CONFIGURATION_REDIS_HA_ANNOUNCE_0_SERVICE_HOST}"
         ANNOUNCE_IP=${ENTERPRISE_TDF_CONFIGURATION_REDIS_HA_ANNOUNCE_0_SERVICE_HOST}
         echo "  identified announce (${ANNOUNCE_IP})"
     fi
