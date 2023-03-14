@@ -286,7 +286,7 @@
         echo " SERVICE ${SERVICE}"
         service="${SERVICE}-announce-${INDEX}"
         echo " service ${service}"
-        getent hosts "${service}"
+        env
         ANNOUNCE_IP=$(getent_hosts | awk '{ print $1 }')
         echo "  identified announce (${ANNOUNCE_IP})"
     }
