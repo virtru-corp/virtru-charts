@@ -106,7 +106,7 @@
     identify_master() {
         echo "Identifying redis master (get-master-addr-by-name).."
         echo "  using sentinel ({{ template "redis-ha.fullname" . }}), sentinel group name ({{ template "redis-ha.masterGroupName" . }})"
-        MASTER="$(sentinel_get_master_retry 3)"
+        MASTER="$(sentinel_get_master_retry 1)"
         if [ -n "${MASTER}" ]; then
             echo "  $(date) Found redis master (${MASTER})"
         else
@@ -273,7 +273,7 @@
     }
 
     getent_hosts() {
-        index=${0:-${INDEX}}
+        index=${1:-${INDEX}}
         service="${SERVICE}-announce-${index}"
         host=$(getent hosts "${service}")
         echo "${host}"
@@ -282,8 +282,8 @@
     identify_announce_ip() {
         echo "Identify announce ip for this pod.."
         echo "  using (${SERVICE}-announce-${INDEX}) or (${SERVICE}-server-${INDEX})"
-        echo " index ${INDEX})"
-        echo " service ${service})"
+        echo " index ${INDEX}"
+        echo " service ${SERVICE}"
         getent_hosts
         cat /etc/hosts
         ANNOUNCE_IP=$(getent_hosts | awk '{ print $1 }')
