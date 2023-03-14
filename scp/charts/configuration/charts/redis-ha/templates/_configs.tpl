@@ -274,7 +274,7 @@
 
     getent_hosts() {
         index=${1:-${INDEX}}
-        service="${SERVICE}-announce-${index}"
+        service="${SERVICE}-server-${index}"
         host=$(getent hosts "${service}")
         echo "${host}"
     }
@@ -284,8 +284,7 @@
         echo "  using (${SERVICE}-announce-${INDEX}) or (${SERVICE}-server-${INDEX})"
         echo " index ${INDEX}"
         echo " SERVICE ${SERVICE}"
-        cat /etc/hosts
-        service="${SERVICE}-announce-${INDEX}"
+        service="${SERVICE}-server-${INDEX}"
         echo " service ${service}"
         getent hosts "${service}"
         ANNOUNCE_IP=$(getent_hosts | awk '{ print $1 }')
