@@ -274,7 +274,7 @@
 
     getent_hosts() {
         index=${1:-${INDEX}}
-        service="${SERVICE}-server-${index}"
+        service="${SERVICE}-announce-${index}"
         host=$(getent hosts "${service}")
         echo "${host}"
     }
@@ -284,7 +284,7 @@
         echo "  using (${SERVICE}-announce-${INDEX}) or (${SERVICE}-server-${INDEX})"
         echo " index ${INDEX}"
         echo " SERVICE ${SERVICE}"
-        service="${SERVICE}-server-${INDEX}"
+        service="${SERVICE}-announce-${INDEX}"
         echo " service ${service}"
         getent hosts "${service}"
         ANNOUNCE_IP=$(getent_hosts | awk '{ print $1 }')
@@ -333,8 +333,8 @@
 
     if [ -z "${ANNOUNCE_IP}" ]; then
         "Error: Could not resolve the announce ip for this pod."
-        exit 1
-    elif [ "${MASTER}" ]; then
+
+    if [ "${MASTER}" ]; then
         find_master
     else
         setup_defaults
