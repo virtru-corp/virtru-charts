@@ -282,11 +282,6 @@
     identify_announce_ip() {
         echo "Identify announce ip for this pod.."
         echo "  using (${SERVICE}-announce-${INDEX}) or (${SERVICE}-server-${INDEX})"
-        echo " index ${INDEX}"
-        echo " SERVICE ${SERVICE}"
-        service="${SERVICE}-announce-${INDEX}"
-        echo " service ${service}"
-        env
         ANNOUNCE_IP=$(getent_hosts | awk '{ print $1 }')
         echo "  identified announce (${ANNOUNCE_IP})"
     }
@@ -332,9 +327,15 @@
     identify_announce_ip
 
     if [ -z "${ANNOUNCE_IP}" ]; then
-        "Error: Could not resolve the announce ip for this pod."
+        "setting announce to SERVICE_HOST"
+        ANNOUNCE_IP=${ENTERPRISE_TDF_CONFIGURATION_REDIS_HA_ANNOUNCE_0_SERVICE_HOST}
+        echo "  identified announce (${ANNOUNCE_IP})"
+    fi
 
-    if [ "${MASTER}" ]; then
+    if [ -z "${ANNOUNCE_IP}" ]; then
+        "Error: Could not resolve the announce ip for this pod."
+        exit 1
+    elif [ "${MASTER}" ]; then
         find_master
     else
         setup_defaults
