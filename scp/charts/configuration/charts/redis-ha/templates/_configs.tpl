@@ -283,9 +283,11 @@
         echo "Identify announce ip for this pod.."
         echo "  using (${SERVICE}-announce-${INDEX}) or (${SERVICE}-server-${INDEX})"
         echo " index ${INDEX}"
-        echo " service ${SERVICE}"
-        getent_hosts
+        echo " SERVICE ${SERVICE}"
         cat /etc/hosts
+        service="${SERVICE}-announce-${INDEX}"
+        echo " service ${service}"
+        getent hosts "${service}"
         ANNOUNCE_IP=$(getent_hosts | awk '{ print $1 }')
         echo "  identified announce (${ANNOUNCE_IP})"
     }
