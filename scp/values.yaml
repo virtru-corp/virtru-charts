@@ -5,3 +5,62 @@
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+ingress:
+  # Use an existing istio gateway
+  existingGateway:
+  # Name of istio gateway selector
+  gatewaySelector: ingress
+  name: scp
+
+global:
+  opentdf:
+    common:
+      oidcExternalBaseUrl: https://scp.virtrudemos.com
+      ingress:
+        scheme: "https"
+        hostname: "scp.virtrudemos.com"
+
+abacus:
+  basePath: "/abacus"
+  fullnameOverride: abacus
+  ingress:
+    enabled: false
+
+access-pep:
+  name: access-pep
+  imageCredentials:
+    registry: ghcr.io
+    username: overrideme
+    password: overrideme
+    email: overrideme
+  config:
+    disableTracing: "true"
+    attrAuthorityHost: "http://attributes:4020"
+    entitlementPdpHost: "http://entitlement-pdp:3355"
+#KC_HOSTNAME_URL
+backend:
+  keycloak:
+    extraEnv: |-
+      - name: CLAIMS_URL
+        value: http://entitlement-pdp:3355/entitlements
+      - name: JAVA_OPTS_APPEND
+        value: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+      - name: KC_DB
+        value: postgres
+      - name: KC_DB_URL_PORT
+        value: "5432"
+      - name: KC_LOG_LEVEL
+        value: INFO
+      - name: KC_HOSTNAME_STRICT
+        value: "false"
+      - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+        value: "false"
+      - name: KC_HOSTNAME_STRICT_HTTPS
+        value: "false"
+      - name: KC_HOSTNAME_URL
+        value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
+      - name: KC_HOSTNAME_ADMIN_URL
+        value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
+      - name: KC_HTTP_ENABLED
+        value: "true"
