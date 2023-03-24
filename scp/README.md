@@ -24,18 +24,18 @@ helm uninstall scp -n scp
 ```
 
 Notes:
-- To get past keycloak login loop; need to override backend.keycloak envs to add admin url. [Ref(https://www.keycloak.org/server/hostname#_example_scenarios)
-TODO:
+- To get past keycloak login loop; need to override backend.keycloak envs to add admin url. [Ref](https://www.keycloak.org/server/hostname#_example_scenarios)
 - Need to add audience mapper for access-pep: [Final result](./docs/kc_accesspep_aud_mapper.png)
   1. Keycloak admin login 
-  2. Goto TDF realm
-  3. Goto Client Scopes->Create Client Scope
-     4. Enter name = access-pep-aud -> save
-     5. Mappers -> Configure new mapper -> Audience :
-        6. name = access-pep-aud-mapper
-        7. included custom audience = access-pep
-        8. Add to access token = enabled
-- For testing access-pep a client must be updated to use , See:
-  - [Step 1](./docs/access-pep-client_1.png)
-  - [Step 2](./docs/access-pep-client_2.png)
-  - [Step 3](./docs/access-pep-client_3.png)
+  1. Goto TDF realm
+  1. Goto Client Scopes->Create Client Scope
+  1. Enter name = access-pep-aud -> save
+  1. Mappers -> Configure new mapper -> Audience :
+  1. name = access-pep-aud-mapper
+  1. included custom audience = access-pep
+  1. Add to access token = enabled
+- For testing access-pep a client must be updated to use, See:
+  
+  1. [Step 1](./docs/access-pep-client_1.png)
+  1. [Step 2](./docs/access-pep-client_2.png)
+  1. [Step 3](./docs/access-pep-client_3.png)
