@@ -11,7 +11,7 @@ spec:
     - port:
         number: 80
         name: http
-        protocol: HTTP
+        protocol: HTTP2
       hosts:
         - {{ include "scp.ingressHostname" . }}
       tls:
@@ -19,6 +19,6 @@ spec:
     - port:
         number: 443
         name: https-443
-        protocol: HTTP
+        protocol: HTTP2
       hosts:
         - {{ include "scp.ingressHostname" . }}

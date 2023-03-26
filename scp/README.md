@@ -53,3 +53,16 @@ Notes:
     - make policypushinsecure
 - Additional KC Features?:
   - KC_FEATURES=token-exchange,preview
+
+Using GRPC UI For Tagging Service:
+
+Note, the UI is a bit flaky when using binary content. You need to click in the binary content after file upload.
+
+- With reflection
+  ```shell
+  ~/go/bin/grpcui scp.virtrudemos.com:443
+  ```
+- Without server reflection - provide paths to protos.
+  ```
+  ~/go/bin/grpcui -proto ~/development/tagging-pdp/proto/src/main/proto/tagging-pdp.proto -import-path ~/development/tagging-pdp/proto/src/main/proto scp.virtrudemos.com:443
+  ```
