@@ -1,0 +1,201 @@
+# Initial Baseline config from: https://github.com/virtru-corp/deployment-artifacts-federal/blob/main/environment_configs/seafoam/Virtru.TextExtraction.Settings.json
+assertionTagType: tdf.assertion
+attributeTagType: tdf.attribute
+
+synonyms:
+  # Entries mapping synonyms to one or more normalized terms.
+  - id: "classification-dict"
+    entries:
+      - synonyms: ["TS","TOP SECRET","TOPSECRET"]
+        terms: ["TopSecret"]
+      - synonyms: ["S", "SECRET","SEC"]
+        terms: ["Secret"]
+      - synonyms: ["CONFIDENTIAL", "CONTROLLED UNCLASSIFIED", "OFFICIAL-SENSITIVE", "CUI"]
+        terms: ["Confidential"]
+      - synonyms: ["UNCLASSIFIED", "OFFICIAL"]
+        terms: ["Unclassified"]
+  - id: "boldon-james-classification-dict"
+    entries:
+      - synonyms: ["TOP SECRET","TOPSECRET"]
+        terms: ["TopSecret"]
+      - synonyms: ["SECRET","SEC"]
+        terms: ["Secret"]
+      - synonyms: ["OFFICIAL-SENSITIVE"]
+        terms: ["Confidential"]
+      - synonyms: ["OFFICIAL"]
+        terms: ["Unclassified"]
+
+
+contentExtractors:
+  - type: "tika-content-extraction"
+    id: "std-content-extraction"
+    config:
+      "ocr": true
+  - type: "titus-metadata"
+    id: "titus-metadata-extractor-email"
+    config:
+      metatdataKeys:
+        - "Message:Raw-Header:x-titus-metadata-40"
+tagExtractionRules:
+  - id: "xheader_bj_releasability"
+    type: "regex"
+    # scope to email content item type
+    scope:
+      itemTypes: [ "message/rfc822" ]
+      # Only regex on metadata values for key matching the regex
+      contentEval:
+        sources: ["METADATA"]
+        metadataFilters:
+          # only process metadata values based on key match of the following regex
+          - keyRegex: >-
+              (?i)x-bj_releasability
+    regex: >-
+      (\b[A-Z]{2,4}\b(?:[ ,]+\b[A-Z]{2,4}\b)*)
+    captureGroups:
+      - group: "1"
+        delimiters: [",",";"," "]
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            namespace: "http://demo.com/attr/relTo/"
+          - type: "ASSERTION"
+            namespace: "releasableTo"
+  - id: "xheader_bj_classification"
+    type: "regex"
+    # scope to email content item type
+    scope:
+      itemTypes: [ "message/rfc822" ]
+      # Only regex on metadata values for key matching the regex
+      contentEval:
+        sources: ["METADATA"]
+        metadataFilters:
+          # only process metadata values based on key match of the following regex
+          - keyRegex: >-
+              (?i)x-bj_classification
+    regex: >-
+      (?:\W*(?:([A-Z- ]+)(?:[\W]+|$)))*
+    captureGroups:
+      - group: "1"
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            synonymDictionary: "boldon-james-classification-dict"
+            namespace: "http://demo.com/attr/Classification/"
+          - type: "ASSERTION"
+            synonymDictionary: "boldon-james-classification-dict"
+            namespace: "Classification"
+  - id: "classification-banners"
+    desc: "Blah Blah"
+    type: "regex"
+    regex: >-
+      (TOP SECRET|TS|SECRET|SEC|CONFIDENTIAL|OFFICIAL-SENSITIVE|OFFICIAL|CONTROLLED UNCLASSIFIED|CUI|UNCLASSIFIED)[\W]*(INT(?:[\W]?)|OPS(?:[\W]?))*(?:[\W]+(?i)Rel(?:easable)?[\W]*(?:To)?)[\W]*(\b[A-Z]{2,4}\b(?:[ ,]+\b[A-Z]{2,4}\b)*)
+    captureGroups:
+      - group: "1"
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            synonymDictionary: "classification-dict"
+            namespace: "http://demo.com/attr/Classification/"
+          - type: "ASSERTION"
+            synonymDictionary: "classification-dict"
+            namespace: "Classification"
+      - group: "2"
+        delimiters: [",",";"," "]
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            namespace: "http://demo.com/attr/needToKnow/"
+          - type: "ASSERTION"
+            namespace: "needToKnow"
+      - group: "3"
+        delimiters: [",",";"," "]
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            namespace: "http://demo.com/attr/relTo/"
+          - type: "ASSERTION"
+            namespace: "releasableTo"
+  - id: "titus-classification-markings"
+    desc: "Map titus classification markings"
+    type: "regex"
+    # Scope to all content types having a metadata field custom:TitusGUID and use metadata value custom:Classification
+    # as source of tag extraction
+    scope:
+      metadataFilters:
+        - keys: ["custom:TitusGUID"]
+      contentEval:
+        sources: ["METADATA"]
+        metadataFilters:
+          - keys: ["custom:Classification"]
+    regex: >-
+      (\b\w+\b(?:[,|;|\s]+\b\w+\b)*)
+    captureGroups:
+      - group: "1"
+        delimiters: [",",";"]
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            synonymDictionary: "classification-dict"
+            namespace: "http://demo.com/attr/Classification/"
+          - type: "ASSERTION"
+            synonymDictionary: "classification-dict"
+            namespace: "Classification"
+  - id: "titus-releasability-markings"
+    desc: "Map titus releasability markings"
+    type: "regex"
+    # Scope to all content types having a metadata field custom:TitusGUID and use metadata value custom:Releasability
+    # as source of tag extraction
+    scope:
+      metadataFilters:
+        - keys: ["custom:TitusGUID"]
+      contentEval:
+        sources: ["METADATA"]
+        metadataFilters:
+          - keys: ["custom:Releasability"]
+    regex: >-
+      (\b\w+\b(?:[,|;|\s]+\b\w+\b)*)
+    captureGroups:
+      - group: "1"
+        delimiters: [",",";"," "]
+        tagTemplates:
+          - type: "ATTRIBUTE"
+            namespace: "http://demo.com/attr/relTo/"
+          - type: "ASSERTION"
+            namespace: "Releasability"
+rollupRules:
+  - type: "std-rollup"
+    id: "standard rollup"
+    metadataItemTypes: ["message/rfc822"]
+    aliases:
+      - name: "FVEY"
+        namespace: http://demo.com/attr/relTo/
+        members: [ "USA", "GBR", "AUS", "NZL", "CAN" ]
+      - name: "PINK"
+        members: [ "USA", "GBR", "AUS" ]
+        namespace: http://demo.com/attr/relTo/
+      - name: "NATO"
+        members: [ "CAN", "CZE", "DNK", "FRA", "DEU", "GRC", "HUN", "ISL", "ITA", "LUX", "NLD", "NOR", "POL", "PRT", "ESP", "TUR", "GBR", "USA", "BGR", "EST", "LVA", "LTU", "ROU", "SVK", "SVN" ]
+        namespace: http://demo.com/attr/relTo/
+      - name: "US"
+        members: ["USA"]
+        namespace: http://demo.com/attr/relTo/
+      - name: "UK"
+        members: ["GBR"]
+        namespace: http://demo.com/attr/relTo/
+    tagLinks:
+      - src: "Classification"
+        target: "http://demo.com/attr/Classification/"
+      - src: "releasableTo"
+        target: "http://demo.com/attr/relTo/"
+    attributeDefs:
+      - authority: http://demo.com
+        name: Classification
+        order: ["TopSecret","Secret","Confidential","Unclassified"]
+        rule: hierarchy
+        state: published
+      - authority: http://demo.com
+        name: needToKnow
+        order: ["INT","OPS"]
+        rule: anyOf
+        state: published
+      - authority: http://demo.com
+        name: relto
+        order: ["USA","GBR","CAN","AUS","NZL","FRA","UKR","FVEY","NATO","PINK","DEU","FIN"]
+        rule: anyOf
+        state: published
+  - type: "drop-duplicates"
+    id: "drop duplicate values"
