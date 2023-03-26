@@ -38,8 +38,20 @@ access-pep:
     disableTracing: "true"
     attrAuthorityHost: "http://attributes:4020"
     entitlementPdpHost: "http://entitlement-pdp:3355"
-#KC_HOSTNAME_URL
+
 backend:
+  entitlement-pdp:
+    opaConfig:
+      policy:
+        useStaticPolicy: false
+        allowInsecureTLS: true
+        OCIRegistryUrl: "https://scp-docker-registry:5000"
+        # -- Resource path to use to download bundle from configured service
+        bundleRepo: "scp-docker-registry:5000/entitlements-policybundle"
+        bundleTag: 0.0.2
+  entity-resolution:
+    config:
+      disableTracing: "true"
   keycloak:
     extraEnv: |-
       - name: CLAIMS_URL
@@ -64,3 +76,10 @@ backend:
         value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
       - name: KC_HTTP_ENABLED
         value: "true"
+      - name: KC_FEATURES
+        value: "preview,token-exchange"
+docker-registry:
+  persistence:
+    enabled: true
+    size: 1Gi
+  tlsSecretName: scp-docker-registry-certs

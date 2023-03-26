@@ -17,3 +17,8 @@ dependencies:
   - name: access-pep
     repository: oci://ghcr.io/virtru-corp/charts
     version: '0.1.0-beta.sha-cac697c'
+
+  # Private OCI Registry for OPA Policy Bundles
+  - name: docker-registry
+    repository: https://helm.twun.io
+    version: 2.2.2

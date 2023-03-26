@@ -8,12 +8,14 @@ Prerequisites:
 
 Install the SCP chart into the scp namespace
 ```shell
+helm repo add twuni https://helm.twun.io
 helm dependency update .
 ```
 
 helm install w overrides for ghcr:
 ```shell
 helm upgrade --install -n scp --create-namespace \
+    --set entity-resolution.secret.keycloak.clientSecret=replaceme \
     --set access-pep.imageCredentials.username=replaceme \
     --set access-pep.imageCredentials.username=replaceme \
     --set access-pep.imageCredentials.password=replaceme_gh_pat scp .
@@ -39,3 +41,15 @@ Notes:
   1. [Step 1](./docs/access-pep-client_1.png)
   1. [Step 2](./docs/access-pep-client_2.png)
   1. [Step 3](./docs/access-pep-client_3.png)
+- Entity resolution
+  - disableTracing not turned off
+  - The client secret for entity resolution is not set by default
+- Entitlement PDP: 
+  - Policy stored in a private docker registry
+  - Build new policy. e.g. from
+    - [Reference](https://github.com/virtru-corp/federal-scp-platform/tree/main/entitlement-policy)
+    - make policybuild
+    - port forward docker registry: `kubectl port-forward svc/scp-docker-registry 5000:5000`
+    - make policypushinsecure
+- Additional KC Features?:
+  - KC_FEATURES=token-exchange,preview

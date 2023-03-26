@@ -60,3 +60,15 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate certificates for private docker registry
+Note tls.key is indented on purpose
+*/}}
+{{- define "registry.gen-certs" -}}
+{{- $altNames := list ( printf "%s.%s" (include "scp.chart" . ) .Release.Namespace ) ( printf "%s.%s.svc" (include "scp.chart" . ) .Release.Namespace ) -}}
+{{- $ca := genCA "registry-ca" 365 -}}
+{{- $cert := genSignedCert ( include "scp.chart" . ) nil $altNames 365 $ca -}}
+tls.crt: {{ $cert.Cert | b64enc }}
+  tls.key: {{ $cert.Key | b64enc }}
+{{- end -}}
