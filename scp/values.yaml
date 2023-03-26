@@ -78,8 +78,17 @@ backend:
         value: "true"
       - name: KC_FEATURES
         value: "preview,token-exchange"
+
 docker-registry:
   persistence:
     enabled: true
     size: 1Gi
   tlsSecretName: scp-docker-registry-certs
+
+tagging-pdp:
+  fullnameOverride: tagging-pdp
+  image:
+    tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
+    # Since this is a ghcr image; piggy back off of access pep pull secret
+    pullSecrets:
+      - name: access-pep-pull-secret

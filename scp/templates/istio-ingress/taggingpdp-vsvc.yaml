@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Values.ingress.name }}
+spec:
+  gateways:
+    - {{ include "scp.ingress.gateway" . }}
+  hosts:
+    - '*'
+  http:
+    - match:
+        - uri:
+            prefix: /virtru.tagging.pdp.TaggingPDPService
+      name: tagging-pdp
+      route:
+        - destination:
+            host: tagging-pdp
+            port:
+              number: 15001
