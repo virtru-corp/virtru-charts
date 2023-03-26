@@ -54,7 +54,7 @@ Notes:
 - Additional KC Features?:
   - KC_FEATURES=token-exchange,preview
 
-Using GRPC UI For Tagging Service:
+## Using GRPC UI For Tagging Service:
 
 Note, the UI is a bit flaky when using binary content. You need to click in the binary content after file upload.
 
