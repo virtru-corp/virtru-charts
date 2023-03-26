@@ -76,3 +76,5 @@ Note, the UI is a bit flaky when using binary content. You need to click in the 
   ```
   ~/go/bin/grpcui -proto ~/development/tagging-pdp/proto/src/main/proto/tagging-pdp.proto -import-path ~/development/tagging-pdp/proto/src/main/proto scp.virtrudemos.com:443
   ```
+  
+- [Example request, using binary content (via file upload)](./docs/grpc_ui_request.png): 
