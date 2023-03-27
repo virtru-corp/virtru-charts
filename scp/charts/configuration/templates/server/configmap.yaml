@@ -10,4 +10,6 @@ data:
   POSTGRESQL_PORT: {{ .Values.server.postgres.port | quote  }}
   POSTGRESQL_DATABASE: {{ .Values.server.postgres.database | quote  }}
   POSTGRESQL_USER: {{ .Values.server.postgres.user | quote  }}
+{{/*  FIXME remove, move to secrets */}}
+  POSTGRESQL_PASSWORD: myPostgresPassword
   REDIS_HOST: {{ .Values.server.redis.host | quote  }}
