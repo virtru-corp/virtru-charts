@@ -37,6 +37,13 @@ spec:
             - name: http
               containerPort: {{ .Values.server.service.port }}
               protocol: TCP
+          envFrom:
+            {{- with .Values.server.secretRef }}
+            - secretRef:
+                {{- tpl . $ | nindent 16 }}
+            {{- end }}
+            - configMapRef:
+                name: {{ include "configuration.fullname" . }}-configmap
           livenessProbe:
             httpGet:
               path: /
