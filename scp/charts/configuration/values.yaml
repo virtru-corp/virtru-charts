@@ -45,7 +45,9 @@ server:
   # -- Values for deployment's `spec.template.spec.securityContext`
   podSecurityContext: { }
   # -- Values for deployment's `spec.template.spec.containers.securityContext`
-  securityContext: { }
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
   # -- Specify required limits for deploying this service to a pod.
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
