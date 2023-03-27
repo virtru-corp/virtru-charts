@@ -9,5 +9,5 @@ data:
   POSTGRESQL_HOST: {{ .Values.server.postgres.host | quote  }}
   POSTGRESQL_PORT: {{ .Values.server.postgres.port | quote  }}
   POSTGRESQL_DATABASE: {{ .Values.server.postgres.database | quote  }}
-  POSTGRES_USER: {{ .Values.server.postgres.user | quote  }}
+  POSTGRESQL_USER: {{ .Values.server.postgres.user | quote  }}
   REDIS_HOST: {{ .Values.server.redis.host | quote  }}
