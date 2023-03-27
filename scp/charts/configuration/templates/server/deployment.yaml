@@ -46,12 +46,12 @@ spec:
                 name: {{ include "configuration.fullname" . }}-configmap
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /configuration
+              port: "8080"
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /configuration
+              port: "8080"
           resources:
             {{- toYaml .Values.server.resources | nindent 12 }}
       {{- with .Values.server.nodeSelector }}
