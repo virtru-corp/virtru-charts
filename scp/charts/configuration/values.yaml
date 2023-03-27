@@ -16,7 +16,8 @@ server:
   # -- JSON passed to the deployment's `template.spec.imagePullSecrets`.
   # Overrides `global.opentdf.common.imagePullSecrets`
   imagePullSecrets:
-  secretRef:
+  #  FIXME remove value, move to gitops
+  secretRef: virtru/backend/enterprise-tdf-configuration
   service:
     # -- Service `spec.type`
     type: ClusterIP
