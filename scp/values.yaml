@@ -29,6 +29,9 @@ abacus:
 
 access-pep:
   name: access-pep
+  image:
+    repo: ghcr.io/virtru-corp/access-pep/access-pep
+    tag: sha-cac697c
   imageCredentials:
     registry: ghcr.io
     username: overrideme
@@ -96,6 +99,8 @@ tagging-pdp:
 configuration:
   fullnameOverride: configuration
   server:
+    image:
+      tag: 0.3.4
     secretRef: |-
       name: scp-configsvc
     postgres:
