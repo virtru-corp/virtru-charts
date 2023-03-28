@@ -100,7 +100,7 @@ configuration:
   fullnameOverride: configuration
   server:
     image:
-      tag: 0.3.4
+      tag: 0.3.5
     secretRef: |-
       name: scp-configsvc
     postgres:

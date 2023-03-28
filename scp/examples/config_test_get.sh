@@ -11,5 +11,5 @@ while getopts "h:a:" arg; do
   esac
 done
 
-curl -v https://$scphostname/configuration/$a \
+curl -v https://$scphostname/configuration/$artifact \
   -H "Content-Type: application/json"
