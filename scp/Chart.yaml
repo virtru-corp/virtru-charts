@@ -22,6 +22,10 @@ dependencies:
     repository: file://./charts/tagging-pdp
     version: '0.1.0'
 
+  - name: configuration
+    repository: file://./charts/configuration
+    version: '0.3.0'
+
   # Private OCI Registry for OPA Policy Bundles
   - name: docker-registry
     repository: https://helm.twun.io

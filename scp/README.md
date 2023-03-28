@@ -21,6 +21,7 @@ helm install w overrides for:
 helm upgrade --install -n scp --create-namespace \
     --set-file tagging-pdp.taggingConfig=configs/tagging-pdp-config.yaml \
     --set entity-resolution.secret.keycloak.clientSecret=replaceme \
+    --set configuration.server.postgres.password=replaceme \
     --set access-pep.imageCredentials.username=replaceme \
     --set access-pep.imageCredentials.username=replaceme \
     --set access-pep.imageCredentials.password=replaceme_gh_pat scp .

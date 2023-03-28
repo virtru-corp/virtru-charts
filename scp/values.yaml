@@ -88,7 +88,22 @@ docker-registry:
 tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
-    tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
+    tag: d3e4bb93c191fb58f61516a821ccca6fcf3d15f5
     # Since this is a ghcr image; piggy back off of access pep pull secret
     pullSecrets:
+      - name: access-pep-pull-secret
+
+configuration:
+  fullnameOverride: configuration
+  server:
+    secretRef: |-
+      name: scp-configsvc
+    postgres:
+      host: postgresql
+      # Override with value
+      password:
+      # Use an existing user for now
+      user: tdf_entitlement_reader
+    # Since this is a ghcr image; piggy back off of access pep pull secret
+    imagePullSecrets:
       - name: access-pep-pull-secret
