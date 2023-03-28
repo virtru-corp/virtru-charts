@@ -3,7 +3,7 @@ name: configuration
 description: A Helm chart fo OpenTDF Configuration, a service for providing configuration to applications and other services.
 type: application
 version: 0.3.0
-appVersion: 0.3.3
+appVersion: 0.3.5
 kubeVersion: ">=1.24.0-0"
 home: https://github.com/opentdf/backend/tree/main/charts/configuration
 icon: https://avatars.githubusercontent.com/u/90051847?s=200&v=4
