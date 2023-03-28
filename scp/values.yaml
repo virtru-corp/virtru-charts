@@ -107,8 +107,6 @@ configuration:
       host: postgresql
       # Override with value
       password:
-      # Use an existing user for now
-      user: tdf_entitlement_reader
     # Since this is a ghcr image; piggy back off of access pep pull secret
     imagePullSecrets:
       - name: access-pep-pull-secret

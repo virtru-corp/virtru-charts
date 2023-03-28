@@ -64,6 +64,8 @@ helm uninstall scp -n scp
   - The client secret for entity resolution is not set by default
 - Additional KC Features?:
   - KC_FEATURES=token-exchange,preview
+- Config Svc schema bootstrapping. 
+  - TODO: Add config svc schema secret and add via additional entry; [See OTDF Backend Values](https://github.com/opentdf/backend/blob/main/charts/backend/values.yaml#L434)
 
 ## Using GRPC UI For Tagging Service:
 

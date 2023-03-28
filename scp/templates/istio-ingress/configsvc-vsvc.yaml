@@ -10,6 +10,8 @@ spec:
   http:
     - match:
         - uri:
+            prefix: /configuration/
+        - uri:
             prefix: /configuration
       name: configuration
       rewrite:
