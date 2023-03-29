@@ -98,7 +98,7 @@ tagging-pdp:
   gateway:
     enabled: true
     image:
-      tag: sha-debead3
+      tag: sha-7f1a6f7
 
 configuration:
   fullnameOverride: configuration
