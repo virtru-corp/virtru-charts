@@ -1,0 +1,15 @@
+{{- if .Values.gateway.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "taggingpdp.gateway.fullname" . }}-cm
+  labels:
+    {{- include "taggingpdp.gateway.labels" . | nindent 4 }}
+data:
+  LISTEN_PORT: {{ .Values.gateway.port | quote }}
+  EXTERNAL_HOST: ""
+  VERBOSE: "false"
+  GRPC_ENDPOINT: {{ ( include "taggingpdp.fullname" . ):15001 | quote }}
+  INSECURE_SKIP_VERIFY: "false"
+  SWAGGER_UI_DIR: "/swaggerui"
+{{- end -}}

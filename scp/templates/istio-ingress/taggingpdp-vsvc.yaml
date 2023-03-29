@@ -1,3 +1,5 @@
+{{ $gatewayEnabled := index .Values "tagging-pdp" "gateway" "enabled" }}
+
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -20,3 +22,16 @@ spec:
             port:
               number: 15001
       timeout: 10s
+    {{- if $gatewayEnabled }}
+    - match:
+        - uri:
+            prefix: /tagging-pdp/
+      name: tagging-pdp-grpc-gateway
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: tagging-pdp-grpc-gwy
+            port:
+              number: 8080
+    {{- end }}

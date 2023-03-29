@@ -1,0 +1,17 @@
+{{- if .Values.gateway.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taggingpdp.gateway.fullname" . }}
+  labels:
+    {{- include "taggingpdp.gateway.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.gateway.port }}
+      targetPort: {{ .Values.gateway.port }}
+      appProtocol: http
+      name: http
+  selector:
+    {{- include "taggingpdp.gateway.selectorLabels" . | nindent 4 }}
+{{- end -}}

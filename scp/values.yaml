@@ -91,10 +91,14 @@ docker-registry:
 tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
-    tag: d3e4bb93c191fb58f61516a821ccca6fcf3d15f5
+    tag: 9cbfb70735aa7dc3de1873342083e3336cc1b4ab
     # Since this is a ghcr image; piggy back off of access pep pull secret
     pullSecrets:
       - name: access-pep-pull-secret
+  gateway:
+    enabled: true
+    image:
+      tag: sha-debead3
 
 configuration:
   fullnameOverride: configuration

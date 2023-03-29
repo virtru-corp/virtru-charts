@@ -41,6 +41,18 @@ serviceAccount:
 image:
   tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
+  # image pull secret, also used by the grpc-gateway image if enabled.
   pullSecrets:
     - replace_me
   pullPolicy: IfNotPresent
+
+# GRPC Gateway settings
+gateway:
+  enabled: true
+  replicaCount: 1
+  port: 8080
+  podAnnotations: {}
+  image:
+    tag: 0.1.0
+    repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc-gateway
+    pullPolicy: IfNotPresent
