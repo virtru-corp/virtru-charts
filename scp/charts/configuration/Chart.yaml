@@ -16,8 +16,3 @@ keywords:
 maintainers:
   - name: opentdf
     url: https://opentdf.io/
-dependencies:
-  - name: redis-ha
-    version: 4.23.0
-    repository: https://dandydeveloper.github.io/charts/
-    condition: redis-ha.enabled
