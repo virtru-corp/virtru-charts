@@ -22,4 +22,8 @@ app.kubernetes.io/name: {{ include "taggingpdp.gateway.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "taggingpdp.gateway.grpcEndpoint" -}}
+{{- printf "%s:%d" ( include "taggingpdp.fullname" . )  (.Values.service.port | int ) }}
+{{- end }}
+
 

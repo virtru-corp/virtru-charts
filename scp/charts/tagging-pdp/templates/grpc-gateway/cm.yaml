@@ -6,10 +6,10 @@ metadata:
   labels:
     {{- include "taggingpdp.gateway.labels" . | nindent 4 }}
 data:
+  GRPC_ENDPOINT: {{ (include "taggingpdp.gateway.grpcEndpoint" . ) | quote }}
   LISTEN_PORT: {{ .Values.gateway.port | quote }}
-  EXTERNAL_HOST: ""
   VERBOSE: "false"
-  GRPC_ENDPOINT: {{ ( include "taggingpdp.fullname" . ):15001 | quote }}
   INSECURE_SKIP_VERIFY: "false"
   SWAGGER_UI_DIR: "/swaggerui"
+  PATH_PREFIX: {{ .Values.gateway.pathPrefix | quote }}
 {{- end -}}

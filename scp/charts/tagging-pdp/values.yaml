@@ -52,6 +52,8 @@ gateway:
   replicaCount: 1
   port: 8080
   podAnnotations: {}
+  # additional prefix for path(e.g. ingress) for swagger ui
+  pathPrefix: ""
   image:
     tag: 0.1.0
     repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc-gateway
