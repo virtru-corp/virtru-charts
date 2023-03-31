@@ -3,7 +3,7 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2023-03-27T10:25:10.216222-04:00"
+    created: "2023-03-31T03:06:00.616778-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -13,7 +13,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2023-03-27T10:25:10.215477-04:00"
+    created: "2023-03-31T03:06:00.616158-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -23,7 +23,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2023-03-27T10:25:10.214822-04:00"
+    created: "2023-03-31T03:06:00.614072-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 1a2554129783634ca70ac074f6d2afe576fb73c83702449b100a1aa6495647bf
     name: cks
@@ -31,39 +31,10 @@ entries:
     urls:
     - cks-0.7.2.tgz
     version: 0.7.2
-  configuration:
-  - apiVersion: v2
-    appVersion: 0.0.1
-    created: "2023-03-27T10:25:10.218982-04:00"
-    dependencies:
-    - condition: redis-ha.enabled
-      name: redis-ha
-      repository: https://dandydeveloper.github.io/charts/
-      version: 4.23.0
-    description: A Helm chart fo OpenTDF Configuration, a service for providing configuration
-      to applications and other services.
-    digest: f6df6587a5dfce2feee62c5d1d63a8cca4ef9ab4b453a62d13b126f1e07a47f3
-    home: https://github.com/opentdf/backend/tree/main/charts/configuration
-    icon: https://avatars.githubusercontent.com/u/90051847?s=200&v=4
-    keywords:
-    - opentdf
-    - configuration
-    - PEP
-    kubeVersion: '>=1.23.0-0'
-    maintainers:
-    - name: opentdf
-      url: https://opentdf.io/
-    name: configuration
-    sources:
-    - https://github.com/virtru-corp/virtru-charts/tree/feature/csp/scp/charts/configuration
-    type: application
-    urls:
-    - configuration-0.3.0.tgz
-    version: 0.3.0
   cse:
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2023-03-27T10:25:10.220602-04:00"
+    created: "2023-03-31T03:06:00.618229-04:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -73,7 +44,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2023-03-27T10:25:10.220094-04:00"
+    created: "2023-03-31T03:06:00.617789-04:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -83,7 +54,7 @@ entries:
     version: 0.7.2
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2023-03-27T10:25:10.219597-04:00"
+    created: "2023-03-31T03:06:00.617344-04:00"
     description: A Helm chart for Kubernetes
     digest: f9f64cc7df01dbc58752465afc7064e48017b272027bf8e0e8b04d90ff8554a0
     name: cse
@@ -94,7 +65,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2023-03-27T10:25:10.223208-04:00"
+    created: "2023-03-31T03:06:00.620362-04:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -104,7 +75,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-03-27T10:25:10.222243-04:00"
+    created: "2023-03-31T03:06:00.619632-04:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -114,7 +85,7 @@ entries:
     version: 2.0.2
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-03-27T10:25:10.221491-04:00"
+    created: "2023-03-31T03:06:00.619052-04:00"
     description: A Helm chart for Kubernetes
     digest: 098c3fd743a8436981e7eae56e75187063afa0dbce263194e63b0deab5de12b1
     name: gateway
@@ -122,4 +93,15 @@ entries:
     urls:
     - gateway-2.0.1.tgz
     version: 2.0.1
-generated: "2023-03-27T10:25:10.214004-04:00"
+  scp:
+  - apiVersion: v2
+    appVersion: 0.1.1
+    created: "2023-03-31T03:06:00.621104-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 446bf84e9729d4ff13ddca555970af5f6bc869c45be479370c8a5df7e95e8beb
+    name: scp
+    type: application
+    urls:
+    - scp-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-03-31T03:06:00.6135-04:00"
