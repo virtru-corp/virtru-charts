@@ -24,6 +24,12 @@ synonyms:
         terms: ["Confidential"]
       - synonyms: ["OFFICIAL"]
         terms: ["Unclassified"]
+  - id: "relto-dict"
+    entries:
+      - synonyms: ["US"]
+        terms: ["USA"]
+      - synonyms: ["UK"]
+        terms: ["GBR"]
 
 
 contentExtractors:
@@ -57,8 +63,10 @@ tagExtractionRules:
         tagTemplates:
           - type: "ATTRIBUTE"
             namespace: "http://demo.com/attr/relTo/"
+            synonymDictionary: "relto-dict"
           - type: "ASSERTION"
             namespace: "releasableTo"
+            synonymDictionary: "relto-dict"
   - id: "xheader_bj_classification"
     type: "regex"
     # scope to email content item type
@@ -108,8 +116,10 @@ tagExtractionRules:
         tagTemplates:
           - type: "ATTRIBUTE"
             namespace: "http://demo.com/attr/relTo/"
+            synonymDictionary: "relto-dict"
           - type: "ASSERTION"
             namespace: "releasableTo"
+            synonymDictionary: "relto-dict"
   - id: "titus-classification-markings"
     desc: "Map titus classification markings"
     type: "regex"
@@ -154,8 +164,10 @@ tagExtractionRules:
         tagTemplates:
           - type: "ATTRIBUTE"
             namespace: "http://demo.com/attr/relTo/"
+            synonymDictionary: "relto-dict"
           - type: "ASSERTION"
             namespace: "Releasability"
+            synonymDictionary: "relto-dict"
 rollupRules:
   - type: "std-rollup"
     id: "standard rollup"
