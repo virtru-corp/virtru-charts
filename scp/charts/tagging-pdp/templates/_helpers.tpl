@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "scp.name" -}}
+{{- define "taggingpdp.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "scp.fullname" -}}
+{{- define "taggingpdp.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "scp.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- define "taggingpdp.chart" -}}
+{{- printf "%s-%s" "taggingpdp" "0.1.0" | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "scp.labels" -}}
-helm.sh/chart: {{ include "scp.chart" . }}
-{{ include "scp.selectorLabels" . }}
+{{- define "taggingpdp.labels" -}}
+helm.sh/chart: {{ include "taggingpdp.chart" . }}
+{{ include "taggingpdp.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,30 +45,20 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "scp.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "scp.name" . }}
+{{- define "taggingpdp.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "taggingpdp.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "scp.serviceAccountName" -}}
+{{- define "taggingpdp.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "scp.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "taggingpdp.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
-{{/*
-Generate certificates for private docker registry
-Note tls.key is indented on purpose
-*/}}
-{{- define "registry.gen-certs" -}}
-{{- $altNames := list ( printf "%s.%s" (include "scp.chart" . ) .Release.Namespace ) ( printf "%s.%s.svc" (include "scp.chart" . ) .Release.Namespace ) -}}
-{{- $ca := genCA "registry-ca" 365 -}}
-{{- $cert := genSignedCert ( include "scp.chart" . ) nil $altNames 365 $ca -}}
-tls.crt: {{ $cert.Cert | b64enc }}
-  tls.key: {{ $cert.Key | b64enc }}
-{{- end -}}
+

@@ -1,0 +1,29 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: scpsandbox
+  region: us-west-2
+  version: "1.23"
+
+iam:
+  withOIDC: true
+
+addons:
+  - name: aws-ebs-csi-driver
+    version: v1.11.4-eksbuild.1
+    attachPolicyARNs:
+      - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+  - name: vpc-cni
+
+nodeGroups:
+  - name: scpsandbox-ng1
+    instanceType: m5.large
+    minSize: 2
+    maxSize: 3
+    desiredCapacity: 2
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+

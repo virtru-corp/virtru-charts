@@ -4,3 +4,29 @@ description: A Helm chart for Kubernetes
 type: application
 version: 0.1.0
 appVersion: 0.1.1
+
+dependencies:
+  - name: backend
+    repository: oci://ghcr.io/opentdf/charts
+    version: '0.0.0-sha-03c7ccc'
+
+  - name: abacus
+    repository: oci://ghcr.io/opentdf/charts
+    version: '1.2.0-sha83c261c'
+
+  - name: access-pep
+    repository: oci://ghcr.io/virtru-corp/charts
+    version: '0.1.0-beta.sha-cac697c'
+
+  - name: tagging-pdp
+    repository: file://./charts/tagging-pdp
+    version: '0.1.0'
+
+  - name: configuration
+    repository: file://./charts/configuration
+    version: '0.3.0'
+
+  # Private OCI Registry for OPA Policy Bundles
+  - name: docker-registry
+    repository: https://helm.twun.io
+    version: 2.2.2

@@ -1,0 +1,60 @@
+global:
+  imagePullSecrets:
+
+#The tagging config yaml- use --set-file on deploy
+taggingConfig:
+
+service:
+  type: ClusterIP
+  port: 15001
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+
+# -- Select a specific name for the resource, instead of the default, taggingpdp
+nameOverride: ""
+
+# -- The fully qualified appname override
+fullnameOverride: ""
+
+# -- Values for the deployment `spec.template.metadata.annotations` field
+podAnnotations: {}
+
+# -- Values for deployment's `spec.template.spec.securityContext`
+podSecurityContext: {}
+
+# -- Values for deployment's `spec.template.spec.containers.securityContext`
+securityContext: {}
+
+# A service account to create
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+
+image:
+  tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
+  repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
+  # image pull secret, also used by the grpc-gateway image if enabled.
+  pullSecrets:
+    - replace_me
+  pullPolicy: IfNotPresent
+
+# GRPC Gateway settings
+gateway:
+  enabled: true
+  replicaCount: 1
+  port: 8080
+  podAnnotations: {}
+  # additional prefix for path(e.g. ingress) for swagger ui
+  pathPrefix: ""
+  image:
+    tag: 0.1.0
+    repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc-gateway
+    pullPolicy: IfNotPresent

@@ -1,0 +1,39 @@
+{{- if .Values.gateway.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "taggingpdp.gateway.fullname" . }}
+  labels:
+    {{- include "taggingpdp.gateway.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.gateway.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "taggingpdp.gateway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.gateway.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "taggingpdp.gateway.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with (coalesce .Values.image.pullSecrets .Values.global.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-grpc-gateway
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.gateway.image.repo }}:{{ .Values.gateway.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "taggingpdp.gateway.fullname" . }}-cm
+          ports:
+            - containerPort: {{ .Values.gateway.port }}
+{{- end -}}

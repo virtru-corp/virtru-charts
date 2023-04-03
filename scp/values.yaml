@@ -5,3 +5,113 @@
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+ingress:
+  # Use an existing istio gateway
+  existingGateway:
+  # Name of istio gateway selector
+  gatewaySelector: ingress
+  name: scp
+
+global:
+  opentdf:
+    common:
+      oidcExternalBaseUrl: https://scp.virtrudemos.com
+      ingress:
+        scheme: "https"
+        hostname: "scp.virtrudemos.com"
+
+abacus:
+  basePath: "/abacus"
+  fullnameOverride: abacus
+  ingress:
+    enabled: false
+
+access-pep:
+  name: access-pep
+  image:
+    repo: ghcr.io/virtru-corp/access-pep/access-pep
+    tag: sha-cac697c
+  imageCredentials:
+    registry: ghcr.io
+    username: overrideme
+    password: overrideme
+    email: overrideme
+  config:
+    disableTracing: "true"
+    attrAuthorityHost: "http://attributes:4020"
+    entitlementPdpHost: "http://entitlement-pdp:3355"
+
+backend:
+  entitlement-pdp:
+    opaConfig:
+      policy:
+        useStaticPolicy: false
+        allowInsecureTLS: true
+        OCIRegistryUrl: "https://scp-docker-registry:5000"
+        # -- Resource path to use to download bundle from configured service
+        bundleRepo: "scp-docker-registry:5000/entitlements-policybundle"
+        bundleTag: 0.0.2
+  entity-resolution:
+    config:
+      disableTracing: "true"
+  keycloak:
+    extraEnv: |-
+      - name: CLAIMS_URL
+        value: http://entitlement-pdp:3355/entitlements
+      - name: JAVA_OPTS_APPEND
+        value: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+      - name: KC_DB
+        value: postgres
+      - name: KC_DB_URL_PORT
+        value: "5432"
+      - name: KC_LOG_LEVEL
+        value: INFO
+      - name: KC_HOSTNAME_STRICT
+        value: "false"
+      - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+        value: "false"
+      - name: KC_HOSTNAME_STRICT_HTTPS
+        value: "false"
+      - name: KC_HOSTNAME_URL
+        value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
+      - name: KC_HOSTNAME_ADMIN_URL
+        value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
+      - name: KC_HTTP_ENABLED
+        value: "true"
+      - name: KC_FEATURES
+        value: "preview,token-exchange"
+
+docker-registry:
+  persistence:
+    enabled: true
+    size: 1Gi
+  tlsSecretName: scp-docker-registry-certs
+
+tagging-pdp:
+  fullnameOverride: tagging-pdp
+  image:
+    tag: 935f2fc606f61dd0f052cbcc3d254196dd09f152
+    # Since this is a ghcr image; piggy back off of access pep pull secret
+    pullSecrets:
+      - name: access-pep-pull-secret
+  gateway:
+    enabled: true
+    pathPrefix: tagging-pdp
+    image:
+      tag: sha-e28d7ee
+
+configuration:
+  fullnameOverride: configuration
+  server:
+    image:
+      tag: 0.3.5
+    secretRef: |-
+      name: scp-configsvc
+    postgres:
+      host: postgresql
+      # Override with value
+      password:
+    # Since this is a ghcr image; piggy back off of access pep pull secret
+    imagePullSecrets:
+      - name: access-pep-pull-secret

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: scp-install
+description: A Helper chart to install entitlements, attributes, users, etc.
+type: application
+version: 0.1.0
+appVersion: 0.1.1
+
+dependencies:
+  - name: keycloak-bootstrap
+    repository: oci://ghcr.io/opentdf/charts
+    version: '0.0.0-sha-03c7ccc'
