@@ -14,8 +14,6 @@ spec:
         - uri:
             prefix: /configuration
       name: configuration
-      rewrite:
-        uri: /
       route:
         - destination:
             host: configuration
