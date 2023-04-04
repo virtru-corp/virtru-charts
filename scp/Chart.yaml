@@ -9,24 +9,30 @@ dependencies:
   - name: backend
     repository: oci://ghcr.io/opentdf/charts
     version: '0.0.0-sha-03c7ccc'
+    condition: backend.enabled
 
   - name: abacus
     repository: oci://ghcr.io/opentdf/charts
     version: '1.2.0-sha83c261c'
+    condition: abacus.enabled
 
   - name: access-pep
     repository: oci://ghcr.io/virtru-corp/charts
     version: '0.1.0-beta.sha-cac697c'
+    condition: access-pep.enabled
 
   - name: tagging-pdp
     repository: file://./charts/tagging-pdp
     version: '0.1.0'
+    condition: tagging-pdp.enabled
 
   - name: configuration
     repository: file://./charts/configuration
     version: '0.3.0'
+    condition: configuration.enabled
 
   # Private OCI Registry for OPA Policy Bundles
   - name: docker-registry
     repository: https://helm.twun.io
     version: 2.2.2
+    condition: docker-registry.enabled
