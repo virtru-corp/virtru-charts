@@ -3,7 +3,7 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2023-03-31T03:06:00.616778-04:00"
+    created: "2023-04-05T01:37:47.0254-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -13,7 +13,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2023-03-31T03:06:00.616158-04:00"
+    created: "2023-04-05T01:37:47.024754-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -23,7 +23,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2023-03-31T03:06:00.614072-04:00"
+    created: "2023-04-05T01:37:47.023285-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 1a2554129783634ca70ac074f6d2afe576fb73c83702449b100a1aa6495647bf
     name: cks
@@ -34,7 +34,7 @@ entries:
   cse:
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2023-03-31T03:06:00.618229-04:00"
+    created: "2023-04-05T01:37:47.027369-04:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -44,7 +44,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2023-03-31T03:06:00.617789-04:00"
+    created: "2023-04-05T01:37:47.02672-04:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -54,7 +54,7 @@ entries:
     version: 0.7.2
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2023-03-31T03:06:00.617344-04:00"
+    created: "2023-04-05T01:37:47.026074-04:00"
     description: A Helm chart for Kubernetes
     digest: f9f64cc7df01dbc58752465afc7064e48017b272027bf8e0e8b04d90ff8554a0
     name: cse
@@ -65,7 +65,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2023-03-31T03:06:00.620362-04:00"
+    created: "2023-04-05T01:37:47.029944-04:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -75,7 +75,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-03-31T03:06:00.619632-04:00"
+    created: "2023-04-05T01:37:47.029029-04:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -85,7 +85,7 @@ entries:
     version: 2.0.2
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-03-31T03:06:00.619052-04:00"
+    created: "2023-04-05T01:37:47.028209-04:00"
     description: A Helm chart for Kubernetes
     digest: 098c3fd743a8436981e7eae56e75187063afa0dbce263194e63b0deab5de12b1
     name: gateway
@@ -96,12 +96,37 @@ entries:
   scp:
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-03-31T03:06:00.621104-04:00"
+    created: "2023-04-05T01:37:47.042023-04:00"
+    dependencies:
+    - condition: backend.enabled
+      name: backend
+      repository: oci://ghcr.io/opentdf/charts
+      version: 0.0.0-sha-03c7ccc
+    - condition: abacus.enabled
+      name: abacus
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.2.0-sha83c261c
+    - condition: access-pep.enabled
+      name: access-pep
+      repository: oci://ghcr.io/virtru-corp/charts
+      version: 0.1.0-beta.sha-cac697c
+    - condition: tagging-pdp.enabled
+      name: tagging-pdp
+      repository: file://./charts/tagging-pdp
+      version: 0.1.0
+    - condition: configuration.enabled
+      name: configuration
+      repository: file://./charts/configuration
+      version: 0.3.0
+    - condition: docker-registry.enabled
+      name: docker-registry
+      repository: https://helm.twun.io
+      version: 2.2.2
     description: A Helm chart for Kubernetes
-    digest: 446bf84e9729d4ff13ddca555970af5f6bc869c45be479370c8a5df7e95e8beb
+    digest: b2c6cd9016ff98733bebce5c917462b026c7fb03d4b729f22c7643c2b7104052
     name: scp
     type: application
     urls:
     - scp-0.1.0.tgz
     version: 0.1.0
-generated: "2023-03-31T03:06:00.6135-04:00"
+generated: "2023-04-05T01:37:47.022591-04:00"
