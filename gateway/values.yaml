@@ -134,6 +134,7 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
+  oidcClientSecret: <oidc-client-secret>
   
   
 
@@ -177,3 +178,7 @@ additionalConfig:
   dkimSigning:
     enabled: false
     selector: gw
+  oidcClientId: ""
+  oidcTokenUrl: ""
+  taggingPdpLocation: ""
+  accessServiceUrl: "" # If this is non-null && not an empty string, we will trigger ABAC processing.
