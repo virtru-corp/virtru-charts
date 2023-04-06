@@ -6,6 +6,17 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+taggingPdpImage: 
+  tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
+  repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
+  # image pull secret, also used by the grpc-gateway image if enabled.
+  pullSecrets:
+    - replace_me
+  pullPolicy: IfNotPresent
+
+taggingService:
+  port: 15001
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -80,6 +91,7 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
+
 
 # This will create a persistent volume for each 
 # enabled gateway mode. This will keep your postfix queue 
@@ -178,7 +190,9 @@ additionalConfig:
   dkimSigning:
     enabled: false
     selector: gw
-  oidcClientId: ""
-  oidcTokenUrl: ""
-  taggingPdpLocation: ""
-  accessServiceUrl: "" # If this is non-null && not an empty string, we will trigger ABAC processing.
+  abac:
+    enabled: false
+    oidcClientId: ""
+    oidcTokenUrl: ""
+    taggingPdpLocation: ""
+    accessServiceUrl: "" # If this is non-null && not an empty string, we will trigger ABAC processing.

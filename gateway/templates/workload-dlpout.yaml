@@ -33,7 +33,7 @@ spec:
         app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
         app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with (coalesce .Values.taggingPdpImage.pullSecrets .Values.imagePullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -49,7 +49,7 @@ spec:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
       containers:
-        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
+        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }} # Gateway Container
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -63,6 +63,10 @@ spec:
           {{- end }}
           - name: postfix-dir
             mountPath: /var/spool/postfix
+          {{ - if eq .Values.additionalConfing.abac.enabled true }}
+          - name: shared-data-tagging-pdp-dir
+            mountPath: /usr/local/smtp-proxy/tmp # Where we write content to be extracted.
+          {{ - end }}
           ports:
             - containerPort: {{ .Values.service.port }}
               protocol: TCP
@@ -108,6 +112,13 @@ spec:
                 key: gateway-xheader-auth-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
+          {{- if eq .Values.additionalConfig.abac.enabled true }}
+          - name: OIDC_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: oidc-client-secret
+                name: {{ .Release.Name }}-secrets
+          {{- end }}
           readinessProbe:
             tcpSocket:
               port: 25
@@ -126,6 +137,25 @@ spec:
             timeoutSeconds: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{ - if eq.Values.additionalConfig.abac.enabled true }}    
+        - name: {{ .Chart.Name }}-{{ tagging-pdp }} # Tagging Pdp Container to be added in Gateway Pod
+          securityContext: {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.taggingPdpImage.repo }}:{{ .Values.taggingPdpImage.tag }}"
+          imagePullPolicy: {{ .Values.taggingPdpImage.pullPolicy }}
+          volumeMounts:
+          - name: shared-data-tagging-pdp-dir
+            mountPath: /usr/local/smtp-proxy/tmp # Where we write content to be extracted.
+          env:
+            - name: CONFIG_PATH
+            value: /tagging-pdp/config.yaml
+          volumeMounts:
+            - name: tagging-config-volume
+              mountPath: /tagging-pdp/config.yaml
+          ports:
+            - name: grpc
+              containerPort: {{ .Values.taggingService.port }}
+              protocol: TCP
+        {{ - end }}
       volumes:
       - name: cert-dir
         emptyDir: {}
@@ -135,6 +165,10 @@ spec:
           defaultMode: 420
           secretName: {{ .Release.Name }}-dkim-secrets
       {{- end }}
+      {{ - if eq .Values.additionalConfig.abac.enabled true }} # Add an empty shared volume that can be added to Gateway / Tagging Pdp.
+      - name: shared-data-tagging-pdp-dir
+        emptyDir: {}
+      {{ - end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
