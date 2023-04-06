@@ -22,12 +22,14 @@ global:
         hostname: "scp.virtrudemos.com"
 
 abacus:
+  enabled: true
   basePath: "/abacus"
   fullnameOverride: abacus
   ingress:
     enabled: false
 
 access-pep:
+  enabled: true
   name: access-pep
   image:
     repo: ghcr.io/virtru-corp/access-pep/access-pep
@@ -43,6 +45,7 @@ access-pep:
     entitlementPdpHost: "http://entitlement-pdp:3355"
 
 backend:
+  enabled: true
   entitlement-pdp:
     opaConfig:
       policy:
@@ -83,12 +86,14 @@ backend:
         value: "preview,token-exchange"
 
 docker-registry:
+  enabled: true
   persistence:
     enabled: true
     size: 1Gi
   tlsSecretName: scp-docker-registry-certs
 
 tagging-pdp:
+  enabled: true
   fullnameOverride: tagging-pdp
   image:
     tag: 935f2fc606f61dd0f052cbcc3d254196dd09f152
@@ -102,6 +107,7 @@ tagging-pdp:
       tag: sha-e28d7ee
 
 configuration:
+  enabled: true
   fullnameOverride: configuration
   server:
     image:
