@@ -22,11 +22,12 @@ data:
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
   {{- if eq .Values.additionalConfig.abac.enabled true }}
-  OIDC_CLIENT_ID: {{ .Values.additionalConfig.oidcClientId }}
-  OIDC_TOKEN_URL: {{ .Values.additionalConfig.oidcTokenUrl }}
-  TAGGING_PDP_LOCATION: {{ .Values.additionalConfig.taggingPdpLocation }}
-  ACCESS_SERVICE_URL: {{ .Values.additionalConfig.accessServiceUrl }} # ABAC based processing is triggered by this value being present, and not an empty string || null.
-  {{ - end }}
+  OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.oidcClientId | quote }}
+  OIDC_TOKEN_URL: {{ .Values.additionalConfig.abac.oidcTokenUrl | quote }}
+  TAGGING_PDP_LOCATION: {{ .Values.additionalConfig.abac.taggingPdpLocation | quote }}
+  ACCESS_SERVICE_URL: {{ .Values.additionalConfig.abac.accessServiceUrl | quote }} # ABAC based processing is triggered by this value being present, and not an empty string || null.
+  config.yaml: {{ .Values.additionalConfig.abac.taggingConfig | quote }}
+  {{- end }}
   {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
   GATEWAY_SMTP_USE_TLS: "1"
