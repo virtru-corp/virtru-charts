@@ -6,12 +6,17 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+useImagePullSecret: true
+
 taggingPdpImage: 
-  tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
+  tag: c241e5077b14ab76c03c630ff743b6f3f2610484
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
-  pullSecrets:
-    - replace_me
+  imageCredentials:
+    username: replaceme
+    password: replaceme
+    email: replaceme
+    registry: ghcr.io
   pullPolicy: IfNotPresent
 
 taggingService:
@@ -191,8 +196,9 @@ additionalConfig:
     enabled: false
     selector: gw
   abac:
-    enabled: false
-    oidcClientId: ""
-    oidcTokenUrl: ""
-    taggingPdpLocation: ""
-    accessServiceUrl: "" # If this is non-null && not an empty string, we will trigger ABAC processing.
+    enabled: true
+    oidcClientId: 12321
+    oidcTokenUrl: some-token-url
+    taggingPdpLocation: localhost:15001
+    accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
+    taggingConfig: #Used with set-file

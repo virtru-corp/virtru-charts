@@ -1,3 +1,10 @@
+{{- define "imagePullSecret" }}
+{{- with .Values.taggingPdpImage.imageCredentials }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
+{{- end }}
+
+
 {{/*
 Expand the name of the chart.
 */}}
