@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "gateway.name" . }}-outbound-dlp
+spec:
+  selector:
+    istio: {{ .Values.istioIngress.gatewaySelector }}
+  servers:
+    - port:
+        number: {{ .Values.gatewayModes.outboundDlp.port }}
+        name: gateway
+        protocol: TCP
+      hosts:
+        - {{ .Values.istioIngress.ingressHostname | quote }}
