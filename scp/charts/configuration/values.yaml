@@ -1,0 +1,136 @@
+# Default values for configuration.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+server:
+  name: server
+  # Configure the container image to use in the deployment.
+  image:
+    # -- The image selector, also called the 'image name' in k8s documentation
+    # and 'image repository' in docker's guides.
+    repository: ghcr.io/virtru-corp/enterprise-tdf/scp-configuration
+    # -- `Chart.AppVersion` will be used for image tag, override here if needed
+    tag:
+    # -- The container's `imagePullPolicy`
+    pullPolicy: IfNotPresent
+  # -- JSON passed to the deployment's `template.spec.imagePullSecrets`.
+  # Overrides `global.opentdf.common.imagePullSecrets`
+  imagePullSecrets:
+  secretRef:
+  service:
+    # -- Service `spec.type`
+    type: ClusterIP
+    # -- Port to assign to the `http` port
+    port: 8080
+  # A service account to create
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: true
+    # -- Annotations to add to the service account
+    annotations: {}
+    # -- The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+  postgres:
+    user: scp_configuration_manager
+    host: ""
+    port: 5432
+    database: tdf_database
+  redis:
+    host: ""
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  # -- Values for the deployment `spec.template.metadata.annotations` field
+  podAnnotations: { }
+  # -- Values for deployment's `spec.template.spec.securityContext`
+  podSecurityContext: { }
+  # -- Values for deployment's `spec.template.spec.containers.securityContext`
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+  # -- Specify required limits for deploying this service to a pod.
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube.
+  resources: {}
+  # -- Node labels for pod assignment
+  nodeSelector: { }
+  # -- Tolerations for nodes that have taints on them
+  tolerations: [ ]
+  # -- Pod scheduling preferences
+  affinity: { }
+# This key configures Redis-HA subchart and when enabled (redis-ha.enabled=true)
+# the custom redis deployment is omitted
+# Check the redis-ha chart for more properties
+redis-ha:
+  # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
+  enabled: false
+  # TODO move hardAntiAffinity to gitops
+  hardAntiAffinity: false
+  networkPolicy:
+    enabled: true
+  ## Prometheus redis-exporter sidecar
+  exporter:
+    # -- Enable Prometheus redis-exporter sidecar
+    enabled: false
+    # -- Repository to use for the redis-exporter
+    image: public.ecr.aws/bitnami/redis-exporter
+    # -- Tag to use for the redis-exporter
+    tag: 1.45.0
+  persistentVolume:
+    # -- Configures persistence on Redis nodes
+    enabled: false
+  redis:
+    # -- Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated
+    masterGroupName: scp-configuration
+    # -- Any valid redis config options in this section will be applied to each server (see `redis-ha` chart)
+    # @default -- See [values.yaml]
+    config:
+      # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
+      # @default -- `'""'`
+      save: '""'
+  haproxy:
+    # -- Enabled HAProxy LoadBalancing/Proxy
+    enabled: false
+    metrics:
+      # -- HAProxy enable prometheus metric scraping
+      enabled: false
+  image:
+    # -- Redis tag
+    tag: 7.0.9-alpine
+
+  ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints:
+    # -- Enable Redis HA topology spread constraints
+    enabled: false
+    # -- Max skew of pods tolerated
+    # @default -- `""` (defaults to `1`)
+    maxSkew: ""
+    # -- Topology key for spread
+    # @default -- `""` (defaults to `topology.kubernetes.io/zone`)
+    topologyKey: ""
+    # -- Enforcement policy, hard or soft
+    # @default -- `""` (defaults to `ScheduleAnyway`)
+    whenUnsatisfiable: ""
+
+# External Redis parameters
+externalRedis:
+  # -- External Redis server host
+  host: ""
+  # -- External Redis username
+  username: ""
+  # -- External Redis password
+  password: ""
+  # -- External Redis server port
+  port: 6379
+  # -- The name of an existing secret with Redis credentials (must contain key `redis-password`).
+  # When it's set, the `externalRedis.password` parameter is ignored
+  existingSecret: ""
+  # -- External Redis Secret annotations
+  secretAnnotations: {}
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
