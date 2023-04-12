@@ -117,7 +117,7 @@ persistentVolumes:
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
 
-gatewayAccountsUrl: http://configuration/configuration
+gatewayAccountsUrl: http://gateway-virtru-proxy:8080/accounts
 gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
@@ -217,3 +217,10 @@ istioIngress:
   gatewaySelector: ingress
   ingressHostname: "*"
   name: scp
+virtruProxy:
+  image:
+    repo: ghcr.io/virtru-corp/tagging-pdp/proxy-service
+    tag: sha-ac36ab9
+  imagePullSecret: gateway-pull-secrets
+  configsvc:
+    endpoint: http://configuration:8080/configuration
