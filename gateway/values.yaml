@@ -19,6 +19,13 @@ taggingPdpImage:
     registry: ghcr.io
   pullPolicy: IfNotPresent
 
+gateway:
+  imageCredentials:
+    username: replaceme
+    password: replaceme
+    email: replaceme
+    registry: docker.io
+
 taggingService:
   port: 15001
 
@@ -44,7 +51,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 25
 
 ingress:
@@ -77,7 +84,7 @@ autoscaling:
 
 gatewayModes:
   outboundEncrypt:
-    enabled: true
+    enabled: false
     name: outbound-encrypt
     port: 9001
   outboundDecrypt:
@@ -93,7 +100,7 @@ gatewayModes:
     name: inbound-decrypt
     port: 9004
   outboundDlp:
-    enabled: false
+    enabled: true
     name: outbound-dlp
     port: 9005
 
@@ -110,7 +117,7 @@ persistentVolumes:
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
 
-gatewayAccountsUrl: https://api.virtru.com/accounts
+gatewayAccountsUrl: http://configuration/configuration
 gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
@@ -124,7 +131,7 @@ standardConfig:
   # default is open and to lock down firewall on the VPC
   inboundRelayAddresses: 0.0.0.0/0
   headers:
-    xHeaderAuthEnabled: true
+    xHeaderAuthEnabled: false
     # Secret managed in appSecrets.headers
 
 # By default, you can create secrets using the keys below.
@@ -178,7 +185,7 @@ additionalConfig:
     enabled: false
     compliance: MEDIUM
   cks:
-    keyProvider: CKS
+    keyProvider: NONE
     sessionKeyExpiry: "360"
   dlpRuleCache: "30"
   tlsPolicyMaps:
@@ -202,3 +209,11 @@ additionalConfig:
     taggingPdpLocation: localhost:15001
     accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
     taggingConfig: #Used with set-file
+
+istioIngress:
+  # Use an existing istio gateway
+  existingGateway:
+  # Name of istio gateway selector
+  gatewaySelector: ingress
+  ingressHostname: "*"
+  name: scp

@@ -36,6 +36,7 @@ spec:
       {{- with (coalesce .Values.imagePullSecrets .Values.taggingPdpImage.imageCredentials) }}
       imagePullSecrets:
         - name: gateway-pull-secrets
+        - name: gateway-docker-pull-secrets
       {{- end }}
       serviceAccountName: {{ include "gateway.serviceAccountName" . }}
       securityContext:
