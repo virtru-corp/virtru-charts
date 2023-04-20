@@ -85,6 +85,8 @@ access-pep:
     disableTracing: *disableTracing
     attrAuthorityHost: *attrEndpoint
     entitlementPdpHost: "http://entitlement-pdp:3355"
+    keycloakAttrAuthorityClientID: "tdf-client"
+    keycloakAttrAuthorityClientSecret:
 
 # Attribute Chart Overrides
 attributes:
@@ -207,13 +209,11 @@ keycloak:
 
 keycloak-bootstrap:
   entitlements:
+    hostname: http://entitlements:4030
     realms: null
   existingConfigSecret: scp-keycloakbootstrap-config
   secretRef: |-
     name: scp-keycloakbootstrap-secret
-  image:
-    tag: 1.2.1-tim
-    pullPolicy: Always
   attributes:
     hostname: *attrEndpoint
     realm: tdf
@@ -250,25 +250,26 @@ secrets:
   postgresql:
     dbPassword:
   attributes:
+    clientSecret:
+    dbPassword:
+  configuration:
     dbPassword:
   entitlementStore:
     dbPassword:
   entitlements:
+    clientSecret:
     dbPassword:
   keycloak:
-    postgres:
-      password:
-    admin:
-      user:
-      password:
+    dbPassword:
+    adminUsername:
+    adminPassword:
   keycloakBootstrap:
+    attributesUsername:
+    attributesPassword:
+    users:
+    clients:
     clientSecret:
-    attributes:
-      username:
-      password:
-    keycloak:
-      users:
-      clients:
+    customConfig: null
   opaPolicyPullSecret:
   #Image pull credentials.
   imageCredentials:
@@ -291,4 +292,5 @@ tagging-pdp:
     image:
       tag: sha-e28d7ee
 
-
+# The admin user created for tdf.
+tdfAdminUsername: tdf-admin

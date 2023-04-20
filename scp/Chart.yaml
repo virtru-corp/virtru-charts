@@ -1,11 +1,11 @@
 apiVersion: v2
 name: scp
-description: A Helm chart for Kubernetes
+description: Self Hosted Data Protection Platform
 type: application
 version: 0.1.1
 appVersion: 0.1.2
 
-otdfVersion: &otdfVersion "0.0.0-sha-da7b457"
+otdfVersion: &otdfVersion "0.0.0-sha-bd7a8d2"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
