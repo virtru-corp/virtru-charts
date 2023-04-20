@@ -41,19 +41,18 @@ And keycloak client and users via values overrides:
 ```
 secrets:
   keycloakBootstrap:
-    keycloak:
-      #list of keycloak clients to be added
-      clients:
-        - clientId: 
-          clientSecret: 
-          #optional audience mapper
-          audienceMappers:
-            - my-aud
-      users:
-        - username: alice
-          password: replaceme
-        - username: bob
-          password: replaceme   
+    #list of keycloak clients to be added
+    clients:
+      - clientId: 
+        clientSecret: 
+        #optional audience mapper
+        audienceMappers:
+          - my-aud
+    users:
+      - username: alice
+        password: replaceme
+      - username: bob
+        password: replaceme   
 ```
 
 ### Demo Install
