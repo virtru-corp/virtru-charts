@@ -1,6 +1,6 @@
 apiVersion: v2
-name: tagging-pdp
-description: Tagging PDP Deployment
+name: opcr-policy
+description: Build and push an opa policy to an OCI registry
 type: application
 version: 0.1.0
 appVersion: 0.1.0

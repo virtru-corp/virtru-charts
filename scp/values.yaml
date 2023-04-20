@@ -2,9 +2,46 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-imagePullSecrets: []
+# Some yaml anchor definitions for convenience
+commonParams:
+  attrEndpoint: &attrEndpoint "http://attributes:4020"
+  #Disable OTEL Tracing
+  disableTracing: &disableTracing "true"
+  entitlementPolicyBundleRepo: &entitlementPolicyBundleRepo "scp-docker-registry:5000/entitlements-policybundle"
+  entitlementPolicyBundleTag: &entitlementPolicyBundleTag 0.0.2
+  entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://scp-docker-registry:5000"
+  scpImagePullSecretName: &scpImagePullSecretName "scp-pull-secret"
+  imagePullSecrets: &imagePullSecrets
+    - name: *scpImagePullSecretName
+
 nameOverride: ""
 fullnameOverride: ""
+
+embedded:
+  # -- Use an embedded keycloak or not
+  keycloak: true
+  # -- Use an embedded postgres or not
+  postgresql: true
+
+bootstrap:
+  enabled: false
+  #Should keycloak bootstrap be enabled
+  keycloak: true
+  configsvc:
+    enabled: true
+    job:
+      name: configsvc-bootstrap
+      image:
+        repo: ghcr.io/virtru-corp/postman-cli/opcr-policy
+        tag: sha-531eea2
+        pullPolicy: IfNotPresent
+      backoffLimit: 5
+      configVolumeSecretRefName: scp-bootstrap-configsvc
+      envSecretRef:
+  # The path to the install configuration file (relative to the chart directory)
+  configPath:
+  # Should entitlement policy be bootstrapped
+  entitlementPolicy: true
 
 ingress:
   # Use an existing istio gateway
@@ -17,9 +54,18 @@ global:
   opentdf:
     common:
       oidcExternalBaseUrl: https://scp.virtrudemos.com
+      oidcInternalBaseUrl: http://keycloak-http
+      oidcUrlPath: auth
       ingress:
         scheme: "https"
         hostname: "scp.virtrudemos.com"
+      postgres:
+        # -- postgres server's k8s name or global DNS for external server
+        host: postgresql
+        # -- postgres server port
+        port: 5432
+        # -- The database name within the given server
+        database: tdf_database
 
 abacus:
   enabled: true
@@ -31,81 +77,22 @@ abacus:
 access-pep:
   enabled: true
   name: access-pep
+  existingImagePullSecret: *scpImagePullSecretName
   image:
     repo: ghcr.io/virtru-corp/access-pep/access-pep
     tag: sha-cac697c
-  imageCredentials:
-    registry: ghcr.io
-    username: overrideme
-    password: overrideme
-    email: overrideme
   config:
-    disableTracing: "true"
-    attrAuthorityHost: "http://attributes:4020"
+    disableTracing: *disableTracing
+    attrAuthorityHost: *attrEndpoint
     entitlementPdpHost: "http://entitlement-pdp:3355"
 
-backend:
-  enabled: true
-  entitlement-pdp:
-    opaConfig:
-      policy:
-        useStaticPolicy: false
-        allowInsecureTLS: true
-        OCIRegistryUrl: "https://scp-docker-registry:5000"
-        # -- Resource path to use to download bundle from configured service
-        bundleRepo: "scp-docker-registry:5000/entitlements-policybundle"
-        bundleTag: 0.0.2
-  entity-resolution:
-    config:
-      disableTracing: "true"
-  keycloak:
-    extraEnv: |-
-      - name: CLAIMS_URL
-        value: http://entitlement-pdp:3355/entitlements
-      - name: JAVA_OPTS_APPEND
-        value: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-      - name: KC_DB
-        value: postgres
-      - name: KC_DB_URL_PORT
-        value: "5432"
-      - name: KC_LOG_LEVEL
-        value: INFO
-      - name: KC_HOSTNAME_STRICT
-        value: "false"
-      - name: KC_HOSTNAME_STRICT_BACKCHANNEL
-        value: "false"
-      - name: KC_HOSTNAME_STRICT_HTTPS
-        value: "false"
-      - name: KC_HOSTNAME_URL
-        value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
-      - name: KC_HOSTNAME_ADMIN_URL
-        value: {{ ( include "backend.keycloak.externalUrl" . ) | quote }}
-      - name: KC_HTTP_ENABLED
-        value: "true"
-      - name: KC_FEATURES
-        value: "preview,token-exchange"
+# Attribute Chart Overrides
+attributes:
+  fullnameOverride: attributes
+  secretRef: |-
+    name: scp-attributes-secret
 
-docker-registry:
-  enabled: true
-  persistence:
-    enabled: true
-    size: 1Gi
-  tlsSecretName: scp-docker-registry-certs
-
-tagging-pdp:
-  enabled: true
-  fullnameOverride: tagging-pdp
-  image:
-    tag: 935f2fc606f61dd0f052cbcc3d254196dd09f152
-    # Since this is a ghcr image; piggy back off of access pep pull secret
-    pullSecrets:
-      - name: access-pep-pull-secret
-  gateway:
-    enabled: true
-    pathPrefix: tagging-pdp
-    image:
-      tag: sha-e28d7ee
-
+# Configuration Chart Overrides
 configuration:
   enabled: true
   fullnameOverride: configuration
@@ -118,6 +105,190 @@ configuration:
       host: postgresql
       # Override with value
       password:
-    # Since this is a ghcr image; piggy back off of access pep pull secret
-    imagePullSecrets:
-      - name: access-pep-pull-secret
+    imagePullSecrets: *imagePullSecrets
+
+# Entitlement Policy Bootstrap
+entitlement-policy-bootstrap:
+  policyGlobPattern: "configs/fed-demo/entitlement-policy/*"
+  bundleRepo: *entitlementPolicyBundleRepo
+  bundleTag: *entitlementPolicyBundleTag
+  OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
+  policyConfigMap: scp-bootstrap-entitlement-cm
+  policyDataSecretRef: scp-bootstrap-entitlement-policy
+  imagePullSecrets: *imagePullSecrets
+  image:
+    tag: sha-531eea2
+
+# Entitlement PDP Chart Overrides
+entitlement-pdp:
+  fullnameOverride: entitlement-pdp
+  opaConfig:
+    policy:
+      useStaticPolicy: false
+      allowInsecureTLS: true
+      OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
+      # -- Resource path to use to download bundle from configured service
+      bundleRepo: *entitlementPolicyBundleRepo
+      bundleTag: *entitlementPolicyBundleTag
+  config:
+    disableTracing: *disableTracing
+  secretRef: |-
+    name: scp-entitlement-pdp-secret
+
+entitlement-store:
+  fullnameOverride: entitlement-store
+  secretRef: |-
+    name: scp-entitlement-store-secret
+
+entitlements:
+  fullnameOverride: entitlements
+  secretRef: |-
+    name: scp-entitlements-secret    
+
+entity-resolution:
+  fullnameOverride: entity-resolution
+  config:
+    disableTracing: *disableTracing
+    keycloak:
+      legacy: true
+
+kas:
+  fullnameOverride: kas
+  endpoints:
+    attrHost: *attrEndpoint
+  pdp:
+    verbose: "true"
+    disableTracing: *disableTracing
+
+keycloak:
+  fullnameOverride: keycloak
+  image:
+    repository: ghcr.io/opentdf/keycloak
+    tag: main
+    pullPolicy: IfNotPresent
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "--verbose"
+    - "start-dev"
+    - "--http-relative-path"
+    - "/auth"
+  postgresql:
+    enabled: false
+  externalDatabase:
+    database: keycloak_database
+  extraEnv: |-
+    - name: CLAIMS_URL
+      value: http://entitlement-pdp:3355/entitlements
+    - name: JAVA_OPTS_APPEND
+      value: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    - name: KC_DB
+      value: postgres
+    - name: KC_DB_URL_PORT
+      value: "5432"
+    - name: KC_LOG_LEVEL
+      value: INFO
+    - name: KC_HOSTNAME_STRICT
+      value: "false"
+    - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+      value: "false"
+    - name: KC_HOSTNAME_STRICT_HTTPS
+      value: "false"
+    - name: KC_HOSTNAME_URL
+      value: {{ ( include "keycloak.externalUrl" . ) | quote }}
+    - name: KC_HOSTNAME_ADMIN_URL
+      value: {{ ( include "keycloak.externalUrl" . ) | quote }}
+    - name: KC_HTTP_ENABLED
+      value: "true"
+    - name: KC_FEATURES
+      value: "preview,token-exchange"
+  extraEnvFrom: |-
+    - secretRef:
+        name: scp-keycloak-secret
+
+keycloak-bootstrap:
+  entitlements:
+    realms: null
+  existingConfigSecret: scp-keycloakbootstrap-config
+  secretRef: |-
+    name: scp-keycloakbootstrap-secret
+  image:
+    tag: 1.2.1-tim
+    pullPolicy: Always
+  attributes:
+    hostname: *attrEndpoint
+    realm: tdf
+    clientId: dcr-test
+
+docker-registry:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 1Gi
+  tlsSecretName: scp-docker-registry-certs
+
+postgresql:
+  fullnameOverride: postgresql
+  image:
+    debug: true
+    tag: "11"
+  auth:
+    existingSecret: >
+      {{ include "postgresql.primary.fullname" . }}-secret
+  primary:
+    initdb:
+      user: postgres
+      scriptsSecret: >
+        {{ include "postgresql.primary.fullname" . }}-initdb-secret
+
+#Templates for generating secrets
+secrets:
+  # Generate secrets from the values provided below.  If false, another boostrapping
+  # mechanism for secrets is required.
+  enabled: true
+  # -- Client secret used to verify identity in attributes and entitlements
+  oidcClientSecret:
+  postgresql:
+    dbPassword:
+  attributes:
+    dbPassword:
+  entitlementStore:
+    dbPassword:
+  entitlements:
+    dbPassword:
+  keycloak:
+    postgres:
+      password:
+    admin:
+      user:
+      password:
+  keycloakBootstrap:
+    clientSecret:
+    attributes:
+      username:
+      password:
+    keycloak:
+      users:
+      clients:
+  opaPolicyPullSecret:
+  #Image pull credentials.
+  imageCredentials:
+    - name: scp-pull-secret
+      registry: ghcr.io
+      username: username
+      password: password
+      email: nope@nah.com
+
+# Tagging PDP Chart Overrides
+tagging-pdp:
+  enabled: true
+  fullnameOverride: tagging-pdp
+  image:
+    tag: sha-470efff
+    pullSecrets: *imagePullSecrets
+  gateway:
+    enabled: true
+    pathPrefix: tagging-pdp
+    image:
+      tag: sha-e28d7ee
+
+

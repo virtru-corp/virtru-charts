@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.lib.name" . }}-bootstrap-entitlement-cm
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+data:
+  BUNDLETAG: {{ index .Values "entitlement-policy-bootstrap" "bundleRepo" | quote }}
+  OCIRegistryUrl: {{ index .Values "entitlement-policy-bootstrap" "OCIRegistryUrl" | quote }}
+  POLICYVERSION: {{index .Values "entitlement-policy-bootstrap" "bundleTag" | quote }}
+

@@ -1,74 +1,30 @@
-{{/*
-Expand the name of the chart.
-*/}}
-{{- define "scp.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "scp.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "scp.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "scp.labels" -}}
-helm.sh/chart: {{ include "scp.chart" . }}
-{{ include "scp.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "scp.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "scp.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "scp.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "scp.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
 
 {{/*
 Generate certificates for private docker registry
 Note tls.key is indented on purpose
 */}}
 {{- define "registry.gen-certs" -}}
-{{- $altNames := list ( printf "%s.%s" (include "scp.chart" . ) .Release.Namespace ) ( printf "%s.%s.svc" (include "scp.chart" . ) .Release.Namespace ) -}}
+{{- $altNames := list ( printf "%s.%s" (include "common.lib.chart" . ) .Release.Namespace ) ( printf "%s.%s.svc" (include "common.lib.chart" . ) .Release.Namespace ) -}}
 {{- $ca := genCA "registry-ca" 365 -}}
-{{- $cert := genSignedCert ( include "scp.chart" . ) nil $altNames 365 $ca -}}
+{{- $cert := genSignedCert ( include "common.lib.chart" . ) nil $altNames 365 $ca -}}
 tls.crt: {{ $cert.Cert | b64enc }}
   tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
+
+{{/*
+Create Keycloak External Url
+*/}}
+{{- define "keycloak.externalUrl" }}
+{{- if .Values.global.opentdf.common.oidcUrlPath }}
+{{- printf "%s/%s" .Values.global.opentdf.common.oidcExternalBaseUrl .Values.global.opentdf.common.oidcUrlPath }}
+{{- else }}
+{{- default .Values.global.opentdf.common.oidcExternalBaseUrl }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create Keycloak hostname by extracting from the external url base .Values.global.opentdf.common.oidcExternalBaseUrl
+*/}}
+{{- define "keycloak.externalHostname" }}
+{{- .Values.global.opentdf.common.oidcExternalBaseUrl | trimPrefix "http://"  | trimPrefix "https://" | trimSuffix "/" }}
+{{- end }}

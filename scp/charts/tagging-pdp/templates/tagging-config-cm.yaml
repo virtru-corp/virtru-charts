@@ -1,12 +1,10 @@
+{{- if .Values.config.configFile }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "taggingpdp.fullname" . }}-taggingconfig-cm
+  name: {{ include "common.lib.fullname" . }}-taggingconfig-cm
   labels:
-    {{- include "taggingpdp.labels" . | nindent 4 }}
+    {{- include "common.lib.labels" . | nindent 4 }}
 data:
-{{- if .Values.taggingConfig }}
-  config.yaml: {{ .Values.taggingConfig | quote }}
-{{- else }}
-  config.yaml: ""
+  config.yaml: {{ .Values.config.configFile | quote }}
 {{- end }}

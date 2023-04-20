@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "taggingpdp.fullname" . }}
+  name: {{ include "common.lib.fullname" . }}
   labels:
-    {{- include "taggingpdp.labels" . | nindent 4 }}
+    {{- include "common.lib.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "taggingpdp.selectorLabels" . | nindent 6 }}
+      {{- include "common.lib.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "taggingpdp.selectorLabels" . | nindent 8 }}
+        {{- include "common.lib.selectorLabels" . | nindent 8 }}
     spec:
       {{- with (coalesce .Values.image.pullSecrets .Values.global.imagePullSecrets) }}
       imagePullSecrets:
@@ -27,23 +27,27 @@ spec:
       serviceAccountName: {{ include "taggingpdp.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.config.configFile }}
       volumes:
         - name: tagging-config-volume
           configMap:
-            name: {{ include "taggingpdp.fullname" . }}-taggingconfig-cm
+            name: {{ include "common.lib.fullname" . }}-taggingconfig-cm
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.image.repo }}:{{ .Values.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: CONFIG_PATH
-              value: /tagging-pdp/config.yaml
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.lib.fullname" . }}-tagging-cm
+          {{- if .Values.config.configFile }}
           volumeMounts:
             - name: tagging-config-volume
               mountPath: /tagging-pdp/config.yaml
               subPath: config.yaml
+          {{- end }}
           ports:
               - name: grpc
                 containerPort: {{ .Values.service.port }}

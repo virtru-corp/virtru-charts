@@ -2,19 +2,57 @@ apiVersion: v2
 name: scp
 description: A Helm chart for Kubernetes
 type: application
-version: 0.1.0
-appVersion: 0.1.1
+version: 0.1.1
+appVersion: 0.1.2
+
+otdfVersion: &otdfVersion "0.0.0-sha-da7b457"
+otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
-  - name: backend
-    repository: oci://ghcr.io/opentdf/charts
-    version: '0.0.0-sha-03c7ccc'
-    condition: backend.enabled
-
   - name: abacus
-    repository: oci://ghcr.io/opentdf/charts
+    repository: *otdfRepo
     version: '1.2.0-sha83c261c'
     condition: abacus.enabled
+  - name: attributes
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entitlement-pdp
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entitlement-store
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entitlements
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entity-resolution
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: kas
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: common-lib
+    repository: file://../common-lib
+    version: 0.1.0
+
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 12.1.8
+    condition: embedded.postgresql
+    tags: ["third-party"]
+
+  - name: keycloakx
+    alias: keycloak
+    repository: https://codecentric.github.io/helm-charts
+    version: 2.1.1
+    condition: embedded.keycloak
+    tags: ["third-party", "identity"]
 
   - name: access-pep
     repository: oci://ghcr.io/virtru-corp/charts
@@ -26,6 +64,7 @@ dependencies:
     version: '0.1.0'
     condition: tagging-pdp.enabled
 
+
   - name: configuration
     repository: file://./charts/configuration
     version: '0.3.0'
@@ -35,4 +74,21 @@ dependencies:
   - name: docker-registry
     repository: https://helm.twun.io
     version: 2.2.2
-    condition: docker-registry.enabled
+
+  - name: keycloak-bootstrap
+    repository: file:///Users/ttschampel/development/backend/charts/keycloak-bootstrap
+    version: 0.4.4
+    condition: bootstrap.keycloak
+    tags: ["utility"]
+
+  - name: opcr-policy
+    repository: file://./charts/opcr-policy
+    alias: entitlement-policy-bootstrap
+    version: 0.1.0
+    condition: boostrap.entitlementPolicy
+    tags: ["bootstrap"]
+#  - name: postman-cli
+#    repository: file://../postman-cli
+#    version: 0.1.0
+#    condition: boostrap.enabled
+#    tags: ["bootstrap"]

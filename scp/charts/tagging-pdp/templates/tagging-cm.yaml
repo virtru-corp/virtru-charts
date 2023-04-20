@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.lib.fullname" . }}-tagging-cm
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+data:
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+{{- if .Values.config.configFile }}
+  CONFIG_PATH: "/tagging-pdp/config.yaml"
+{{- else }}
+  CONFIG_ARTIFACT_ID: {{ .Values.config.configSvc.artifactId | quote }}
+  CONFIG_SERVICE_ENDPOINT: {{ .Values.config.configSvc.url | quote }}
+{{- end }}
+
