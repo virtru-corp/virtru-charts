@@ -24,11 +24,13 @@ embedded:
   postgresql: true
 
 bootstrap:
-  enabled: false
   #Should keycloak bootstrap be enabled
   keycloak: true
+  # Configuration service boostrapping configuration
   configsvc:
+    # Enable configuration service artifact bootstrapping
     enabled: true
+    # Config svc artifact bootstrapping job config
     job:
       name: configsvc-bootstrap
       image:
@@ -36,7 +38,9 @@ bootstrap:
         tag: sha-531eea2
         pullPolicy: IfNotPresent
       backoffLimit: 5
+      # Secret name used to mount configuration artifacts used by the job
       configVolumeSecretRefName: scp-bootstrap-configsvc
+      # secret for environment variables
       envSecretRef:
   # The path to the install configuration file (relative to the chart directory)
   configPath:
@@ -126,6 +130,7 @@ entitlement-pdp:
   fullnameOverride: entitlement-pdp
   opaConfig:
     policy:
+      # Use static policy flag - false to pull from oci registry
       useStaticPolicy: false
       allowInsecureTLS: true
       OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
