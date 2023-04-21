@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Some yaml anchor definitions for convenience
+# -- Some yaml anchor definitions for convenience
 commonParams:
   attrEndpoint: &attrEndpoint "http://attributes:4020"
   #Disable OTEL Tracing
@@ -23,14 +23,15 @@ embedded:
   # -- Use an embedded postgres or not
   postgresql: true
 
+#-- Keycloak bootstrap parameters
 bootstrap:
-  #Should keycloak bootstrap be enabled
+  #-- Should keycloak bootstrap be enabled
   keycloak: true
-  # Configuration service boostrapping configuration
+  #-- Configuration service boostrapping configuration
   configsvc:
-    # Enable configuration service artifact bootstrapping
+    #-- Enable configuration service artifact bootstrapping
     enabled: true
-    # Config svc artifact bootstrapping job config
+    #-- Config svc artifact bootstrapping job config
     job:
       name: configsvc-bootstrap
       image:
@@ -38,19 +39,19 @@ bootstrap:
         tag: sha-531eea2
         pullPolicy: IfNotPresent
       backoffLimit: 5
-      # Secret name used to mount configuration artifacts used by the job
+      #-- Secret name used to mount configuration artifacts used by the job
       configVolumeSecretRefName: scp-bootstrap-configsvc
-      # secret for environment variables
+      #-- secret for environment variables
       envSecretRef:
-  # The path to the install configuration file (relative to the chart directory)
+  #-- The path to the install configuration file (relative to the chart directory)
   configPath:
-  # Should entitlement policy be bootstrapped
+  #-- Should entitlement policy be bootstrapped
   entitlementPolicy: true
 
 ingress:
-  # Use an existing istio gateway
+  #-- Use an existing istio gateway
   existingGateway:
-  # Name of istio gateway selector
+  #-- Name of istio gateway selector
   gatewaySelector: ingress
   name: scp
 
@@ -72,6 +73,7 @@ global:
         database: tdf_database
 
 abacus:
+  # -- abacus enabled flag
   enabled: true
   basePath: "/abacus"
   fullnameOverride: abacus
@@ -79,12 +81,16 @@ abacus:
     enabled: false
 
 access-pep:
+  # -- Enable access-pep flag
   enabled: true
+  # -- Name override
   name: access-pep
+  # -- Existing pull secrets
   existingImagePullSecret: *scpImagePullSecretName
   image:
     repo: ghcr.io/virtru-corp/access-pep/access-pep
     tag: sha-cac697c
+  # -- Access Pep configuration
   config:
     disableTracing: *disableTracing
     attrAuthorityHost: *attrEndpoint
@@ -92,15 +98,19 @@ access-pep:
     keycloakAttrAuthorityClientID: "tdf-client"
     keycloakAttrAuthorityClientSecret:
 
-# Attribute Chart Overrides
+# -- Attribute Chart Overrides
 attributes:
+  # -- Attribute Service Name Override
   fullnameOverride: attributes
   secretRef: |-
     name: scp-attributes-secret
 
-# Configuration Chart Overrides
+
+# -- Configuration Chart Overrides
 configuration:
+  # -- Configuration Service enabled flag
   enabled: true
+  # -- Configuration svc name override
   fullnameOverride: configuration
   server:
     image:
@@ -113,7 +123,7 @@ configuration:
       password:
     imagePullSecrets: *imagePullSecrets
 
-# Entitlement Policy Bootstrap
+# -- Entitlement Policy Bootstrap
 entitlement-policy-bootstrap:
   policyGlobPattern: "configs/fed-demo/entitlement-policy/*"
   bundleRepo: *entitlementPolicyBundleRepo
@@ -125,12 +135,13 @@ entitlement-policy-bootstrap:
   image:
     tag: sha-531eea2
 
-# Entitlement PDP Chart Overrides
+# -- Entitlement PDP Chart Overrides
 entitlement-pdp:
+  # -- Entitlement PDP name override
   fullnameOverride: entitlement-pdp
   opaConfig:
     policy:
-      # Use static policy flag - false to pull from oci registry
+      # -- Use static policy flag - false to pull from oci registry
       useStaticPolicy: false
       allowInsecureTLS: true
       OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
@@ -143,16 +154,19 @@ entitlement-pdp:
     name: scp-entitlement-pdp-secret
 
 entitlement-store:
+  # -- Entitlement Store name override
   fullnameOverride: entitlement-store
   secretRef: |-
     name: scp-entitlement-store-secret
 
 entitlements:
+  # -- Entitlements Name Override
   fullnameOverride: entitlements
   secretRef: |-
     name: scp-entitlements-secret    
 
 entity-resolution:
+  # -- Entity Resolution Name override
   fullnameOverride: entity-resolution
   config:
     disableTracing: *disableTracing
@@ -160,19 +174,24 @@ entity-resolution:
       legacy: true
 
 kas:
+  # -- KAS Name Override
   fullnameOverride: kas
   endpoints:
+    # -- Attributes hostname accessible to KAS
     attrHost: *attrEndpoint
   pdp:
     verbose: "true"
+    # -- Disable tracing flag
     disableTracing: *disableTracing
 
 keycloak:
+  # -- keycloak name override
   fullnameOverride: keycloak
   image:
     repository: ghcr.io/opentdf/keycloak
     tag: main
     pullPolicy: IfNotPresent
+  # -- Command to start the keycloak service
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "--verbose"
@@ -183,6 +202,7 @@ keycloak:
     enabled: false
   externalDatabase:
     database: keycloak_database
+  # -- Extra environment variables.
   extraEnv: |-
     - name: CLAIMS_URL
       value: http://entitlement-pdp:3355/entitlements
@@ -245,52 +265,52 @@ postgresql:
       scriptsSecret: >
         {{ include "postgresql.primary.fullname" . }}-initdb-secret
 
-#Templates for generating secrets
+# -- Templates for generating secrets
 secrets:
-  # Generate secrets from the values provided below.  If false, another bootstrapping
+  # -- Generate secrets from the values provided below.  If false, another bootstrapping
   # mechanism for secrets is required.
   enabled: true
   postgresql:
-    #password for postgres user
+    # -- password for postgres user
     dbPassword:
   attributes:
-    # oidc client secret used by attributes svc to auth to idp and enforce svc authorization
+    # -- oidc client secret used by attributes svc to auth to idp and enforce svc authorization
     clientSecret:
-    # postgres password for attributes svc user
+    # -- postgres password for attributes svc user
     dbPassword:
   configuration:
-    # postgres password for config svc user
+    # -- postgres password for config svc user
     dbPassword:
   entitlementStore:
-    # postgres password for entitlement-store svc user
+    # -- postgres password for entitlement-store svc user
     dbPassword:
   entitlements:
-    # oidc client secret used by entitlements svc to auth to idp and enforce svc authorization
+    # -- oidc client secret used by entitlements svc to auth to idp and enforce svc authorization
     clientSecret:
-    # postgres password for entitlements svc user
+    # -- postgres password for entitlements svc user
     dbPassword:
   keycloak:
-    # postgres password for keycloak svc user
+    # -- postgres password for keycloak svc user
     dbPassword:
-    # keycloak admin user's username
+    # -- keycloak admin user's username
     adminUsername:
-    # Keycloak admin user's password
+    # -- Keycloak admin user's password
     adminPassword:
   keycloakBootstrap:
-    #username for attribute service auth
+    # -- username for attribute service auth
     attributesUsername:
-    #password for attribute service auth
+    # -- password for attribute service auth
     attributesPassword:
-    # list of users to be added
+    # -- list of users to be added
     users:
-    # list of custom oidc clients to add
+    # -- list of custom oidc clients to add
     clients:
-    #client secret assigned to standard bootstrapper clients
+    # -- client secret assigned to standard bootstrapper clients
     clientSecret:
     customConfig: null
-  #oci registry pull secret for OPA policy
+  # -- oci registry pull secret for OPA policy
   opaPolicyPullSecret:
-  #Image pull credentials.
+  # -- Image pull credentials.
   imageCredentials:
     - name: scp-pull-secret
       registry: ghcr.io
@@ -298,7 +318,7 @@ secrets:
       password: password
       email: nope@nah.com
 
-# Tagging PDP Chart Overrides
+# -- Tagging PDP Chart Overrides
 tagging-pdp:
   enabled: true
   fullnameOverride: tagging-pdp
@@ -311,5 +331,5 @@ tagging-pdp:
     image:
       tag: sha-e28d7ee
 
-# The admin user created for tdf.
+# -- The admin user created for tdf.
 tdfAdminUsername: tdf-admin

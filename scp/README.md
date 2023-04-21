@@ -86,21 +86,17 @@ helm uninstall scp -n scp
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | abacus.basePath | string | `"/abacus"` |  |
-| abacus.enabled | bool | `true` |  |
+| abacus.enabled | bool | `true` | abacus enabled flag |
 | abacus.fullnameOverride | string | `"abacus"` |  |
 | abacus.ingress.enabled | bool | `false` |  |
-| access-pep.config.attrAuthorityHost | string | `"http://attributes:4020"` |  |
-| access-pep.config.disableTracing | string | `"true"` |  |
-| access-pep.config.entitlementPdpHost | string | `"http://entitlement-pdp:3355"` |  |
-| access-pep.config.keycloakAttrAuthorityClientID | string | `"tdf-client"` |  |
-| access-pep.config.keycloakAttrAuthorityClientSecret | string | `nil` |  |
-| access-pep.enabled | bool | `true` |  |
-| access-pep.existingImagePullSecret | string | `"scp-pull-secret"` |  |
+| access-pep.config | object | `{"attrAuthorityHost":"http://attributes:4020","disableTracing":"true","entitlementPdpHost":"http://entitlement-pdp:3355","keycloakAttrAuthorityClientID":"tdf-client","keycloakAttrAuthorityClientSecret":null}` | Access Pep configuration |
+| access-pep.enabled | bool | `true` | Enable access-pep flag |
+| access-pep.existingImagePullSecret | string | `"scp-pull-secret"` | Existing pull secrets |
 | access-pep.image.repo | string | `"ghcr.io/virtru-corp/access-pep/access-pep"` |  |
 | access-pep.image.tag | string | `"sha-cac697c"` |  |
-| access-pep.name | string | `"access-pep"` |  |
-| attributes.fullnameOverride | string | `"attributes"` |  |
-| attributes.secretRef | string | `"name: scp-attributes-secret"` |  |
+| access-pep.name | string | `"access-pep"` | Name override |
+| attributes | object | `{"fullnameOverride":"attributes","secretRef":"name: scp-attributes-secret"}` | Attribute Chart Overrides |
+| attributes.fullnameOverride | string | `"attributes"` | Attribute Service Name Override |
 | bootstrap.configPath | string | `nil` |  |
 | bootstrap.configsvc.enabled | bool | `true` |  |
 | bootstrap.configsvc.job.backoffLimit | int | `5` |  |
@@ -112,49 +108,28 @@ helm uninstall scp -n scp
 | bootstrap.configsvc.job.name | string | `"configsvc-bootstrap"` |  |
 | bootstrap.entitlementPolicy | bool | `true` |  |
 | bootstrap.keycloak | bool | `true` |  |
-| commonParams.attrEndpoint | string | `"http://attributes:4020"` |  |
-| commonParams.disableTracing | string | `"true"` |  |
-| commonParams.entilementPolicyOCIRegistryUrl | string | `"https://scp-docker-registry:5000"` |  |
-| commonParams.entitlementPolicyBundleRepo | string | `"scp-docker-registry:5000/entitlements-policybundle"` |  |
-| commonParams.entitlementPolicyBundleTag | string | `"0.0.2"` |  |
-| commonParams.imagePullSecrets[0].name | string | `"scp-pull-secret"` |  |
-| commonParams.scpImagePullSecretName | string | `"scp-pull-secret"` |  |
-| configuration.enabled | bool | `true` |  |
-| configuration.fullnameOverride | string | `"configuration"` |  |
-| configuration.server.image.tag | string | `"0.3.5"` |  |
-| configuration.server.imagePullSecrets[0].name | string | `"scp-pull-secret"` |  |
-| configuration.server.postgres.host | string | `"postgresql"` |  |
-| configuration.server.postgres.password | string | `nil` |  |
-| configuration.server.secretRef | string | `"name: scp-configsvc"` |  |
+| commonParams | object | `{"attrEndpoint":"http://attributes:4020","disableTracing":"true","entilementPolicyOCIRegistryUrl":"https://scp-docker-registry:5000","entitlementPolicyBundleRepo":"scp-docker-registry:5000/entitlements-policybundle","entitlementPolicyBundleTag":"0.0.2","imagePullSecrets":[{"name":"scp-pull-secret"}],"scpImagePullSecretName":"scp-pull-secret"}` | Some yaml anchor definitions for convenience |
+| configuration | object | `{"enabled":true,"fullnameOverride":"configuration","server":{"image":{"tag":"0.3.5"},"imagePullSecrets":[{"name":"scp-pull-secret"}],"postgres":{"host":"postgresql","password":null},"secretRef":"name: scp-configsvc"}}` | Configuration Chart Overrides |
+| configuration.enabled | bool | `true` | Configuration Service enabled flag |
+| configuration.fullnameOverride | string | `"configuration"` | Configuration svc name override |
 | docker-registry.enabled | bool | `true` |  |
 | docker-registry.persistence.enabled | bool | `true` |  |
 | docker-registry.persistence.size | string | `"1Gi"` |  |
 | docker-registry.tlsSecretName | string | `"scp-docker-registry-certs"` |  |
 | embedded.keycloak | bool | `true` | Use an embedded keycloak or not |
 | embedded.postgresql | bool | `true` | Use an embedded postgres or not |
-| entitlement-pdp.config.disableTracing | string | `"true"` |  |
-| entitlement-pdp.fullnameOverride | string | `"entitlement-pdp"` |  |
-| entitlement-pdp.opaConfig.policy.OCIRegistryUrl | string | `"https://scp-docker-registry:5000"` |  |
-| entitlement-pdp.opaConfig.policy.allowInsecureTLS | bool | `true` |  |
+| entitlement-pdp | object | `{"config":{"disableTracing":"true"},"fullnameOverride":"entitlement-pdp","opaConfig":{"policy":{"OCIRegistryUrl":"https://scp-docker-registry:5000","allowInsecureTLS":true,"bundleRepo":"scp-docker-registry:5000/entitlements-policybundle","bundleTag":"0.0.2","useStaticPolicy":false}},"secretRef":"name: scp-entitlement-pdp-secret"}` | Entitlement PDP Chart Overrides |
+| entitlement-pdp.fullnameOverride | string | `"entitlement-pdp"` | Entitlement PDP name override |
 | entitlement-pdp.opaConfig.policy.bundleRepo | string | `"scp-docker-registry:5000/entitlements-policybundle"` | Resource path to use to download bundle from configured service |
-| entitlement-pdp.opaConfig.policy.bundleTag | string | `"0.0.2"` |  |
-| entitlement-pdp.opaConfig.policy.useStaticPolicy | bool | `false` |  |
-| entitlement-pdp.secretRef | string | `"name: scp-entitlement-pdp-secret"` |  |
-| entitlement-policy-bootstrap.OCIRegistryUrl | string | `"https://scp-docker-registry:5000"` |  |
-| entitlement-policy-bootstrap.bundleRepo | string | `"scp-docker-registry:5000/entitlements-policybundle"` |  |
-| entitlement-policy-bootstrap.bundleTag | string | `"0.0.2"` |  |
-| entitlement-policy-bootstrap.image.tag | string | `"sha-531eea2"` |  |
-| entitlement-policy-bootstrap.imagePullSecrets[0].name | string | `"scp-pull-secret"` |  |
-| entitlement-policy-bootstrap.policyConfigMap | string | `"scp-bootstrap-entitlement-cm"` |  |
-| entitlement-policy-bootstrap.policyDataSecretRef | string | `"scp-bootstrap-entitlement-policy"` |  |
-| entitlement-policy-bootstrap.policyGlobPattern | string | `"configs/fed-demo/entitlement-policy/*"` |  |
-| entitlement-store.fullnameOverride | string | `"entitlement-store"` |  |
+| entitlement-pdp.opaConfig.policy.useStaticPolicy | bool | `false` | Use static policy flag - false to pull from oci registry |
+| entitlement-policy-bootstrap | object | `{"OCIRegistryUrl":"https://scp-docker-registry:5000","bundleRepo":"scp-docker-registry:5000/entitlements-policybundle","bundleTag":"0.0.2","image":{"tag":"sha-531eea2"},"imagePullSecrets":[{"name":"scp-pull-secret"}],"policyConfigMap":"scp-bootstrap-entitlement-cm","policyDataSecretRef":"scp-bootstrap-entitlement-policy","policyGlobPattern":"configs/fed-demo/entitlement-policy/*"}` | Entitlement Policy Bootstrap |
+| entitlement-store.fullnameOverride | string | `"entitlement-store"` | Entitlement Store name override |
 | entitlement-store.secretRef | string | `"name: scp-entitlement-store-secret"` |  |
-| entitlements.fullnameOverride | string | `"entitlements"` |  |
+| entitlements.fullnameOverride | string | `"entitlements"` | Entitlements Name Override |
 | entitlements.secretRef | string | `"name: scp-entitlements-secret    "` |  |
 | entity-resolution.config.disableTracing | string | `"true"` |  |
 | entity-resolution.config.keycloak.legacy | bool | `true` |  |
-| entity-resolution.fullnameOverride | string | `"entity-resolution"` |  |
+| entity-resolution.fullnameOverride | string | `"entity-resolution"` | Entity Resolution Name override |
 | fullnameOverride | string | `""` |  |
 | global.opentdf.common.ingress.hostname | string | `"scp.virtrudemos.com"` |  |
 | global.opentdf.common.ingress.scheme | string | `"https"` |  |
@@ -167,9 +142,9 @@ helm uninstall scp -n scp
 | ingress.existingGateway | string | `nil` |  |
 | ingress.gatewaySelector | string | `"ingress"` |  |
 | ingress.name | string | `"scp"` |  |
-| kas.endpoints.attrHost | string | `"http://attributes:4020"` |  |
-| kas.fullnameOverride | string | `"kas"` |  |
-| kas.pdp.disableTracing | string | `"true"` |  |
+| kas.endpoints.attrHost | string | `"http://attributes:4020"` | Attributes hostname accessible to KAS |
+| kas.fullnameOverride | string | `"kas"` | KAS Name Override |
+| kas.pdp.disableTracing | string | `"true"` | Disable tracing flag |
 | kas.pdp.verbose | string | `"true"` |  |
 | keycloak-bootstrap.attributes.clientId | string | `"dcr-test"` |  |
 | keycloak-bootstrap.attributes.hostname | string | `"http://attributes:4020"` |  |
@@ -178,15 +153,11 @@ helm uninstall scp -n scp
 | keycloak-bootstrap.entitlements.realms | string | `nil` |  |
 | keycloak-bootstrap.existingConfigSecret | string | `"scp-keycloakbootstrap-config"` |  |
 | keycloak-bootstrap.secretRef | string | `"name: scp-keycloakbootstrap-secret"` |  |
-| keycloak.command[0] | string | `"/opt/keycloak/bin/kc.sh"` |  |
-| keycloak.command[1] | string | `"--verbose"` |  |
-| keycloak.command[2] | string | `"start-dev"` |  |
-| keycloak.command[3] | string | `"--http-relative-path"` |  |
-| keycloak.command[4] | string | `"/auth"` |  |
+| keycloak.command | list | `["/opt/keycloak/bin/kc.sh","--verbose","start-dev","--http-relative-path","/auth"]` | Command to start the keycloak service |
 | keycloak.externalDatabase.database | string | `"keycloak_database"` |  |
-| keycloak.extraEnv | string | `"- name: CLAIMS_URL\n  value: http://entitlement-pdp:3355/entitlements\n- name: JAVA_OPTS_APPEND\n  value: -Djgroups.dns.query={{ include \"keycloak.fullname\" . }}-headless\n- name: KC_DB\n  value: postgres\n- name: KC_DB_URL_PORT\n  value: \"5432\"\n- name: KC_LOG_LEVEL\n  value: INFO\n- name: KC_HOSTNAME_STRICT\n  value: \"false\"\n- name: KC_HOSTNAME_STRICT_BACKCHANNEL\n  value: \"false\"\n- name: KC_HOSTNAME_STRICT_HTTPS\n  value: \"false\"\n- name: KC_HOSTNAME_URL\n  value: {{ ( include \"keycloak.externalUrl\" . ) | quote }}\n- name: KC_HOSTNAME_ADMIN_URL\n  value: {{ ( include \"keycloak.externalUrl\" . ) | quote }}\n- name: KC_HTTP_ENABLED\n  value: \"true\"\n- name: KC_FEATURES\n  value: \"preview,token-exchange\""` |  |
+| keycloak.extraEnv | string | `"- name: CLAIMS_URL\n  value: http://entitlement-pdp:3355/entitlements\n- name: JAVA_OPTS_APPEND\n  value: -Djgroups.dns.query={{ include \"keycloak.fullname\" . }}-headless\n- name: KC_DB\n  value: postgres\n- name: KC_DB_URL_PORT\n  value: \"5432\"\n- name: KC_LOG_LEVEL\n  value: INFO\n- name: KC_HOSTNAME_STRICT\n  value: \"false\"\n- name: KC_HOSTNAME_STRICT_BACKCHANNEL\n  value: \"false\"\n- name: KC_HOSTNAME_STRICT_HTTPS\n  value: \"false\"\n- name: KC_HOSTNAME_URL\n  value: {{ ( include \"keycloak.externalUrl\" . ) | quote }}\n- name: KC_HOSTNAME_ADMIN_URL\n  value: {{ ( include \"keycloak.externalUrl\" . ) | quote }}\n- name: KC_HTTP_ENABLED\n  value: \"true\"\n- name: KC_FEATURES\n  value: \"preview,token-exchange\""` | Extra environment variables. |
 | keycloak.extraEnvFrom | string | `"- secretRef:\n    name: scp-keycloak-secret"` |  |
-| keycloak.fullnameOverride | string | `"keycloak"` |  |
+| keycloak.fullnameOverride | string | `"keycloak"` | keycloak name override |
 | keycloak.image.pullPolicy | string | `"IfNotPresent"` |  |
 | keycloak.image.repository | string | `"ghcr.io/opentdf/keycloak"` |  |
 | keycloak.image.tag | string | `"main"` |  |
@@ -198,36 +169,28 @@ helm uninstall scp -n scp
 | postgresql.image.tag | string | `"11"` |  |
 | postgresql.primary.initdb.scriptsSecret | string | `"{{ include \"postgresql.primary.fullname\" . }}-initdb-secret\n"` |  |
 | postgresql.primary.initdb.user | string | `"postgres"` |  |
-| secrets.attributes.clientSecret | string | `nil` |  |
-| secrets.attributes.dbPassword | string | `nil` |  |
-| secrets.configuration.dbPassword | string | `nil` |  |
-| secrets.enabled | bool | `true` |  |
-| secrets.entitlementStore.dbPassword | string | `nil` |  |
-| secrets.entitlements.clientSecret | string | `nil` |  |
-| secrets.entitlements.dbPassword | string | `nil` |  |
-| secrets.imageCredentials[0].email | string | `"nope@nah.com"` |  |
-| secrets.imageCredentials[0].name | string | `"scp-pull-secret"` |  |
-| secrets.imageCredentials[0].password | string | `"password"` |  |
-| secrets.imageCredentials[0].registry | string | `"ghcr.io"` |  |
-| secrets.imageCredentials[0].username | string | `"username"` |  |
-| secrets.keycloak.adminPassword | string | `nil` |  |
-| secrets.keycloak.adminUsername | string | `nil` |  |
-| secrets.keycloak.dbPassword | string | `nil` |  |
-| secrets.keycloakBootstrap.attributesPassword | string | `nil` |  |
-| secrets.keycloakBootstrap.attributesUsername | string | `nil` |  |
-| secrets.keycloakBootstrap.clientSecret | string | `nil` |  |
-| secrets.keycloakBootstrap.clients | string | `nil` |  |
-| secrets.keycloakBootstrap.customConfig | string | `nil` |  |
-| secrets.keycloakBootstrap.users | string | `nil` |  |
-| secrets.opaPolicyPullSecret | string | `nil` |  |
-| secrets.postgresql.dbPassword | string | `nil` |  |
-| tagging-pdp.enabled | bool | `true` |  |
-| tagging-pdp.fullnameOverride | string | `"tagging-pdp"` |  |
-| tagging-pdp.gateway.enabled | bool | `true` |  |
-| tagging-pdp.gateway.image.tag | string | `"sha-e28d7ee"` |  |
-| tagging-pdp.gateway.pathPrefix | string | `"tagging-pdp"` |  |
-| tagging-pdp.image.pullSecrets[0].name | string | `"scp-pull-secret"` |  |
-| tagging-pdp.image.tag | string | `"sha-470efff"` |  |
-| tdfAdminUsername | string | `"tdf-admin"` |  |
+| secrets | object | `{"attributes":{"clientSecret":null,"dbPassword":null},"configuration":{"dbPassword":null},"enabled":true,"entitlementStore":{"dbPassword":null},"entitlements":{"clientSecret":null,"dbPassword":null},"imageCredentials":[{"email":"nope@nah.com","name":"scp-pull-secret","password":"password","registry":"ghcr.io","username":"username"}],"keycloak":{"adminPassword":null,"adminUsername":null,"dbPassword":null},"keycloakBootstrap":{"attributesPassword":null,"attributesUsername":null,"clientSecret":null,"clients":null,"customConfig":null,"users":null},"opaPolicyPullSecret":null,"postgresql":{"dbPassword":null}}` | Templates for generating secrets |
+| secrets.attributes.clientSecret | string | `nil` | oidc client secret used by attributes svc to auth to idp and enforce svc authorization |
+| secrets.attributes.dbPassword | string | `nil` | postgres password for attributes svc user |
+| secrets.configuration.dbPassword | string | `nil` | postgres password for config svc user |
+| secrets.enabled | bool | `true` | Generate secrets from the values provided below.  If false, another bootstrapping mechanism for secrets is required. |
+| secrets.entitlementStore.dbPassword | string | `nil` | postgres password for entitlement-store svc user |
+| secrets.entitlements.clientSecret | string | `nil` | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization |
+| secrets.entitlements.dbPassword | string | `nil` | postgres password for entitlements svc user |
+| secrets.imageCredentials | list | `[{"email":"nope@nah.com","name":"scp-pull-secret","password":"password","registry":"ghcr.io","username":"username"}]` | Image pull credentials. |
+| secrets.keycloak.adminPassword | string | `nil` | Keycloak admin user's password |
+| secrets.keycloak.adminUsername | string | `nil` | keycloak admin user's username |
+| secrets.keycloak.dbPassword | string | `nil` | postgres password for keycloak svc user |
+| secrets.keycloakBootstrap.attributesPassword | string | `nil` | password for attribute service auth |
+| secrets.keycloakBootstrap.attributesUsername | string | `nil` | username for attribute service auth |
+| secrets.keycloakBootstrap.clientSecret | string | `nil` | client secret assigned to standard bootstrapper clients |
+| secrets.keycloakBootstrap.clients | string | `nil` | list of custom oidc clients to add |
+| secrets.keycloakBootstrap.users | string | `nil` | list of users to be added |
+| secrets.opaPolicyPullSecret | string | `nil` | oci registry pull secret for OPA policy |
+| secrets.postgresql.dbPassword | string | `nil` | password for postgres user |
+| tagging-pdp | object | `{"enabled":true,"fullnameOverride":"tagging-pdp","gateway":{"enabled":true,"image":{"tag":"sha-e28d7ee"},"pathPrefix":"tagging-pdp"},"image":{"pullSecrets":[{"name":"scp-pull-secret"}],"tag":"sha-470efff"}}` | Tagging PDP Chart Overrides |
+| tdfAdminUsername | string | `"tdf-admin"` | The admin user created for tdf. |
 
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
 
