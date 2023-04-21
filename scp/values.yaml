@@ -2,60 +2,77 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Some yaml anchor definitions for convenience
+# Some yaml anchor definitions for convenience
+## @section Common parameters - used as yaml anchors
 commonParams:
+  ## @param commonParams.attrEndpoint Interal attribute service endpoint
   attrEndpoint: &attrEndpoint "http://attributes:4020"
-  #Disable OTEL Tracing
+  ## @param commonParams.disableTracing Disable OTEL Tracing
   disableTracing: &disableTracing "true"
+  ## @param commonParams.entitlementPolicyBundleRepo entitlement OPA Bundle Repo
   entitlementPolicyBundleRepo: &entitlementPolicyBundleRepo "scp-docker-registry:5000/entitlements-policybundle"
+  ## @param commonParams.entitlementPolicyBundleTag entitlement OPA Bundle tag
   entitlementPolicyBundleTag: &entitlementPolicyBundleTag 0.0.2
+  ## @param commonParams.entilementPolicyOCIRegistryUrl OPA policy endpoint
   entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://scp-docker-registry:5000"
+  ## @param commonParams.scpImagePullSecretName common pull secret name
   scpImagePullSecretName: &scpImagePullSecretName "scp-pull-secret"
   imagePullSecrets: &imagePullSecrets
+    ## @param commonParams.imagePullSecrets[0].name name of pull secret
     - name: *scpImagePullSecretName
 
+## @section Name Parameters
+## @param nameOverride Chart name override
 nameOverride: ""
+## @param fullnameOverride Chart full name override
 fullnameOverride: ""
 
+## @section Embedded Service Deployment
 embedded:
-  # -- Use an embedded keycloak or not
+  ## @param embedded.keycloak  Use an embedded keycloak or not
   keycloak: true
-  # -- Use an embedded postgres or not
+  ## @param embedded.postgresql  Use an embedded postgres or not
   postgresql: true
 
-#-- Keycloak bootstrap parameters
+## @section Keycloak bootstrap parameters
 bootstrap:
-  #-- Should keycloak bootstrap be enabled
+  ## @param bootstrap.keycloak Should keycloak bootstrap be enabled
   keycloak: true
-  #-- Configuration service boostrapping configuration
   configsvc:
-    #-- Enable configuration service artifact bootstrapping
+    ## @param bootstrap.configsvc.enabled Enable configuration service artifact bootstrapping
     enabled: true
-    #-- Config svc artifact bootstrapping job config
     job:
+      ## @param bootstrap.configsvc.job.name Name of the job
       name: configsvc-bootstrap
       image:
+        ## @param bootstrap.configsvc.job.image.repo Image repository
         repo: ghcr.io/virtru-corp/postman-cli/opcr-policy
+        ## @param bootstrap.configsvc.job.image.tag Image tag
         tag: sha-531eea2
+        ## @param bootstrap.configsvc.job.image.pullPolicy Image pull policy
         pullPolicy: IfNotPresent
+      ## @param bootstrap.configsvc.job.backoffLimit Job backoff limit
       backoffLimit: 5
-      #-- Secret name used to mount configuration artifacts used by the job
+      ## @param bootstrap.configsvc.job.configVolumeSecretRefName Secret name used to mount configuration artifacts used by the job
       configVolumeSecretRefName: scp-bootstrap-configsvc
-      #-- secret for environment variables
+      ## @param bootstrap.configsvc.job.envSecretRef secret for environment variables
       envSecretRef:
-  #-- The path to the install configuration file (relative to the chart directory)
+  ## @param  bootstrap.configPath The path to the install configuration file (relative to the chart directory)
   configPath:
-  #-- Should entitlement policy be bootstrapped
+  ## @param bootstrap.entitlementPolicy Should entitlement policy be bootstrapped
   entitlementPolicy: true
 
+## @section Ingress Configuration
 ingress:
-  #-- Use an existing istio gateway
+  ## @param ingress.existingGateway Use an existing istio gateway
   existingGateway:
-  #-- Name of istio gateway selector
+  ## @param ingress.gatewaySelector Name of istio gateway selector
   gatewaySelector: ingress
+  ## @param ingress.name Name base for istio resources
   name: scp
 
 global:
+  ## @skip global.opentdf
   opentdf:
     common:
       oidcExternalBaseUrl: https://scp.virtrudemos.com
@@ -72,135 +89,167 @@ global:
         # -- The database name within the given server
         database: tdf_database
 
+## @section ABACUS Chart Overrides
 abacus:
-  # -- abacus enabled flag
+  ## @param abacus.enabled abacus enabled flag
   enabled: true
+  ## @param abacus.basePath path to abcus
   basePath: "/abacus"
+  ## @param abacus.fullnameOverride Override name of abacus
   fullnameOverride: abacus
+  ## @skip abacus.ingress
   ingress:
     enabled: false
 
+## @section Access-PEP Chart Overrides
 access-pep:
-  # -- Enable access-pep flag
+  ## @param access-pep.enabled Enable access-pep flag
   enabled: true
-  # -- Name override
+  ## @param access-pep.name Name override
   name: access-pep
-  # -- Existing pull secrets
+  ## @param access-pep.existingImagePullSecret Existing pull secret for the image
   existingImagePullSecret: *scpImagePullSecretName
   image:
+    ## @param access-pep.image.repo Image Rep
     repo: ghcr.io/virtru-corp/access-pep/access-pep
+    ## @param access-pep.image.tag Image tag
     tag: sha-cac697c
-  # -- Access Pep configuration
   config:
+    ## @param access-pep.config.disableTracing disable tracing flag
     disableTracing: *disableTracing
+    ## @param access-pep.config.attrAuthorityHost Attribute Service Endpoint
     attrAuthorityHost: *attrEndpoint
+    ## @param access-pep.config.entitlementPdpHost entitlement pdp endpoint
     entitlementPdpHost: "http://entitlement-pdp:3355"
+    ## @param access-pep.config.keycloakAttrAuthorityClientID OIDC client id
     keycloakAttrAuthorityClientID: "tdf-client"
+    ## @param access-pep.config.keycloakAttrAuthorityClientSecret Sets client secret to empty - to be overridden by secret
     keycloakAttrAuthorityClientSecret:
 
-# Attribute Chart Overrides
+## @section Attribute Chart Overrides
 attributes:
-  # -- Attribute Service Name Override
+  ## @param attributes.fullnameOverride Attribute Service Name Override
   fullnameOverride: attributes
+  ## @param attributes.secretRef Secrets for environment variable injection
   secretRef: |-
     name: scp-attributes-secret
 
-
-
-# Configuration Chart Overrides
+## @section Configuration Chart Overrides
 configuration:
-  # -- Configuration Service enabled flag
+  ## @param configuration.enabled Configuration Service enabled flag
   enabled: true
-  # -- Configuration svc name override
+  ## @param configuration.fullnameOverride Configuration svc name override
   fullnameOverride: configuration
   server:
     image:
+      ## @param configuration.server.image.tag Configuration Service Image Tag
       tag: 0.3.5
+    ## @param configuration.server.secretRef Configuration Service Secrets Ref
     secretRef: |-
       name: scp-configsvc
     postgres:
+      ## @param configuration.server.postgres.host hostname of postgres
       host: postgresql
-      # Override with value
+      ## @param configuration.server.postgres.password password for postgres - should not be set
       password:
+    ## @skip configuration.server.imagePullSecrets[0].name
     imagePullSecrets: *imagePullSecrets
 
-# Entitlement Policy Bootstrap Job parameters
+## @section Entitlement Policy Bootstrap Job parameters
 entitlement-policy-bootstrap:
-  # -- The Glob Pattern to the entitlement policy source data . e.g. rego + data.json
+  ## @param entitlement-policy-bootstrap.policyGlobPattern The Glob Pattern to the entitlement policy source data . e.g. rego + data.json
   policyGlobPattern: "configs/fed-demo/entitlement-policy/*"
-  # -- Bundle repository
+  ## @param entitlement-policy-bootstrap.bundleRepo Bundle repository
   bundleRepo: *entitlementPolicyBundleRepo
-  # -- Bundle Tag
+  ## @param entitlement-policy-bootstrap.bundleTag Bundle Tag
   bundleTag: *entitlementPolicyBundleTag
-  # -- URL of OCI registry to publish to
+  ## @param entitlement-policy-bootstrap.OCIRegistryUrl URL of OCI registry to publish to
   OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
-  # -- Config map name used to inject env varibles into the job
+  ## @param entitlement-policy-bootstrap.policyConfigMap Config map name used to inject env varibles into the job
   policyConfigMap: scp-bootstrap-entitlement-cm
-  # -- Secret name used to mount policy artifacts into the job
+  ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job
   policyDataSecretRef: scp-bootstrap-entitlement-policy
-  # -- Image pull secrets for the job
+  ## @skip entitlement-policy-bootstrap.imagePullSecrets[0].name
   imagePullSecrets: *imagePullSecrets
   image:
-    # -- ocpr container tag
+    ## @param entitlement-policy-bootstrap.image.tag ocpr container tag
     tag: sha-531eea2
 
-# Entitlement PDP Chart Overrides
+## @section Entitlement PDP Chart Overrides
 entitlement-pdp:
-  # -- Entitlement PDP name override
+  ## @param entitlement-pdp.fullnameOverride  Entitlement PDP name override
   fullnameOverride: entitlement-pdp
   opaConfig:
     policy:
-      # -- Use static policy flag - false to pull from oci registry
+      ## @param entitlement-pdp.opaConfig.policy.useStaticPolicy Use static policy flag - false to pull from oci registry
       useStaticPolicy: false
+      ## @param entitlement-pdp.opaConfig.policy.allowInsecureTLS Allow insecure comms to oci registry
       allowInsecureTLS: true
+      ## @param entitlement-pdp.opaConfig.policy.OCIRegistryUrl OCI registry url
       OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
-      # -- Resource path to use to download bundle from configured service
+      ## @param entitlement-pdp.opaConfig.policy.bundleRepo OCI Bundle Repo
       bundleRepo: *entitlementPolicyBundleRepo
+      ## @param entitlement-pdp.opaConfig.policy.bundleTag OCI bundle tag
       bundleTag: *entitlementPolicyBundleTag
   config:
+    ## @param entitlement-pdp.config.disableTracing Disable tracing flag
     disableTracing: *disableTracing
+  ## @param entitlement-pdp.secretRef Secrets for env variables.
   secretRef: |-
     name: scp-entitlement-pdp-secret
 
+## @section Entitlement Store Chart Overrides
 entitlement-store:
-  # -- Entitlement Store name override
+  ## @param entitlement-store.fullnameOverride Entitlement Store name override
   fullnameOverride: entitlement-store
+  ## @param entitlement-store.secretRef Secrets for environment variables
   secretRef: |-
     name: scp-entitlement-store-secret
 
+## @section Entitlement Chart Overrides
 entitlements:
-  # -- Entitlements Name Override
+  ## @param entitlements.fullnameOverride Entitlements Name Override
   fullnameOverride: entitlements
+  ## @param  entitlements.secretRef Entitlements Secrets for environment variables
   secretRef: |-
     name: scp-entitlements-secret    
 
+## @section Entity Resolution Chart Overrides
 entity-resolution:
-  # -- Entity Resolution Name override
+  ## @param entity-resolution.fullnameOverride Entity Resolution Name override
   fullnameOverride: entity-resolution
   config:
+    ## @param entity-resolution.config.disableTracing Disable Tracing Flag
     disableTracing: *disableTracing
     keycloak:
+      ## @param entity-resolution.config.keycloak.legacy Legacy Keycloak Tracing Flag
       legacy: true
 
+## @section KAS Chart Overrides
 kas:
-  # -- KAS Name Override
+  ## @param kas.fullnameOverride  KAS Name Override
   fullnameOverride: kas
   endpoints:
-    # -- Attributes hostname accessible to KAS
+    ## @param kas.endpoints.attrHost Attributes hostname accessible to KAS
     attrHost: *attrEndpoint
   pdp:
+    ## @param kas.pdp.verbose Verbose Logging Flag
     verbose: "true"
-    # -- Disable tracing flag
+    ## @param kas.pdp.disableTracing  Disable tracing flag
     disableTracing: *disableTracing
 
+## @section Keycloak Chart Overrides
 keycloak:
-  # -- keycloak name override
+  ## @param keycloak.fullnameOverride keycloak name override
   fullnameOverride: keycloak
   image:
+    ## @param keycloak.image.repository Keycloak Image Repo
     repository: ghcr.io/opentdf/keycloak
+    ## @param keycloak.image.tag Keycloak Image Tag
     tag: main
+    ## @param keycloak.image.pullPolicy Keycloak Image pull policy
     pullPolicy: IfNotPresent
-  # -- Command to start the keycloak service
+  ## @param keycloak.command Command to start the keycloak service
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "--verbose"
@@ -208,10 +257,12 @@ keycloak:
     - "--http-relative-path"
     - "/auth"
   postgresql:
+    ## @param keycloak.postgresql.enabled Use keycloak deployed postgres flag
     enabled: false
   externalDatabase:
+    ## @param keycloak.externalDatabase.database Database name
     database: keycloak_database
-  # -- Extra environment variables.
+  ## @param keycloak.extraEnv Extra environment variables.
   extraEnv: |-
     - name: CLAIMS_URL
       value: http://entitlement-pdp:3355/entitlements
@@ -237,100 +288,111 @@ keycloak:
       value: "true"
     - name: KC_FEATURES
       value: "preview,token-exchange"
+  ## @param keycloak.extraEnvFrom Extra Environment From Reference YAML
   extraEnvFrom: |-
     - secretRef:
         name: scp-keycloak-secret
 
+## @section Keycloak Bootstrap Chart Overrides
 keycloak-bootstrap:
   entitlements:
-    # -- Entitlement svc hostname
+    ## @param keycloak-bootstrap.entitlements.hostname Entitlement svc hostname
     hostname: http://entitlements:4030
-    # -- Entitlement override realms
+    ## @param keycloak-bootstrap.entitlements.realms Entitlement override realms
     realms: null
-  # -- Secret name used to Mount bootstrapping data
+  ## @param keycloak-bootstrap.existingConfigSecret Secret name used to Mount bootstrapping data
   existingConfigSecret: scp-keycloakbootstrap-config
-  # -- Secret for bootstrap job env variables.
+  ## @param keycloak-bootstrap.secretRef Secret for bootstrap job env variables.
   secretRef: |-
     name: scp-keycloakbootstrap-secret
   attributes:
-    # -- Attribute service endpoint accessible to boostrap job
+    ## @param keycloak-bootstrap.attributes.hostname Attribute service endpoint accessible to boostrap job
     hostname: *attrEndpoint
-    # -- Realm for OIDC client auth to attribute service
+    ## @param keycloak-bootstrap.attributes.realm Realm for OIDC client auth to attribute service
     realm: tdf
-    # -- OIDC client ID used to auth to attribute service
+    ## @param keycloak-bootstrap.attributes.clientId OIDC client ID used to auth to attribute service
     clientId: dcr-test
 
+## @section Docker Registry Configuration
 docker-registry:
-  # -- Enable docker registry
+  ## @param docker-registry.enabled Enable docker registry
   enabled: true
   persistence:
-    # -- Persistence Enabled Flag
+    ## @param docker-registry.persistence.enabled Persistence Enabled Flag
     enabled: true
+    ## @param docker-registry.persistence.size Size of volume
     size: 1Gi
-  # -- Secret name containing TLS Certs used by the registry
+  ## @param docker-registry.tlsSecretName Secret name containing TLS Certs used by the registry
   tlsSecretName: scp-docker-registry-certs
 
+## @section Postgresql Chart Overrides
 postgresql:
-  # -- Postgresql Name override
+  ## @param postgresql.fullnameOverride Postgresql Name override
   fullnameOverride: postgresql
   image:
+    ## @param postgresql.image.debug Debug Flag
     debug: true
+    ## @param postgresql.image.tag Image Tag
     tag: "11"
   auth:
+    ## @param postgresql.auth.existingSecret Existing secret for postgres auth settings
     existingSecret: >
       {{ include "postgresql.primary.fullname" . }}-secret
   primary:
     initdb:
+      ## @param postgresql.primary.initdb.user user for init script execution
       user: postgres
+      ## @param postgresql.primary.initdb.scriptsSecret Secret containing init db scripts
       scriptsSecret: >
         {{ include "postgresql.primary.fullname" . }}-initdb-secret
 
-# Templates for generating secrets
+## @section Secret Generation Parameters
 secrets:
-  # -- Generate secrets from the values provided below.  If false, another bootstrapping
+  ## @param secrets.enabled Generate secrets from the values provided below.  If false, another bootstrapping
   # mechanism for secrets is required.
   enabled: true
   postgresql:
-    # -- password for postgres user
+    ## @param secrets.postgresql.dbPassword password for postgres user
     dbPassword:
   attributes:
-    # -- oidc client secret used by attributes svc to auth to idp and enforce svc authorization
+    ## @param secrets.attributes.clientSecret oidc client secret used by attributes svc to auth to idp and enforce svc authorization
     clientSecret:
-    # -- postgres password for attributes svc user
+    ## @param secrets.attributes.dbPassword postgres password for attributes svc user
     dbPassword:
   configuration:
-    # -- postgres password for config svc user
+    ## @param secrets.configuration.dbPassword postgres password for config svc user
     dbPassword:
   entitlementStore:
-    # -- postgres password for entitlement-store svc user
+    ## @param secrets.entitlementStore.dbPassword postgres password for entitlement-store svc user
     dbPassword:
   entitlements:
-    # -- oidc client secret used by entitlements svc to auth to idp and enforce svc authorization
+    ## @param secrets.entitlements.clientSecret oidc client secret used by entitlements svc to auth to idp and enforce svc authorization
     clientSecret:
-    # -- postgres password for entitlements svc user
+    ## @param secrets.entitlements.dbPassword postgres password for entitlements svc user
     dbPassword:
   keycloak:
-    # -- postgres password for keycloak svc user
+    ## @param secrets.keycloak.dbPassword postgres password for keycloak svc user
     dbPassword:
-    # -- keycloak admin user's username
+    ## @param secrets.keycloak.adminUsername keycloak admin user's username
     adminUsername:
-    # -- Keycloak admin user's password
+    ## @param secrets.keycloak.adminPassword Keycloak admin user's password
     adminPassword:
   keycloakBootstrap:
-    # -- username for attribute service auth
+    ## @param secrets.keycloakBootstrap.attributesUsername username for attribute service auth
     attributesUsername:
-    # -- password for attribute service auth
+    ## @param secrets.keycloakBootstrap.attributesPassword password for attribute service auth
     attributesPassword:
-    # -- list of users to be added
+    ## @param secrets.keycloakBootstrap.users list of users to be added [{"username":"","password":""}]
     users:
-    # -- list of custom oidc clients to add
+    ## @param secrets.keycloakBootstrap.clients list of custom oidc clients added [{"clientId":<>,"clientSecret":"","audienceMappers":["aud]}]
     clients:
-    # -- client secret assigned to standard bootstrapper clients
+    ## @param secrets.keycloakBootstrap.clientSecret client secret assigned to standard bootstrapper clients
     clientSecret:
+    ## @param secrets.keycloakBootstrap.customConfig Override for custom config to none
     customConfig: null
-  # -- oci registry pull secret for OPA policy
+  ## @param secrets.opaPolicyPullSecret oci registry pull secret for OPA policy
   opaPolicyPullSecret:
-  # -- Image pull credentials.
+  ## @skip secrets.imageCredentials[0]
   imageCredentials:
     - name: scp-pull-secret
       registry: ghcr.io
@@ -338,20 +400,25 @@ secrets:
       password: password
       email: nope@nah.com
 
-# Tagging PDP Chart Overrides
+## @section Tagging PDP Chart Overrides
 tagging-pdp:
-  # -- Tagging-PDP enabled flag
+  ## @param tagging-pdp.enabled enabled flag
   enabled: true
+  ## @param tagging-pdp.fullnameOverride override name
   fullnameOverride: tagging-pdp
   image:
+    ## @param tagging-pdp.image.tag Tagging PDP Image Tag
     tag: sha-470efff
+    ## @skip tagging-pdp.image.pullSecrets[0].name
     pullSecrets: *imagePullSecrets
   gateway:
-    # -- Tagging PDP Rest Gateway enabled flag
+    ## @param tagging-pdp.gateway.enabled Tagging PDP Rest Gateway enabled flag
     enabled: true
+    ## @param tagging-pdp.gateway.pathPrefix tagging-pdp svc prefix
     pathPrefix: tagging-pdp
+    ## @skip tagging-pdp.gateway.image
     image:
       tag: sha-e28d7ee
 
-# -- The admin user created for tdf.
+## @param tdfAdminUsername The admin user created for tdf.
 tdfAdminUsername: tdf-admin
