@@ -98,7 +98,7 @@ access-pep:
     keycloakAttrAuthorityClientID: "tdf-client"
     keycloakAttrAuthorityClientSecret:
 
-# -- Attribute Chart Overrides
+# Attribute Chart Overrides
 attributes:
   # -- Attribute Service Name Override
   fullnameOverride: attributes
@@ -106,7 +106,8 @@ attributes:
     name: scp-attributes-secret
 
 
-# -- Configuration Chart Overrides
+
+# Configuration Chart Overrides
 configuration:
   # -- Configuration Service enabled flag
   enabled: true
@@ -123,19 +124,27 @@ configuration:
       password:
     imagePullSecrets: *imagePullSecrets
 
-# -- Entitlement Policy Bootstrap
+# Entitlement Policy Bootstrap Job parameters
 entitlement-policy-bootstrap:
+  # -- The Glob Pattern to the entitlement policy source data . e.g. rego + data.json
   policyGlobPattern: "configs/fed-demo/entitlement-policy/*"
+  # -- Bundle repository
   bundleRepo: *entitlementPolicyBundleRepo
+  # -- Bundle Tag
   bundleTag: *entitlementPolicyBundleTag
+  # -- URL of OCI registry to publish to
   OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
+  # -- Config map name used to inject env varibles into the job
   policyConfigMap: scp-bootstrap-entitlement-cm
+  # -- Secret name used to mount policy artifacts into the job
   policyDataSecretRef: scp-bootstrap-entitlement-policy
+  # -- Image pull secrets for the job
   imagePullSecrets: *imagePullSecrets
   image:
+    # -- ocpr container tag
     tag: sha-531eea2
 
-# -- Entitlement PDP Chart Overrides
+# Entitlement PDP Chart Overrides
 entitlement-pdp:
   # -- Entitlement PDP name override
   fullnameOverride: entitlement-pdp
@@ -234,24 +243,35 @@ keycloak:
 
 keycloak-bootstrap:
   entitlements:
+    # -- Entitlement svc hostname
     hostname: http://entitlements:4030
+    # -- Entitlement override realms
     realms: null
+  # -- Secret name used to Mount bootstrapping data
   existingConfigSecret: scp-keycloakbootstrap-config
+  # -- Secret for bootstrap job env variables.
   secretRef: |-
     name: scp-keycloakbootstrap-secret
   attributes:
+    # -- Attribute service endpoint accessible to boostrap job
     hostname: *attrEndpoint
+    # -- Realm for OIDC client auth to attribute service
     realm: tdf
+    # -- OIDC client ID used to auth to attribute service
     clientId: dcr-test
 
 docker-registry:
+  # -- Enable docker registry
   enabled: true
   persistence:
+    # -- Persistence Enabled Flag
     enabled: true
     size: 1Gi
+  # -- Secret name containing TLS Certs used by the registry
   tlsSecretName: scp-docker-registry-certs
 
 postgresql:
+  # -- Postgresql Name override
   fullnameOverride: postgresql
   image:
     debug: true
@@ -265,7 +285,7 @@ postgresql:
       scriptsSecret: >
         {{ include "postgresql.primary.fullname" . }}-initdb-secret
 
-# -- Templates for generating secrets
+# Templates for generating secrets
 secrets:
   # -- Generate secrets from the values provided below.  If false, another bootstrapping
   # mechanism for secrets is required.
@@ -318,14 +338,16 @@ secrets:
       password: password
       email: nope@nah.com
 
-# -- Tagging PDP Chart Overrides
+# Tagging PDP Chart Overrides
 tagging-pdp:
+  # -- Tagging-PDP enabled flag
   enabled: true
   fullnameOverride: tagging-pdp
   image:
     tag: sha-470efff
     pullSecrets: *imagePullSecrets
   gateway:
+    # -- Tagging PDP Rest Gateway enabled flag
     enabled: true
     pathPrefix: tagging-pdp
     image:
