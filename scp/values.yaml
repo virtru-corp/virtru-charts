@@ -242,34 +242,48 @@ postgresql:
 
 #Templates for generating secrets
 secrets:
-  # Generate secrets from the values provided below.  If false, another boostrapping
+  # Generate secrets from the values provided below.  If false, another bootstrapping
   # mechanism for secrets is required.
   enabled: true
-  # -- Client secret used to verify identity in attributes and entitlements
-  oidcClientSecret:
   postgresql:
+    #password for postgres user
     dbPassword:
   attributes:
+    # oidc client secret used by attributes svc to auth to idp and enforce svc authorization
     clientSecret:
+    # postgres password for attributes svc user
     dbPassword:
   configuration:
+    # postgres password for config svc user
     dbPassword:
   entitlementStore:
+    # postgres password for entitlement-store svc user
     dbPassword:
   entitlements:
+    # oidc client secret used by entitlements svc to auth to idp and enforce svc authorization
     clientSecret:
+    # postgres password for entitlements svc user
     dbPassword:
   keycloak:
+    # postgres password for keycloak svc user
     dbPassword:
+    # keycloak admin user's username
     adminUsername:
+    # Keycloak admin user's password
     adminPassword:
   keycloakBootstrap:
+    #username for attribute service auth
     attributesUsername:
+    #password for attribute service auth
     attributesPassword:
+    # list of users to be added
     users:
+    # list of custom oidc clients to add
     clients:
+    #client secret assigned to standard bootstrapper clients
     clientSecret:
     customConfig: null
+  #oci registry pull secret for OPA policy
   opaPolicyPullSecret:
   #Image pull credentials.
   imageCredentials:

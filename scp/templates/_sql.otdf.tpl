@@ -45,19 +45,19 @@ CREATE TABLE IF NOT EXISTS tdf_entitlement.entity_attribute
 CREATE INDEX entity_id_index ON tdf_entitlement.entity_attribute (entity_id);
 
 -- tdf_attribute
-CREATE ROLE tdf_attribute_manager WITH LOGIN PASSWORD '{{ .Values.secrets.postgres.dbPassword }}';
+CREATE ROLE tdf_attribute_manager WITH LOGIN PASSWORD '{{ .Values.secrets.attributes.dbPassword }}';
 GRANT USAGE ON SCHEMA tdf_attribute TO tdf_attribute_manager;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA tdf_attribute TO tdf_attribute_manager;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA tdf_attribute TO tdf_attribute_manager;
 
 -- tdf_entitlement
-CREATE ROLE tdf_entitlement_manager WITH LOGIN PASSWORD '{{ .Values.secrets.postgres.dbPassword }}';
+CREATE ROLE tdf_entitlement_manager WITH LOGIN PASSWORD '{{ .Values.secrets.entitlements.dbPassword }}';
 GRANT USAGE ON SCHEMA tdf_entitlement TO tdf_entitlement_manager;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA tdf_entitlement TO tdf_entitlement_manager;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA tdf_entitlement TO tdf_entitlement_manager;
 
 -- entitlement-store
-CREATE ROLE tdf_entitlement_reader WITH LOGIN PASSWORD '{{ .Values.secrets.postgres.dbPassword }}';
+CREATE ROLE tdf_entitlement_reader WITH LOGIN PASSWORD '{{ .Values.secrets.entitlementStore.dbPassword }}';
 GRANT USAGE ON SCHEMA tdf_entitlement TO tdf_entitlement_reader;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA tdf_entitlement TO tdf_entitlement_reader;
 GRANT SELECT ON tdf_entitlement.entity_attribute TO tdf_entitlement_reader;
