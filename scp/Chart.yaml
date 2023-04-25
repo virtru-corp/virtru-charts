@@ -41,19 +41,6 @@ dependencies:
     repository: file://../common-lib
     version: 0.1.0
 
-  - name: postgresql
-    repository: https://charts.bitnami.com/bitnami
-    version: 12.1.8
-    condition: embedded.postgresql
-    tags: ["third-party"]
-
-  - name: keycloakx
-    alias: keycloak
-    repository: https://codecentric.github.io/helm-charts
-    version: 2.1.1
-    condition: embedded.keycloak
-    tags: ["third-party", "identity"]
-
   - name: access-pep
     repository: oci://ghcr.io/virtru-corp/charts
     version: '0.1.0-beta.sha-cac697c'
@@ -63,7 +50,6 @@ dependencies:
     repository: file://./charts/tagging-pdp
     version: '0.1.0'
     condition: tagging-pdp.enabled
-
 
   - name: configuration
     repository: file://./charts/configuration
@@ -78,8 +64,9 @@ dependencies:
   - name: keycloak-bootstrap
     repository: *otdfRepo
     version: *otdfVersion
-    condition: bootstrap.keycloak
-    tags: ["utility"]
+    condition: bootstrap.attrDefOrEntitlements
+    alias: entitlement-attrdef-bootstrap
+    tags: ["bootstrap"]
 
   - name: opcr-policy
     repository: file://./charts/opcr-policy
@@ -87,8 +74,3 @@ dependencies:
     version: 0.1.0
     condition: boostrap.entitlementPolicy
     tags: ["bootstrap"]
-#  - name: postman-cli
-#    repository: file://../postman-cli
-#    version: 0.1.0
-#    condition: boostrap.enabled
-#    tags: ["bootstrap"]

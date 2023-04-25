@@ -3,8 +3,6 @@ Release name:  {{ .Release.Name }}
 Version: {{ .Chart.Version }}
 
 {{ $baseURl := printf "%s://%s" .Values.global.opentdf.common.ingress.scheme ( include "scp.ingressHostname" . ) }}
-Abacus: {{ $baseURl }}/abacus/
-Keycloak: {{ $baseURl }}/auth
 
 API Endpoints:
 Access Service:
