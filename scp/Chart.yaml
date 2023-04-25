@@ -76,8 +76,8 @@ dependencies:
     version: 2.2.2
 
   - name: keycloak-bootstrap
-    repository: file:///Users/ttschampel/development/backend/charts/keycloak-bootstrap
-    version: 0.4.4
+    repository: *otdfRepo
+    version: *otdfVersion
     condition: bootstrap.keycloak
     tags: ["utility"]
 
