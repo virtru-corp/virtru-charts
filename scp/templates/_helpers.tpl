@@ -12,9 +12,9 @@ tls.crt: {{ $cert.Cert | b64enc }}
 {{- end -}}
 
 {{/*
-Create Keycloak External Url
+Create OIDC External Url
 */}}
-{{- define "keycloak.externalUrl" }}
+{{- define "shp.oidc.externalUrl" }}
 {{- if .Values.global.opentdf.common.oidcUrlPath }}
 {{- printf "%s/%s" .Values.global.opentdf.common.oidcExternalBaseUrl .Values.global.opentdf.common.oidcUrlPath }}
 {{- else }}
@@ -23,8 +23,8 @@ Create Keycloak External Url
 {{- end }}
 
 {{/*
-Create Keycloak hostname by extracting from the external url base .Values.global.opentdf.common.oidcExternalBaseUrl
+Create OIDC hostname by extracting from the external url base .Values.global.opentdf.common.oidcExternalBaseUrl
 */}}
-{{- define "keycloak.externalHostname" }}
+{{- define "shp.oidc.externalHostname" }}
 {{- .Values.global.opentdf.common.oidcExternalBaseUrl | trimPrefix "http://"  | trimPrefix "https://" | trimSuffix "/" }}
 {{- end }}

@@ -12,7 +12,7 @@ config:
 
 service:
   type: ClusterIP
-  port: 15001
+  port: 8080
 
 replicaCount: 1
 

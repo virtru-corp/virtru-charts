@@ -5,7 +5,10 @@
     helm repo update  
     kubectl create namespace istio-system
     helm install istio-base istio/base -n istio-system
-    helm install istiod istio/istiod -n istio-system --wait
+    helm install istiod istio/istiod \
+      --set global.proxy.resources.requests.cpu="50m" \
+      --set global.proxy.resources.requests.memory="128Mi" \
+       -n istio-system --wait 
     ```
 1. Install istio ingress gateway  - optional; needed only if not using an existing gateway
    ```

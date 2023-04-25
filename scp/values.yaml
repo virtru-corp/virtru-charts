@@ -20,6 +20,8 @@ commonParams:
   imagePullSecrets: &imagePullSecrets
     ## @param commonParams.imagePullSecrets[0].name name of pull secret
     - name: *scpImagePullSecretName
+  ## @param commonParams.jobWaitForIstio Job needs to wait for istio and exit appropriately
+  jobWaitForIstio: &istioTerminationHack true
 
 ## @section Name Parameters
 ## @param nameOverride Chart name override
@@ -72,6 +74,8 @@ ingress:
   name: scp
 
 global:
+  ## @param global.istioEnabled Istio enabled true/false
+  istioEnabled: true
   ## @skip global.opentdf
   opentdf:
     common:
@@ -171,6 +175,8 @@ entitlement-policy-bootstrap:
   policyDataSecretRef: scp-bootstrap-entitlement-policy
   ## @skip entitlement-policy-bootstrap.imagePullSecrets[0].name
   imagePullSecrets: *imagePullSecrets
+  ## @param entitlement-policy-bootstrap.istioTerminationHack Set istio on/off
+  istioTerminationHack: *istioTerminationHack
   image:
     ## @param entitlement-policy-bootstrap.image.tag ocpr container tag
     tag: sha-531eea2
@@ -259,6 +265,9 @@ keycloak:
   postgresql:
     ## @param keycloak.postgresql.enabled Use keycloak deployed postgres flag
     enabled: false
+  ## @skip  keycloak.podAnnotations.proxy.istio.io/config
+  podAnnotations:
+    proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
   externalDatabase:
     ## @param keycloak.externalDatabase.database Database name
     database: keycloak_database
@@ -281,9 +290,9 @@ keycloak:
     - name: KC_HOSTNAME_STRICT_HTTPS
       value: "false"
     - name: KC_HOSTNAME_URL
-      value: {{ ( include "keycloak.externalUrl" . ) | quote }}
+      value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
     - name: KC_HOSTNAME_ADMIN_URL
-      value: {{ ( include "keycloak.externalUrl" . ) | quote }}
+      value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
     - name: KC_HTTP_ENABLED
       value: "true"
     - name: KC_FEATURES
@@ -302,6 +311,8 @@ keycloak-bootstrap:
     realms: null
   ## @param keycloak-bootstrap.existingConfigSecret Secret name used to Mount bootstrapping data
   existingConfigSecret: scp-keycloakbootstrap-config
+  ## @param keycloak-bootstrap.istioTerminationHack Set istio on/off
+  istioTerminationHack: *istioTerminationHack
   ## @param keycloak-bootstrap.secretRef Secret for bootstrap job env variables.
   secretRef: |-
     name: scp-keycloakbootstrap-secret
@@ -339,6 +350,9 @@ postgresql:
     existingSecret: >
       {{ include "postgresql.primary.fullname" . }}-secret
   primary:
+    ## @skip postgresql.primary.annotations.proxy.istio.io/config
+    annotations:
+      proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
     initdb:
       ## @param postgresql.primary.initdb.user user for init script execution
       user: postgres

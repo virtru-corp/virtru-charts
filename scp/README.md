@@ -5,6 +5,10 @@
 - K8S Cluster; version TBD
 - Helm; version TBD
 - Istio Service Mesh + Istio Ingress Gateway: [See Istio Installation](./istio.md)
+  - Add istion injection to the namespace:
+    ```
+    kubectl label namespace <ns> istio-injection=enabled
+    ```
 
 ## Update Dependencies
 ```shell
@@ -81,19 +85,27 @@ helm uninstall scp -n scp
   uniq -c
   ```
 
+
+Parameter documentation generated from [generator-for-helm](https://github.com/bitnami-labs/readme-generator-for-helm)
+```shell
+npm i https://github.com/bitnami-labs/readme-generator-for-helm
+npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
+```
+
 ## Parameters
 
 ### Common parameters - used as yaml anchors
 
-| Name                                          | Description                        | Value                                                |
-| --------------------------------------------- | ---------------------------------- | ---------------------------------------------------- |
-| `commonParams.attrEndpoint`                   | Interal attribute service endpoint | `http://attributes:4020`                             |
-| `commonParams.disableTracing`                 | Disable OTEL Tracing               | `true`                                               |
-| `commonParams.entitlementPolicyBundleRepo`    | entitlement OPA Bundle Repo        | `scp-docker-registry:5000/entitlements-policybundle` |
-| `commonParams.entitlementPolicyBundleTag`     | entitlement OPA Bundle tag         | `0.0.2`                                              |
-| `commonParams.entilementPolicyOCIRegistryUrl` | OPA policy endpoint                | `https://scp-docker-registry:5000`                   |
-| `commonParams.scpImagePullSecretName`         | common pull secret name            | `scp-pull-secret`                                    |
-| `commonParams.imagePullSecrets[0].name`       | name of pull secret                | `scp-pull-secret`                                    |
+| Name                                          | Description                                        | Value                                                |
+| --------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| `commonParams.attrEndpoint`                   | Interal attribute service endpoint                 | `http://attributes:4020`                             |
+| `commonParams.disableTracing`                 | Disable OTEL Tracing                               | `true`                                               |
+| `commonParams.entitlementPolicyBundleRepo`    | entitlement OPA Bundle Repo                        | `scp-docker-registry:5000/entitlements-policybundle` |
+| `commonParams.entitlementPolicyBundleTag`     | entitlement OPA Bundle tag                         | `0.0.2`                                              |
+| `commonParams.entilementPolicyOCIRegistryUrl` | OPA policy endpoint                                | `https://scp-docker-registry:5000`                   |
+| `commonParams.scpImagePullSecretName`         | common pull secret name                            | `scp-pull-secret`                                    |
+| `commonParams.imagePullSecrets[0].name`       | name of pull secret                                | `scp-pull-secret`                                    |
+| `commonParams.jobWaitForIstio`                | Job needs to wait for istio and exit appropriately | `true`                                               |
 
 ### Name Parameters
 
@@ -132,6 +144,7 @@ helm uninstall scp -n scp
 | `ingress.existingGateway` | Use an existing istio gateway  | `nil`     |
 | `ingress.gatewaySelector` | Name of istio gateway selector | `ingress` |
 | `ingress.name`            | Name base for istio resources  | `scp`     |
+| `global.istioEnabled`     | Istio enabled true/false       | `true`    |
 
 ### ABACUS Chart Overrides
 
@@ -176,15 +189,16 @@ helm uninstall scp -n scp
 
 ### Entitlement Policy Bootstrap Job parameters
 
-| Name                                               | Description                                                                    | Value                                                |
-| -------------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| `entitlement-policy-bootstrap.policyGlobPattern`   | The Glob Pattern to the entitlement policy source data . e.g. rego + data.json | `configs/fed-demo/entitlement-policy/*`              |
-| `entitlement-policy-bootstrap.bundleRepo`          | Bundle repository                                                              | `scp-docker-registry:5000/entitlements-policybundle` |
-| `entitlement-policy-bootstrap.bundleTag`           | Bundle Tag                                                                     | `0.0.2`                                              |
-| `entitlement-policy-bootstrap.OCIRegistryUrl`      | URL of OCI registry to publish to                                              | `https://scp-docker-registry:5000`                   |
-| `entitlement-policy-bootstrap.policyConfigMap`     | Config map name used to inject env varibles into the job                       | `scp-bootstrap-entitlement-cm`                       |
-| `entitlement-policy-bootstrap.policyDataSecretRef` | Secret name used to mount policy artifacts into the job                        | `scp-bootstrap-entitlement-policy`                   |
-| `entitlement-policy-bootstrap.image.tag`           | ocpr container tag                                                             | `sha-531eea2`                                        |
+| Name                                                | Description                                                                    | Value                                                |
+| --------------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| `entitlement-policy-bootstrap.policyGlobPattern`    | The Glob Pattern to the entitlement policy source data . e.g. rego + data.json | `configs/fed-demo/entitlement-policy/*`              |
+| `entitlement-policy-bootstrap.bundleRepo`           | Bundle repository                                                              | `scp-docker-registry:5000/entitlements-policybundle` |
+| `entitlement-policy-bootstrap.bundleTag`            | Bundle Tag                                                                     | `0.0.2`                                              |
+| `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                              | `https://scp-docker-registry:5000`                   |
+| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                       | `scp-bootstrap-entitlement-cm`                       |
+| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job                        | `scp-bootstrap-entitlement-policy`                   |
+| `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                               | `true`                                               |
+| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                             | `sha-531eea2`                                        |
 
 ### Entitlement PDP Chart Overrides
 
@@ -258,9 +272,9 @@ helm uninstall scp -n scp
 - name: KC_HOSTNAME_STRICT_HTTPS
   value: "false"
 - name: KC_HOSTNAME_URL
-  value: {{ ( include "keycloak.externalUrl" . ) | quote }}
+  value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
 - name: KC_HOSTNAME_ADMIN_URL
-  value: {{ ( include "keycloak.externalUrl" . ) | quote }}
+  value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
 - name: KC_HTTP_ENABLED
   value: "true"
 - name: KC_FEATURES
@@ -275,6 +289,7 @@ helm uninstall scp -n scp
 | `keycloak-bootstrap.entitlements.hostname` | Entitlement svc hostname                              | `http://entitlements:4030`           |
 | `keycloak-bootstrap.entitlements.realms`   | Entitlement override realms                           | `nil`                                |
 | `keycloak-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `scp-keycloakbootstrap-config`       |
+| `keycloak-bootstrap.istioTerminationHack`  | Set istio on/off                                      | `true`                               |
 | `keycloak-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: scp-keycloakbootstrap-secret` |
 | `keycloak-bootstrap.attributes.hostname`   | Attribute service endpoint accessible to boostrap job | `http://attributes:4020`             |
 | `keycloak-bootstrap.attributes.realm`      | Realm for OIDC client auth to attribute service       | `tdf`                                |

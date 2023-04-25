@@ -20,7 +20,7 @@ spec:
         - destination:
             host: tagging-pdp
             port:
-              number: 15001
+              number: 8080
       timeout: 10s
     {{- if $gatewayEnabled }}
     - match:
