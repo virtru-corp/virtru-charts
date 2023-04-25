@@ -1,12 +1,18 @@
 global:
   imagePullSecrets:
 
-#The tagging config yaml- use --set-file on deploy
-taggingConfig:
+config:
+  logLevel: INFO
+  #The tagging config yaml- use --set-file on deploy; optional - otherwise use config svc as the source
+  configFile:
+  # The configuration service endpoint and artifact for the tagging svc
+  configSvc:
+    url: http://configuration:8080/configuration
+    artifactId: taggingpdp.test
 
 service:
   type: ClusterIP
-  port: 15001
+  port: 8080
 
 replicaCount: 1
 
@@ -39,7 +45,7 @@ serviceAccount:
   name: null
 
 image:
-  tag: 3825cf502ac82299b9538ccc55e2f5f8a3d581f9
+  tag: sha-470efff
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
   pullSecrets:

@@ -3,7 +3,7 @@ kind: Gateway
 metadata:
   name: {{ .Values.ingress.name }}-gateway
   labels:
-    {{- include "scp.labels" . | nindent 4 }}
+    {{- include "common.lib.labels" . | nindent 4 }}
 spec:
   selector:
     istio: {{ .Values.ingress.gatewaySelector }}
