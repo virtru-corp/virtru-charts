@@ -19,6 +19,25 @@ spec:
     - port:
         number: 443
         name: https-443
+        {{- if .Values.ingress.tls.enabled }}
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: {{ include "scp.ingress.tlsCredName" . }}
+        {{- else }}
         protocol: HTTP2
+        {{- end }}
       hosts:
         - {{ include "scp.ingressHostname" . }}
+---
+{{- if .Values.ingress.tls.enabled }}
+{{- if not .Values.ingress.tls.existingSecret }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "scp.ingress.tlsCredName" . }}
+type: kubernetes.io/tls
+data:
+  {{ ( include "scp.ingress.gen-certs" . ) }}
+{{- end }}
+{{- end }}

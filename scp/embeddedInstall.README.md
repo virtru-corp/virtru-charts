@@ -11,7 +11,7 @@
 1. Install Embedded Postgresql, Embedded Keycloak + SHP
    Run from base directory:
     ```
-    ./scp/embedded-install.sh
+    ./scp/embedded-install.sh -u <ghcr username> -p <ghcr pat> -h <ingress host>
     ```
    
 ## Uninstall everything

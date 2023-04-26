@@ -10,11 +10,11 @@ commonParams:
   ## @param commonParams.disableTracing Disable OTEL Tracing
   disableTracing: &disableTracing "true"
   ## @param commonParams.entitlementPolicyBundleRepo entitlement OPA Bundle Repo
-  entitlementPolicyBundleRepo: &entitlementPolicyBundleRepo "scp-docker-registry:5000/entitlements-policybundle"
+  entitlementPolicyBundleRepo: &entitlementPolicyBundleRepo "docker-registry:5000/entitlements-policybundle"
   ## @param commonParams.entitlementPolicyBundleTag entitlement OPA Bundle tag
   entitlementPolicyBundleTag: &entitlementPolicyBundleTag 0.0.2
   ## @param commonParams.entilementPolicyOCIRegistryUrl OPA policy endpoint
-  entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://scp-docker-registry:5000"
+  entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://docker-registry:5000"
   ## @param commonParams.scpImagePullSecretName common pull secret name
   scpImagePullSecretName: &scpImagePullSecretName "scp-pull-secret"
   imagePullSecrets: &imagePullSecrets
@@ -75,6 +75,11 @@ ingress:
   gatewaySelector: ingress
   ## @param ingress.name Name base for istio resources
   name: scp
+  tls:
+    ## @param ingress.tls.enabled Require Gateway to use tls
+    enabled: false
+    ## @param ingress.tls.existingSecretName Use existing TLS Secret
+    existingSecret:
 
 global:
   ## @param global.istioEnabled Istio enabled true/false
@@ -95,6 +100,8 @@ global:
         port: 5432
         # -- The database name within the given server
         database: tdf_database
+  ## @skip global.imagePullSecrets[0].name
+  imagePullSecrets: *imagePullSecrets
 
 ## @section ABACUS Chart Overrides
 abacus:
@@ -273,6 +280,8 @@ entitlement-attrdef-bootstrap:
 docker-registry:
   ## @param docker-registry.enabled Enable docker registry
   enabled: true
+  ## @param docker-registry.fullnameOverride Override name of service
+  fullnameOverride: docker-registry
   persistence:
     ## @param docker-registry.persistence.enabled Persistence Enabled Flag
     enabled: true
@@ -322,7 +331,7 @@ secrets:
   opaPolicyPullSecret:
   ## @skip secrets.imageCredentials[0]
   imageCredentials:
-    - name: scp-pull-secret
+    - name: pull-secret
       registry: ghcr.io
       username: username
       password: password
