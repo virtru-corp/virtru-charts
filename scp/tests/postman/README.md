@@ -20,7 +20,7 @@ newman run <collection.json> -e <env file> -d <data file>
 
 Helper for pluggable data/envs:
 ```shell
-export POSTMAN_ENV=./tests/postman
+export POSTMAN_VAR_DIR=./tests/postman
 ```
 - Verify Access Service
   - [Collection](./access-pep.postman_collection.json)
@@ -35,4 +35,11 @@ export POSTMAN_ENV=./tests/postman
   - Example:
     ```shell
      newman run tests/postman/attribute-definitions.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/attribute-definitions_data.json
+    ```
+- Configuration Service
+  - [Collection](./configuration-svc.postman_collection.json)
+  - [Data](./configuration-svc_data.json)
+  - Example:
+    ```shell
+     newman run tests/postman/configuration-svc.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/configuration-svc_data.json
     ```

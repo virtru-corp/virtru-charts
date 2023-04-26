@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "018e7eac-99a2-440b-b358-0f3a63f6a800",
+		"name": "configuration-svc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23744829"
+	},
+	"item": [
+		{
+			"name": "Config Svc - Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"var bodyToken = responseJson.access_token;",
+							"pm.environment.set(\"authToken\", bodyToken)",
+							"",
+							"pm.test(\"Access Token\", function () {",
+							"    pm.expect(bodyToken).to.not.equal(null);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{attributesClientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{attributesClientId}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/realms/tdf/protocol/openid-connect/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"tdf",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assert Get Artifact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Exists\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/configuration/{{artifactId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"configuration",
+						"{{artifactId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
