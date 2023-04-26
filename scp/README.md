@@ -108,7 +108,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 | Name                                                | Description                                                                  | Value                                         |
 | --------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------- |
-| `bootstrap.entitlement-attrdef-bootstrap`           | Should entitlements and/or attributes be bootstrapped.                       | `true`                                        |
+| `bootstrap.attrDefOrEntitlements`                   | Should entitlements and/or attributes be bootstrapped.                       | `true`                                        |
 | `bootstrap.configsvc.enabled`                       | Enable configuration service artifact bootstrapping                          | `true`                                        |
 | `bootstrap.configsvc.job.name`                      | Name of the job                                                              | `configsvc-bootstrap`                         |
 | `bootstrap.configsvc.job.image.repo`                | Image repository                                                             | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |

@@ -41,8 +41,8 @@ keycloak:
 
 ## @section Attribute Definition and Entitlement bootstrap parameters
 bootstrap:
-  ## @param bootstrap.entitlement-attrdef-bootstrap Should entitlements and/or attributes be bootstrapped.
-  entitlement-attrdef-bootstrap: true
+  ## @param bootstrap.attrDefOrEntitlements Should entitlements and/or attributes be bootstrapped.
+  attrDefOrEntitlements: true
   configsvc:
     ## @param bootstrap.configsvc.enabled Enable configuration service artifact bootstrapping
     enabled: true
