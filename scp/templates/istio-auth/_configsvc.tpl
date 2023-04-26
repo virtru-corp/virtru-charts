@@ -1,17 +1,9 @@
 {{- define "shp.configsvc.auth.issuer" -}}
-{{- if .Values.embedded.keycloak -}}
 {{ printf "%s/realms/%s" ( include "shp.oidc.externalUrl" . ) ( .Values.keycloak.realm | default "tdf" ) }}
-{{- else -}}
-{{ printf "%s" ( include "shp.oidc.externalUrl" . ) }}
-{{- end -}}
 {{- end -}}
 
 {{- define "shp.configsvc.auth.jwksUri" -}}
-{{- if .Values.embedded.keycloak -}}
-{{ printf "http://keycloak-http.%s.svc.cluster.local/realms/%s/protocol/openid-connect/certs" .Release.Namespace ( .Values.keycloak.realm | default "tdf" ) }}
-{{- else -}}
-{{ printf "%s" include "shp.oidc.externalUrl" . }}
-{{- end -}}
+{{ printf "%s/protocol/openid-connect/certs" (include "shp.configsvc.auth.issuer" . ) }}
 {{- end -}}
 
 {{/*

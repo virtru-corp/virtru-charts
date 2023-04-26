@@ -10,11 +10,11 @@ commonParams:
   ## @param commonParams.disableTracing Disable OTEL Tracing
   disableTracing: &disableTracing "true"
   ## @param commonParams.entitlementPolicyBundleRepo entitlement OPA Bundle Repo
-  entitlementPolicyBundleRepo: &entitlementPolicyBundleRepo "scp-docker-registry:5000/entitlements-policybundle"
+  entitlementPolicyBundleRepo: &entitlementPolicyBundleRepo "docker-registry:5000/entitlements-policybundle"
   ## @param commonParams.entitlementPolicyBundleTag entitlement OPA Bundle tag
   entitlementPolicyBundleTag: &entitlementPolicyBundleTag 0.0.2
   ## @param commonParams.entilementPolicyOCIRegistryUrl OPA policy endpoint
-  entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://scp-docker-registry:5000"
+  entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://docker-registry:5000"
   ## @param commonParams.scpImagePullSecretName common pull secret name
   scpImagePullSecretName: &scpImagePullSecretName "scp-pull-secret"
   imagePullSecrets: &imagePullSecrets
@@ -31,15 +31,18 @@ fullnameOverride: ""
 
 ## @section Embedded Service Deployment
 embedded:
-  ## @param embedded.keycloak  Use an embedded keycloak or not
+  ## @param embedded.keycloak  Is keycloak in the cluster
   keycloak: true
-  ## @param embedded.postgresql  Use an embedded postgres or not
-  postgresql: true
 
-## @section Keycloak bootstrap parameters
+## @section Keycloak Configuration
+keycloak:
+  ## @param keycloak.realm  If using keycloak - the realm name
+  realm: tdf
+
+## @section Attribute Definition and Entitlement bootstrap parameters
 bootstrap:
-  ## @param bootstrap.keycloak Should keycloak bootstrap be enabled
-  keycloak: true
+  ## @param bootstrap.attrDefOrEntitlements Should entitlements and/or attributes be bootstrapped.
+  attrDefOrEntitlements: true
   configsvc:
     ## @param bootstrap.configsvc.enabled Enable configuration service artifact bootstrapping
     enabled: true
@@ -72,6 +75,11 @@ ingress:
   gatewaySelector: ingress
   ## @param ingress.name Name base for istio resources
   name: scp
+  tls:
+    ## @param ingress.tls.enabled Require Gateway to use tls
+    enabled: false
+    ## @param ingress.tls.existingSecretName Use existing TLS Secret
+    existingSecret:
 
 global:
   ## @param global.istioEnabled Istio enabled true/false
@@ -92,6 +100,8 @@ global:
         port: 5432
         # -- The database name within the given server
         database: tdf_database
+  ## @skip global.imagePullSecrets[0].name
+  imagePullSecrets: *imagePullSecrets
 
 ## @section ABACUS Chart Overrides
 abacus:
@@ -244,90 +254,34 @@ kas:
     ## @param kas.pdp.disableTracing  Disable tracing flag
     disableTracing: *disableTracing
 
-## @section Keycloak Chart Overrides
-keycloak:
-  ## @param keycloak.fullnameOverride keycloak name override
-  fullnameOverride: keycloak
-  image:
-    ## @param keycloak.image.repository Keycloak Image Repo
-    repository: ghcr.io/opentdf/keycloak
-    ## @param keycloak.image.tag Keycloak Image Tag
-    tag: main
-    ## @param keycloak.image.pullPolicy Keycloak Image pull policy
-    pullPolicy: IfNotPresent
-  ## @param keycloak.command Command to start the keycloak service
-  command:
-    - "/opt/keycloak/bin/kc.sh"
-    - "--verbose"
-    - "start-dev"
-    - "--http-relative-path"
-    - "/auth"
-  postgresql:
-    ## @param keycloak.postgresql.enabled Use keycloak deployed postgres flag
-    enabled: false
-  ## @skip  keycloak.podAnnotations.proxy.istio.io/config
-  podAnnotations:
-    proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
-  externalDatabase:
-    ## @param keycloak.externalDatabase.database Database name
-    database: keycloak_database
-  ## @param keycloak.extraEnv Extra environment variables.
-  extraEnv: |-
-    - name: CLAIMS_URL
-      value: http://entitlement-pdp:3355/entitlements
-    - name: JAVA_OPTS_APPEND
-      value: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-    - name: KC_DB
-      value: postgres
-    - name: KC_DB_URL_PORT
-      value: "5432"
-    - name: KC_LOG_LEVEL
-      value: INFO
-    - name: KC_HOSTNAME_STRICT
-      value: "false"
-    - name: KC_HOSTNAME_STRICT_BACKCHANNEL
-      value: "false"
-    - name: KC_HOSTNAME_STRICT_HTTPS
-      value: "false"
-    - name: KC_HOSTNAME_URL
-      value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
-    - name: KC_HOSTNAME_ADMIN_URL
-      value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
-    - name: KC_HTTP_ENABLED
-      value: "true"
-    - name: KC_FEATURES
-      value: "preview,token-exchange"
-  ## @param keycloak.extraEnvFrom Extra Environment From Reference YAML
-  extraEnvFrom: |-
-    - secretRef:
-        name: scp-keycloak-secret
-
 ## @section Keycloak Bootstrap Chart Overrides
-keycloak-bootstrap:
+entitlement-attrdef-bootstrap:
   entitlements:
-    ## @param keycloak-bootstrap.entitlements.hostname Entitlement svc hostname
+    ## @param entitlement-attrdef-bootstrap.entitlements.hostname Entitlement svc hostname
     hostname: http://entitlements:4030
-    ## @param keycloak-bootstrap.entitlements.realms Entitlement override realms
+    ## @param entitlement-attrdef-bootstrap.entitlements.realms Entitlement override realms
     realms: null
-  ## @param keycloak-bootstrap.existingConfigSecret Secret name used to Mount bootstrapping data
+  ## @param entitlement-attrdef-bootstrap.existingConfigSecret Secret name used to Mount bootstrapping data
   existingConfigSecret: scp-keycloakbootstrap-config
-  ## @param keycloak-bootstrap.istioTerminationHack Set istio on/off
+  ## @param entitlement-attrdef-bootstrap.istioTerminationHack Set istio on/off
   istioTerminationHack: *istioTerminationHack
-  ## @param keycloak-bootstrap.secretRef Secret for bootstrap job env variables.
+  ## @param entitlement-attrdef-bootstrap.secretRef Secret for bootstrap job env variables.
   secretRef: |-
     name: scp-keycloakbootstrap-secret
   attributes:
-    ## @param keycloak-bootstrap.attributes.hostname Attribute service endpoint accessible to boostrap job
+    ## @param entitlement-attrdef-bootstrap.attributes.hostname Attribute service endpoint accessible to boostrap job
     hostname: *attrEndpoint
-    ## @param keycloak-bootstrap.attributes.realm Realm for OIDC client auth to attribute service
+    ## @param entitlement-attrdef-bootstrap.attributes.realm Realm for OIDC client auth to attribute service
     realm: tdf
-    ## @param keycloak-bootstrap.attributes.clientId OIDC client ID used to auth to attribute service
+    ## @param entitlement-attrdef-bootstrap.attributes.clientId OIDC client ID used to auth to attribute service
     clientId: dcr-test
 
 ## @section Docker Registry Configuration
 docker-registry:
   ## @param docker-registry.enabled Enable docker registry
   enabled: true
+  ## @param docker-registry.fullnameOverride Override name of service
+  fullnameOverride: docker-registry
   persistence:
     ## @param docker-registry.persistence.enabled Persistence Enabled Flag
     enabled: true
@@ -335,30 +289,6 @@ docker-registry:
     size: 1Gi
   ## @param docker-registry.tlsSecretName Secret name containing TLS Certs used by the registry
   tlsSecretName: scp-docker-registry-certs
-
-## @section Postgresql Chart Overrides
-postgresql:
-  ## @param postgresql.fullnameOverride Postgresql Name override
-  fullnameOverride: postgresql
-  image:
-    ## @param postgresql.image.debug Debug Flag
-    debug: true
-    ## @param postgresql.image.tag Image Tag
-    tag: "11"
-  auth:
-    ## @param postgresql.auth.existingSecret Existing secret for postgres auth settings
-    existingSecret: >
-      {{ include "postgresql.primary.fullname" . }}-secret
-  primary:
-    ## @skip postgresql.primary.annotations.proxy.istio.io/config
-    annotations:
-      proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
-    initdb:
-      ## @param postgresql.primary.initdb.user user for init script execution
-      user: postgres
-      ## @param postgresql.primary.initdb.scriptsSecret Secret containing init db scripts
-      scriptsSecret: >
-        {{ include "postgresql.primary.fullname" . }}-initdb-secret
 
 ## @section Secret Generation Parameters
 secrets:
@@ -384,13 +314,6 @@ secrets:
     clientSecret:
     ## @param secrets.entitlements.dbPassword postgres password for entitlements svc user
     dbPassword:
-  keycloak:
-    ## @param secrets.keycloak.dbPassword postgres password for keycloak svc user
-    dbPassword:
-    ## @param secrets.keycloak.adminUsername keycloak admin user's username
-    adminUsername:
-    ## @param secrets.keycloak.adminPassword Keycloak admin user's password
-    adminPassword:
   keycloakBootstrap:
     ## @param secrets.keycloakBootstrap.attributesUsername username for attribute service auth
     attributesUsername:
@@ -408,7 +331,7 @@ secrets:
   opaPolicyPullSecret:
   ## @skip secrets.imageCredentials[0]
   imageCredentials:
-    - name: scp-pull-secret
+    - name: pull-secret
       registry: ghcr.io
       username: username
       password: password

@@ -25,12 +25,10 @@ Secrets are required with installation options:
 
 
 ## Bootstrapping deployment
-- Keycloak users, entitlements, attribute definitions:  Done by customizing the configuration for the 
-OpenTDF keycloak-bootstrap chart.
 - Entitlement Policy: Built using an opcr cli job that builds, tests and pushes an OPA bundle to the docker
 oci registry.  This is handled as part of the [opcr-policy Chart](./charts/opcr-policy)
 - Database Schema: Handled by the postgres initdb secret with scripts populating OpenTDF schema and SHP
-component schemas (Configuration).  [Example postgres schema bootstrapping secret](templates/bootstrap/postgres-initdb-secret.yaml)
+component schemas (Configuration).  [Example postgres schema bootstrapping secret](../shp-embedded-postgresql/templates/postgres-initdb-secret.yaml)
   - These SQL scripts use templating; the OTDF schema scripts probably SHOULD be moved to that project.
 - Configuration Service Artifacts: TBD
 
@@ -41,23 +39,6 @@ This YAML file's expected keys/structure:
 - entitlements: [See entitlement list](https://github.com/opentdf/backend/blob/main/charts/keycloak-bootstrap/values.yaml#L103)
 - attributeDefinitions: [See Attribute Definition list](https://github.com/opentdf/backend/blob/main/charts/keycloak-bootstrap/values.yaml#L124)
 
-And keycloak client and users via values overrides:
-```
-secrets:
-  keycloakBootstrap:
-    #list of keycloak clients to be added
-    clients:
-      - clientId: 
-        clientSecret: 
-        #optional audience mapper
-        audienceMappers:
-          - my-aud
-    users:
-      - username: alice
-        password: replaceme
-      - username: bob
-        password: replaceme   
-```
 
 ### Demo Install
 Install demo:
@@ -74,9 +55,6 @@ helm uninstall scp -n scp
 - Also remove PVCs if you want to remove persistent state
 
 ### Configuration Notes
-- keycloak KC_HOSTNAME_URL, KC_HOSTNAME_ADMIN_URL are required to properly handle and avoid keycloak login loop
-- Additional KC Features?:
-  - KC_FEATURES=token-exchange,preview
 - Quick and dirty script to get all images: 
   ```
   kubectl get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}" |\
@@ -116,16 +94,21 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Embedded Service Deployment
 
-| Name                  | Description                     | Value  |
-| --------------------- | ------------------------------- | ------ |
-| `embedded.keycloak`   | Use an embedded keycloak or not | `true` |
-| `embedded.postgresql` | Use an embedded postgres or not | `true` |
+| Name                | Description                | Value  |
+| ------------------- | -------------------------- | ------ |
+| `embedded.keycloak` | Is keycloak in the cluster | `true` |
 
-### Keycloak bootstrap parameters
+### Keycloak Configuration
+
+| Name             | Description                        | Value |
+| ---------------- | ---------------------------------- | ----- |
+| `keycloak.realm` | If using keycloak - the realm name | `tdf` |
+
+### Attribute Definition and Entitlement bootstrap parameters
 
 | Name                                                | Description                                                                  | Value                                         |
 | --------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------- |
-| `bootstrap.keycloak`                                | Should keycloak bootstrap be enabled                                         | `true`                                        |
+| `bootstrap.attrDefOrEntitlements`                   | Should entitlements and/or attributes be bootstrapped.                       | `true`                                        |
 | `bootstrap.configsvc.enabled`                       | Enable configuration service artifact bootstrapping                          | `true`                                        |
 | `bootstrap.configsvc.job.name`                      | Name of the job                                                              | `configsvc-bootstrap`                         |
 | `bootstrap.configsvc.job.image.repo`                | Image repository                                                             | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |
@@ -244,56 +227,18 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `kas.pdp.verbose`        | Verbose Logging Flag                  | `true`                   |
 | `kas.pdp.disableTracing` | Disable tracing flag                  | `true`                   |
 
-### Keycloak Chart Overrides
-
-| Name                                 | Description                           | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------------------ | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `keycloak.fullnameOverride`          | keycloak name override                | `keycloak`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `keycloak.image.repository`          | Keycloak Image Repo                   | `ghcr.io/opentdf/keycloak`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `keycloak.image.tag`                 | Keycloak Image Tag                    | `main`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `keycloak.image.pullPolicy`          | Keycloak Image pull policy            | `IfNotPresent`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `keycloak.command`                   | Command to start the keycloak service | `["/opt/keycloak/bin/kc.sh","--verbose","start-dev","--http-relative-path","/auth"]`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `keycloak.postgresql.enabled`        | Use keycloak deployed postgres flag   | `false`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `keycloak.externalDatabase.database` | Database name                         | `keycloak_database`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `keycloak.extraEnv`                  | Extra environment variables.          | `- name: CLAIMS_URL
-  value: http://entitlement-pdp:3355/entitlements
-- name: JAVA_OPTS_APPEND
-  value: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-- name: KC_DB
-  value: postgres
-- name: KC_DB_URL_PORT
-  value: "5432"
-- name: KC_LOG_LEVEL
-  value: INFO
-- name: KC_HOSTNAME_STRICT
-  value: "false"
-- name: KC_HOSTNAME_STRICT_BACKCHANNEL
-  value: "false"
-- name: KC_HOSTNAME_STRICT_HTTPS
-  value: "false"
-- name: KC_HOSTNAME_URL
-  value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
-- name: KC_HOSTNAME_ADMIN_URL
-  value: {{ ( include "shp.oidc.externalUrl" . ) | quote }}
-- name: KC_HTTP_ENABLED
-  value: "true"
-- name: KC_FEATURES
-  value: "preview,token-exchange"` |
-| `keycloak.extraEnvFrom`              | Extra Environment From Reference YAML | `- secretRef:
-    name: scp-keycloak-secret`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-
 ### Keycloak Bootstrap Chart Overrides
 
-| Name                                       | Description                                           | Value                                |
-| ------------------------------------------ | ----------------------------------------------------- | ------------------------------------ |
-| `keycloak-bootstrap.entitlements.hostname` | Entitlement svc hostname                              | `http://entitlements:4030`           |
-| `keycloak-bootstrap.entitlements.realms`   | Entitlement override realms                           | `nil`                                |
-| `keycloak-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `scp-keycloakbootstrap-config`       |
-| `keycloak-bootstrap.istioTerminationHack`  | Set istio on/off                                      | `true`                               |
-| `keycloak-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: scp-keycloakbootstrap-secret` |
-| `keycloak-bootstrap.attributes.hostname`   | Attribute service endpoint accessible to boostrap job | `http://attributes:4020`             |
-| `keycloak-bootstrap.attributes.realm`      | Realm for OIDC client auth to attribute service       | `tdf`                                |
-| `keycloak-bootstrap.attributes.clientId`   | OIDC client ID used to auth to attribute service      | `dcr-test`                           |
+| Name                                                  | Description                                           | Value                                |
+| ----------------------------------------------------- | ----------------------------------------------------- | ------------------------------------ |
+| `entitlement-attrdef-bootstrap.entitlements.hostname` | Entitlement svc hostname                              | `http://entitlements:4030`           |
+| `entitlement-attrdef-bootstrap.entitlements.realms`   | Entitlement override realms                           | `nil`                                |
+| `entitlement-attrdef-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `scp-keycloakbootstrap-config`       |
+| `entitlement-attrdef-bootstrap.istioTerminationHack`  | Set istio on/off                                      | `true`                               |
+| `entitlement-attrdef-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: scp-keycloakbootstrap-secret` |
+| `entitlement-attrdef-bootstrap.attributes.hostname`   | Attribute service endpoint accessible to boostrap job | `http://attributes:4020`             |
+| `entitlement-attrdef-bootstrap.attributes.realm`      | Realm for OIDC client auth to attribute service       | `tdf`                                |
+| `entitlement-attrdef-bootstrap.attributes.clientId`   | OIDC client ID used to auth to attribute service      | `dcr-test`                           |
 
 ### Docker Registry Configuration
 
@@ -303,19 +248,6 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `docker-registry.persistence.enabled` | Persistence Enabled Flag                              | `true`                      |
 | `docker-registry.persistence.size`    | Size of volume                                        | `1Gi`                       |
 | `docker-registry.tlsSecretName`       | Secret name containing TLS Certs used by the registry | `scp-docker-registry-certs` |
-
-### Postgresql Chart Overrides
-
-| Name                                      | Description                                | Value                                                          |
-| ----------------------------------------- | ------------------------------------------ | -------------------------------------------------------------- |
-| `postgresql.fullnameOverride`             | Postgresql Name override                   | `postgresql`                                                   |
-| `postgresql.image.debug`                  | Debug Flag                                 | `true`                                                         |
-| `postgresql.image.tag`                    | Image Tag                                  | `11`                                                           |
-| `postgresql.auth.existingSecret`          | Existing secret for postgres auth settings | `{{ include "postgresql.primary.fullname" . }}-secret
-`        |
-| `postgresql.primary.initdb.user`          | user for init script execution             | `postgres`                                                     |
-| `postgresql.primary.initdb.scriptsSecret` | Secret containing init db scripts          | `{{ include "postgresql.primary.fullname" . }}-initdb-secret
-` |
 
 ### Secret Generation Parameters
 
@@ -329,9 +261,6 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `secrets.entitlementStore.dbPassword`          | postgres password for entitlement-store svc user                                               | `nil`  |
 | `secrets.entitlements.clientSecret`            | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization       | `nil`  |
 | `secrets.entitlements.dbPassword`              | postgres password for entitlements svc user                                                    | `nil`  |
-| `secrets.keycloak.dbPassword`                  | postgres password for keycloak svc user                                                        | `nil`  |
-| `secrets.keycloak.adminUsername`               | keycloak admin user's username                                                                 | `nil`  |
-| `secrets.keycloak.adminPassword`               | Keycloak admin user's password                                                                 | `nil`  |
 | `secrets.keycloakBootstrap.attributesUsername` | username for attribute service auth                                                            | `nil`  |
 | `secrets.keycloakBootstrap.attributesPassword` | password for attribute service auth                                                            | `nil`  |
 | `secrets.keycloakBootstrap.users`              | list of users to be added [{"username":"","password":""}]                                      | `nil`  |
