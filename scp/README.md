@@ -100,10 +100,9 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Keycloak Configuration
 
-| Name                 | Description                          | Value  |
-| -------------------- | ------------------------------------ | ------ |
-| `keycloak.inCluster` | If using keycloak - is it in cluster | `true` |
-| `keycloak.realm`     | If using keycloak - the realm name   | `tdf`  |
+| Name             | Description                        | Value |
+| ---------------- | ---------------------------------- | ----- |
+| `keycloak.realm` | If using keycloak - the realm name | `tdf` |
 
 ### Attribute Definition and Entitlement bootstrap parameters
 

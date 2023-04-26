@@ -3,11 +3,7 @@
 {{- end -}}
 
 {{- define "shp.configsvc.auth.jwksUri" -}}
-{{- if .Values.keycloak.inCluster -}}
-{{ printf "http://keycloak-http.%s.svc.cluster.local/realms/%s/protocol/openid-connect/certs" .Release.Namespace ( .Values.keycloak.realm | default "tdf" ) }}
-{{- else -}}
-{{ printf "%s/realms/%s/protocol/openid-connect/certs" (include "shp.oidc.externalUrl" . ) ( .Values.keycloak.realm | default "tdf" ) }}
-{{- end -}}
+{{ printf "%s/protocol/openid-connect/certs" (include "shp.configsvc.auth.issuer" . ) }}
 {{- end -}}
 
 {{/*

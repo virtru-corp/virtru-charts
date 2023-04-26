@@ -36,8 +36,6 @@ embedded:
 
 ## @section Keycloak Configuration
 keycloak:
-  ## @param keycloak.inCluster  If using keycloak - is it in cluster
-  inCluster: true
   ## @param keycloak.realm  If using keycloak - the realm name
   realm: tdf
 
