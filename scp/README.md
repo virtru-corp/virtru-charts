@@ -313,4 +313,3 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `tagging-pdp.gateway.pathPrefix` | tagging-pdp svc prefix                | `tagging-pdp` |
 | `tdfAdminUsername`               | The admin user created for tdf.       | `tdf-admin`   |
 
-  ```
