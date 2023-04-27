@@ -58,8 +58,8 @@ bootstrap:
       configVolumeSecretRefName: scp-bootstrap-configsvc
       ## @param bootstrap.configsvc.job.envSecretRef secret for environment variables
       envSecretRef:
-  ## @param  bootstrap.configPath The path to the install configuration file (relative to the chart directory)
-  configPath:
+  ## @param  bootstrap.configFile The configuration file content (set using --set-file bootstrap.configPath=yourconfig.yaml
+  configFile:
   ## @param bootstrap.entitlementPolicy Should entitlement policy be bootstrapped
   entitlementPolicy: true
 
@@ -167,8 +167,6 @@ configuration:
 
 ## @section Entitlement Policy Bootstrap Job parameters
 entitlement-policy-bootstrap:
-  ## @param entitlement-policy-bootstrap.policyGlobPattern The Glob Pattern to the entitlement policy source data . e.g. rego + data.json
-  policyGlobPattern: "configs/fed-demo/entitlement-policy/*"
   ## @param entitlement-policy-bootstrap.bundleRepo Bundle repository
   bundleRepo: *entitlementPolicyBundleRepo
   ## @param entitlement-policy-bootstrap.bundleTag Bundle Tag
@@ -177,7 +175,7 @@ entitlement-policy-bootstrap:
   OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
   ## @param entitlement-policy-bootstrap.policyConfigMap Config map name used to inject env varibles into the job
   policyConfigMap: scp-bootstrap-entitlement-cm
-  ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job
+  ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy
   policyDataSecretRef: scp-bootstrap-entitlement-policy
   ## @skip entitlement-policy-bootstrap.imagePullSecrets[0].name
   imagePullSecrets: *imagePullSecrets

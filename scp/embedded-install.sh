@@ -8,11 +8,15 @@ imagePullUsername="changeme"
 imagePullPAT="changeme"
 # Hostname for ingress
 ingressHostname=""
+# Entitlement policy location
+entitlementPolicyLocation=""
+# Config file location
+configFile=""
 
-while getopts "h:t:s:u:p:" arg; do
+while getopts "h:t:s:u:p:e:c:o:" arg; do
   case $arg in
     t)
-      tlsEnabled="true"
+      tlsEnabled=${OPTARG}
       ;;
     s)
       tlsSecret=${OPTARG}
@@ -25,6 +29,15 @@ while getopts "h:t:s:u:p:" arg; do
       ;;
     h)
       ingressHostname=${OPTARG}
+      ;;
+    e)
+      entitlementPolicyLocation=${OPTARG}
+      ;;
+    c)
+      configFile=${OPTARG}
+      ;;
+    o)
+      overrideValues=${OPTARG}
       ;;
   esac
 done
@@ -54,11 +67,15 @@ echo "#5 Bootstrap keycloak users"
 helm upgrade --install -n $ns --create-namespace \
     --set $oidcExternalBaseUrlSetting \
     --set $ingressHostnameSetting \
+    --set-file bootstrap.configFile=$configFile \
     -f shp-keycloak-bootstrapper/values.yaml -f $overrideValues \
      shp-keycloak-bootstrapper shp-keycloak-bootstrapper
 
 echo "#5 Wait for bootstrap job"
 kubectl wait --for=condition=complete job/shp-keycloak-bootstrapper-job --timeout=120s -n $ns
+
+echo "installing entitlement policy secret"
+kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=$entitlementPolicyLocation -n $ns
 
 echo "#6 Install Self hosted platform"
 helm upgrade --install -n $ns --create-namespace \
@@ -66,8 +83,16 @@ helm upgrade --install -n $ns --create-namespace \
  --set secrets.imageCredentials[0].password="${imagePullPAT}" \
  --set $oidcExternalBaseUrlSetting \
  --set $ingressHostnameSetting \
+ --set-file bootstrap.configFile=$configFile \
  --set ingress.tls.enabled=${tlsEnabled} \
  --set ingress.tls.secretName=${tlsSecret} \
  -f scp/values.yaml -f $overrideValues shp scp
 
+echo "Wait for Configuration Artifact Bootstrapping"
+kubectl wait --for=condition=complete job/shp-scp-configsvc-bootstrap --timeout=120s -n $ns
+echo "Wait for Entitlement policy bundle publication"
+kubectl wait --for=condition=complete job/shp-entitlement-policy-bootstrap --timeout=120s -n $ns
+echo "Wait for attribute and entitlement Bootstrapping job"
+kubectl wait --for=condition=complete job/shp-entitlement-attrdef-bootstrap  --timeout=120s -n $ns
 
+# TODO - Run postman smoke tests

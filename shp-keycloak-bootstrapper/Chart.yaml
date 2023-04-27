@@ -2,7 +2,7 @@ apiVersion: v2
 name: shp-keycloak-bootstrapper
 description: Helper chart to bootstrap keycloak configuration.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: 0.1.0
 
 otdfVersion: &otdfVersion "0.0.0-sha-bd7a8d2"

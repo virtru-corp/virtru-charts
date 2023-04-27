@@ -26,8 +26,8 @@ keycloak-bootstrap:
     clientId: dcr-test
 
 bootstrap:
-  ## @param  bootstrap.configPath The path to the install configuration file (relative to the chart directory)
-  configPath:
+  ## @param  bootstrap.configFile The configuration file - set using --set-file bootstrap.configFile=configFilePath
+  configFile:
 
 secrets:
   keycloakBootstrap:
