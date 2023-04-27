@@ -5,10 +5,12 @@
 - K8S Cluster; version TBD
 - Helm; version TBD
 - Istio Service Mesh + Istio Ingress Gateway: [See Istio Installation](./istio.md)
-  - Add istion injection to the namespace:
+  - Add istion injection to the namespace (required for MTLS and use of Istio based Authentication/Authorization):
     ```
     kubectl label namespace <ns> istio-injection=enabled
     ```
+- PostgreSQL database.  For **Non-Production** in-cluster PostgreSQL deployment, [See embedded Postgresql chart](./../shp-embedded-postgresql/README.md)
+- Keycloak or other OIDC Provider.  For **Non-Production** in-cluster Keycloak deployment, [See embedded Keycloak chart](./../shp-embedded-keycloak/README.md)
 
 ## Update Dependencies
 ```shell
@@ -17,52 +19,90 @@ helm dependency update .
 ```
 
 ## Secrets
-Secrets are required with installation options:
-1. Add your own manually or extend this chart.
-1. Use the secret bootstrapping in this chart under the "secret" values.yaml key
+Secret Management is generally in 2 categories:
+1. Add your own out-of-band from this helm chart and reference the existing secrets as value overrides.
+1. Use the secret bootstrapping available in this chart using the parameters under the secrets section of value overrides
 
-## HELM Install/Upgrade 
+## Bootstrapping Data
+This chart provides a mechanism to bootstrap data into various services.  A configuration input file is
+used to feed Helm templates generating secrets which are then and mounted as volumes to service-specific
+bootstrapping jobs.
+
+The configuration file is identified by the `bootstrap.configPath` chart value parameter with yaml schema 
+assumes to follow the example below:
+
+```shell
+# List of attribute authorities
+authorities:
+  # name of attribute authority
+  - http://demo.com
+
+# List of entitlements per username.
+entitlements:
+  alice:
+    - http://demo.com/attr/IntellectualProperty/value/TradeSecret
+  bob:
+    - http://demo.com/attr/IntellectualProperty/value/Confidential
+
+# List of attribute definitions (per OpenTDF Attributes Service Schema)
+attributeDefinitions: 
+  - authority: http://demo.com
+    name: IntellectualProperty
+    rule: hierarchy
+    state: published
+    order: [ "TradeSecret","Confidential" ]
+
+#List of configuration artifacts to be loaded     
+configArtifacts:
+  - name: chat.us
+    yamlRefKey: chatConfig
+    contentType: "application/yaml"
+    externalFileRef:
+
+#Chat configuration payload
+chatConfig:
+  - someKey: someData
+  
+  
+```
+### Attribute Definitions and Entitlements
+A Bootstrapping Job to load Attribute Definitions and Entitlements can be turned on/off via the `bootstrap.attrDefOrEntitlements` parameter
+
+The bootstrapping config file is sourced for authority, attribute definition and entitlements that is then loaded into the platform.
+
+### Configuration Service Artifacts
+A Bootstrapping Job load one or more configuration artifacts into the configuration service is controlled by the `bootstrap.configsvc.enabled` parameter.
+
+When true, a job is create to load the configuration artifacts as identified in the bootrapping config file.
+
+### Entitlement Policy
+Entitlement Policy Bundle (OPA Policy Bundle) can be loaded as part of a bootstrapping job; and enabled/disabled using the `bootstrap.entitlementPolicy` parameter
+
+When enabled, a job is created and configured via the `entitlement-policy-bootstrap` parameter section.
+
+`entitlement-policy-bootstrap.policyGlobPattern` is used to provide a Glob Pattern to a directory of OPA Policy 
+artifacts.  These are copied to a volume and then used to build and publish an OPA Bundle to the configured
+OCI Registry.
 
 
-## Bootstrapping deployment
-- Entitlement Policy: Built using an opcr cli job that builds, tests and pushes an OPA bundle to the docker
-oci registry.  This is handled as part of the [opcr-policy Chart](./charts/opcr-policy)
-- Database Schema: Handled by the postgres initdb secret with scripts populating OpenTDF schema and SHP
-component schemas (Configuration).  [Example postgres schema bootstrapping secret](../shp-embedded-postgresql/templates/postgres-initdb-secret.yaml)
-  - These SQL scripts use templating; the OTDF schema scripts probably SHOULD be moved to that project.
-- Configuration Service Artifacts: TBD
-
-When using the provided bootstrapping a single file can be provided via the `.Values.bootstrap.configPath` option.
-
-This YAML file's expected keys/structure:
-- authorities: [See Attribute Definition Authorities](https://github.com/opentdf/backend/blob/main/charts/keycloak-bootstrap/values.yaml#L97)
-- entitlements: [See entitlement list](https://github.com/opentdf/backend/blob/main/charts/keycloak-bootstrap/values.yaml#L103)
-- attributeDefinitions: [See Attribute Definition list](https://github.com/opentdf/backend/blob/main/charts/keycloak-bootstrap/values.yaml#L124)
-
-
-### Demo Install
-Install demo:
+## Generic Helm Install
 ```shell
 helm upgrade --install -n scp --create-namespace \
     -f values.yaml \ 
     -f <your deployment overrides values> scp .
 ```
 
-## Un-install
+## Embedded Install Example
+[See Embedded Installation Example](./embeddedInstall.README.md)
+
+## Un-install Example
 ```shell
 helm uninstall scp -n scp
 ```
 - Also remove PVCs if you want to remove persistent state
 
-### Configuration Notes
-- Quick and dirty script to get all images: 
-  ```
-  kubectl get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}" |\
-  tr -s '[[:space:]]' '\n' |\
-  sort |\
-  uniq -c
-  ```
-
+## Testing the Chart
+[See Smoketesting deployment documentation](./tests/README.md)
 
 Parameter documentation generated from [generator-for-helm](https://github.com/bitnami-labs/readme-generator-for-helm)
 ```shell
@@ -74,35 +114,25 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Common parameters - used as yaml anchors
 
-| Name                                          | Description                                        | Value                                                |
-| --------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------- |
-| `commonParams.attrEndpoint`                   | Interal attribute service endpoint                 | `http://attributes:4020`                             |
-| `commonParams.disableTracing`                 | Disable OTEL Tracing                               | `true`                                               |
-| `commonParams.entitlementPolicyBundleRepo`    | entitlement OPA Bundle Repo                        | `scp-docker-registry:5000/entitlements-policybundle` |
-| `commonParams.entitlementPolicyBundleTag`     | entitlement OPA Bundle tag                         | `0.0.2`                                              |
-| `commonParams.entilementPolicyOCIRegistryUrl` | OPA policy endpoint                                | `https://scp-docker-registry:5000`                   |
-| `commonParams.scpImagePullSecretName`         | common pull secret name                            | `scp-pull-secret`                                    |
-| `commonParams.imagePullSecrets[0].name`       | name of pull secret                                | `scp-pull-secret`                                    |
-| `commonParams.jobWaitForIstio`                | Job needs to wait for istio and exit appropriately | `true`                                               |
+| Name                                          | Description                                        | Value                                            |
+| --------------------------------------------- | -------------------------------------------------- | ------------------------------------------------ |
+| `commonParams.attrEndpoint`                   | Interal attribute service endpoint                 | `http://attributes:4020`                         |
+| `commonParams.disableTracing`                 | Disable OTEL Tracing                               | `true`                                           |
+| `commonParams.entitlementPolicyBundleRepo`    | entitlement OPA Bundle Repo                        | `docker-registry:5000/entitlements-policybundle` |
+| `commonParams.entitlementPolicyBundleTag`     | entitlement OPA Bundle tag                         | `0.0.2`                                          |
+| `commonParams.entilementPolicyOCIRegistryUrl` | OPA policy endpoint                                | `https://docker-registry:5000`                   |
+| `commonParams.scpImagePullSecretName`         | common pull secret name                            | `scp-pull-secret`                                |
+| `commonParams.imagePullSecrets[0].name`       | name of pull secret                                | `scp-pull-secret`                                |
+| `commonParams.jobWaitForIstio`                | Job needs to wait for istio and exit appropriately | `true`                                           |
 
-### Name Parameters
+### General / Misc Parameters
 
-| Name               | Description              | Value |
-| ------------------ | ------------------------ | ----- |
-| `nameOverride`     | Chart name override      | `""`  |
-| `fullnameOverride` | Chart full name override | `""`  |
-
-### Embedded Service Deployment
-
-| Name                | Description                | Value  |
-| ------------------- | -------------------------- | ------ |
-| `embedded.keycloak` | Is keycloak in the cluster | `true` |
-
-### Keycloak Configuration
-
-| Name             | Description                        | Value |
-| ---------------- | ---------------------------------- | ----- |
-| `keycloak.realm` | If using keycloak - the realm name | `tdf` |
+| Name                | Description                        | Value  |
+| ------------------- | ---------------------------------- | ------ |
+| `nameOverride`      | Chart name override                | `""`   |
+| `fullnameOverride`  | Chart full name override           | `""`   |
+| `embedded.keycloak` | Is keycloak in the cluster         | `true` |
+| `keycloak.realm`    | If using keycloak - the realm name | `tdf`  |
 
 ### Attribute Definition and Entitlement bootstrap parameters
 
@@ -122,12 +152,14 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Ingress Configuration
 
-| Name                      | Description                    | Value     |
-| ------------------------- | ------------------------------ | --------- |
-| `ingress.existingGateway` | Use an existing istio gateway  | `nil`     |
-| `ingress.gatewaySelector` | Name of istio gateway selector | `ingress` |
-| `ingress.name`            | Name base for istio resources  | `scp`     |
-| `global.istioEnabled`     | Istio enabled true/false       | `true`    |
+| Name                         | Description                    | Value     |
+| ---------------------------- | ------------------------------ | --------- |
+| `ingress.existingGateway`    | Use an existing istio gateway  | `nil`     |
+| `ingress.gatewaySelector`    | Name of istio gateway selector | `ingress` |
+| `ingress.name`               | Name base for istio resources  | `scp`     |
+| `ingress.tls.enabled`        | Require Gateway to use tls     | `false`   |
+| `ingress.tls.existingSecret` | Use existing TLS Secret        | `nil`     |
+| `global.istioEnabled`        | Istio enabled true/false       | `true`    |
 
 ### ABACUS Chart Overrides
 
@@ -172,29 +204,29 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Entitlement Policy Bootstrap Job parameters
 
-| Name                                                | Description                                                                    | Value                                                |
-| --------------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| `entitlement-policy-bootstrap.policyGlobPattern`    | The Glob Pattern to the entitlement policy source data . e.g. rego + data.json | `configs/fed-demo/entitlement-policy/*`              |
-| `entitlement-policy-bootstrap.bundleRepo`           | Bundle repository                                                              | `scp-docker-registry:5000/entitlements-policybundle` |
-| `entitlement-policy-bootstrap.bundleTag`            | Bundle Tag                                                                     | `0.0.2`                                              |
-| `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                              | `https://scp-docker-registry:5000`                   |
-| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                       | `scp-bootstrap-entitlement-cm`                       |
-| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job                        | `scp-bootstrap-entitlement-policy`                   |
-| `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                               | `true`                                               |
-| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                             | `sha-531eea2`                                        |
+| Name                                                | Description                                                                    | Value                                            |
+| --------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------ |
+| `entitlement-policy-bootstrap.policyGlobPattern`    | The Glob Pattern to the entitlement policy source data . e.g. rego + data.json | `configs/fed-demo/entitlement-policy/*`          |
+| `entitlement-policy-bootstrap.bundleRepo`           | Bundle repository                                                              | `docker-registry:5000/entitlements-policybundle` |
+| `entitlement-policy-bootstrap.bundleTag`            | Bundle Tag                                                                     | `0.0.2`                                          |
+| `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                              | `https://docker-registry:5000`                   |
+| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                       | `scp-bootstrap-entitlement-cm`                   |
+| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job                        | `scp-bootstrap-entitlement-policy`               |
+| `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                               | `true`                                           |
+| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                             | `sha-531eea2`                                    |
 
 ### Entitlement PDP Chart Overrides
 
-| Name                                                | Description                                              | Value                                                |
-| --------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------- |
-| `entitlement-pdp.fullnameOverride`                  | Entitlement PDP name override                            | `entitlement-pdp`                                    |
-| `entitlement-pdp.opaConfig.policy.useStaticPolicy`  | Use static policy flag - false to pull from oci registry | `false`                                              |
-| `entitlement-pdp.opaConfig.policy.allowInsecureTLS` | Allow insecure comms to oci registry                     | `true`                                               |
-| `entitlement-pdp.opaConfig.policy.OCIRegistryUrl`   | OCI registry url                                         | `https://scp-docker-registry:5000`                   |
-| `entitlement-pdp.opaConfig.policy.bundleRepo`       | OCI Bundle Repo                                          | `scp-docker-registry:5000/entitlements-policybundle` |
-| `entitlement-pdp.opaConfig.policy.bundleTag`        | OCI bundle tag                                           | `0.0.2`                                              |
-| `entitlement-pdp.config.disableTracing`             | Disable tracing flag                                     | `true`                                               |
-| `entitlement-pdp.secretRef`                         | Secrets for env variables.                               | `name: scp-entitlement-pdp-secret`                   |
+| Name                                                | Description                                              | Value                                            |
+| --------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------ |
+| `entitlement-pdp.fullnameOverride`                  | Entitlement PDP name override                            | `entitlement-pdp`                                |
+| `entitlement-pdp.opaConfig.policy.useStaticPolicy`  | Use static policy flag - false to pull from oci registry | `false`                                          |
+| `entitlement-pdp.opaConfig.policy.allowInsecureTLS` | Allow insecure comms to oci registry                     | `true`                                           |
+| `entitlement-pdp.opaConfig.policy.OCIRegistryUrl`   | OCI registry url                                         | `https://docker-registry:5000`                   |
+| `entitlement-pdp.opaConfig.policy.bundleRepo`       | OCI Bundle Repo                                          | `docker-registry:5000/entitlements-policybundle` |
+| `entitlement-pdp.opaConfig.policy.bundleTag`        | OCI bundle tag                                           | `0.0.2`                                          |
+| `entitlement-pdp.config.disableTracing`             | Disable tracing flag                                     | `true`                                           |
+| `entitlement-pdp.secretRef`                         | Secrets for env variables.                               | `name: scp-entitlement-pdp-secret`               |
 
 ### Entitlement Store Chart Overrides
 
@@ -227,7 +259,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `kas.pdp.verbose`        | Verbose Logging Flag                  | `true`                   |
 | `kas.pdp.disableTracing` | Disable tracing flag                  | `true`                   |
 
-### Keycloak Bootstrap Chart Overrides
+### Attribute Definition / Entitlements Bootstrap Chart Overrides
 
 | Name                                                  | Description                                           | Value                                |
 | ----------------------------------------------------- | ----------------------------------------------------- | ------------------------------------ |
@@ -245,6 +277,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | Name                                  | Description                                           | Value                       |
 | ------------------------------------- | ----------------------------------------------------- | --------------------------- |
 | `docker-registry.enabled`             | Enable docker registry                                | `true`                      |
+| `docker-registry.fullnameOverride`    | Override name of service                              | `docker-registry`           |
 | `docker-registry.persistence.enabled` | Persistence Enabled Flag                              | `true`                      |
 | `docker-registry.persistence.size`    | Size of volume                                        | `1Gi`                       |
 | `docker-registry.tlsSecretName`       | Secret name containing TLS Certs used by the registry | `scp-docker-registry-certs` |
@@ -279,3 +312,5 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `tagging-pdp.gateway.enabled`    | Tagging PDP Rest Gateway enabled flag | `true`        |
 | `tagging-pdp.gateway.pathPrefix` | tagging-pdp svc prefix                | `tagging-pdp` |
 | `tdfAdminUsername`               | The admin user created for tdf.       | `tdf-admin`   |
+
+  ```

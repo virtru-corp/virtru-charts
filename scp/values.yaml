@@ -23,18 +23,14 @@ commonParams:
   ## @param commonParams.jobWaitForIstio Job needs to wait for istio and exit appropriately
   jobWaitForIstio: &istioTerminationHack true
 
-## @section Name Parameters
+## @section General / Misc Parameters
 ## @param nameOverride Chart name override
 nameOverride: ""
 ## @param fullnameOverride Chart full name override
 fullnameOverride: ""
-
-## @section Embedded Service Deployment
 embedded:
   ## @param embedded.keycloak  Is keycloak in the cluster
   keycloak: true
-
-## @section Keycloak Configuration
 keycloak:
   ## @param keycloak.realm  If using keycloak - the realm name
   realm: tdf
@@ -78,7 +74,7 @@ ingress:
   tls:
     ## @param ingress.tls.enabled Require Gateway to use tls
     enabled: false
-    ## @param ingress.tls.existingSecretName Use existing TLS Secret
+    ## @param ingress.tls.existingSecret Use existing TLS Secret
     existingSecret:
 
 global:
@@ -254,7 +250,7 @@ kas:
     ## @param kas.pdp.disableTracing  Disable tracing flag
     disableTracing: *disableTracing
 
-## @section Keycloak Bootstrap Chart Overrides
+## @section Attribute Definition / Entitlements Bootstrap Chart Overrides
 entitlement-attrdef-bootstrap:
   entitlements:
     ## @param entitlement-attrdef-bootstrap.entitlements.hostname Entitlement svc hostname
