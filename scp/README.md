@@ -283,23 +283,29 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Secret Generation Parameters
 
-| Name                                           | Description                                                                                    | Value  |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------ |
-| `secrets.enabled`                              | Generate secrets from the values provided below.  If false, another bootstrapping              | `true` |
-| `secrets.postgresql.dbPassword`                | password for postgres user                                                                     | `nil`  |
-| `secrets.attributes.clientSecret`              | oidc client secret used by attributes svc to auth to idp and enforce svc authorization         | `nil`  |
-| `secrets.attributes.dbPassword`                | postgres password for attributes svc user                                                      | `nil`  |
-| `secrets.configuration.dbPassword`             | postgres password for config svc user                                                          | `nil`  |
-| `secrets.entitlementStore.dbPassword`          | postgres password for entitlement-store svc user                                               | `nil`  |
-| `secrets.entitlements.clientSecret`            | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization       | `nil`  |
-| `secrets.entitlements.dbPassword`              | postgres password for entitlements svc user                                                    | `nil`  |
-| `secrets.keycloakBootstrap.attributesUsername` | username for attribute service auth                                                            | `nil`  |
-| `secrets.keycloakBootstrap.attributesPassword` | password for attribute service auth                                                            | `nil`  |
-| `secrets.keycloakBootstrap.users`              | list of users to be added [{"username":"","password":""}]                                      | `nil`  |
-| `secrets.keycloakBootstrap.clients`            | list of custom oidc clients added [{"clientId":<>,"clientSecret":"","audienceMappers":["aud]}] | `nil`  |
-| `secrets.keycloakBootstrap.clientSecret`       | client secret assigned to standard bootstrapper clients                                        | `nil`  |
-| `secrets.keycloakBootstrap.customConfig`       | Override for custom config to none                                                             | `nil`  |
-| `secrets.opaPolicyPullSecret`                  | oci registry pull secret for OPA policy                                                        | `nil`  |
+| Name                                            | Description                                                                                    | Value          |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
+| `secrets.enabled`                               | Generate secrets from the values provided below.  If false, another bootstrapping              | `true`         |
+| `secrets.postgresql.dbPassword`                 | password for postgres user                                                                     | `nil`          |
+| `secrets.attributes.clientSecret`               | oidc client secret used by attributes svc to auth to idp and enforce svc authorization         | `nil`          |
+| `secrets.attributes.dbPassword`                 | postgres password for attributes svc user                                                      | `nil`          |
+| `secrets.configuration.dbPassword`              | postgres password for config svc user                                                          | `nil`          |
+| `secrets.entitlementStore.dbPassword`           | postgres password for entitlement-store svc user                                               | `nil`          |
+| `secrets.entitlements.clientSecret`             | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization       | `nil`          |
+| `secrets.entitlements.dbPassword`               | postgres password for entitlements svc user                                                    | `nil`          |
+| `secrets.keycloakBootstrap.attributesUsername`  | username for attribute service auth                                                            | `nil`          |
+| `secrets.keycloakBootstrap.attributesPassword`  | password for attribute service auth                                                            | `nil`          |
+| `secrets.keycloakBootstrap.users`               | list of users to be added [{"username":"","password":""}]                                      | `nil`          |
+| `secrets.keycloakBootstrap.clients`             | list of custom oidc clients added [{"clientId":<>,"clientSecret":"","audienceMappers":["aud]}] | `nil`          |
+| `secrets.keycloakBootstrap.clientSecret`        | client secret assigned to standard bootstrapper clients                                        | `nil`          |
+| `secrets.keycloakBootstrap.customConfig`        | Override for custom config to none                                                             | `nil`          |
+| `secrets.opaPolicyPullSecret`                   | oci registry pull secret for OPA policy                                                        | `nil`          |
+| `secrets.imageCredentials`                      | Map of key (pull name) to auth information.  Each key creates a pull cred                      |                |
+| `secrets.imageCredentials.pull-secret`          | Container registry auth for "install name"-pull-secret                                         |                |
+| `secrets.imageCredentials.pull-secret.registry` | Registry repo                                                                                  | `ghcr.io`      |
+| `secrets.imageCredentials.pull-secret.username` | Registry Auth username                                                                         | `username`     |
+| `secrets.imageCredentials.pull-secret.password` | Registry Auth password                                                                         | `password`     |
+| `secrets.imageCredentials.pull-secret.email`    | Registry Auth email                                                                            | `nope@nah.com` |
 
 ### Tagging PDP Chart Overrides
 

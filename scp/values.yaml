@@ -83,12 +83,12 @@ global:
   ## @skip global.opentdf
   opentdf:
     common:
-      oidcExternalBaseUrl: https://scp.virtrudemos.com
+      oidcExternalBaseUrl: https://scp.example.com
       oidcInternalBaseUrl: http://keycloak-http
       oidcUrlPath: auth
       ingress:
         scheme: "https"
-        hostname: "scp.virtrudemos.com"
+        hostname: "example.com"
       postgres:
         # -- postgres server's k8s name or global DNS for external server
         host: postgresql
@@ -323,12 +323,17 @@ secrets:
     customConfig: null
   ## @param secrets.opaPolicyPullSecret oci registry pull secret for OPA policy
   opaPolicyPullSecret:
-  ## @skip secrets.imageCredentials[0]
+  ## @extra secrets.imageCredentials Map of key (pull name) to auth information.  Each key creates a pull cred
   imageCredentials:
-    - name: pull-secret
+    ## @extra secrets.imageCredentials.pull-secret Container registry auth for "install name"-pull-secret
+    pull-secret:
+      ## @param secrets.imageCredentials.pull-secret.registry Registry repo
       registry: ghcr.io
+      ## @param secrets.imageCredentials.pull-secret.username Registry Auth username
       username: username
+      ## @param secrets.imageCredentials.pull-secret.password Registry Auth password
       password: password
+      ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
       email: nope@nah.com
 
 ## @section Tagging PDP Chart Overrides
