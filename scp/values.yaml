@@ -58,7 +58,7 @@ bootstrap:
       configVolumeSecretRefName: scp-bootstrap-configsvc
       ## @param bootstrap.configsvc.job.envSecretRef secret for environment variables
       envSecretRef:
-  ## @param  bootstrap.configFile The configuration file content (set using --set-file bootstrap.configPath=yourconfig.yaml
+  ## @param  bootstrap.configFile The configuration file content (set using --set-file bootstrap.configFile=yourconfig.yaml
   configFile:
   ## @param bootstrap.entitlementPolicy Should entitlement policy be bootstrapped
   entitlementPolicy: true
