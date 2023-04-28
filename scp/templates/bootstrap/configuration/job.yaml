@@ -1,6 +1,5 @@
 {{- if .Values.bootstrap.configsvc.enabled }}
-{{ $configPath := .Values.bootstrap.configPath }}
-{{ $config := .Files.Get $configPath | fromYaml }}
+{{ $config := .Values.bootstrap.configFile | fromYaml }}
 apiVersion: batch/v1
 kind: Job
 metadata:

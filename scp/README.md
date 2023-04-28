@@ -28,7 +28,7 @@ This chart provides a mechanism to bootstrap data into various services.  A conf
 used to feed Helm templates generating secrets which are then and mounted as volumes to service-specific
 bootstrapping jobs.
 
-The configuration file is identified by the `bootstrap.configPath` chart value parameter with yaml schema 
+The configuration file is identified by the `bootstrap.configFile` chart value parameter with yaml schema 
 assumes to follow the example below:
 
 ```shell
@@ -136,19 +136,19 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Attribute Definition and Entitlement bootstrap parameters
 
-| Name                                                | Description                                                                  | Value                                         |
-| --------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------- |
-| `bootstrap.attrDefOrEntitlements`                   | Should entitlements and/or attributes be bootstrapped.                       | `true`                                        |
-| `bootstrap.configsvc.enabled`                       | Enable configuration service artifact bootstrapping                          | `true`                                        |
-| `bootstrap.configsvc.job.name`                      | Name of the job                                                              | `configsvc-bootstrap`                         |
-| `bootstrap.configsvc.job.image.repo`                | Image repository                                                             | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |
-| `bootstrap.configsvc.job.image.tag`                 | Image tag                                                                    | `sha-531eea2`                                 |
-| `bootstrap.configsvc.job.image.pullPolicy`          | Image pull policy                                                            | `IfNotPresent`                                |
-| `bootstrap.configsvc.job.backoffLimit`              | Job backoff limit                                                            | `5`                                           |
-| `bootstrap.configsvc.job.configVolumeSecretRefName` | Secret name used to mount configuration artifacts used by the job            | `scp-bootstrap-configsvc`                     |
-| `bootstrap.configsvc.job.envSecretRef`              | secret for environment variables                                             | `nil`                                         |
-| `bootstrap.configPath`                              | The path to the install configuration file (relative to the chart directory) | `nil`                                         |
-| `bootstrap.entitlementPolicy`                       | Should entitlement policy be bootstrapped                                    | `true`                                        |
+| Name                                                | Description                                                                               | Value                                         |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `bootstrap.attrDefOrEntitlements`                   | Should entitlements and/or attributes be bootstrapped.                                    | `true`                                        |
+| `bootstrap.configsvc.enabled`                       | Enable configuration service artifact bootstrapping                                       | `true`                                        |
+| `bootstrap.configsvc.job.name`                      | Name of the job                                                                           | `configsvc-bootstrap`                         |
+| `bootstrap.configsvc.job.image.repo`                | Image repository                                                                          | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |
+| `bootstrap.configsvc.job.image.tag`                 | Image tag                                                                                 | `sha-531eea2`                                 |
+| `bootstrap.configsvc.job.image.pullPolicy`          | Image pull policy                                                                         | `IfNotPresent`                                |
+| `bootstrap.configsvc.job.backoffLimit`              | Job backoff limit                                                                         | `5`                                           |
+| `bootstrap.configsvc.job.configVolumeSecretRefName` | Secret name used to mount configuration artifacts used by the job                         | `scp-bootstrap-configsvc`                     |
+| `bootstrap.configsvc.job.envSecretRef`              | secret for environment variables                                                          | `nil`                                         |
+| `bootstrap.configFile`                              | The configuration file content (set using --set-file bootstrap.configFile=yourconfig.yaml | `nil`                                         |
+| `bootstrap.entitlementPolicy`                       | Should entitlement policy be bootstrapped                                                 | `true`                                        |
 
 ### Ingress Configuration
 
@@ -204,16 +204,15 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Entitlement Policy Bootstrap Job parameters
 
-| Name                                                | Description                                                                    | Value                                            |
-| --------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------ |
-| `entitlement-policy-bootstrap.policyGlobPattern`    | The Glob Pattern to the entitlement policy source data . e.g. rego + data.json | `configs/fed-demo/entitlement-policy/*`          |
-| `entitlement-policy-bootstrap.bundleRepo`           | Bundle repository                                                              | `docker-registry:5000/entitlements-policybundle` |
-| `entitlement-policy-bootstrap.bundleTag`            | Bundle Tag                                                                     | `0.0.2`                                          |
-| `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                              | `https://docker-registry:5000`                   |
-| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                       | `scp-bootstrap-entitlement-cm`                   |
-| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job                        | `scp-bootstrap-entitlement-policy`               |
-| `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                               | `true`                                           |
-| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                             | `sha-531eea2`                                    |
+| Name                                                | Description                                                                                                                                                                                                                                                                                              | Value                                            |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `entitlement-policy-bootstrap.bundleRepo`           | Bundle repository                                                                                                                                                                                                                                                                                        | `docker-registry:5000/entitlements-policybundle` |
+| `entitlement-policy-bootstrap.bundleTag`            | Bundle Tag                                                                                                                                                                                                                                                                                               | `0.0.2`                                          |
+| `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                                                                                                                                                                                                                                                        | `https://docker-registry:5000`                   |
+| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                                                                                                                                                                                                                                                 | `scp-bootstrap-entitlement-cm`                   |
+| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy | `scp-bootstrap-entitlement-policy`               |
+| `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                                                                                                                                                                                                                                                         | `true`                                           |
+| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                                                                                                                                                                                                                                                       | `sha-531eea2`                                    |
 
 ### Entitlement PDP Chart Overrides
 

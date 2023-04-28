@@ -13,7 +13,7 @@
 | `keycloak-bootstrap.attributes.hostname`       | Attribute service endpoint accessible to boostrap job                                          | `http://attributes:4020`                  |
 | `keycloak-bootstrap.attributes.realm`          | Realm for OIDC client auth to attribute service                                                | `tdf`                                     |
 | `keycloak-bootstrap.attributes.clientId`       | OIDC client ID used to auth to attribute service                                               | `dcr-test`                                |
-| `bootstrap.configPath`                         | The path to the install configuration file (relative to the chart directory)                   | `nil`                                     |
+| `bootstrap.configFile`                         | The configuration file - set using --set-file bootstrap.configFile=configFilePath              | `nil`                                     |
 | `secrets.keycloakBootstrap.attributesUsername` | username for attribute service auth                                                            | `nil`                                     |
 | `secrets.keycloakBootstrap.attributesPassword` | password for attribute service auth                                                            | `nil`                                     |
 | `secrets.keycloakBootstrap.users`              | list of users to be added [{"username":"","password":""}]                                      | `nil`                                     |
