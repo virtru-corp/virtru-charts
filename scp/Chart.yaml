@@ -2,10 +2,10 @@ apiVersion: v2
 name: scp
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.1.2
+version: 0.1.3
 appVersion: 0.1.2
 
-otdfVersion: &otdfVersion "0.0.0-sha-bd7a8d2"
+otdfVersion: &otdfVersion "0.0.0-sha-096c5c7"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:

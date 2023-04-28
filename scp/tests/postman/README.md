@@ -43,3 +43,9 @@ export POSTMAN_VAR_DIR=./tests/postman
     ```shell
      newman run tests/postman/configuration-svc.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/configuration-svc_data.json
     ```
+    
+For re-use - this folder is archived and under source control for downloading by consumers.
+
+```
+tar czf postman.tar.gz postman  
+```
