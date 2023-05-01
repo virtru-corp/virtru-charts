@@ -344,7 +344,7 @@ tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
-    tag: sha-470efff
+    tag: sha-f75ec14
     ## @skip tagging-pdp.image.pullSecrets[0].name
     pullSecrets: *imagePullSecrets
   gateway:
@@ -354,7 +354,7 @@ tagging-pdp:
     pathPrefix: tagging-pdp
     ## @skip tagging-pdp.gateway.image
     image:
-      tag: sha-e28d7ee
+      tag: sha-f75ec14
 
 ## @param tdfAdminUsername The admin user created for tdf.
 tdfAdminUsername: tdf-admin
