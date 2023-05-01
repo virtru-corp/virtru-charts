@@ -7,7 +7,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: 8080
+    - port: {{ .Values.virtruProxy.port }}
       targetPort: http
       protocol: TCP
       name: http

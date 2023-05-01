@@ -149,6 +149,8 @@ spec:
           env:
           - name: CONFIG_PATH
             value: /tagging-pdp/config.yaml
+          - name: GRPC_PORT
+            value: {{ .Values.taggingService.port | quote }}
           volumeMounts:
             - name: shared-data-tagging-pdp-dir
               mountPath: /usr/local/smtp-proxy/tmp

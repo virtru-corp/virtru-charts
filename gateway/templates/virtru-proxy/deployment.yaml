@@ -1,3 +1,4 @@
+{{- if .Values.virtruProxy.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,5 +27,6 @@ spec:
                 value: DEBUG
             ports:
               - name: http
-                containerPort: 8080
+                containerPort: {{ .Values.virtruProxy.port }}
                 protocol: TCP
+{{- end }}

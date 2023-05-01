@@ -27,7 +27,7 @@ gateway:
     registry: docker.io
 
 taggingService:
-  port: 15001
+  port: 8080
 
 nameOverride: ""
 fullnameOverride: ""
@@ -211,6 +211,7 @@ additionalConfig:
     taggingConfig: #Used with set-file
 
 istioIngress:
+  enabled: false
   # Use an existing istio gateway
   existingGateway:
   # Name of istio gateway selector
@@ -218,6 +219,8 @@ istioIngress:
   ingressHostname: "*"
   name: scp
 virtruProxy:
+  enabled: false
+  port: 8080
   image:
     repo: ghcr.io/virtru-corp/tagging-pdp/proxy-service
     tag: sha-ac36ab9
