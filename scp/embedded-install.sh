@@ -21,8 +21,8 @@ scpChart="${chartRepo}/scp"
 # For local install change to chart-version.tgz
 #postgresqlChart="shp-embedded-postgresql-0.1.0.tgz"
 #keycloakChart="shp-embedded-keycloak-0.1.0.tgz"
-#keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.2.tgz"
-#scpChart="scp-0.1.3.tgz"
+#keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
+#scpChart="scp-0.1.4.tgz"
 while getopts "h:t:s:u:p:e:c:o:" arg; do
   case $arg in
     t)

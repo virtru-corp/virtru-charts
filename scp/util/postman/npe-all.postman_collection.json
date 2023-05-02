@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Authentication For KC Admin",
+			"name": "Autentication For KC Admin",
 			"event": [
 				{
 					"listen": "test",
@@ -242,9 +242,14 @@
 							"                const authority = attrDef.authority;",
 							"                const attrDefOrder = attrDef.order;",
 							"                const attrName = attrDef.name;",
-							"                for ( o in attrDefOrder){",
-							"                    entitlements.push(authority + \"/attr/\" + attrName +\"/value/\" + attrDefOrder[o]);",
-							"                }            ",
+							"                const attrRule = attrDef.rule;",
+							"                if (attrRule == 'hierarchy'){",
+							"                    entitlements.push(authority + \"/attr/\" + attrName +\"/value/\" + attrDefOrder[0]);",
+							"                }else{",
+							"                    for ( o in attrDefOrder){",
+							"                        entitlements.push(authority + \"/attr/\" + attrName +\"/value/\" + attrDefOrder[o]);",
+							"                    }",
+							"                }               ",
 							"            }",
 							"            const postEntitlementRequest = {",
 							"                url: postEntitlementUrl,",

@@ -5,5 +5,5 @@ Postman Collection Utilities
 For re-use - this folder is archived and under source control for downloading by consumers.
 
 ```
-tar czf postman.tar.gz postman  
+tar czf ../postman.tar.gz ../postman  
 ```
