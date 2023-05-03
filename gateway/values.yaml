@@ -9,7 +9,7 @@ image:
 useImagePullSecret: true
 
 taggingPdpImage: 
-  tag: c241e5077b14ab76c03c630ff743b6f3f2610484
+  tag: sha-f75ec14
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
   imageCredentials:
