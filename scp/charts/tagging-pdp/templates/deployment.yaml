@@ -42,6 +42,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "common.lib.fullname" . }}-tagging-cm
+            {{- if .Values.config.oidcSecretName }}
+            - secretRef:
+                name: {{ .Values.config.oidcSecretName }}
+            {{- else }}
+            - secretRef:
+                name: {{ include "common.lib.fullname" . }}-tagging-cm
+            {{- end }}
           {{- if .Values.config.configFile }}
           volumeMounts:
             - name: tagging-config-volume
