@@ -146,11 +146,11 @@ spec:
           volumeMounts:
           - name: shared-data-tagging-pdp-dir
             mountPath: /usr/local/smtp-proxy/tmp # Where we write content to be extracted.
-          env:
-          - name: CONFIG_PATH
-            value: /tagging-pdp/config.yaml
-          - name: GRPC_PORT
-            value: {{ .Values.taggingService.port | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}-tagging
+            - secretRef:
+                name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}-tagging
           volumeMounts:
             - name: shared-data-tagging-pdp-dir
               mountPath: /usr/local/smtp-proxy/tmp
