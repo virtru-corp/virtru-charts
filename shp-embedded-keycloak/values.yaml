@@ -42,6 +42,12 @@ keycloak:
   ## @skip  keycloak.podAnnotations.proxy.istio.io/config
   podAnnotations:
     proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
+  podSecurityContext:
+    ## @skip  keycloak.podSecurityContext.fsGroup
+    fsGroup: null
+  securityContext:
+    ## @skip  keycloak.securityContext.runAsUser
+    runAsUser: null
   externalDatabase:
     ## @param keycloak.externalDatabase.database Database name
     database: keycloak_database
