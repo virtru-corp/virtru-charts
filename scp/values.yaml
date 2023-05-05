@@ -285,6 +285,11 @@ docker-registry:
     size: 1Gi
   ## @param docker-registry.tlsSecretName Secret name containing TLS Certs used by the registry
   tlsSecretName: scp-docker-registry-certs
+  ## @skip docker-registry.securityContext
+  securityContext:
+    enabled: false
+    fsGroup: null
+    runAsUser: null
 
 ## @section Secret Generation Parameters
 secrets:
