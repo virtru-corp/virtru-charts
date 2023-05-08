@@ -107,7 +107,13 @@
 						"exec": [
 							"pm.variables.set(\"attributeName\", pm.iterationData.get(\"attributeName\"));",
 							"pm.variables.set(\"attributeValue\", pm.iterationData.get(\"attributeValue\"));",
-							"pm.variables.set(\"entityUsername\", pm.iterationData.get(\"entityUsername\"));",
+							"if (pm.iterationData.get(\"entityUsername\")){",
+							"    pm.variables.set(\"entityUsername\", \"\\\"\" + pm.iterationData.get(\"entityUsername\") +\"\\\"\");",
+							"}",
+							"if (pm.iterationData.get(\"entityEmail\")){",
+							"    pm.variables.set(\"entityEmail\", \"\\\"\" + pm.iterationData.get(\"entityEmail\") +\"\\\"\");",
+							"}",
+							"",
 							""
 						],
 						"type": "text/javascript"
@@ -135,7 +141,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"data_attributes\": [\n    {\"namespace\": \"{{attributeAuthority}}\", \"name\": \"{{attributeName}}\", \"value\": \"{{attributeValue}}\"}\n  ],\n  \"entity_usernames\": [\"{{entityUsername}}\"]\n}\n"
+					"raw": "{\n  \"data_attributes\": [\n    {\"namespace\": \"{{attributeAuthority}}\", \"name\": \"{{attributeName}}\", \"value\": \"{{attributeValue}}\"}\n  ],\n  \"entity_usernames\": [{{entityUsername}}],\n  \"entity_email\": [{{entityEmail}}]\n}\n"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/access-pep/access",
