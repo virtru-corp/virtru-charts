@@ -12,5 +12,14 @@ data:
 {{- else }}
   CONFIG_ARTIFACT_ID: {{ .Values.config.configSvc.artifactId | quote }}
   CONFIG_SERVICE_ENDPOINT: {{ .Values.config.configSvc.url | quote }}
+  CONFIG_SERVICE_POLLING_MAX: {{ .Values.config.configSvc.pollingMax | quote}}
+  CONFIG_SERVICE_POLLING_MIN: {{ .Values.config.configSvc.pollingMin | quote}}
+  CONFIG_SERVICE_AUTH_CLIENT_ID: {{ .Values.config.oidcClientId | quote}}
+{{- if .Values.config.attrSvc.url }}
+  ATTR_SERVICE_POLLING_MAX: {{ .Values.config.attrSvc.pollingMax | quote}}
+  ATTR_SERVICE_POLLING_MIN: {{ .Values.config.attrSvc.pollingMin | quote}}
+  ATTR_SERVICE_AUTH_CLIENT_ID: {{ .Values.config.oidcClientId | quote}}
+  ATTR_SERVICE_ENDPOINT: {{ .Values.config.attrSvc.url | quote}}
+{{- end}}
 {{- end }}
 

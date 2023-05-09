@@ -9,6 +9,23 @@ config:
   configSvc:
     url: http://configuration:8080/configuration
     artifactId: taggingpdp.test
+    # Max polling time in seconds
+    pollingMax: 300
+    # Min polling time in seconds
+    pollingMin: 30
+  attrSvc:
+    # Optional attribute service url
+    url:
+    # Max polling time in seconds
+    pollingMax: 300
+    # Min polling time in seconds
+    pollingMin: 30
+  # Optional OIDC Client id
+  oidcClientId:
+  # Optional OIDC Client Secret
+  oidcClientSecret:
+  # Existing client secret w/ AUTH_CLIENT_SECRET key
+  oidcSecretName:
 
 service:
   type: ClusterIP
@@ -45,7 +62,7 @@ serviceAccount:
   name: null
 
 image:
-  tag: sha-470efff
+  tag: sha-f3f0116
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
   pullSecrets:

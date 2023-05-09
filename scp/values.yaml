@@ -153,7 +153,7 @@ configuration:
   server:
     image:
       ## @param configuration.server.image.tag Configuration Service Image Tag
-      tag: 0.3.5
+      tag: 0.3.6
     ## @param configuration.server.secretRef Configuration Service Secrets Ref
     secretRef: |-
       name: scp-configsvc
@@ -323,6 +323,9 @@ secrets:
     customConfig: null
   ## @param secrets.opaPolicyPullSecret oci registry pull secret for OPA policy
   opaPolicyPullSecret:
+  taggingPDP:
+    ## @param secrets.taggingPDP.clientSecret OIDC Client Secret for Tagging PDP
+    clientSecret:
   ## @extra secrets.imageCredentials Map of key (pull name) to auth information.  Each key creates a pull cred
   imageCredentials:
     ## @extra secrets.imageCredentials.pull-secret Container registry auth for "install name"-pull-secret
@@ -344,7 +347,7 @@ tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
-    tag: sha-f75ec14
+    tag: sha-f3f0116
     ## @skip tagging-pdp.image.pullSecrets[0].name
     pullSecrets: *imagePullSecrets
   gateway:
@@ -354,7 +357,15 @@ tagging-pdp:
     pathPrefix: tagging-pdp
     ## @skip tagging-pdp.gateway.image
     image:
-      tag: sha-f75ec14
+      tag: sha-f3f0116
+  config:
+    attrSvc:
+      ## @param tagging-pdp.config.attrSvc.url Set the attribute service url
+      url: *attrEndpoint
+    ## @param tagging-pdp.config.oidcSecretName Use existing secret for OIDC Creds
+    oidcSecretName: scp-tagging-pdp-secret
+    ## @param tagging-pdp.config.oidcClientId OIDC Client ID for tagging pdp
+    oidcClientId: shp-tagging-pdp
 
 ## @param tdfAdminUsername The admin user created for tdf.
 tdfAdminUsername: tdf-admin
