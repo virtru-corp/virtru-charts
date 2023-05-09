@@ -1,5 +1,6 @@
 {{- if .Values.istioIngress.enabled }}
-{{- if .Values.gatewayModes.outboundDlp.enabled && .Values.additionalConfig.abac.enabled }}
+{{- if .Values.gatewayModes.outboundDlp.enabled }}
+{{- if .Values.additionalConfig.abac.enabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -14,5 +15,6 @@ spec:
         protocol: TCP
       hosts:
         - {{ .Values.istioIngress.ingressHostname | quote }}
+{{- end }}        
 {{- end }}
 {{- end }}
