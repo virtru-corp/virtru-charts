@@ -1,0 +1,5 @@
+--------NOT RECOMMENDED FOR PRODUCTION USE-----
+Installed {{ .Chart.Name }}
+Release name:  {{ .Release.Name }}
+Version: {{ .Chart.Version }}
+--------NOT RECOMMENDED FOR PRODUCTION USE-----

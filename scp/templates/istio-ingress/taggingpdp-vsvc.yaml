@@ -1,0 +1,37 @@
+{{ $gatewayEnabled := index .Values "tagging-pdp" "gateway" "enabled" }}
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tagging-pdp
+spec:
+  gateways:
+    - {{ include "scp.ingress.gateway" . }}
+  hosts:
+    - '*'
+  http:
+    - match:
+        - uri:
+            prefix: /virtru.tagging.pdp.TaggingPDPService
+        - uri:
+            prefix: /grpc.reflection.v1alpha.ServerReflection
+      name: tagging-pdp
+      route:
+        - destination:
+            host: tagging-pdp
+            port:
+              number: 8080
+      timeout: 10s
+    {{- if $gatewayEnabled }}
+    - match:
+        - uri:
+            prefix: /tagging-pdp/
+      name: tagging-pdp-grpc-gateway
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: tagging-pdp-grpc-gwy
+            port:
+              number: 8080
+    {{- end }}

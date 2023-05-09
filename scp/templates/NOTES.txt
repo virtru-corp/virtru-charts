@@ -1,2 +1,12 @@
-SCP Installed
+Installed {{ .Chart.Name }}.
+Release name:  {{ .Release.Name }}
+Version: {{ .Chart.Version }}
+
+{{ $baseURl := printf "%s://%s" .Values.global.opentdf.common.ingress.scheme ( include "scp.ingressHostname" . ) }}
+
+API Endpoints:
+Access Service:
+Attributes: {{ $baseURl }}/api/kas/
+Configuration: {{ $baseURl }}/configuration
+KAS: {{ $baseURl }}/api/kas/
 

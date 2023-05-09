@@ -1,0 +1,40 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: {{ include "common.lib.name" . }}-config-svc-jwt-authentication
+spec:
+  selector:
+    matchLabels:
+      {{- include "shp.configsvc.auth.selectorLabels" . | nindent 6 }}
+  jwtRules:
+  - issuer: {{ include "shp.configsvc.auth.issuer" . | quote }}
+    jwksUri: {{ include "shp.configsvc.auth.jwksUri" . | quote }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "common.lib.name" . }}-config-svc-external
+spec:
+  selector:
+    matchLabels:
+      {{- include "shp.configsvc.auth.selectorLabels" . | nindent 6 }}
+  action: ALLOW
+  rules:
+    - from:
+      - source:
+          requestPrincipals: ["*"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "common.lib.name" . }}-config-svc-internal
+spec:
+  selector:
+    matchLabels:
+      {{- include "shp.configsvc.auth.selectorLabels" . | nindent 6 }}
+  action: ALLOW
+  rules:
+    - from:
+      - source:
+          namespaces: [ {{ .Release.Namespace }}]
+---

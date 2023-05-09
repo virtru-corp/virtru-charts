@@ -1,3 +1,5 @@
+{{- if .Values.istioIngress.enabled }}
+{{- if .Values.gatewayModes.outboundDlp.enabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -9,9 +11,11 @@ spec:
     - '*'
   tcp:
     - match:
-        - port: 9005
+        - port: {{  .Values.gatewayModes.outboundDlp.port }}
       route:
         - destination:
             host: {{ include "gateway.name" . }}-{{ .Values.gatewayModes.outboundDlp.name }}
             port:
               number: {{ .Values.gatewayModes.outboundDlp.port }}
+{{- end }}
+{{- end }}

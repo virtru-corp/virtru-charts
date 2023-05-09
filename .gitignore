@@ -1,1 +1,6 @@
+package.json
+package-lock.json
+**/node_modules
 /.idea/
+**/charts/*.tgz
+**/Chart.lock

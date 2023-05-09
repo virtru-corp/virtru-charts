@@ -1,0 +1,14 @@
+[
+  {
+    "attributeName": "IntellectualProperty",
+    "attributeValue": "TradeSecret",
+    "entityUsername": "alice",
+    "accessDecision": false
+  },
+  {
+    "attributeName": "IntellectualProperty",
+    "attributeValue": "Secret",
+    "entityUsername": "bob",
+    "accessDecision": false
+  }
+]

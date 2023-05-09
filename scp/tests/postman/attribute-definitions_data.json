@@ -1,0 +1,8 @@
+[
+  {
+    "name":"IntellectualProperty",
+    "order": ["TradeSecret"],
+    "rule": "hierarchy"
+  }
+
+]

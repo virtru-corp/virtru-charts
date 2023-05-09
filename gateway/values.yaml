@@ -9,7 +9,7 @@ image:
 useImagePullSecret: true
 
 taggingPdpImage: 
-  tag: c241e5077b14ab76c03c630ff743b6f3f2610484
+  tag: sha-f75ec14
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
   imageCredentials:
@@ -27,7 +27,7 @@ gateway:
     registry: docker.io
 
 taggingService:
-  port: 15001
+  port: 8080
 
 nameOverride: ""
 fullnameOverride: ""
@@ -117,7 +117,7 @@ persistentVolumes:
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
 
-gatewayAccountsUrl: http://configuration/configuration
+gatewayAccountsUrl: http://gateway-virtru-proxy:8080/accounts
 gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
@@ -209,11 +209,30 @@ additionalConfig:
     taggingPdpLocation: localhost:15001
     accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
     taggingConfig: #Used with set-file
+    configService: # Optional - if set overrides taggingConfig
+      taggingArtifactId:
+      url:
+      pollingMin: 90
+      pollingMax: 300
+    attrService:
+      url: # url to attribute service - optional
+      pollingMin: 90
+      pollingMax: 300
 
 istioIngress:
+  enabled: false
   # Use an existing istio gateway
   existingGateway:
   # Name of istio gateway selector
   gatewaySelector: ingress
   ingressHostname: "*"
   name: scp
+virtruProxy:
+  enabled: false
+  port: 8080
+  image:
+    repo: ghcr.io/virtru-corp/tagging-pdp/proxy-service
+    tag: sha-470efff
+  imagePullSecret: gateway-pull-secrets
+  configsvc:
+    endpoint: http://configuration:8080/configuration
