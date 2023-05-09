@@ -51,7 +51,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 25
 
 ingress:
@@ -84,7 +84,7 @@ autoscaling:
 
 gatewayModes:
   outboundEncrypt:
-    enabled: false
+    enabled: true
     name: outbound-encrypt
     port: 9001
   outboundDecrypt:
@@ -100,7 +100,7 @@ gatewayModes:
     name: inbound-decrypt
     port: 9004
   outboundDlp:
-    enabled: true
+    enabled: false
     name: outbound-dlp
     port: 9005
 
@@ -117,7 +117,7 @@ persistentVolumes:
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
 
-gatewayAccountsUrl: http://api.virtru.com/accounts
+gatewayAccountsUrl: https://api.virtru.com/accounts
 gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
@@ -131,7 +131,7 @@ standardConfig:
   # default is open and to lock down firewall on the VPC
   inboundRelayAddresses: 0.0.0.0/0
   headers:
-    xHeaderAuthEnabled: false
+    xHeaderAuthEnabled: true
     # Secret managed in appSecrets.headers
 
 # By default, you can create secrets using the keys below.
@@ -185,7 +185,7 @@ additionalConfig:
     enabled: false
     compliance: MEDIUM
   cks:
-    keyProvider: NONE
+    keyProvider: CKS
     sessionKeyExpiry: "360"
   dlpRuleCache: "30"
   tlsPolicyMaps:
