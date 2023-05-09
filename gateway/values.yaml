@@ -203,10 +203,10 @@ additionalConfig:
     enabled: false
     selector: gw
   abac:
-    enabled: true
-    oidcClientId: 12321
+    enabled: false
+    oidcClientId: example-client
     oidcTokenUrl: some-token-url
-    taggingPdpLocation: localhost:15001
+    taggingPdpLocation: localhost:8080
     accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
     taggingConfig: #Used with set-file
     configService: # Optional - if set overrides taggingConfig
