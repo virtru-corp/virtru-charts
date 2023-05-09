@@ -208,7 +208,7 @@ additionalConfig:
     oidcTokenUrl: some-token-url
     taggingPdpLocation: localhost:8080
     accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
-    taggingConfig: #Used with set-file
+    taggingConfig: "" #Used with set-file
     configService: # Optional - if set overrides taggingConfig
       taggingArtifactId:
       url:
