@@ -236,3 +236,4 @@ virtruProxy:
   imagePullSecret: gateway-pull-secrets
   configsvc:
     endpoint: http://configuration:8080/configuration
+    gatewayKey: gateway.virtru

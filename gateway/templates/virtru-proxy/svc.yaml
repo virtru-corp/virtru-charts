@@ -1,3 +1,4 @@
+{{- if .Values.virtruProxy.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,3 +15,4 @@ spec:
       appProtocol: http
   selector:
     app.kubernetes.io/name: {{ include "gateway.name" . }}-virtru-proxy
+{{- end }}

@@ -25,6 +25,8 @@ spec:
                 value: {{ .Values.virtruProxy.configsvc.endpoint }}
               - name: LOG_LVL_SERVICE
                 value: DEBUG
+              - name: configsvc.gatewayKey
+                value: {{ .Values.virtruProxy.configsvc.gatewayKey }}
             ports:
               - name: http
                 containerPort: {{ .Values.virtruProxy.port }}
