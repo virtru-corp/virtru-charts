@@ -117,7 +117,7 @@ persistentVolumes:
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
 
-gatewayAccountsUrl: http://gateway-virtru-proxy:8080/accounts
+gatewayAccountsUrl: http://api.virtru.com/accounts
 gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
