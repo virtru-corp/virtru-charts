@@ -1,0 +1,12 @@
+apiVersion: v2
+name: sharepoint
+description: Sharepoint ABAC Enforcement Helm Chart
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+
+dependencies:
+  - name: common-lib
+    repository: file://../common-lib
+    version: 0.1.0
+
