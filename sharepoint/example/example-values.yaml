@@ -1,0 +1,16 @@
+deployHostname: &deployHostname "www.example.org"
+
+config:
+  db:
+    host: postresql
+    user: sharepoint_manager
+    port: 5432
+    dbName: tdf_sharepoint
+  auth:
+    url: *deployHostname
+    org: tdf
+    clientId: sharepoint-oidc-client
+
+  secrets:
+    dbPassword: replaceme
+    oidcClientSecret: replaceme

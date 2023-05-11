@@ -20,10 +20,7 @@ spec:
       labels:
         {{- include "common.lib.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with (coalesce .Values.image.pullSecrets .Values.global.imagePullSecrets) }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{ include "sharepoint.imagePullSecrets" . | nindent 6 }}
       serviceAccountName: {{ include "common.lib.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -44,24 +41,24 @@ spec:
             {{- with .Values.secretRef }}
             - secretRef:
                 {{- tpl . $ | nindent 16 }}
+            {{- else }}
+            - secretRef:
+                secretName: {{ include "common.lib.fullname" . }}-service-secret
             {{- end }}
             - configMapRef:
                 name: {{ include "common.lib.fullname" . }}-configmap
           volumeMounts:
               - name: secret-volume
-                mountPath: /sharepoint/config/privatekey.pfx
-                subPath: privatekey.pfx
-              - name: secret-volume
-                mountPath: /sharepoint/config/site-config.json
-                subPath: site-config.json
-#          livenessProbe:
-#            httpGet:
-#              path: /healthz?probe=liveness
-#              port: http
-#          readinessProbe:
-#            httpGet:
-#              path: /healthz?probe=readiness
-#              port: http
+                mountPath: /etc/sharepoint/keys/sharepoint.pfx
+                subPath: sharepoint.pfx
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

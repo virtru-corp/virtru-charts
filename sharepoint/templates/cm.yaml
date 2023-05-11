@@ -10,7 +10,6 @@ data:
   POSTGRES_PORT: {{ (coalesce .Values.config.db.port .Values.global.opentdf.common.postgres.port) | quote }}
   POSTGRES_DB: {{ .Values.config.db.dbName | quote }}
   POSTGRES_SSLMODE: {{ .Values.config.db.sslMode | quote }}
-  LOCAL: {{ .Values.config.local | quote }}
   AUTH_URL: {{ .Values.config.auth.url | quote }}
   AUTH_ORGANIZATION: {{ (coalesce .Values.config.auth.org .Values.global.auth.organization ) | quote }}
   AUTH_CLIENT_ID: {{ .Values.config.auth.clientId | quote }}

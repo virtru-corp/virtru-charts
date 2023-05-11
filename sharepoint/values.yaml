@@ -27,8 +27,6 @@ global:
         port:
 
 
-
-
 ## @section Image parameters
 ## @param imagePullSecrets Image Pull Secrets - Overrides Global
 imagePullSecrets:
@@ -39,6 +37,8 @@ image:
   repo: ghcr.io/virtru-corp/sharepoint-webhooks/sharepoint-webhook-service
   ## @param image.pullPolicy Image Pull Policy
   pullPolicy: IfNotPresent
+## @param imageCredentials - If `imagePullSecrets` is NOT set and this is, image pull secrets are generated from this list. list [{name,registry,password, email}]
+imageCredentials: []
 
 ## @section Webhook Service Configuration
 service:
@@ -47,8 +47,6 @@ service:
   ## @param service.type Service Type
   type: ClusterIP
 config:
-  ## @skip config.local
-  local: true
   db:
     ## @param config.db.host Postgresql DB Host
     host:
@@ -67,25 +65,39 @@ config:
     org: tdf
     ## @param config.auth.clientId OIDC Client Id
     clientId:
-
   configSvc:
     ## @param config.configSvc.url Configuration Service Endpoint
     url: http://configuration:8080/configuration
     ## @param config.configSvc.artifactId Configuration Artifact Identifier used by the sharepoint service
-    artifactId:
+    artifactId: sharepoint
   ## @param config.existingSecret Existing Secret Name for secret env vars
   existingSecret:
-  ## @param config.privateKeyPfx Set the Private Key PFX - use --set-file to set this value
-  privateKeyPfx:
-  ## @param config.siteConfigJson Set the Site Configuration - use --set-file to set this value
-  siteConfigJson:
-
+  ## @param config.sharepointPfx Set the Private Key PFX used in Sharepoint Authentication - use --set-file to set this value
+  sharepointPfx:
   secrets:
     ## @param config.secrets.dbPassword Postgresql Database password - used if `config.existingSecret` is blank
     dbPassword:
     ## @param config.secrets.oidcClientSecret OIDC Client Secret - used if `config.existingSecret` is blank
     oidcClientSecret:
 
+## @section Ingress Configuration
+ingress:
+  ## @param ingress.hostname the ingress hostname
+  hostname:
+  istio:
+    ## @param ingress.istio.enabled  Enable istio ingress, overrides `global.istioEnabled`
+    enabled: true
+    ## @param ingress.istio.existingGateway Name of an exiting ingress gateway to use
+    existingGateway:
+    ## @param ingress.istio.ingressSelector Selector of ingress gateway
+    ingressSelector: ingress
+    ## @param ingress.istio.ingressPrefix Ingress path to expose in the Virtual Service
+    ingressPrefix: "/sharepoint/"
+    tls:
+      ## @param ingress.istio.tls.enabled Is TLS enabled on the gateway. Typically this is handled by a vendor load balancer
+      enabled:
+      ## @param ingress.istio.tls.existingSecret Name of Existing tls secret to be used.
+      existingSecret:
 
 ## @section Deployment Parameters
 ## @param nameOverride Override name of the chart
@@ -100,7 +112,7 @@ autoscaling:
   ## @param autoscaling.enabled Auto Scale deployment
   enabled:
 serviceAccount:
-    ## @param serviceAccount.name Specifies whether a service account should be created
+    ## @param serviceAccount.create Specifies whether a service account should be created
     create: true
     ## @param serviceAccount.annotations Annotations to add to the service account
     annotations: {}
