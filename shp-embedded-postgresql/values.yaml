@@ -42,3 +42,6 @@ secrets:
   keycloak:
     ## @param secrets.keycloak.dbPassword postgres password for keycloak svc user
     dbPassword:
+  sharepoint:
+    ## @param secrets.keycloak.dbPassword postgres password for sharepoint svc user
+    dbPassword:
