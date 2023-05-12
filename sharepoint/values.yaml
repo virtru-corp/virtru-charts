@@ -80,6 +80,29 @@ config:
     ## @param config.secrets.oidcClientSecret OIDC Client Secret - used if `config.existingSecret` is blank
     oidcClientSecret:
 
+## @section Bootstrap Configuration
+bootstrap:
+  ## @param bootstrap.enabled Enable Flag for Sharepoint Configuration Bootstrapping
+  enabled: false
+  ## @param bootstrap.configFile Configuration yaml for configuration artifacts. Use --set-file bootstrap.configFile=XXX. Expected yaml schema see scp/docs/config_file_schema.json
+  configFile:
+  job:
+    ## @param bootstrap.job.name Name of the job to bootstrap sharepoint configuration
+    name: config-bootstrap
+    image:
+      ## @param bootstrap.job.image.repo Image repository
+      repo: ghcr.io/virtru-corp/postman-cli/opcr-policy
+      ## @param bootstrap.job.image.tag Image tag
+      tag: sha-531eea2
+      ## @param bootstrap.job.image.pullPolicy Image pull policy
+      pullPolicy: IfNotPresent
+    ## @param bootstrap.job.backoffLimit Job backoff limit
+    backoffLimit: 5
+    ## @param bootstrap.job.envSecretRef secret for environment variables
+    envSecretRef:
+    ## @param bootstrap.job.waitForIstio Istio Mesh is active
+    waitForIstio: true
+
 ## @section Ingress Configuration
 ingress:
   ## @param ingress.hostname the ingress hostname

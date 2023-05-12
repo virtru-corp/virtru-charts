@@ -1,6 +1,0 @@
-{
-  "data_attributes": [
-    {"namespace": "https://example.com", "name": "Classification","value": "C"}
-  ],
-  "entity_usernames": ["alice_1234"]
-}

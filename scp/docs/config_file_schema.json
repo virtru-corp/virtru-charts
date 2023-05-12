@@ -1,0 +1,91 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://virtru.com/configuration-boostrap.schema.json",
+    "title": "Platform Configuration Schema",
+    "description": "Configuration schema for TDF Platform",
+    "type": "object",
+    "properties": {
+      "authorities": { "$ref": "#/$defs/authorities"},
+      "entitlements": { "$ref": "#/$defs/entitlements"},
+      "attributeDefinitions": { "$ref": "#/$defs/attributeDefinitions"},
+      "configArtifacts" : { "$ref": "#/$defs/configArtifacts"}
+    },
+    "required": ["authorities","entitlements","attributeDefinitions","configArtifacts"],
+
+    "$defs": {
+      "synonym":{
+        "type": "object",
+        "properties":{
+          "id" :{
+            "type": "string",            
+            "description": "unique id of the synonym dictionary"
+          },
+          "entries":{"type":"array","items":{"$ref":"#/$defs/synonym-entry"}}
+        },
+        "required": ["id", "entries"]
+      },
+      "synonym-entry":{
+        "type":"object",
+        "properties":{
+          "terms":{"type":"array", "items":{"type":"string"}},
+          "synonyms":{"type":"array", "items":{"type":"string"}}
+        },
+        "required":["terms","synonyms"]
+      },
+      "synonyms":{
+        "type": "array",
+        "items" :{ "$ref": "#/$defs/synonym" }
+      },
+      "content-extractors":{
+        "type": "array",
+        "items" :{ "$ref": "#/$defs/content-extractor" }
+      },
+      "tag-extraction-rules":{
+        "type": "array",
+        "items": {"$ref":"#/$defs/tag-extraction-rule"}
+      },
+      "tag-extraction-rule":{
+
+      },
+      "base-processor":{
+        "type":"object",
+        "properties":{
+          "id":{"type": "string"},
+          "type":{"type": "string"}
+        },
+        "required":["id","type"]
+      },
+      "tika-content-extractor":{
+        "type":"object",
+        "allOf": [{ "$ref": "#/$defs/base-processor" }],
+        "properties":{
+          "type": {"pattern": "(tika-content-extraction)"},
+          "config":{"type":"object", "properties":{}}
+        }
+      },
+      "titus-content-extractor":{
+        "type":"object",
+        "allOf": [{ "$ref": "#/$defs/base-processor" }],
+         "properties":{
+          "id": {"type": "string"},
+          "type": {"pattern": "(titus-metadata)", "type":"string"},
+          "config":{
+            "type":"object", 
+            "properties":{
+              "metatdataKeys":{"type":"array","items":"string"}
+          },"additionalProperties": false
+        }
+        },        
+        "additionalProperties": false
+      },
+      "content-extractor":{
+        "type": "object",
+        "oneOf": 
+        [
+          {"$ref": "#/$defs/tika-content-extractor"},
+          {"$ref": "#/$defs/titus-content-extractor"}
+        ]          
+      }
+    }
+    
+  }

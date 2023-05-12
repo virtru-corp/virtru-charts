@@ -19,7 +19,7 @@ keycloakChart="${chartRepo}/shp-embedded-keycloak"
 keycloakBootstrapperChart="${chartRepo}/shp-keycloak-bootstrapper"
 scpChart="${chartRepo}/scp"
 # For local install change to chart-version.tgz
-#postgresqlChart="shp-embedded-postgresql-0.1.0.tgz"
+#postgresqlChart="shp-embedded-postgresql-0.1.1.tgz"
 #keycloakChart="shp-embedded-keycloak-0.1.0.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
 #scpChart="scp-0.1.5.tgz"

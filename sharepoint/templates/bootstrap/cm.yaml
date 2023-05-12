@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.lib.fullname" . }}-{{ .Values.bootstrap.job.name }}-cm
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+data:
+  ConfigSvcUrl: "http://configuration:8080/configuration"
+

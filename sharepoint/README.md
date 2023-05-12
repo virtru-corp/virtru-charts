@@ -1,16 +1,23 @@
 # Deployment
 
 ## Install Chart
+
+Prerequisites:
+- A postgresql database.  See [Example role/db creation](../shp-embedded-postgresql/templates/_sql.sharepoint.tpl)
+- A Deployed TDF Platform See [TDF Platform](../scp)
+- Sharepoint Configuration Artifact uploaded to platform configuration service.
+
+### Install from source in this repo
 ```shell
 helm dependency update
 ```
-Install from source in this repo:
 ```shell
 helm upgrade --install -n <namespace> --create-namespace \
     -f sharepoint/values.yaml \
      sharepoint sharepoint
 ```
-Install from published chart:
+
+### Install from published chart
 - add repo
     ```shell
     helm repo add virtru-charts \
@@ -32,6 +39,7 @@ Install from published chart:
 The example:
 - sets the private key to value in `sharepoint/example/privateKey.pfx`
 - create image pull credentials named "ghcr" for github container registry with username/password 
+- turns bootstrap on
 
 ```shell
 helm upgrade --install -n <namespace> --create-namespace \
@@ -40,6 +48,8 @@ helm upgrade --install -n <namespace> --create-namespace \
     --set "imageCredentials[0].password"="${GITHUB_TOKEN}" \
     --set "imageCredentials[0].email"="nope@nah.com" \
     --set "imageCredentials[0].registry"="ghcr.io" \
+    --set bootstrap.enabled=true \
+    --set-file bootstrap.configFile=sharepoint/example/example-config.yaml \
     --set-file config.sharepointPfx=sharepoint/example/privateKey.pfx \
     -f sharepoint/values.yaml \
     -f sharepoint/example/example-values.yaml \
@@ -76,7 +86,7 @@ npx @bitnami/readme-generator-for-helm -v sharepoint/values.yaml -r sharepoint/R
 | Name               | Description                                                                                                                             | Value                                                                |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `imagePullSecrets` | Image Pull Secrets - Overrides Global                                                                                                   | `nil`                                                                |
-| `image.tag`        | Image tag                                                                                                                               | `sha-470efff`                                                        |
+| `image.tag`        | Image tag                                                                                                                               | `sha-b51ffd3`                                                        |
 | `image.repo`       | Image repository                                                                                                                        | `ghcr.io/virtru-corp/sharepoint-webhooks/sharepoint-webhook-service` |
 | `image.pullPolicy` | Image Pull Policy                                                                                                                       | `IfNotPresent`                                                       |
 | `imageCredentials` | - If `imagePullSecrets` is NOT set and this is, image pull secrets are generated from this list. list [{name,registry,password, email}] | `[]`                                                                 |
@@ -102,14 +112,31 @@ npx @bitnami/readme-generator-for-helm -v sharepoint/values.yaml -r sharepoint/R
 | `config.secrets.dbPassword`       | Postgresql Database password - used if `config.existingSecret` is blank                      | `nil`                                     |
 | `config.secrets.oidcClientSecret` | OIDC Client Secret - used if `config.existingSecret` is blank                                | `nil`                                     |
 
+### Bootstrap Configuration
+
+| Name                             | Description                                                                                                                                        | Value                                         |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `bootstrap.enabled`              | Enable Flag for Sharepoint Configuration Bootstrapping                                                                                             | `false`                                       |
+| `bootstrap.configFile`           | Configuration yaml for configuration artifacts. Use --set-file bootstrap.configFile=XXX. Expected yaml schema see scp/docs/config_file_schema.json | `nil`                                         |
+| `bootstrap.job.name`             | Name of the job to bootstrap sharepoint configuration                                                                                              | `config-bootstrap`                            |
+| `bootstrap.job.image.repo`       | Image repository                                                                                                                                   | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |
+| `bootstrap.job.image.tag`        | Image tag                                                                                                                                          | `sha-531eea2`                                 |
+| `bootstrap.job.image.pullPolicy` | Image pull policy                                                                                                                                  | `IfNotPresent`                                |
+| `bootstrap.job.backoffLimit`     | Job backoff limit                                                                                                                                  | `5`                                           |
+| `bootstrap.job.envSecretRef`     | secret for environment variables                                                                                                                   | `nil`                                         |
+| `bootstrap.job.waitForIstio`     | Istio Mesh is active                                                                                                                               | `true`                                        |
+
 ### Ingress Configuration
 
-| Name                            | Description                                           | Value          |
-| ------------------------------- | ----------------------------------------------------- | -------------- |
-| `ingress.istio.enabled`         | Enable istio ingress, overrides `global.istioEnabled` | `true`         |
-| `ingress.istio.existingGateway` | Name of an exiting ingress gateway to use             | `nil`          |
-| `ingress.istio.ingressSelector` | Selector of ingress gateway                           | `ingress`      |
-| `ingress.istio.ingressPrefix`   | Ingress path to expose in the Virtual Service         | `/sharepoint/` |
+| Name                               | Description                                                                        | Value          |
+| ---------------------------------- | ---------------------------------------------------------------------------------- | -------------- |
+| `ingress.hostname`                 | the ingress hostname                                                               | `nil`          |
+| `ingress.istio.enabled`            | Enable istio ingress, overrides `global.istioEnabled`                              | `true`         |
+| `ingress.istio.existingGateway`    | Name of an exiting ingress gateway to use                                          | `nil`          |
+| `ingress.istio.ingressSelector`    | Selector of ingress gateway                                                        | `ingress`      |
+| `ingress.istio.ingressPrefix`      | Ingress path to expose in the Virtual Service                                      | `/sharepoint/` |
+| `ingress.istio.tls.enabled`        | Is TLS enabled on the gateway. Typically this is handled by a vendor load balancer | `nil`          |
+| `ingress.istio.tls.existingSecret` | Name of Existing tls secret to be used.                                            | `nil`          |
 
 ### Deployment Parameters
 
