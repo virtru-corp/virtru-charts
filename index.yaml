@@ -3,7 +3,7 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2023-05-03T14:42:21.757121-07:00"
+    created: "2023-05-12T13:26:54.970005-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -13,7 +13,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2023-05-03T14:42:21.756609-07:00"
+    created: "2023-05-12T13:26:54.969585-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -23,7 +23,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2023-05-03T14:42:21.756131-07:00"
+    created: "2023-05-12T13:26:54.969042-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 1a2554129783634ca70ac074f6d2afe576fb73c83702449b100a1aa6495647bf
     name: cks
@@ -34,7 +34,7 @@ entries:
   cse:
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2023-05-03T14:42:21.758436-07:00"
+    created: "2023-05-12T13:26:54.974425-07:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -44,7 +44,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2023-05-03T14:42:21.758021-07:00"
+    created: "2023-05-12T13:26:54.973837-07:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -54,7 +54,7 @@ entries:
     version: 0.7.2
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2023-05-03T14:42:21.757576-07:00"
+    created: "2023-05-12T13:26:54.970459-07:00"
     description: A Helm chart for Kubernetes
     digest: f9f64cc7df01dbc58752465afc7064e48017b272027bf8e0e8b04d90ff8554a0
     name: cse
@@ -65,7 +65,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2023-05-03T14:42:21.760291-07:00"
+    created: "2023-05-12T13:26:54.976345-07:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -75,7 +75,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-05-03T14:42:21.759647-07:00"
+    created: "2023-05-12T13:26:54.97577-07:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -85,7 +85,7 @@ entries:
     version: 2.0.2
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-05-03T14:42:21.759063-07:00"
+    created: "2023-05-12T13:26:54.975181-07:00"
     description: A Helm chart for Kubernetes
     digest: 098c3fd743a8436981e7eae56e75187063afa0dbce263194e63b0deab5de12b1
     name: gateway
@@ -96,7 +96,7 @@ entries:
   scp:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2023-05-03T14:42:21.779281-07:00"
+    created: "2023-05-12T13:26:54.996208-07:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -153,7 +153,7 @@ entries:
       - bootstrap
       version: 0.1.0
     description: Self Hosted Data Protection Platform
-    digest: 3bce2ca9dabb12fdd5dad2852ce5054509fd8ddd4a24345e9c06e756be9d1879
+    digest: b449bffa4e4b973878bd5a694797a3d89c59ce18061b85ed8e758ea1e76542d6
     name: scp
     type: application
     urls:
@@ -161,7 +161,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2023-05-03T14:42:21.769779-07:00"
+    created: "2023-05-12T13:26:54.985544-07:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -224,10 +224,25 @@ entries:
     urls:
     - scp-0.1.4.tgz
     version: 0.1.4
+  sharepoint:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-05-12T13:26:54.997011-07:00"
+    dependencies:
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    description: Sharepoint ABAC Enforcement Helm Chart
+    digest: d30706c5f95fcdb6927b6a6762b6f05b4bb8761565e454e6de0396a7dc233046
+    name: sharepoint
+    type: application
+    urls:
+    - sharepoint-0.1.0.tgz
+    version: 0.1.0
   shp-embedded-keycloak:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-03T14:42:21.780948-07:00"
+    created: "2023-05-12T13:26:54.998645-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -246,7 +261,7 @@ entries:
   shp-embedded-postgresql:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-03T14:42:21.783651-07:00"
+    created: "2023-05-12T13:26:55.001283-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -265,7 +280,7 @@ entries:
   shp-keycloak-bootstrapper:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-03T14:42:21.784444-07:00"
+    created: "2023-05-12T13:26:55.001812-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -283,4 +298,4 @@ entries:
     urls:
     - shp-keycloak-bootstrapper-0.1.3.tgz
     version: 0.1.3
-generated: "2023-05-03T14:42:21.755316-07:00"
+generated: "2023-05-12T13:26:54.967651-07:00"
