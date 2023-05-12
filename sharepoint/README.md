@@ -2,10 +2,11 @@
 
 ## Install Chart
 
-Prerequisites:
+### Prerequisites 
 - A postgresql database.  See [Example role/db creation](../shp-embedded-postgresql/templates/_sql.sharepoint.tpl)
 - A Deployed TDF Platform See [TDF Platform](../scp)
-- Sharepoint Configuration Artifact uploaded to platform configuration service.
+- SharePoint Configuration Artifact uploaded to platform configuration service.
+- Istio - Optional
 
 ### Install from source in this repo
 ```shell
@@ -36,26 +37,25 @@ helm upgrade --install -n <namespace> --create-namespace \
     ```
 
 ### Example - Using generated service secrets and image pull credentials.
-The example:
-- sets the private key to value in `sharepoint/example/privateKey.pfx`
-- create image pull credentials named "ghcr" for github container registry with username/password 
-- turns bootstrap on
+This example deploys the chart using an example shell script; example from base directory of the repo.
+
+This assumes [Prerequisites](#prerequisites) have been completed.</a>
 
 ```shell
-helm upgrade --install -n <namespace> --create-namespace \
+export ns=scp
+helm template -n scp \
     --set "imageCredentials[0].name"="ghcr" \
     --set "imageCredentials[0].username"="${GITHUB_USERNAME}" \
     --set "imageCredentials[0].password"="${GITHUB_TOKEN}" \
     --set "imageCredentials[0].email"="nope@nah.com" \
     --set "imageCredentials[0].registry"="ghcr.io" \
-    --set bootstrap.enabled=true \
-    --set-file bootstrap.configFile=sharepoint/example/example-config.yaml \
-    --set-file config.sharepointPfx=sharepoint/example/privateKey.pfx \
+    --set-file config.privateKeyPfx=sharepoint/example/privateKey.pfx \
     -f sharepoint/values.yaml \
     -f sharepoint/example/example-values.yaml \
     sharepoint sharepoint
+ ```
 
-```
+
 
 # Chart Values Documentation
 Parameter documentation generated from [generator-for-helm](https://github.com/bitnami-labs/readme-generator-for-helm)

@@ -33,23 +33,26 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           envFrom:
+            {{- if .Values.secretRef }}
             {{- with .Values.secretRef }}
             - secretRef:
                 {{- tpl . $ | nindent 16 }}
+            {{- end }}
             {{- else }}
             - secretRef:
-                secretName: {{ include "common.lib.fullname" . }}-service-secret
+                name: {{ include "common.lib.fullname" . }}-service-secret
             {{- end }}
             - configMapRef:
                 name: {{ include "common.lib.fullname" . }}-configmap
           volumeMounts:
               - name: secret-volume
-                mountPath: /etc/sharepoint/keys/sharepoint.pfx
+                mountPath: /sharepoint/config/privatekey.pfx
                 subPath: sharepoint.pfx
           livenessProbe:
             httpGet:

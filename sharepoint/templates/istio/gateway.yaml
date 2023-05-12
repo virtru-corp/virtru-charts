@@ -7,7 +7,7 @@ metadata:
     {{- include "common.lib.labels" . | nindent 4 }}
 spec:
   selector:
-    istio: {{ .Values.ingress.ingressSelector }}
+    istio: {{ .Values.ingress.istio.ingressSelector }}
   servers:
     - port:
         number: 80

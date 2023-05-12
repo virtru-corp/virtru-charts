@@ -2,7 +2,7 @@ deployHostname: &deployHostname "www.example.org"
 
 config:
   db:
-    host: postresql
+    host: postgresql
     user: sharepoint_manager
     port: 5432
     dbName: tdf_sharepoint
