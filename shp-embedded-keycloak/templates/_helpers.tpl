@@ -9,23 +9,6 @@ Create OIDC External Url
 {{- end }}
 {{- end }}
 
-{{/*
-Create a white space delimited list of expected certs to be loaded into the truststore
-*/}}
-{{- define "shp.embedded.keycloak.x509bundle" }}
-{{- if .Values.trustedCertSecret }}
-{{- $s := (lookup "v1" "Secret" .Release.Namespace .Values.trustedCertSecret) }}
-{{- $cert_list:= list }}
-{{- range $k := $s.data }}
-{{- $cert_list = append $cert_list ( printf "/etc/x509/https/%s" $k ) }}
-{{- end }}
-{{- printf "%s" ( join " " $cert_list ) }}
-{{- else }}
-{{- print "" }}
-{{- end }}
-{{- print "" }}
-{{- end }}
-
 
 {{/*
 Create Extra Volumes
@@ -61,6 +44,8 @@ Create Extra Env From
 {{- define "shp.embedded.keycloak.extraEnvFrom" -}}
 - secretRef:
     name: {{ .Values.fullnameOverride }}-extraenv
+- configMapRef:
+    name: {{ .Values.fullnameOverride }}-cabundles
 {{- end }}
 
 
@@ -89,6 +74,4 @@ Create Extra Env From
   value: "true"
 - name: KC_FEATURES
   value: "preview,token-exchange"
-- name: X509_CA_BUNDLE
-  value: {{ (include "shp.embedded.keycloak.x509bundle" . ) | quote }}
 {{- end }}
