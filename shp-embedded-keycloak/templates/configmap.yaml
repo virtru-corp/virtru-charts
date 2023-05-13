@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.keycloak.fullnameOverride }}-custom-entrypoint
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+binaryData:
+  {{ range $path, $bytes := .Files.Glob (printf "kc_custom_entrypoint.sh")}}
+  {{ $name := base $path }}
+  {{- printf "%s" $name}}{{ print ": "}}{{ $.Files.Get $path | b64enc }}
+  {{ end }}

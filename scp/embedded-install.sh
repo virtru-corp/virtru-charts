@@ -10,8 +10,10 @@ imagePullPAT="changeme"
 ingressHostname=""
 # Entitlement policy location
 entitlementPolicyLocation=""
-# Config file location
+# Config file location; set using -c arg
 configFile=""
+# Location (directory) to keycloak trusted certs - optional ; set using -k arg
+certificateLocation=""
 
 chartRepo="virtru-charts"
 postgresqlChart="${chartRepo}/shp-embedded-postgresql"
@@ -20,10 +22,10 @@ keycloakBootstrapperChart="${chartRepo}/shp-keycloak-bootstrapper"
 scpChart="${chartRepo}/scp"
 # For local install change to chart-version.tgz
 #postgresqlChart="shp-embedded-postgresql-0.1.1.tgz"
-#keycloakChart="shp-embedded-keycloak-0.1.0.tgz"
+#keycloakChart="shp-embedded-keycloak-0.1.1.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
 #scpChart="scp-0.1.5.tgz"
-while getopts "h:t:s:u:p:e:c:o:" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -49,6 +51,9 @@ while getopts "h:t:s:u:p:e:c:o:" arg; do
     o)
       overrideValues=${OPTARG}
       ;;
+    k)
+      certificateLocation=${OPTARG}
+      ;;
   esac
 done
 echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValues}"
@@ -62,6 +67,14 @@ helm upgrade --install -n $ns --create-namespace \
 
 echo "#2 Wait for postgresql"
 kubectl rollout status --watch --timeout=120s statefulset/postgresql -n $ns
+
+
+if [ ! -z "$certificateLocation" ]
+then
+  echo "Installing keycloak-certs-secret from $certificateLocation"
+  kubectl delete secret keycloak-certs-secret --ignore-not-found true -n $ns
+  kubectl create secret generic keycloak-certs-secret --from-file=$certificateLocation -n $ns
+fi
 
 echo "#3 Install Keycloak"
 helm upgrade --install -n $ns --create-namespace \
