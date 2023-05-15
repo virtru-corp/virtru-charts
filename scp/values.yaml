@@ -79,10 +79,10 @@ ingress:
 
 ## @section Istio AuthN/Z Parameters
 istioAuth:
-  ## @param istioAuth.enabled Turn on/off istio authentication configuration for defined services.
+  ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
   enabled: true
-  ## @extra policies List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ]
-  ## @skip policies
+  ## @extra istioAuth.policies List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ]
+  ## @skip istioAuth.policies
   policies:
     - name: taggingpdp
       labelName:
