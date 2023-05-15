@@ -24,7 +24,7 @@ scpChart="${chartRepo}/scp"
 #postgresqlChart="shp-embedded-postgresql-0.1.1.tgz"
 #keycloakChart="shp-embedded-keycloak-0.1.1.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
-#scpChart="scp-0.1.5.tgz"
+#scpChart="scp-0.1.6.tgz"
 while getopts "h:t:s:u:p:e:c:o:k:" arg; do
   case $arg in
     t)
