@@ -204,6 +204,7 @@ additionalConfig:
     selector: gw
   abac:
     enabled: false
+    logLevel: info
     oidcClientId: example-client
     oidcTokenUrl: some-token-url
     taggingPdpLocation: localhost:8080
