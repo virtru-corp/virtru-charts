@@ -1,23 +1,26 @@
+{{- if .Values.istioAuth.enabled }}
+{{- $root := . -}}
+{{ range $entry :=  .Values.istioAuth.policies }}
 apiVersion: security.istio.io/v1beta1
 kind: RequestAuthentication
 metadata:
-  name: {{ include "common.lib.name" . }}-config-svc-jwt-authentication
+  name: {{ include "common.lib.name" $ }}-{{ $entry.name }}-jwt-authentication
 spec:
   selector:
     matchLabels:
-      {{- include "shp.configsvc.auth.selectorLabels" . | nindent 6 }}
+      {{- tpl $entry.selectorLabels $ | nindent 6 }}
   jwtRules:
-  - issuer: {{ include "shp.configsvc.auth.issuer" . | quote }}
-    jwksUri: {{ include "shp.configsvc.auth.jwksUri" . | quote }}
+    - issuer: {{ include "shp.auth.issuer" $ | quote }}
+      jwksUri: {{ include "shp.auth.jwksUri" $ | quote }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ include "common.lib.name" . }}-config-svc-external
+  name: {{ include "common.lib.name" $ }}-{{ $entry.name }}-external
 spec:
   selector:
     matchLabels:
-      {{- include "shp.configsvc.auth.selectorLabels" . | nindent 6 }}
+      {{- tpl $entry.selectorLabels $ | nindent 6 }}
   action: ALLOW
   rules:
     - from:
@@ -27,14 +30,16 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ include "common.lib.name" . }}-config-svc-internal
+  name: {{ include "common.lib.name" $ }}-{{ $entry.name }}-internal
 spec:
   selector:
     matchLabels:
-      {{- include "shp.configsvc.auth.selectorLabels" . | nindent 6 }}
+      {{- tpl $entry.selectorLabels $ | nindent 6 }}
   action: ALLOW
   rules:
     - from:
       - source:
-          namespaces: [ {{ .Release.Namespace }}]
+          namespaces: [ {{ $.Release.Namespace }} ]
 ---
+{{- end }}
+{{- end }}
