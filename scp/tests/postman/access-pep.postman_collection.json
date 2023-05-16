@@ -90,8 +90,16 @@
 							"",
 							"pm.test(\"access decisions\", function () {",
 							"    var entityUsername = pm.iterationData.get(\"entityUsername\");",
-							"    console.log(\"Check decisisions for \" + entityUsername + \" for \" + pm.iterationData.get(\"attributeName\") +\"/\"+  pm.iterationData.get(\"attributeValue\") +\"=\" + pm.iterationData.get(\"accessDecision\"));",
-							"    accessResponse = resp.decisions_by_username[entityUsername];",
+							"    var entityEmail = pm.iterationData.get(\"entityEmail\");",
+							"    var accessResponse;",
+							"    if (entityUsername){",
+							"        console.log(\"Check username decisisions for \" + entityUsername + \" for \" + pm.iterationData.get(\"attributeName\") +\"/\"+  pm.iterationData.get(\"attributeValue\") +\"=\" + pm.iterationData.get(\"accessDecision\"));",
+							"        accessResponse = resp.decisions_by_username[entityUsername];",
+							"    }else{",
+							"        console.log(\"Check email decisisions for \" + entityEmail + \" for \" + pm.iterationData.get(\"attributeName\") +\"/\"+  pm.iterationData.get(\"attributeValue\") +\"=\" + pm.iterationData.get(\"accessDecision\"));",
+							"        accessResponse = resp.decisions_by_email[entityEmail];",
+							"    }",
+							"    console.log(\"Access response:\" + accessResponse);",
 							"    pm.expect(accessResponse.access).eq(pm.iterationData.get(\"accessDecision\"));",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -107,7 +115,15 @@
 						"exec": [
 							"pm.variables.set(\"attributeName\", pm.iterationData.get(\"attributeName\"));",
 							"pm.variables.set(\"attributeValue\", pm.iterationData.get(\"attributeValue\"));",
-							"pm.variables.set(\"entityUsername\", pm.iterationData.get(\"entityUsername\"));",
+							"if (pm.iterationData.get(\"entityUsername\")){",
+							"    pm.variables.set(\"entityUsername\", \"\\\"\" + pm.iterationData.get(\"entityUsername\") +\"\\\"\");",
+							"    pm.variables.set(\"entityEmail\", undefined);",
+							"}",
+							"if (pm.iterationData.get(\"entityEmail\")){",
+							"    pm.variables.set(\"entityUsername\", undefined);",
+							"    pm.variables.set(\"entityEmail\", \"\\\"\" + pm.iterationData.get(\"entityEmail\") +\"\\\"\");",
+							"}",
+							"",
 							""
 						],
 						"type": "text/javascript"
@@ -135,7 +151,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"data_attributes\": [\n    {\"namespace\": \"{{attributeAuthority}}\", \"name\": \"{{attributeName}}\", \"value\": \"{{attributeValue}}\"}\n  ],\n  \"entity_usernames\": [\"{{entityUsername}}\"]\n}\n"
+					"raw": "{\n  \"data_attributes\": [\n    {\"namespace\": \"{{attributeAuthority}}\", \"name\": \"{{attributeName}}\", \"value\": \"{{attributeValue}}\"}\n  ],\n  \"entity_usernames\": [{{entityUsername}}],\n  \"entity_emails\": [{{entityEmail}}]\n}\n"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/access-pep/access",

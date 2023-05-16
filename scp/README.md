@@ -159,7 +159,14 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `ingress.name`               | Name base for istio resources  | `scp`     |
 | `ingress.tls.enabled`        | Require Gateway to use tls     | `false`   |
 | `ingress.tls.existingSecret` | Use existing TLS Secret        | `nil`     |
-| `global.istioEnabled`        | Istio enabled true/false       | `true`    |
+
+### Istio AuthN/Z Parameters
+
+| Name                  | Description                                                                                                            | Value  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| `istioAuth.enabled`   | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration          | `true` |
+| `istioAuth.policies`  | List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ] |        |
+| `global.istioEnabled` | Istio enabled true/false                                                                                               | `true` |
 
 ### ABACUS Chart Overrides
 
@@ -197,7 +204,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | ---------------------------------------- | ----------------------------------------- | --------------------- |
 | `configuration.enabled`                  | Configuration Service enabled flag        | `true`                |
 | `configuration.fullnameOverride`         | Configuration svc name override           | `configuration`       |
-| `configuration.server.image.tag`         | Configuration Service Image Tag           | `0.3.5`               |
+| `configuration.server.image.tag`         | Configuration Service Image Tag           | `0.3.6`               |
 | `configuration.server.secretRef`         | Configuration Service Secrets Ref         | `name: scp-configsvc` |
 | `configuration.server.postgres.host`     | hostname of postgres                      | `postgresql`          |
 | `configuration.server.postgres.password` | password for postgres - should not be set | `nil`                 |
@@ -300,6 +307,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `secrets.keycloakBootstrap.clientSecret`        | client secret assigned to standard bootstrapper clients                                        | `nil`          |
 | `secrets.keycloakBootstrap.customConfig`        | Override for custom config to none                                                             | `nil`          |
 | `secrets.opaPolicyPullSecret`                   | oci registry pull secret for OPA policy                                                        | `nil`          |
+| `secrets.taggingPDP.clientSecret`               | OIDC Client Secret for Tagging PDP                                                             | `nil`          |
 | `secrets.imageCredentials`                      | Map of key (pull name) to auth information.  Each key creates a pull cred                      |                |
 | `secrets.imageCredentials.pull-secret`          | Container registry auth for "install name"-pull-secret                                         |                |
 | `secrets.imageCredentials.pull-secret.registry` | Registry repo                                                                                  | `ghcr.io`      |
@@ -309,12 +317,15 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Tagging PDP Chart Overrides
 
-| Name                             | Description                           | Value         |
-| -------------------------------- | ------------------------------------- | ------------- |
-| `tagging-pdp.enabled`            | enabled flag                          | `true`        |
-| `tagging-pdp.fullnameOverride`   | override name                         | `tagging-pdp` |
-| `tagging-pdp.image.tag`          | Tagging PDP Image Tag                 | `sha-470efff` |
-| `tagging-pdp.gateway.enabled`    | Tagging PDP Rest Gateway enabled flag | `true`        |
-| `tagging-pdp.gateway.pathPrefix` | tagging-pdp svc prefix                | `tagging-pdp` |
-| `tdfAdminUsername`               | The admin user created for tdf.       | `tdf-admin`   |
+| Name                                | Description                           | Value                    |
+| ----------------------------------- | ------------------------------------- | ------------------------ |
+| `tagging-pdp.enabled`               | enabled flag                          | `true`                   |
+| `tagging-pdp.fullnameOverride`      | override name                         | `tagging-pdp`            |
+| `tagging-pdp.image.tag`             | Tagging PDP Image Tag                 | `sha-f3f0116`            |
+| `tagging-pdp.gateway.enabled`       | Tagging PDP Rest Gateway enabled flag | `true`                   |
+| `tagging-pdp.gateway.pathPrefix`    | tagging-pdp svc prefix                | `tagging-pdp`            |
+| `tagging-pdp.config.attrSvc.url`    | Set the attribute service url         | `http://attributes:4020` |
+| `tagging-pdp.config.oidcSecretName` | Use existing secret for OIDC Creds    | `scp-tagging-pdp-secret` |
+| `tagging-pdp.config.oidcClientId`   | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`        |
+| `tdfAdminUsername`                  | The admin user created for tdf.       | `tdf-admin`              |
 

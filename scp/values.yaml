@@ -77,6 +77,26 @@ ingress:
     ## @param ingress.tls.existingSecret Use existing TLS Secret
     existingSecret:
 
+## @section Istio AuthN/Z Parameters
+istioAuth:
+  ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
+  enabled: true
+  ## @extra istioAuth.policies List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ]
+  ## @skip istioAuth.policies
+  policies:
+    - name: taggingpdp
+      labelName:
+      selectorLabels: |-
+        app.kubernetes.io/name: {{ index $.Values "tagging-pdp" "fullnameOverride" }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+    - name: taggingpdp-grpc-gateway
+      selectorLabels: |
+        app.kubernetes.io/name: {{ index $.Values "tagging-pdp" "fullnameOverride" }}-grpc-gw
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+    - name: configsvc
+      selectorLabels: |
+        app.kubernetes.io/name: {{ index $.Values "configuration" "fullnameOverride" }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
 global:
   ## @param global.istioEnabled Istio enabled true/false
   istioEnabled: true

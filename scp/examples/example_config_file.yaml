@@ -1,0 +1,21 @@
+authorities:
+  - https://opentdf.io
+
+entitlements:
+  realms: null
+
+attributeDefinitions: &attributeDefinitions
+  - authority: https://opentdf.io
+    name: IntellectualProperty
+    rule: hierarchy
+    state: published
+    order: [ "TradeSecret","Proprietary","BusinessSensitive","Open" ]
+
+configArtifacts:
+  - name: config1.config
+    yamlRefKey: config1
+    contentType: "application/json"
+    externalFileRef:
+
+config1.config:
+  mykey: "foo"
