@@ -33,12 +33,7 @@ keycloak:
   command:
     - "/opt/keycloak/custom_bin/kc_custom_entrypoint.sh"
     - "--verbose"
-    - "--spi-truststore-file-file=/opt/keycloak/conf/truststore.jks"
-    - "--spi-truststore-file-password=$JKS_TRUSTSTORE_PASSWORD"
-    - "--spi-truststore-file-hostname-verification-policy=ANY"
     - "start-dev"
-    - "--http-relative-path"
-    - "/auth"
   postgresql:
     ## @param keycloak.postgresql.enabled Use keycloak deployed postgres flag
     enabled: false

@@ -1,5 +1,7 @@
 {{/*
   Create a white space delimited list of expected certs to be loaded into the truststore
+  See: https://www.keycloak.org/server/all-provider-config#_truststore
+  See: https://www.keycloak.org/server/enabletls#_using_a_truststore
   */}}
 apiVersion: v1
 kind: ConfigMap
@@ -16,6 +18,9 @@ data:
 {{- end }}
 {{- $bundlestr := join " " $cert_list }}
   X509_CA_BUNDLE: {{ $bundlestr | quote}}
+  KC_SPI_TRUSTSTORE_FILE_FILE: "/opt/keycloak/conf/truststore.jks"
+  KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY: "ANY"
+  KC_HTTPS_KEY_STORE_FILE: "/opt/keycloak/conf/truststore.jks"
 {{- else }}
   X509_CA_BUNDLE: ""
 {{- end}}
