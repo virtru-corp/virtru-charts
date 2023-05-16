@@ -2,7 +2,7 @@ apiVersion: v2
 name: shp-embedded-keycloak
 description: Helper chart to deploy a Non-production keycloak into a cluster
 type: application
-version: 0.1.3
+version: 0.1.4
 appVersion: 0.1.0
 
 dependencies:

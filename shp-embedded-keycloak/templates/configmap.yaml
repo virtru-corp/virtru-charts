@@ -10,8 +10,8 @@ metadata:
   labels:
     {{- include "common.lib.labels" . | nindent 4 }}
 data:
-{{- if .Values.trustedCertSecret }}
-{{- $s := (lookup "v1" "Secret" .Release.Namespace .Values.trustedCertSecret) }}
+{{- if .Values.keycloak.trustedCertSecret }}
+{{- $s := (lookup "v1" "Secret" .Release.Namespace .Values.keycloak.trustedCertSecret) }}
 {{- $cert_list:= list }}
 {{- range $k,$v := index $s "data" }}
 {{- $cert_list = append $cert_list ( printf "/etc/x509/https/%s" $k ) }}
