@@ -13,7 +13,9 @@
         -k <optional - path to keycloak trust certs> \
         -e <pathToEntitlementPolicyDir> \
         -c <pathToInstallationConfigFile> \
-        -o <pathToChartOverridesFile>
+        -o <pathToChartOverridesFile> \
+        -l <optional - path to local charts dir > \
+        -i <optional - scale istio down and up after install (no arg)>
     ```
    
 ## Uninstall everything
