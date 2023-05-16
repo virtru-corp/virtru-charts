@@ -3,7 +3,7 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2023-05-16T08:23:09.59078-07:00"
+    created: "2023-05-16T10:03:57.585332-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -13,7 +13,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2023-05-16T08:23:09.59033-07:00"
+    created: "2023-05-16T10:03:57.584848-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -23,7 +23,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2023-05-16T08:23:09.58981-07:00"
+    created: "2023-05-16T10:03:57.58434-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 1a2554129783634ca70ac074f6d2afe576fb73c83702449b100a1aa6495647bf
     name: cks
@@ -34,7 +34,7 @@ entries:
   cse:
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2023-05-16T08:23:09.592347-07:00"
+    created: "2023-05-16T10:03:57.586551-07:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -44,7 +44,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2023-05-16T08:23:09.591739-07:00"
+    created: "2023-05-16T10:03:57.58613-07:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -54,7 +54,7 @@ entries:
     version: 0.7.2
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2023-05-16T08:23:09.591244-07:00"
+    created: "2023-05-16T10:03:57.585732-07:00"
     description: A Helm chart for Kubernetes
     digest: f9f64cc7df01dbc58752465afc7064e48017b272027bf8e0e8b04d90ff8554a0
     name: cse
@@ -65,7 +65,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2023-05-16T08:23:09.594118-07:00"
+    created: "2023-05-16T10:03:57.588283-07:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -75,7 +75,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-05-16T08:23:09.593571-07:00"
+    created: "2023-05-16T10:03:57.587699-07:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -85,7 +85,7 @@ entries:
     version: 2.0.2
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-05-16T08:23:09.592981-07:00"
+    created: "2023-05-16T10:03:57.587144-07:00"
     description: A Helm chart for Kubernetes
     digest: 098c3fd743a8436981e7eae56e75187063afa0dbce263194e63b0deab5de12b1
     name: gateway
@@ -96,7 +96,7 @@ entries:
   scp:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2023-05-16T08:23:09.617398-07:00"
+    created: "2023-05-16T10:03:57.61097-07:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -161,7 +161,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2023-05-16T08:23:09.604247-07:00"
+    created: "2023-05-16T10:03:57.599408-07:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -227,7 +227,7 @@ entries:
   sharepoint:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-16T08:23:09.618247-07:00"
+    created: "2023-05-16T10:03:57.611732-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -242,7 +242,7 @@ entries:
   shp-embedded-keycloak:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-16T08:23:09.622006-07:00"
+    created: "2023-05-16T10:03:57.617527-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -252,7 +252,25 @@ entries:
       repository: https://codecentric.github.io/helm-charts
       version: 2.1.1
     description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: e075fc3e7d14b30cb7f1142cd6ebfed50214318de9faad70522ccd14c21bc4ac
+    digest: 82ec8b025b156712b5cffed57a962ae2d185855eb7de48a794511dbb4fbe3fee
+    name: shp-embedded-keycloak
+    type: application
+    urls:
+    - shp-embedded-keycloak-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-05-16T10:03:57.616127-07:00"
+    dependencies:
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - alias: keycloak
+      name: keycloakx
+      repository: https://codecentric.github.io/helm-charts
+      version: 2.1.1
+    description: Helper chart to deploy a Non-production keycloak into a cluster
+    digest: c09939d0f98595d80b1ab38c68069384ab7c6c0ac022ff26a44256cee584eecf
     name: shp-embedded-keycloak
     type: application
     urls:
@@ -260,7 +278,25 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-16T08:23:09.620056-07:00"
+    created: "2023-05-16T10:03:57.62748-07:00"
+    dependencies:
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - alias: keycloak
+      name: keycloakx
+      repository: https://codecentric.github.io/helm-charts
+      version: 2.1.1
+    description: Helper chart to deploy a Non-production keycloak into a cluster
+    digest: c09939d0f98595d80b1ab38c68069384ab7c6c0ac022ff26a44256cee584eecf
+    name: shp-embedded-keycloak
+    type: application
+    urls:
+    - test/shp-embedded-keycloak-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-05-16T10:03:57.614009-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -279,7 +315,7 @@ entries:
   shp-embedded-postgresql:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-16T08:23:09.629442-07:00"
+    created: "2023-05-16T10:03:57.625094-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -297,7 +333,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-16T08:23:09.625989-07:00"
+    created: "2023-05-16T10:03:57.621577-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -316,7 +352,7 @@ entries:
   shp-keycloak-bootstrapper:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-16T08:23:09.629988-07:00"
+    created: "2023-05-16T10:03:57.625734-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -334,4 +370,4 @@ entries:
     urls:
     - shp-keycloak-bootstrapper-0.1.3.tgz
     version: 0.1.3
-generated: "2023-05-16T08:23:09.588953-07:00"
+generated: "2023-05-16T10:03:57.583417-07:00"
