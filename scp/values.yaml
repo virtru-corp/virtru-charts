@@ -16,10 +16,10 @@ commonParams:
   ## @param commonParams.entilementPolicyOCIRegistryUrl OPA policy endpoint
   entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://docker-registry:5000"
   ## @param commonParams.scpImagePullSecretName common pull secret name
-  scpImagePullSecretName: &scpImagePullSecretName "scp-pull-secret"
-  imagePullSecrets: &imagePullSecrets
+  scpImagePullSecretName:
+  imagePullSecrets:
     ## @param commonParams.imagePullSecrets[0].name name of pull secret
-    - name: *scpImagePullSecretName
+    - name:
   ## @param commonParams.jobWaitForIstio Job needs to wait for istio and exit appropriately
   jobWaitForIstio: &istioTerminationHack true
 
@@ -117,7 +117,7 @@ global:
         # -- The database name within the given server
         database: tdf_database
   ## @skip global.imagePullSecrets[0].name
-  imagePullSecrets: *imagePullSecrets
+  imagePullSecrets:
 
 ## @section ABACUS Chart Overrides
 abacus:
@@ -138,7 +138,9 @@ access-pep:
   ## @param access-pep.name Name override
   name: access-pep
   ## @param access-pep.existingImagePullSecret Existing pull secret for the image
-  existingImagePullSecret: *scpImagePullSecretName
+  existingImagePullSecret:
+  ## @skip access-pep.useImagePullSecret
+  useImagePullSecret: false
   image:
     ## @param access-pep.image.repo Image Rep
     repo: ghcr.io/virtru-corp/access-pep/access-pep
@@ -183,7 +185,7 @@ configuration:
       ## @param configuration.server.postgres.password password for postgres - should not be set
       password:
     ## @skip configuration.server.imagePullSecrets[0].name
-    imagePullSecrets: *imagePullSecrets
+    imagePullSecrets:
 
 ## @section Entitlement Policy Bootstrap Job parameters
 entitlement-policy-bootstrap:
@@ -198,7 +200,7 @@ entitlement-policy-bootstrap:
   ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy
   policyDataSecretRef: scp-bootstrap-entitlement-policy
   ## @skip entitlement-policy-bootstrap.imagePullSecrets[0].name
-  imagePullSecrets: *imagePullSecrets
+  imagePullSecrets:
   ## @param entitlement-policy-bootstrap.istioTerminationHack Set istio on/off
   istioTerminationHack: *istioTerminationHack
   image:
@@ -303,6 +305,11 @@ docker-registry:
     size: 1Gi
   ## @param docker-registry.tlsSecretName Secret name containing TLS Certs used by the registry
   tlsSecretName: scp-docker-registry-certs
+  ## @skip docker-registry.securityContext
+  securityContext:
+    enabled: false
+    fsGroup: null
+    runAsUser: null
 
 ## @section Secret Generation Parameters
 secrets:
@@ -369,7 +376,7 @@ tagging-pdp:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
     tag: sha-1c2f22a
     ## @skip tagging-pdp.image.pullSecrets[0].name
-    pullSecrets: *imagePullSecrets
+    pullSecrets:
   gateway:
     ## @param tagging-pdp.gateway.enabled Tagging PDP Rest Gateway enabled flag
     enabled: true

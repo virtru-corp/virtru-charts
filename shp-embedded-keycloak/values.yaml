@@ -26,7 +26,7 @@ keycloak:
     ## @param keycloak.image.repository Keycloak Image Repo
     repository: ghcr.io/opentdf/keycloak
     ## @param keycloak.image.tag Keycloak Image Tag
-    tag: main
+    tag: 21.0.1-1.3.0
     ## @param keycloak.image.pullPolicy Keycloak Image pull policy
     pullPolicy: IfNotPresent
   ## @param keycloak.command Command to start the keycloak service
@@ -40,6 +40,12 @@ keycloak:
   ## @skip  keycloak.podAnnotations.proxy.istio.io/config
   podAnnotations:
     proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
+  podSecurityContext:
+    ## @skip  keycloak.podSecurityContext.fsGroup
+    fsGroup: null
+  securityContext:
+    ## @skip  keycloak.securityContext.runAsUser
+    runAsUser: null
   externalDatabase:
     ## @param keycloak.externalDatabase.database Database name
     database: keycloak_database

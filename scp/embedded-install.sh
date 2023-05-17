@@ -3,9 +3,9 @@ tlsEnabled="false"
 # The existing secret for Istio Gateway TLS config
 tlsSecret="null"
 # Image Pull Username . e.g. GHCR Personal Access Token
-imagePullUsername="changeme"
+imagePullUsername=""
 # Image pull username
-imagePullPAT="changeme"
+imagePullPAT=""
 # Hostname for ingress
 ingressHostname=""
 # Entitlement policy location
@@ -14,6 +14,10 @@ entitlementPolicyLocation=""
 configFile=""
 # Location (directory) to keycloak trusted certs - optional ; set using -k arg
 certificateLocation=""
+# Location (directory) of charts - optional ; set using -l arg
+chartsLocalDir=""
+# Scale istiod downt to 0 then back up to 1
+scaleIstio=false
 
 chartRepo="virtru-charts"
 postgresqlChart="${chartRepo}/shp-embedded-postgresql"
@@ -25,7 +29,7 @@ scpChart="${chartRepo}/scp"
 #keycloakChart="shp-embedded-keycloak-0.1.4.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
 #scpChart="scp-0.1.6.tgz"
-while getopts "h:t:s:u:p:e:c:o:k:" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:l:i" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -54,8 +58,34 @@ while getopts "h:t:s:u:p:e:c:o:k:" arg; do
     k)
       certificateLocation=${OPTARG}
       ;;
+    l)
+      chartsLocalDir=${OPTARG}
+      ;;
+    i)
+      scaleIstio=true
   esac
 done
+
+if [ ! -z "$chartsLocalDir" ]; then
+  echo "Using local charts from ${chartsLocalDir}"
+  postgresqlChart="${chartsLocalDir}/shp-embedded-postgresql-*.tgz"
+  keycloakChart="${chartsLocalDir}/shp-embedded-keycloak-*.tgz"
+  keycloakBootstrapperChart="${chartsLocalDir}/shp-keycloak-bootstrapper-*.tgz"
+  scpChart="${chartsLocalDir}/scp-*.tgz"
+fi
+
+pullSecretArgs=()
+if [ ! -z "$imagePullUsername" ] && [ "$imagePullUsername"!="null" ]; then
+  echo "Setting pull secret args"
+  scpImagePullSecretName="scp-pull-secret"
+  pullSecretArgs+=("--set" "access-pdp.existingImagePullSecret=${scpImagePullSecretName}"
+                  "--set" "access-pdp.useImagePullSecret=true"
+                  "--set" "configuration.server.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "entitlement-policy-bootstrap.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "tagging-pdp.image.pullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "gloabl.imagePullSecrets[0].name=${scpImagePullSecretName}")
+fi
+
 echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValues}"
 oidcExternalBaseUrlSetting="global.opentdf.common.oidcExternalBaseUrl=https://${ingressHostname}"
 ingressHostnameSetting="global.opentdf.common.ingress.hostname=${ingressHostname}"
@@ -110,6 +140,7 @@ helm upgrade --install -n $ns --create-namespace \
  --set-file bootstrap.configFile=$configFile \
  --set ingress.tls.enabled=${tlsEnabled} \
  --set ingress.tls.secretName=${tlsSecret} \
+ "${pullSecretArgs[@]}" \
  -f $overrideValues shp $scpChart
 
 echo "Wait for Configuration Artifact Bootstrapping"
@@ -119,7 +150,9 @@ kubectl wait --for=condition=complete job/shp-entitlement-policy-bootstrap --tim
 echo "Wait for attribute and entitlement Bootstrapping job"
 kubectl wait --for=condition=complete job/shp-entitlement-attrdef-bootstrap  --timeout=120s -n $ns
 
-kubectl scale deployment istiod -n istio-system --replicas=0
-kubectl scale deployment istiod -n istio-system --replicas=1
+if $scaleIstio; then
+  kubectl scale deployment istiod -n istio-system --replicas=0
+  kubectl scale deployment istiod -n istio-system --replicas=1
+fi
 
 ## TODO - Run postman smoke tests

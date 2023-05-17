@@ -71,7 +71,7 @@ spec:
         uri: /
       route:
         - destination:
-            host: entitlements-pdp
+            host: entitlement-pdp
             port:
               number: 5000
     - match:
