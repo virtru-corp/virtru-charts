@@ -43,7 +43,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 # -- Values for the deployment `spec.template.metadata.annotations` field
-podAnnotations: {}
+podAnnotations:
+  proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
 
 # -- Values for deployment's `spec.template.spec.securityContext`
 podSecurityContext: {}
