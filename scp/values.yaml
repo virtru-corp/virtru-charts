@@ -367,7 +367,7 @@ tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
-    tag: sha-f3f0116
+    tag: sha-1c2f22a
     ## @skip tagging-pdp.image.pullSecrets[0].name
     pullSecrets: *imagePullSecrets
   gateway:
@@ -377,7 +377,7 @@ tagging-pdp:
     pathPrefix: tagging-pdp
     ## @skip tagging-pdp.gateway.image
     image:
-      tag: sha-f3f0116
+      tag: sha-1c2f22a
   config:
     attrSvc:
       ## @param tagging-pdp.config.attrSvc.url Set the attribute service url
