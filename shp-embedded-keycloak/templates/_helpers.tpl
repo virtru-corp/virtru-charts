@@ -18,7 +18,7 @@ Create Extra Volumes
   configMap:
     name: {{ .Values.fullnameOverride }}-custom-entrypoint
     defaultMode: 511
-{{- if .Values.trustedCertSecret -}}
+{{ if .Values.trustedCertSecret -}}
 - name: x509
   secret:
     secretName: {{ .Values.trustedCertSecret }}
@@ -29,13 +29,13 @@ Create Extra Volumes
 Create Extra Volumes Mounts
 */}}
 {{- define "shp.embedded.keycloak.extraVolumeMounts" -}}
-{{- if .Values.trustedCertSecret -}}
-- name: x509
-  mountPath: /etc/x509/https
-{{- end -}}
 - name: custom-entrypoint
   mountPath: /opt/keycloak/custom_bin/kc_custom_entrypoint.sh
   subPath: kc_custom_entrypoint.sh
+{{ if .Values.trustedCertSecret -}}
+- name: x509
+  mountPath: /etc/x509/https
+{{- end -}}
 {{- end }}
 
 {{/*
