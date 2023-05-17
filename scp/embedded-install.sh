@@ -29,7 +29,7 @@ scpChart="${chartRepo}/scp"
 #keycloakChart="shp-embedded-keycloak-0.1.1.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
 #scpChart="scp-0.1.6.tgz"
-while getopts "h:t:s:u:p:e:c:o:k:i" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:l:i" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -75,16 +75,15 @@ if [ ! -z "$chartsLocalDir" ]; then
 fi
 
 pullSecretArgs=()
-if [ ! -z "$imagePullUsername" ]; then
+if [ ! -z "$imagePullUsername" ] && [ "$imagePullUsername"!="null" ]; then
   echo "Setting pull secret args"
   scpImagePullSecretName="scp-pull-secret"
-  imagePullSecrets="[{\"name\":\"${scpImagePullSecretName}\"}]"
   pullSecretArgs+=("--set" "access-pdp.existingImagePullSecret=${scpImagePullSecretName}"
                   "--set" "access-pdp.useImagePullSecret=true"
-                  "--set" "configuration.server.imagePullSecrets=${imagePullSecrets}"
-                  "--set" "entitlement-policy-bootstrap.imagePullSecrets=${imagePullSecrets}"
-                  "--set" "tagging-pdp.image.pullSecrets=${imagePullSecrets}"
-                  "--set" "gloabl.imagePullSecrets=${imagePullSecrets}")
+                  "--set" "configuration.server.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "entitlement-policy-bootstrap.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "tagging-pdp.image.pullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "gloabl.imagePullSecrets[0].name=${scpImagePullSecretName}")
 fi
 
 echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValues}"
@@ -151,7 +150,7 @@ kubectl wait --for=condition=complete job/shp-entitlement-policy-bootstrap --tim
 echo "Wait for attribute and entitlement Bootstrapping job"
 kubectl wait --for=condition=complete job/shp-entitlement-attrdef-bootstrap  --timeout=120s -n $ns
 
-if [ $scaleIstio ]; then
+if $scaleIstio; then
   kubectl scale deployment istiod -n istio-system --replicas=0
   kubectl scale deployment istiod -n istio-system --replicas=1
 fi
