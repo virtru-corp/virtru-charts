@@ -75,15 +75,17 @@ if [ ! -z "$chartsLocalDir" ]; then
 fi
 
 pullSecretArgs=()
-if [ ! -z "$imagePullUsername" ] && [ "$imagePullUsername"!="null" ]; then
+if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
   echo "Setting pull secret args"
   scpImagePullSecretName="scp-pull-secret"
-  pullSecretArgs+=("--set" "access-pdp.existingImagePullSecret=${scpImagePullSecretName}"
-                  "--set" "access-pdp.useImagePullSecret=true"
+  pullSecretArgs+=("--set" "access-pep.existingImagePullSecret=${scpImagePullSecretName}"
+                  "--set" "access-pep.useImagePullSecret=true"
                   "--set" "configuration.server.imagePullSecrets[0].name=${scpImagePullSecretName}"
                   "--set" "entitlement-policy-bootstrap.imagePullSecrets[0].name=${scpImagePullSecretName}"
                   "--set" "tagging-pdp.image.pullSecrets[0].name=${scpImagePullSecretName}"
-                  "--set" "gloabl.imagePullSecrets[0].name=${scpImagePullSecretName}")
+                  "--set" "gloabl.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "bootstrap.configsvc.job.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  )
 fi
 
 echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValues}"
