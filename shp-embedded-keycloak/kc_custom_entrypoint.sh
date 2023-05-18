@@ -68,7 +68,7 @@ autogenerate_keystores() {
     CUSTOM_ARGS+=${CUSTOM_TLS_ARGS}
 }
 
-if [[ -n "${X509_CA_BUNDLE+0}" ]] ; then
+if [[ -n "${X509_CA_BUNDLE}" ]] ; then
     autogenerate_keystores
 fi
 
