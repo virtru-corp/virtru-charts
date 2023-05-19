@@ -34,5 +34,10 @@ Create OIDC hostname by extracting from the external url base .Values.global.ope
 Create OIDC Token Url
 */}}
 {{- define "shp.oidc.tokenUrl" }}
-{{- printf "%s/realms/%s/protocol/openid-connect/token" ( include "shp.oidc.externalUrl" . ) .Values.keycloak.realm }}
+{{- if .Values.embedded.keycloak }}
+{{- printf "http://keycloak-http/auth/realms/%s/protocol/openid-connect/token" .Values.keycloak.realm }}
+{{- else }}
+{{- printf "%s/realms/%s/protocol/openid-connect/token" ( include "shp.oidc.externalUrl" .subS ) .Values.keycloak.realm }}
 {{- end }}
+{{- end }}
+

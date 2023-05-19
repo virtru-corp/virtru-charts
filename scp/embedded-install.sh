@@ -27,8 +27,8 @@ scpChart="${chartRepo}/scp"
 # For local install change to chart-version.tgz
 #postgresqlChart="shp-embedded-postgresql-0.1.1.tgz"
 #keycloakChart="shp-embedded-keycloak-0.1.4.tgz"
-#keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.3.tgz"
-#scpChart="scp-0.1.6.tgz"
+#keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.4.tgz"
+#scpChart="scp-0.1.8.tgz"
 while getopts "h:t:s:u:p:e:c:o:k:l:i" arg; do
   case $arg in
     t)
@@ -92,7 +92,7 @@ echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} an
 oidcExternalBaseUrlSetting="global.opentdf.common.oidcExternalBaseUrl=https://${ingressHostname}"
 ingressHostnameSetting="global.opentdf.common.ingress.hostname=${ingressHostname}"
 
-echo "#1 Deploy postgresql - from shp-embedded-postgresql directory"
+echo "#1 Deploy postgresql - from $postgresqlChart"
 helm upgrade --install -n $ns --create-namespace \
      -f $overrideValues \
      shp-postgresql $postgresqlChart

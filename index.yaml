@@ -3,7 +3,7 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2023-05-18T12:34:56.882264-04:00"
+    created: "2023-05-19T08:29:48.3205-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -13,7 +13,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2023-05-18T12:34:56.880859-04:00"
+    created: "2023-05-19T08:29:48.319995-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -23,7 +23,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v1.4.4
-    created: "2023-05-18T12:34:56.880338-04:00"
+    created: "2023-05-19T08:29:48.319432-07:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 1a2554129783634ca70ac074f6d2afe576fb73c83702449b100a1aa6495647bf
     name: cks
@@ -34,7 +34,7 @@ entries:
   cse:
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2023-05-18T12:34:56.883825-04:00"
+    created: "2023-05-19T08:29:48.321765-07:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -44,7 +44,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2023-05-18T12:34:56.883361-04:00"
+    created: "2023-05-19T08:29:48.321354-07:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -54,7 +54,7 @@ entries:
     version: 0.7.2
   - apiVersion: v2
     appVersion: v4.0.1
-    created: "2023-05-18T12:34:56.882853-04:00"
+    created: "2023-05-19T08:29:48.320942-07:00"
     description: A Helm chart for Kubernetes
     digest: f9f64cc7df01dbc58752465afc7064e48017b272027bf8e0e8b04d90ff8554a0
     name: cse
@@ -65,7 +65,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2023-05-18T12:34:56.885924-04:00"
+    created: "2023-05-19T08:29:48.323468-07:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -75,7 +75,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-05-18T12:34:56.885134-04:00"
+    created: "2023-05-19T08:29:48.322888-07:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -85,7 +85,7 @@ entries:
     version: 2.0.2
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-05-18T12:34:56.884552-04:00"
+    created: "2023-05-19T08:29:48.322344-07:00"
     description: A Helm chart for Kubernetes
     digest: 098c3fd743a8436981e7eae56e75187063afa0dbce263194e63b0deab5de12b1
     name: gateway
@@ -96,7 +96,7 @@ entries:
   scp:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2023-05-18T12:34:56.910984-04:00"
+    created: "2023-05-19T08:29:48.333801-07:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -153,146 +153,16 @@ entries:
       - bootstrap
       version: 0.1.0
     description: Self Hosted Data Protection Platform
-    digest: b16e9fd8757d97684caf3826602533d5a67f030674d23b25ace5df64bfbdb343
+    digest: 7976d271d2dd1736a8b8717d3a7ca533c6820168712ef3efa1964543cfde553e
     name: scp
     type: application
     urls:
-    - scp-0.1.7.tgz
-    version: 0.1.7
-  - apiVersion: v2
-    appVersion: 0.1.2
-    created: "2023-05-18T12:34:56.905301-04:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.2.0-sha83c261c
-    - name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-c00bac0
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 0.0.0-sha-d78be14
-    - alias: entitlement-policy-bootstrap
-      condition: boostrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 013865ecb973ae7df6ec470b5da10e5db81a739af498c5d1ce2831af30796037
-    name: scp
-    type: application
-    urls:
-    - scp-0.1.6.tgz
-    version: 0.1.6
-  - apiVersion: v2
-    appVersion: 0.1.2
-    created: "2023-05-18T12:34:56.895533-04:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.2.0-sha83c261c
-    - name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 0.0.0-sha-d78be14
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-c00bac0
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 0.0.0-sha-d78be14
-    - alias: entitlement-policy-bootstrap
-      condition: boostrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: b449bffa4e4b973878bd5a694797a3d89c59ce18061b85ed8e758ea1e76542d6
-    name: scp
-    type: application
-    urls:
-    - scp-0.1.5.tgz
-    version: 0.1.5
+    - scp-0.1.8.tgz
+    version: 0.1.8
   sharepoint:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.911579-04:00"
+    created: "2023-05-19T08:29:48.334643-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -307,7 +177,7 @@ entries:
   shp-embedded-keycloak:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.918348-04:00"
+    created: "2023-05-19T08:29:48.337026-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -325,25 +195,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.917018-04:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: ad7376616db5cca75c6827eef2837e114be581abc127bbdade6de3a876e20758
-    name: shp-embedded-keycloak
-    type: application
-    urls:
-    - shp-embedded-keycloak-0.1.3.tgz
-    version: 0.1.3
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.915589-04:00"
+    created: "2023-05-19T08:29:48.343361-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -357,30 +209,12 @@ entries:
     name: shp-embedded-keycloak
     type: application
     urls:
-    - shp-embedded-keycloak-0.1.2.tgz
+    - test/shp-embedded-keycloak-0.1.2.tgz
     version: 0.1.2
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.913378-04:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: cb352018def06fa1337bcd577ffa0b391cc0c68fea0566d762b693a284df28d6
-    name: shp-embedded-keycloak
-    type: application
-    urls:
-    - shp-embedded-keycloak-0.1.1.tgz
-    version: 0.1.1
   shp-embedded-postgresql:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.924792-04:00"
+    created: "2023-05-19T08:29:48.340759-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -396,28 +230,10 @@ entries:
     urls:
     - shp-embedded-postgresql-0.1.1.tgz
     version: 0.1.1
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.921766-04:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 12.1.8
-    description: Helper chart to deploy a non production postgresql database into
-      a cluster
-    digest: 47a96efc4408fd7a5281259109174b62deaef1081c64cf35bab6fd13e5607a0c
-    name: shp-embedded-postgresql
-    type: application
-    urls:
-    - shp-embedded-postgresql-0.1.0.tgz
-    version: 0.1.0
   shp-keycloak-bootstrapper:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-18T12:34:56.925461-04:00"
+    created: "2023-05-19T08:29:48.341542-07:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -429,10 +245,10 @@ entries:
       - utility
       version: 1.3.0
     description: Helper chart to bootstrap keycloak configuration.
-    digest: a422962e20ff5735dc227ec652200c7847ed1f4af517b6a787be54d0d2fdb979
+    digest: 636b9d66eac94a32566bfbbd1d2a7e5951d4d69f0a7c5a37ca431e5993251f8f
     name: shp-keycloak-bootstrapper
     type: application
     urls:
-    - shp-keycloak-bootstrapper-0.1.3.tgz
-    version: 0.1.3
-generated: "2023-05-18T12:34:56.879533-04:00"
+    - shp-keycloak-bootstrapper-0.1.4.tgz
+    version: 0.1.4
+generated: "2023-05-19T08:29:48.316914-07:00"

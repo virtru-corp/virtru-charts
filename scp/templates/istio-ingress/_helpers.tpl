@@ -21,7 +21,7 @@ SCP Ingress gateway name
 SCP Ingress gateway name
 */}}
 {{- define "scp.ingress.tlsCredName" -}}
-{{- if .Values.ingress.tls }}
+{{- if .Values.ingress.tls.enabled }}
 {{- if .Values.ingress.existingSecret }}
 {{- printf "%s" .Values.ingress.existingSecret }}
 {{- else }}
@@ -32,6 +32,9 @@ SCP Ingress gateway name
 {{- end }}
 {{- end -}}
 
+{{- define "scp.ingress.tlsNs" -}}
+{{- printf "%s" ( .Values.ingress.istioIngressNS | default "istio-ingress" ) }}
+{{- end }}
 
 {{/*
 Generate certificates for gateway tls
@@ -39,8 +42,8 @@ Note tls.key is indented on purpose
 */}}
 {{- define "scp.ingress.gen-certs" -}}
 {{- $altNames := list ( printf "%s" .Values.global.opentdf.common.ingress.hostname ) -}}
-{{- $ca := genCA "registry-ca" 365 -}}
-{{- $cert := genSignedCert ( include "common.lib.chart" . ) nil $altNames 365 $ca -}}
+{{- $ca := genCA "shp-ca" 365 -}}
+{{- $cert := genSignedCert .Values.global.opentdf.common.ingress.hostname nil $altNames 365 $ca -}}
 tls.crt: {{ $cert.Cert | b64enc }}
   tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
