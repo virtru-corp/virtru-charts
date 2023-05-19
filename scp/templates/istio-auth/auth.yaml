@@ -11,11 +11,7 @@ spec:
       {{- tpl $entry.selectorLabels $ | nindent 6 }}
   jwtRules:
     - issuer: {{ include "shp.auth.issuer" $ | quote }}
-    {{- if $.Values.embedded.keycloak }}
-      jwksUri: {{ include "shp.authinternal.jwksUri" $ | quote }}
-    {{- else }}
       jwksUri: {{ include "shp.auth.jwksUri" $ | quote }}
-    {{- end }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
