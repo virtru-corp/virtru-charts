@@ -25,7 +25,7 @@ curl -L https://raw.githubusercontent.com/opentdf/backend/main/containers/entitl
 ```
 ## Download embedded install script
 ```shell
-curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/embedded-install.sh -o embedded-install.sh && ch
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/embedded-install.sh -o embedded-install.sh && chmod 755 embedded-install.sh
 ```
 
 ## Optional - use sample values files
@@ -47,7 +47,7 @@ export GITHUB_TOKEN=replaceme
 export INGRESS_HOSTNAME=scp.virtru.local
 `
 kubectl create namespace $ns
-kubectl label namespace $ns istio-injection=enable
+kubectl label namespace $ns istio-injection=enabled
 ./embedded-install.sh -u $GITHUB_USER -p $GITHUB_TOKEN -h $INGRESS_HOSTNAME -e ./entitlement-policy -c ./sample-install-config.yaml -o ./sample-values.yaml
 ```
 Enabled local TLS via self-signed cert:
