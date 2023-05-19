@@ -36,7 +36,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ include "scp.ingress.tlsCredName" . }}
-  namespace: {{ include "scp.ingress.tlsNs" . }} istio-ingress
+  namespace: {{ include "scp.ingress.tlsNs" . }}
 type: kubernetes.io/tls
 data:
   {{ ( include "scp.ingress.gen-certs" . ) }}
