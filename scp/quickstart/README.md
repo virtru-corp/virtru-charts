@@ -25,7 +25,13 @@ curl -L https://raw.githubusercontent.com/opentdf/backend/main/containers/entitl
 ```
 ## Download embedded install script
 ```shell
-curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/embedded-install.sh -o embedded-install.sh 
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/embedded-install.sh -o embedded-install.sh && ch
+```
+
+## Optional - use sample values files
+```shell
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/sample-install-config.yaml -o sample-install-config.yaml
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/sample-values.yaml -o sample-values.yaml
 ```
 
 # Install
@@ -40,7 +46,11 @@ export GITHUB_USERNAME=replaceme
 export GITHUB_TOKEN=replaceme
 export INGRESS_HOSTNAME=scp.virtru.local
 `
-kubectl createnamespace $ns
+kubectl create namespace $ns
 kubectl label namespace $ns istio-injection=enable
 ./embedded-install.sh -u $GITHUB_USER -p $GITHUB_TOKEN -h $INGRESS_HOSTNAME -e ./entitlement-policy -c ./sample-install-config.yaml -o ./sample-values.yaml
+```
+Enabled local TLS via self-signed cert:
+```
+./embedded-install.sh -u $GITHUB_USER -p $GITHUB_TOKEN -h $INGRESS_HOSTNAME -e ./entitlement-policy -c ./sample-install-config.yaml -o ./sample-values.yaml -t true
 ```

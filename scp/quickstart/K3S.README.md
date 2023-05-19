@@ -18,6 +18,20 @@ multipass mount ./mydir k3s:~/k8s
 ```shell
 multipass shell k3s
 ```
+### Set hostnames
+1. Get ip address of VM: `multipass info k3s`
+- Set an additional hostname on the VM's /etc/hosts = ingress hostname for the deployment
+- Set entry on local machine for VM's IP -> ingress hostname
+
+### Example - scp.virtru.local
+- Mac Host:  
+    ```
+    192.168.64.5    scp.virtru.local
+    ```
+- Multipass VM:
+    ```shell
+    127.0.0.1 scp.virtru.local
+    ```
 ### Cleanup (After cluster use)
 ```shell
 multipass delete k3s
@@ -43,3 +57,4 @@ Notes:
 - If this is a local deployment append the `-t true` flag to the call to the install script to 
 generate a self-signed tls certifcate for the deployment
 - Add entry to /etc/hosts/ for deployment hostname (scp.virtru.local in the example)
+- Trust - Self-Signed Certificate for browsing / local client use over SSL
