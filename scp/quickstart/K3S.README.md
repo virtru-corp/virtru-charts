@@ -10,9 +10,9 @@ brew install --cask multipass
 ```shell
 multipass launch --name k3s --mem 8G --disk 40G --cpus 4
 ```
-### Mount a directory for file sharing
+### Optional Mount a directory(s) for file sharing into the VM
 ```shell
-multipass mount ./virtru-charts k3s:~/k8s
+multipass mount ./mydir k3s:~/k8s
 ```
 ### Get Shell
 ```shell
