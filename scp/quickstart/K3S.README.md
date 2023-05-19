@@ -38,3 +38,8 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 ```
 ## Install Embedded Self Hosted Platform
 [See base Quickstart Base Installation](./README.md)
+
+Notes:
+- If this is a local deployment append the `-t true` flag to the call to the install script to 
+generate a self-signed tls certifcate for the deployment
+- Add entry to /etc/hosts/ for deployment hostname (scp.virtru.local in the example)
