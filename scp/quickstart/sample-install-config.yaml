@@ -1,0 +1,30 @@
+authorities:
+  - http://demo.com
+
+entitlements:
+  alice:
+    - "http://demo.com/attr/IntellectualProperty/value/TradeSecret"
+  bob:
+    - "http://demo.com/attr/IntellectualProperty/value/BusinessSensitive"
+
+attributeDefinitions:
+  - authority: http://demo.com
+    name: IntellectualProperty
+    rule: hierarchy
+    state: published
+    "order": [ "TradeSecret","Proprietary","BusinessSensitive","Open" ]
+
+configArtifacts:
+  - name: taggingpdp.config
+    yamlRefKey: taggingpdp_config
+    contentType: "application/yaml"
+    externalFileRef:
+
+taggingpdp_config:
+  contentExtractors:
+    - type: "tika-content-extraction"
+      id: "std-content-extraction"
+      config:
+        "ocr": true
+
+

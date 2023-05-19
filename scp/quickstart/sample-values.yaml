@@ -1,0 +1,86 @@
+postresPassword: &postgresPassword "sampleDemoPostgresPassword"
+oidcClientSecret: &oidcClientSecret "sampleClientCredential"
+tdfAdminUsername: &tdfAdminUsername "tdf-admin-user"
+tdfAdminPassword: &tdfAdminPassword "tdf-admin-pwd"
+keycloakAdminUsername: &keycloakAdminUsername "kcadmin"
+keycloakAdminPassword: &keycloakAdminPassword "samplekcadminpwd"
+demoTestUserPwd: &demoTestUserPwd "sample1234"
+taggingPDPClientSecret: &taggingPDPClientSecret "sample1234"
+
+ingress:
+  tls:
+    enabled: false
+
+secrets:
+  postgres:
+    dbPassword: *postgresPassword
+  configuration:
+    dbPassword: *postgresPassword
+  attributes:
+    clientSecret: *oidcClientSecret
+    dbPassword: *postgresPassword
+  entitlements:
+    clientSecret: *oidcClientSecret
+    dbPassword: *postgresPassword
+  entitlementStore:
+    dbPassword: *postgresPassword
+  keycloak:
+    dbPassword: *postgresPassword
+    adminUsername: *keycloakAdminUsername
+    adminPassword: *keycloakAdminPassword
+  taggingPDP:
+    clientSecret: *taggingPDPClientSecret
+  keycloakBootstrap:
+    clientSecret: *oidcClientSecret
+    attributesUsername: *tdfAdminUsername
+    attributesPassword: *tdfAdminPassword
+    clients:
+      - clientId: sample-pep-client
+        clientSecret: test-client-secret
+        audienceMappers:
+          - access-pep
+          - tdf-attributes
+          - tdf-entitlements
+      - clientId: shp-tagging-pdp
+        audienceMappers:
+          - tdf-attributes
+        clientSecret: *taggingPDPClientSecret
+    users:
+      - username: *tdfAdminUsername
+        enabled: true
+        credentials:
+          - type: password
+            value: *tdfAdminPassword
+      # Testing users - simulated NCS users
+      - username: bob
+        enabled: true
+        credentials:
+          - type: password
+            value: *demoTestUserPwd
+        email: bob@corp.shpvtest.com
+        emailVerified: true
+      - username: alice
+        enabled: true
+        credentials:
+          - type: password
+            value: *demoTestUserPwd
+        email: alice@corp.shpvtest.com
+        emailVerified: true
+  tdfAdminPassword: *tdfAdminPassword
+
+entity-resolution:
+  secret:
+    keycloak:
+      clientSecret: *oidcClientSecret
+
+access-pep:
+  config:
+    keycloakAttrAuthorityClientSecret: *oidcClientSecret
+
+tagging-pdp:
+  config:
+    configSvc:
+      artifactId: taggingpdp.config
+
+# Set storage class for postgresql K3S
+storageClassName: local-path
