@@ -7,9 +7,6 @@ keycloakAdminPassword: &keycloakAdminPassword "samplekcadminpwd"
 demoTestUserPwd: &demoTestUserPwd "sample1234"
 taggingPDPClientSecret: &taggingPDPClientSecret "sample1234"
 
-ingress:
-  tls:
-    enabled: false
 
 secrets:
   postgres:
