@@ -88,13 +88,25 @@ if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
                   )
 fi
 
-echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValues}"
+echo "Setting override value files"
+SAVEIFS=$IFS
+IFS=$','
+overrideValuesArray=($overrideValues)
+IFS=$SAVEIFS
+overrideValuesArgs=()
+for i in "${overrideValuesArray[@]}"
+do
+	overrideValuesArgs+=("-f" "$i")
+  
+done
+
+echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValuesArgs[*]}"
 oidcExternalBaseUrlSetting="global.opentdf.common.oidcExternalBaseUrl=https://${ingressHostname}"
 ingressHostnameSetting="global.opentdf.common.ingress.hostname=${ingressHostname}"
 
 echo "#1 Deploy postgresql - from $postgresqlChart"
 helm upgrade --install -n $ns --create-namespace \
-     -f $overrideValues \
+     "${overrideValuesArgs[@]}" \
      shp-postgresql $postgresqlChart
 
 echo "#2 Wait for postgresql"
@@ -112,7 +124,7 @@ echo "#3 Install Keycloak"
 helm upgrade --install -n $ns --create-namespace \
     --set $oidcExternalBaseUrlSetting \
     --set $ingressHostnameSetting \
-    -f $overrideValues \
+   "${overrideValuesArgs[@]}" \
      shp-keycloak $keycloakChart
 
 echo "#4 Wait for keycloak"
@@ -123,7 +135,7 @@ helm upgrade --install -n $ns --create-namespace \
     --set $oidcExternalBaseUrlSetting \
     --set $ingressHostnameSetting \
     --set-file bootstrap.configFile=$configFile \
-    -f $overrideValues \
+    "${overrideValuesArgs[@]}" \
      shp-keycloak-bootstrapper $keycloakBootstrapperChart
 
 echo "#5 Wait for bootstrap job"
@@ -143,7 +155,8 @@ helm upgrade --install -n $ns --create-namespace \
  --set ingress.tls.enabled=${tlsEnabled} \
  --set ingress.tls.secretName=${tlsSecret} \
  "${pullSecretArgs[@]}" \
- -f $overrideValues shp $scpChart
+ "${overrideValuesArgs[@]}" \
+ shp $scpChart
 
 echo "Wait for Configuration Artifact Bootstrapping"
 kubectl wait --for=condition=complete job/shp-scp-configsvc-bootstrap --timeout=120s -n $ns
