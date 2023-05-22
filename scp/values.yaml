@@ -91,7 +91,7 @@ istioAuth:
         app.kubernetes.io/instance: {{ $.Release.Name }}
     - name: taggingpdp-grpc-gateway
       selectorLabels: |
-        app.kubernetes.io/name: {{ index $.Values "tagging-pdp" "fullnameOverride" }}-grpc-gw
+        app.kubernetes.io/name: {{ index $.Values "tagging-pdp" "fullnameOverride" }}-grpc-gwy
         app.kubernetes.io/instance: {{ $.Release.Name }}
     - name: configsvc
       selectorLabels: |
