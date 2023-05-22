@@ -18,6 +18,8 @@ certificateLocation=""
 chartsLocalDir=""
 # Scale istiod downt to 0 then back up to 1
 scaleIstio=false
+# Add security contexts to keycloak, configuration, and docker-registry
+addSecurityContexts=false
 
 chartRepo="virtru-charts"
 postgresqlChart="${chartRepo}/shp-embedded-postgresql"
@@ -29,7 +31,7 @@ scpChart="${chartRepo}/scp"
 #keycloakChart="shp-embedded-keycloak-0.1.4.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.4.tgz"
 #scpChart="scp-0.1.8.tgz"
-while getopts "h:t:s:u:p:e:c:o:k:l:i" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:l:ia" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -63,6 +65,10 @@ while getopts "h:t:s:u:p:e:c:o:k:l:i" arg; do
       ;;
     i)
       scaleIstio=true
+      ;;
+    a)
+      addSecurityContexts=true
+      ;;
   esac
 done
 
@@ -120,11 +126,19 @@ then
   kubectl create secret generic keycloak-certs-secret --from-file=$certificateLocation -n $ns
 fi
 
+securityContextArgs=()
+if $addSecurityContexts; then
+  securityContextArgs+=("--set" "keycloak.podSecurityContext.fsGroup=1000"
+                        "--set" "keycloak.securityContext.runAsUser=1000"
+                        "--set" "keycloak.securityContext.runAsNonRoot=true")
+fi
+
 echo "#3 Install Keycloak"
 helm upgrade --install -n $ns --create-namespace \
     --set $oidcExternalBaseUrlSetting \
     --set $ingressHostnameSetting \
-   "${overrideValuesArgs[@]}" \
+    "${securityContextArgs[@]}" \
+    "${overrideValuesArgs[@]}" \
      shp-keycloak $keycloakChart
 
 echo "#4 Wait for keycloak"
@@ -145,6 +159,15 @@ echo "installing entitlement policy secret"
 kubectl delete secret scp-bootstrap-entitlement-policy --ignore-not-found true -n $ns
 kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=$entitlementPolicyLocation -n $ns
 
+securityContextArgs=()
+if $addSecurityContexts; then
+  securityContextArgs+=("--set" "docker-registry.securityContext.enabled=true"
+                        "--set" "docker-registry.securityContext.runAsUser=1000"
+                        "--set" "docker-registry.securityContext.fsGroup=1000"
+                        "--set" "configuration.server.securityContext.runAsUser=1000"
+                        "--set" "configuration.server.securityContext.runAsNonRoot=true")
+fi
+
 echo "#6 Install Self hosted platform"
 helm upgrade --install -n $ns --create-namespace \
  --set secrets.imageCredentials.pull-secret.username="${imagePullUsername}" \
@@ -155,6 +178,7 @@ helm upgrade --install -n $ns --create-namespace \
  --set ingress.tls.enabled=${tlsEnabled} \
  --set ingress.tls.secretName=${tlsSecret} \
  "${pullSecretArgs[@]}" \
+ "${securityContextArgs[@]}" \
  "${overrideValuesArgs[@]}" \
  shp $scpChart
 
