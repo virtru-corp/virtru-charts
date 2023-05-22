@@ -103,7 +103,6 @@ overrideValuesArgs=()
 for i in "${overrideValuesArray[@]}"
 do
 	overrideValuesArgs+=("-f" "$i")
-  
 done
 
 echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValuesArgs[*]}"
