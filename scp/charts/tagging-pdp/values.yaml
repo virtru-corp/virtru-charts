@@ -66,8 +66,7 @@ image:
   tag: sha-f3f0116
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
-  pullSecrets:
-    - replace_me
+  pullSecrets: []
   pullPolicy: IfNotPresent
 
 # GRPC Gateway settings
