@@ -1,0 +1,10 @@
+[
+  {
+    "authority_for_attributes_test": "https://attributesapitest.com",
+    "attribute_name_for_attributes_test": "attributesTestAttribute",
+    "original_order_for_attributes_test": "TradeSecret",
+    "updated_order_for_attributes_test": "Proprietary",
+    "original_rule_for_attributes_test": "hierarchy",
+    "updated_rule_for_attributes_test": "allOf"
+  }
+]

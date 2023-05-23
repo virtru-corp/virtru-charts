@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "5099b578-7aaa-4753-bda1-d50aad8ea501",
+		"name": "Sharepoint svc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3237256"
+	},
+	"item": [
+		{
+			"name": "/health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/sharepoint/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sharepoint",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/version",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check presence of versionLong value\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('versionLong');",
+							"    pm.expect(jsonData.versionLong).not.eq(null)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/sharepoint/version",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sharepoint",
+						"version"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/config",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/sharepoint/config",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sharepoint",
+						"config"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://shp.virtrudemos.com",
+			"type": "string"
+		}
+	]
+}

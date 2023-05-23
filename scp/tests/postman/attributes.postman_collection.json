@@ -1,0 +1,458 @@
+{
+	"info": {
+		"_postman_id": "1904633b-bb04-4417-9a62-3c4426726a90",
+		"name": "Platform-AttributesAPI",
+		"description": "Acceptance CRUD test for Attributes service endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3237256"
+	},
+	"item": [
+		{
+			"name": "Attributes - Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp = pm.response.json()",
+							"var token = resp.access_token",
+							"pm.collectionVariables.set(\"auth_token_attributes\", token);",
+							"",
+							"pm.test(\"Access token is received, 200 coded is returned\", function () {",
+							"    pm.expect(token).to.not.equal(null)",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{accessPEPClientId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{accessPEPClientSecret}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/realms/tdf/protocol/openid-connect/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"tdf",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Authority",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"authority\": \"{{authority_for_attributes_test}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/authorities",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"authorities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Authorities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 and created authority is added to the list\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.include(pm.collectionVariables.get(\"authority_for_attributes_test\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"authority\": \"{{authority_for_attributes_test}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/authorities",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"authorities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Attribute",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"authority\": \"{{authority_for_attributes_test}}\",\n            \"name\": \"{{attribute_name_for_attributes_test}}\",\n            \"rule\": \"{{original_rule_for_attributes_test}}\",\n            \"state\": \"published\",\n            \"order\": [\"{{original_order_for_attributes_test}}\"]\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/definitions/attributes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"definitions",
+						"attributes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Attribute",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"authority\": \"{{authority_for_attributes_test}}\",\n            \"name\": \"{{attribute_name_for_attributes_test}}\",\n            \"rule\": \"{{updated_rule_for_attributes_test}}\",\n            \"state\": \"published\",\n            \"order\": [\"{{updated_order_for_attributes_test}}\"]\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/definitions/attributes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"definitions",
+						"attributes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Attributes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/definitions/attributes?authority={{authority_for_attributes_test}}&name={{attribute_name_for_attributes_test}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"definitions",
+						"attributes"
+					],
+					"query": [
+						{
+							"key": "authority",
+							"value": "{{authority_for_attributes_test}}"
+						},
+						{
+							"key": "name",
+							"value": "{{attribute_name_for_attributes_test}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Attribute",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 202\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"authority\": \"{{authority_for_attributes_test}}\",\n            \"name\": \"{{attribute_name_for_attributes_test}}\",\n            \"rule\": \"{{updated_rule_for_attributes_test}}\",\n            \"state\": \"published\",\n            \"order\": [\"{{updated_order_for_attributes_test}}\"]\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/definitions/attributes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"definitions",
+						"attributes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Authority",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 202\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"authority\":\"{{authority_for_attributes_test}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/attributes/authorities",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"attributes",
+						"authorities"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token_attributes}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.collectionVariables.set(\"authority_for_attributes_test\", pm.iterationData.get(\"authority_for_attributes_test\"));",
+					"pm.collectionVariables.set(\"attribute_name_for_attributes_test\", pm.iterationData.get(\"attribute_name_for_attributes_test\"));",
+					"pm.collectionVariables.set(\"original_order_for_attributes_test\", pm.iterationData.get(\"original_order_for_attributes_test\"));",
+					"pm.collectionVariables.set(\"updated_order_for_attributes_test\", pm.iterationData.get(\"updated_order_for_attributes_test\"));",
+					"pm.collectionVariables.set(\"original_rule_for_attributes_test\", pm.iterationData.get(\"original_rule_for_attributes_test\"));",
+					"pm.collectionVariables.set(\"updated_rule_for_attributes_test\", pm.iterationData.get(\"updated_rule_for_attributes_test\"));",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authority_for_attributes_test",
+			"value": ""
+		},
+		{
+			"key": "attribute_name_for_attributes_test",
+			"value": ""
+		},
+		{
+			"key": "original_order_for_attributes_test",
+			"value": ""
+		},
+		{
+			"key": "updated_order_for_attributes_test",
+			"value": ""
+		},
+		{
+			"key": "original_rule_for_attributes_test",
+			"value": ""
+		},
+		{
+			"key": "updated_rule_for_attributes_test",
+			"value": ""
+		},
+		{
+			"key": "auth_token_attributes",
+			"value": ""
+		}
+	]
+}
