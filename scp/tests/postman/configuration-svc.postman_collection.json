@@ -51,12 +51,12 @@
 						},
 						{
 							"key": "client_secret",
-							"value": "test-client-secret",
+							"value": "{{configurationSvcClientSecret}}",
 							"type": "text"
 						},
 						{
 							"key": "client_id",
-							"value": "shp-sharepoint",
+							"value": "{{configurationSvcClientId}}",
 							"type": "text"
 						}
 					]
