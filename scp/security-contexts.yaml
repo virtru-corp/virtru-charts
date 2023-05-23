@@ -1,0 +1,18 @@
+configuration:
+  server:
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+
+docker-registry:
+  securityContext:
+    enabled: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+keycloak:
+  podSecurityContext:
+    fsGroup: 1000
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true

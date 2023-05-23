@@ -13,9 +13,10 @@
         -k <optional - path to keycloak trust certs> \
         -e <pathToEntitlementPolicyDir> \
         -c <pathToInstallationConfigFile> \
-        -o <pathToChartOverridesFile> \
+        -o <pathToChartOverridesFile(s) -- multiple files can be passed with "," delimeter> \
         -l <optional - path to local charts dir > \
         -i <optional - scale istio down and up after install (no arg)>
+        -a <optional - add security contexts to keycloak, config, and registry (no arg)>
     ```
    
 ## Uninstall everything
