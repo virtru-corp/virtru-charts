@@ -41,6 +41,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  annotations: {}
   type: LoadBalancer
   port: 443
   protocol: TCP
@@ -114,3 +115,13 @@ appSecrets:
   cksHmac:
     tokenId: "from-your-cks" 
     tokenSecret: "from-your-cks" 
+
+#https://external-secrets.io/v0.8.2/introduction/overview/
+#externalAppSecrets:
+#- name: <external secret object name> #secret object will be named the same.
+#  secretsPath: <path of secret in secret store>
+#  secretStoreRef:
+#    kind: <SecretStore or ClusterSecretStore>
+#    name: <name of secret store>
+#  refreshInterval: <how often to reconcile with secret store>
+#

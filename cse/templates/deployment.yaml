@@ -54,7 +54,7 @@ spec:
               {{- end }}
             initialDelaySeconds: 30
             periodSeconds: 10
-            timeoutSeconds: 300
+            timeoutSeconds: 5
             failureThreshold: 2
             successThreshold: 1
           livenessProbe:
@@ -68,7 +68,7 @@ spec:
               {{- end }}
             initialDelaySeconds: 40
             periodSeconds: 10
-            timeoutSeconds: 300
+            timeoutSeconds: 5
             failureThreshold: 2
             successThreshold: 1
           resources:
