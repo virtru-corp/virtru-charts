@@ -222,7 +222,7 @@
 							"var updatedConfigValue = {\"id\": \"chat\", \"ou\": \"fr\", \"status\": 5, \"assignee\": \"david\"}",
 							"",
 							"pm.test(\"Body is correct, corresponds to the latest PUT update\", function () {",
-							"    pm.response.to.have.body(updatedConfig);",
+							"    pm.response.to.have.body(updatedConfigValue);",
 							"});"
 						],
 						"type": "text/javascript"
