@@ -81,6 +81,8 @@ ingress:
 istioAuth:
   ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
   enabled: true
+  ## @param istioAuth.internalJWTURL Whether to compute and use internal keycloak jwks uri - default false
+  internalJWTURL: true
   ## @extra istioAuth.policies List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ]
   ## @skip istioAuth.policies
   policies:
@@ -116,7 +118,7 @@ global:
         port: 5432
         # -- The database name within the given server
         database: tdf_database
-  ## @skip global.imagePullSecrets[0].name
+  ## @param global.imagePullSecrets global pull secrets
   imagePullSecrets:
 
 ## @section ABACUS Chart Overrides
@@ -184,7 +186,7 @@ configuration:
       host: postgresql
       ## @param configuration.server.postgres.password password for postgres - should not be set
       password:
-    ## @skip configuration.server.imagePullSecrets[0].name
+    ## @param configuration.server.imagePullSecrets Pull secrets for configuration service
     imagePullSecrets:
 
 ## @section Entitlement Policy Bootstrap Job parameters
@@ -199,7 +201,7 @@ entitlement-policy-bootstrap:
   policyConfigMap: scp-bootstrap-entitlement-cm
   ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy
   policyDataSecretRef: scp-bootstrap-entitlement-policy
-  ## @skip entitlement-policy-bootstrap.imagePullSecrets[0].name
+  ## @param entitlement-policy-bootstrap.imagePullSecrets Pull secrets for entitlement policy bootstrap
   imagePullSecrets:
   ## @param entitlement-policy-bootstrap.istioTerminationHack Set istio on/off
   istioTerminationHack: *istioTerminationHack
@@ -375,7 +377,7 @@ tagging-pdp:
   image:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
     tag: sha-6a63938 
-    ## @skip tagging-pdp.image.pullSecrets[0].name
+    ## @param tagging-pdp.image.pullSecrets TaggingPDP image pull secrets
     pullSecrets:
   gateway:
     ## @param tagging-pdp.gateway.enabled Tagging PDP Rest Gateway enabled flag
