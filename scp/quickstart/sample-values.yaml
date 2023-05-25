@@ -1,5 +1,5 @@
 postresPassword: &postgresPassword "sampleDemoPostgresPassword"
-oidcClientSecret: &oidcClientSecret "sampleClientCredential"
+oidcClientSecret: &oidcClientSecret "123-456"
 tdfAdminUsername: &tdfAdminUsername "tdf-admin-user"
 tdfAdminPassword: &tdfAdminPassword "tdf-admin-pwd"
 keycloakAdminUsername: &keycloakAdminUsername "kcadmin"
