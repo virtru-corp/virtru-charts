@@ -4,6 +4,10 @@ helm repo add virtru-charts \
 helm repo update
 helm search repo
 
+echo "Install Istio"
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/quickstart-istio.sh -o quickstart-istio.sh && chmod 755 quickstart-istio.sh
+./quickstart-istio.sh
+
 echo "Download sample entitlement policy"
 mkdir entitlement-policy
 curl -L https://raw.githubusercontent.com/opentdf/backend/main/containers/entitlement-pdp/entitlement-policy/Makefile -o entitlement-policy/Makefile
@@ -20,11 +24,6 @@ curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch
 echo "Download sample chart overrides and configs"
 curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/sample-install-config.yaml -o sample-install-config.yaml
 curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/sample-values.yaml -o sample-values.yaml
-
-
-echo "Install Istio"
-curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/quickstart-istio.sh -o quickstart-istio.sh && chmod 755 quickstart-istio.sh
-./quickstart-istio.sh
 
 echo "Create namespace and enable istio injection"
 kubectl create namespace $ns
