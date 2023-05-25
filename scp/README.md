@@ -121,8 +121,8 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `commonParams.entitlementPolicyBundleRepo`    | entitlement OPA Bundle Repo                        | `docker-registry:5000/entitlements-policybundle` |
 | `commonParams.entitlementPolicyBundleTag`     | entitlement OPA Bundle tag                         | `0.0.2`                                          |
 | `commonParams.entilementPolicyOCIRegistryUrl` | OPA policy endpoint                                | `https://docker-registry:5000`                   |
-| `commonParams.scpImagePullSecretName`         | common pull secret name                            | `scp-pull-secret`                                |
-| `commonParams.imagePullSecrets[0].name`       | name of pull secret                                | `scp-pull-secret`                                |
+| `commonParams.scpImagePullSecretName`         | common pull secret name                            | `nil`                                            |
+| `commonParams.imagePullSecrets[0].name`       | name of pull secret                                | `nil`                                            |
 | `commonParams.jobWaitForIstio`                | Job needs to wait for istio and exit appropriately | `true`                                           |
 
 ### General / Misc Parameters
@@ -162,11 +162,13 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Istio AuthN/Z Parameters
 
-| Name                  | Description                                                                                                            | Value  |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
-| `istioAuth.enabled`   | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration          | `true` |
-| `istioAuth.policies`  | List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ] |        |
-| `global.istioEnabled` | Istio enabled true/false                                                                                               | `true` |
+| Name                       | Description                                                                                                            | Value   |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------- |
+| `istioAuth.enabled`        | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration          | `true`  |
+| `istioAuth.internalJWTURL` | Whether to compute and use internal keycloak jwks uri - default false                                                  | `false` |
+| `istioAuth.policies`       | List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ] |         |
+| `global.istioEnabled`      | Istio enabled true/false                                                                                               | `true`  |
+| `global.imagePullSecrets`  | global pull secrets                                                                                                    | `nil`   |
 
 ### ABACUS Chart Overrides
 
@@ -182,7 +184,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | ----------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------- |
 | `access-pep.enabled`                                  | Enable access-pep flag                                   | `true`                                      |
 | `access-pep.name`                                     | Name override                                            | `access-pep`                                |
-| `access-pep.existingImagePullSecret`                  | Existing pull secret for the image                       | `scp-pull-secret`                           |
+| `access-pep.existingImagePullSecret`                  | Existing pull secret for the image                       | `nil`                                       |
 | `access-pep.image.repo`                               | Image Rep                                                | `ghcr.io/virtru-corp/access-pep/access-pep` |
 | `access-pep.image.tag`                                | Image tag                                                | `sha-cac697c`                               |
 | `access-pep.config.disableTracing`                    | disable tracing flag                                     | `true`                                      |
@@ -208,6 +210,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `configuration.server.secretRef`         | Configuration Service Secrets Ref         | `name: scp-configsvc` |
 | `configuration.server.postgres.host`     | hostname of postgres                      | `postgresql`          |
 | `configuration.server.postgres.password` | password for postgres - should not be set | `nil`                 |
+| `configuration.server.imagePullSecrets`  | Pull secrets for configuration service    | `nil`                 |
 
 ### Entitlement Policy Bootstrap Job parameters
 
@@ -218,6 +221,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                                                                                                                                                                                                                                                        | `https://docker-registry:5000`                   |
 | `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                                                                                                                                                                                                                                                 | `scp-bootstrap-entitlement-cm`                   |
 | `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy | `scp-bootstrap-entitlement-policy`               |
+| `entitlement-policy-bootstrap.imagePullSecrets`     | Pull secrets for entitlement policy bootstrap                                                                                                                                                                                                                                                            | `nil`                                            |
 | `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                                                                                                                                                                                                                                                         | `true`                                           |
 | `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                                                                                                                                                                                                                                                       | `sha-531eea2`                                    |
 
@@ -321,7 +325,8 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | ----------------------------------- | ------------------------------------- | ------------------------ |
 | `tagging-pdp.enabled`               | enabled flag                          | `true`                   |
 | `tagging-pdp.fullnameOverride`      | override name                         | `tagging-pdp`            |
-| `tagging-pdp.image.tag`             | Tagging PDP Image Tag                 | `sha-f3f0116`            |
+| `tagging-pdp.image.tag`             | Tagging PDP Image Tag                 | `sha-6a63938`            |
+| `tagging-pdp.image.pullSecrets`     | TaggingPDP image pull secrets         | `nil`                    |
 | `tagging-pdp.gateway.enabled`       | Tagging PDP Rest Gateway enabled flag | `true`                   |
 | `tagging-pdp.gateway.pathPrefix`    | tagging-pdp svc prefix                | `tagging-pdp`            |
 | `tagging-pdp.config.attrSvc.url`    | Set the attribute service url         | `http://attributes:4020` |
