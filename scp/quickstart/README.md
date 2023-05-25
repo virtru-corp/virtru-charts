@@ -19,8 +19,9 @@ export INGRESS_HOSTNAME=scp.virtru.local
 # Install
 Download and execute full install script
 ```shell
-curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/full-quick-start-install.sh -o full-quick-start-install.sh .sh && chmod 755 full-quick-start-install.sh 
-./full-quick-start-install.sh    
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/full-quickstart-install.sh \
+  -o full-quickstart-install.sh && chmod 755 full-quickstart-install.sh 
+./full-quickstart-install.sh    
 ```
 - [Above referenced script](./full-quickstart-install.sh) installs:
   - istio, 

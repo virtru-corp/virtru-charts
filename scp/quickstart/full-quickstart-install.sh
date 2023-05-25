@@ -21,6 +21,11 @@ echo "Download sample chart overrides and configs"
 curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/sample-install-config.yaml -o sample-install-config.yaml
 curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/sample-values.yaml -o sample-values.yaml
 
+
+echo "Install Istio"
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/quickstart-istio.sh -o quickstart-istio.sh && chmod 755 quickstart-istio.sh
+./quickstart-istio.sh
+
 echo "Create namespace and enable istio injection"
 kubectl create namespace $ns
 kubectl label namespace $ns istio-injection=enabled
@@ -29,6 +34,3 @@ echo "Run embedded install with tls self signed cert"
 ./embedded-install.sh -h $INGRESS_HOSTNAME -e ./entitlement-policy -c ./sample-install-config.yaml -o ./sample-values.yaml -t true -u $GITHUB_USER -p $GITHUB_TOKEN
 
 
-echo "Install Istio"
-curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/quickstart-istio.sh -o quickstart-istio.sh && chmod 755 quickstart-istio.sh
-./quickstart-istio.sh
