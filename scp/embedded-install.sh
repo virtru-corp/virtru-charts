@@ -104,8 +104,44 @@ for i in "${overrideValuesArray[@]}"
 do
 	overrideValuesArgs+=("-f" "$i")
 done
+# Checks and warnings
+if [[ -z $overrideValues ]]; then
+  echo "\nERROR: Chart Overrides Value required; set using the -o flag"
+  exit 1;
+fi
+if [[ -z $ingressHostname ]]; then
+  echo "\nERROR: Ingress hostname required; set using the -h flag"
+  exit 1;
+fi
+if [[ -z $configFile ]]; then
+  echo "\nERROR: Platform configuration file path required; set using the -c flag"
+  exit 1;
+fi
+if [[ -z $entitlementPolicyLocation ]]; then
+  echo "\nERROR: Entitlement policy directory path required; set using the -e flag"
+  exit 1;
+fi
+if [[ -z $imagePullUsername ]] ; then
+  echo "\n------WARNING: Pull credential username NOT provided - an existing image pull secret must exist in the cluster and be referenced in chart values; otherwise set with -u flag\n"
+fi
+if [[ -z $imagePullPAT ]] ; then
+  echo "\n------WARNING: Image Pull credential password  NOT provided - an existing image pull secret must exist in the cluster and be referenced in chart values; otherwise set with -p flag\n"
+fi
 
-echo "Deploying to hostname=${ingressHostname}, with configFile=${configFile} and chart overrides = ${overrideValuesArgs[*]}"
+# Log variables
+echo "---------------"
+echo "Deploying with:"
+echo "----------------"
+echo "hostname: ${ingressHostname}"
+echo "configuration file: ${configFile}"
+echo "chart override files: ${overrideValuesArgs[*]}"
+echo "entitlement policy location: ${entitlementPolicyLocation}"
+echo "istio gateway tls: ${tlsEnabled}"
+echo "keycloak truststore certificate location: ${certificateLocation}"
+echo "scale istio deployment: ${scaleIstio}"
+echo "add security contexts: ${addSecurityContexts}"
+echo "----------------"
+
 oidcExternalBaseUrlSetting="global.opentdf.common.oidcExternalBaseUrl=https://${ingressHostname}"
 ingressHostnameSetting="global.opentdf.common.ingress.hostname=${ingressHostname}"
 
