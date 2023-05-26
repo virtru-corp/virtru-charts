@@ -24,8 +24,8 @@ postgresql:
 
 ## @section Secret Generation Parameters
 secrets:
-  postgresql:
-    ## @param secrets.postgresql.dbPassword password for postgres user
+  postgres:
+    ## @param secrets.postgres.dbPassword password for postgres user
     dbPassword:
   attributes:
     ## @param secrets.attributes.dbPassword postgres password for attributes svc user
@@ -43,5 +43,5 @@ secrets:
     ## @param secrets.keycloak.dbPassword postgres password for keycloak svc user
     dbPassword:
   sharepoint:
-    ## @param secrets.keycloak.dbPassword postgres password for sharepoint svc user
+    ## @param secrets.sharepoint.dbPassword postgres password for sharepoint svc user
     dbPassword:

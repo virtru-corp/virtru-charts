@@ -17,9 +17,10 @@
 
 | Name                                  | Description                                      | Value |
 | ------------------------------------- | ------------------------------------------------ | ----- |
-| `secrets.postgresql.dbPassword`       | password for postgres user                       | `nil` |
+| `secrets.postgres.dbPassword`         | password for postgres user                       | `nil` |
 | `secrets.attributes.dbPassword`       | postgres password for attributes svc user        | `nil` |
 | `secrets.configuration.dbPassword`    | postgres password for config svc user            | `nil` |
 | `secrets.entitlementStore.dbPassword` | postgres password for entitlement-store svc user | `nil` |
 | `secrets.entitlements.dbPassword`     | postgres password for entitlements svc user      | `nil` |
 | `secrets.keycloak.dbPassword`         | postgres password for keycloak svc user          | `nil` |
+| `secrets.sharepoint.dbPassword`       | postgres password for sharepoint svc user        | `nil` |

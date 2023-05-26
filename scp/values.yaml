@@ -337,6 +337,11 @@ secrets:
     clientSecret:
     ## @param secrets.entitlements.dbPassword postgres password for entitlements svc user
     dbPassword:
+  keycloak:
+    ## @param secrets.keycloak.adminUsername Optional for bootstrapping - keycloak username for user with admin role
+    adminUsername:
+    ## @param secrets.keycloak.adminPassword Optional for bootstrapping - keycloak password for user with admin role
+    adminPassword:
   keycloakBootstrap:
     ## @param secrets.keycloakBootstrap.attributesUsername username for attribute service auth
     attributesUsername:

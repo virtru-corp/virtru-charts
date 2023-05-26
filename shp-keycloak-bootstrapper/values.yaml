@@ -43,6 +43,10 @@ secrets:
     clientSecret:
     ## @param secrets.keycloakBootstrap.customConfig Override for custom config to none
     customConfig: null
-
+  keycloak:
+    ## @param secrets.keycloak.adminUsername Optional for bootstrapping - keycloak username for user with admin role
+    adminUsername:
+    ## @param secrets.keycloak.adminPassword Optional for bootstrapping - keycloak password for user with admin role
+    adminPassword:
 ## @param tdfAdminUsername The admin user created for tdf.
 tdfAdminUsername: tdf-admin

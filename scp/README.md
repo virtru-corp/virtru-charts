@@ -162,13 +162,13 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 
 ### Istio AuthN/Z Parameters
 
-| Name                       | Description                                                                                                            | Value   |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------- |
-| `istioAuth.enabled`        | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration          | `true`  |
-| `istioAuth.internalJWTURL` | Whether to compute and use internal keycloak jwks uri - default false                                                  | `false` |
-| `istioAuth.policies`       | List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ] |         |
-| `global.istioEnabled`      | Istio enabled true/false                                                                                               | `true`  |
-| `global.imagePullSecrets`  | global pull secrets                                                                                                    | `nil`   |
+| Name                       | Description                                                                                                            | Value  |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| `istioAuth.enabled`        | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration          | `true` |
+| `istioAuth.internalJWTURL` | Whether to compute and use internal keycloak jwks uri - default false                                                  | `true` |
+| `istioAuth.policies`       | List of in format : [ {name: <k8s compliant resource name part>, selectorLabels: yaml template for selector labels } ] |        |
+| `global.istioEnabled`      | Istio enabled true/false                                                                                               | `true` |
+| `global.imagePullSecrets`  | global pull secrets                                                                                                    | `nil`  |
 
 ### ABACUS Chart Overrides
 
@@ -304,6 +304,8 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `secrets.entitlementStore.dbPassword`           | postgres password for entitlement-store svc user                                               | `nil`          |
 | `secrets.entitlements.clientSecret`             | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization       | `nil`          |
 | `secrets.entitlements.dbPassword`               | postgres password for entitlements svc user                                                    | `nil`          |
+| `secrets.keycloak.adminUsername`                | Optional for bootstrapping - keycloak username for user with admin role                        | `nil`          |
+| `secrets.keycloak.adminPassword`                | Optional for bootstrapping - keycloak password for user with admin role                        | `nil`          |
 | `secrets.keycloakBootstrap.attributesUsername`  | username for attribute service auth                                                            | `nil`          |
 | `secrets.keycloakBootstrap.attributesPassword`  | password for attribute service auth                                                            | `nil`          |
 | `secrets.keycloakBootstrap.users`               | list of users to be added [{"username":"","password":""}]                                      | `nil`          |

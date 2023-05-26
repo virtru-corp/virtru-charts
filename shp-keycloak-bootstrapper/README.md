@@ -20,4 +20,6 @@
 | `secrets.keycloakBootstrap.clients`            | list of custom oidc clients added [{"clientId":<>,"clientSecret":"","audienceMappers":["aud]}] | `nil`                                     |
 | `secrets.keycloakBootstrap.clientSecret`       | client secret assigned to standard bootstrapper clients                                        | `nil`                                     |
 | `secrets.keycloakBootstrap.customConfig`       | Override for custom config to none                                                             | `nil`                                     |
+| `secrets.keycloak.adminUsername`               | Optional for bootstrapping - keycloak username for user with admin role                        | `nil`                                     |
+| `secrets.keycloak.adminPassword`               | Optional for bootstrapping - keycloak password for user with admin role                        | `nil`                                     |
 | `tdfAdminUsername`                             | The admin user created for tdf.                                                                | `tdf-admin`                               |

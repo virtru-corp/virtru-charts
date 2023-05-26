@@ -1,4 +1,5 @@
 {{- if .Values.bootstrap.configsvc.enabled }}
+{{- if .Values.bootstrap.configFile}}
 {{ $config := .Values.bootstrap.configFile | fromYaml }}
 apiVersion: batch/v1
 kind: Job
@@ -51,4 +52,5 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   backoffLimit: {{ .Values.bootstrap.configsvc.job.backoffLimit }}
+{{- end }}
 {{- end }}
