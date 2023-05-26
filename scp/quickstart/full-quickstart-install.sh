@@ -30,6 +30,6 @@ kubectl create namespace $ns
 kubectl label namespace $ns istio-injection=enabled
 
 echo "Run embedded install with tls self signed cert"
-./embedded-install.sh -h $INGRESS_HOSTNAME -e ./entitlement-policy -c ./sample-install-config.yaml -o ./sample-values.yaml -t true -u $GITHUB_USER -p $GITHUB_TOKEN
+./embedded-install.sh -h $INGRESS_HOSTNAME -e ./entitlement-policy -c ./sample-install-config.yaml -o ./sample-values.yaml -t true -u $GITHUB_USERNAME -p $GITHUB_TOKEN
 
 
