@@ -43,6 +43,27 @@ export POSTMAN_VAR_DIR=./tests/postman
     ```shell
      newman run tests/postman/configuration-svc.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/configuration-svc_data.json
     ```
+- Attributes Service
+  - [Collection](./attributes.postman_collection.json)
+  - [Data](./attributes_data.json)
+  - Example:
+    ```shell
+     newman run tests/postman/attributes.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/attributes_data.json
+    ```
+- Entitlements Service
+  - [Collection](./entitlements.postman_collection.json)
+  - [Data](./entitlements_data.json)
+  - Example:
+    ```shell
+     newman run tests/postman/entitlements.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/entitlements_data.json
+    ```
+- Sharepoint Service
+  - [Collection](./sharepoint-svc.postman_collection.json)
+  - [Data](./sharepoint-svc_data.json)
+  - Example:
+    ```shell
+     newman run tests/postman/sharepoint-svc.postman_collection.json -e $POSTMAN_VAR_DIR/env.json -d $POSTMAN_VAR_DIR/sharepoint-svc_data.json
+    ```
     
 For re-use - this folder is archived and under source control for downloading by consumers.
 

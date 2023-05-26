@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "018e7eac-99a2-440b-b358-0f3a63f6a800",
+		"_postman_id": "edbdf5d8-0e45-4956-af03-d6a750cd43d0",
 		"name": "configuration-svc",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23744829"
+		"_exporter_id": "3237256"
 	},
 	"item": [
 		{
@@ -15,9 +15,9 @@
 						"exec": [
 							"const responseJson = pm.response.json();",
 							"var bodyToken = responseJson.access_token;",
-							"pm.environment.set(\"authToken\", bodyToken)",
+							"pm.collectionVariables.set(\"access_token_configuration\", bodyToken)",
 							"",
-							"pm.test(\"Access Token\", function () {",
+							"pm.test(\"Access Token is provided, status code is 200\", function () {",
 							"    pm.expect(bodyToken).to.not.equal(null);",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -51,12 +51,12 @@
 						},
 						{
 							"key": "client_secret",
-							"value": "{{attributesClientSecret}}",
+							"value": "{{configurationSvcClientSecret}}",
 							"type": "text"
 						},
 						{
 							"key": "client_id",
-							"value": "{{attributesClientId}}",
+							"value": "{{configurationSvcClientId}}",
 							"type": "text"
 						}
 					]
@@ -79,7 +79,7 @@
 			"response": []
 		},
 		{
-			"name": "Assert Get Artifact",
+			"name": "Config Svc - POST/Create",
 			"event": [
 				{
 					"listen": "test",
@@ -95,16 +95,141 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{authToken}}",
-							"type": "string"
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": \"chat\", \"ou\": \"us\", \"status\": 3}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
+				"url": {
+					"raw": "{{baseUrl}}/configuration/{{artifactId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"configuration",
+						"{{artifactId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Config Svc - HEAD/Get Metadata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Returns 200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Last-modified header is present\", function () {",
+							"    pm.response.to.have.header(\"last-modified\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "HEAD",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/configuration/{{artifactId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"configuration",
+						"{{artifactId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Config Svc - PUT/Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Exists\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": \"chat\", \"ou\": \"fr\", \"status\": 5, \"assignee\": \"david\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/configuration/{{artifactId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"configuration",
+						"{{artifactId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Config Svc - GET/Read",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response code is 200 Success\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var updatedConfigValue = {\"id\": \"chat\", \"ou\": \"fr\", \"status\": 5, \"assignee\": \"david\"}",
+							"",
+							"pm.test(\"Body is correct, corresponds to the latest PUT update\", function () {",
+							"    pm.response.to.have.body(updatedConfigValue);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -119,6 +244,96 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Config Svc - DELETE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Exists\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/configuration/{{artifactId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"configuration",
+						"{{artifactId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token_configuration}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.collectionVariables.set(\"artifactId\", pm.iterationData.get(\"artifactId\"));",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token_configuration",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "artifactId",
+			"value": "",
+			"type": "string"
 		}
 	]
 }

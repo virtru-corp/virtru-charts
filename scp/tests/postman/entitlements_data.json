@@ -1,0 +1,7 @@
+[
+  {
+    "authority_for_entitlements_test": "https://entitlementapitest.com",
+    "attribute_name_for_entitlements_test": "entitlementsTestAttribute",
+    "attribute_order_value_for_entitlements_test": "entitlementsTestOrderValue"
+  }
+]
