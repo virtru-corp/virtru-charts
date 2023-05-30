@@ -6,3 +6,8 @@ package-lock.json
 **/Chart.lock
 /scp/quickstart/entitlement-policy/
 /scp/quickstart/embedded-install.sh
+/scp/tests/sample.txt
+/scp/tests/sample.txt.ntdf
+/scp/tests/sample.txt.tdf
+/scp/tests/sample_out.txt
+/scp/tests/sample_out.nano.txt
