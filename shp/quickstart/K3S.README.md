@@ -23,14 +23,14 @@ multipass shell k3s
 - Set an additional hostname on the VM's /etc/hosts = ingress hostname for the deployment
 - Set entry on local machine for VM's IP -> ingress hostname
 
-### Example - scp.virtru.local
+### Example - shp.virtru.local
 - Mac Host:  
     ```
-    192.168.64.5    scp.virtru.local
+    192.168.64.5    shp.virtru.local
     ```
 - Multipass VM:
     ```shell
-    127.0.0.1 scp.virtru.local
+    127.0.0.1 shp.virtru.local
     ```
 ### Cleanup (After cluster use)
 ```shell
@@ -56,5 +56,5 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 Notes:
 - If this is a local deployment append the `-t true` flag to the call to the install script to 
 generate a self-signed tls certifcate for the deployment
-- Add entry to /etc/hosts/ for deployment hostname (scp.virtru.local in the example)
+- Add entry to /etc/hosts/ for deployment hostname (shp.virtru.local in the example)
 - Trust - Self-Signed Certificate for browsing / local client use over SSL

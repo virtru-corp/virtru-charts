@@ -1,5 +1,5 @@
 apiVersion: v2
-name: scp
+name: shp
 description: Self Hosted Data Protection Platform
 type: application
 version: 0.1.12

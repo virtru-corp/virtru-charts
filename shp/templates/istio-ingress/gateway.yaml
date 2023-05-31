@@ -13,7 +13,7 @@ spec:
         name: http
         protocol: HTTP2
       hosts:
-        - {{ include "scp.ingressHostname" . }}
+        - {{ include "shp.ingressHostname" . }}
       tls:
         httpsRedirect: true # sends 301 redirect for http requests
     - port:
@@ -23,22 +23,22 @@ spec:
         protocol: HTTPS
       tls:
         mode: SIMPLE
-        credentialName: {{ include "scp.ingress.tlsCredName" . }}
+        credentialName: {{ include "shp.ingress.tlsCredName" . }}
         {{- else }}
         protocol: HTTP2
         {{- end }}
       hosts:
-        - {{ include "scp.ingressHostname" . }}
+        - {{ include "shp.ingressHostname" . }}
 ---
 {{- if .Values.ingress.tls.enabled }}
 {{- if not .Values.ingress.tls.existingSecret }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "scp.ingress.tlsCredName" . }}
-  namespace: {{ include "scp.ingress.tlsNs" . }}
+  name: {{ include "shp.ingress.tlsCredName" . }}
+  namespace: {{ include "shp.ingress.tlsNs" . }}
 type: kubernetes.io/tls
 data:
-  {{ ( include "scp.ingress.gen-certs" . ) }}
+  {{ ( include "shp.ingress.gen-certs" . ) }}
 {{- end }}
 {{- end }}

@@ -2,7 +2,7 @@ Installed {{ .Chart.Name }}.
 Release name:  {{ .Release.Name }}
 Version: {{ .Chart.Version }}
 
-{{ $baseURl := printf "%s://%s" .Values.global.opentdf.common.ingress.scheme ( include "scp.ingressHostname" . ) }}
+{{ $baseURl := printf "%s://%s" .Values.global.opentdf.common.ingress.scheme ( include "shp.ingressHostname" . ) }}
 
 API Endpoints:
 Access Service:

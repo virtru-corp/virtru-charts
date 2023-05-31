@@ -6,7 +6,7 @@ metadata:
   name: tagging-pdp
 spec:
   gateways:
-    - {{ include "scp.ingress.gateway" . }}
+    - {{ include "shp.ingress.gateway" . }}
   hosts:
     - '*'
   http:

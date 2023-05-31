@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.ingress.name }}
 spec:
   gateways:
-    - {{ include "scp.ingress.gateway" . }}
+    - {{ include "shp.ingress.gateway" . }}
   hosts:
   - '*'
   http:

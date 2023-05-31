@@ -87,9 +87,9 @@ OCI Registry.
 
 ## Generic Helm Install
 ```shell
-helm upgrade --install -n scp --create-namespace \
+helm upgrade --install -n shp --create-namespace \
     -f values.yaml \ 
-    -f <your deployment overrides values> scp .
+    -f <your deployment overrides values> shp .
 ```
 
 ## Embedded Install Example
@@ -97,7 +97,7 @@ helm upgrade --install -n scp --create-namespace \
 
 ## Un-install Example
 ```shell
-helm uninstall scp -n scp
+helm uninstall shp -n shp
 ```
 - Also remove PVCs if you want to remove persistent state
 
@@ -107,7 +107,7 @@ helm uninstall scp -n scp
 Parameter documentation generated from [generator-for-helm](https://github.com/bitnami-labs/readme-generator-for-helm)
 ```shell
 npm i https://github.com/bitnami-labs/readme-generator-for-helm
-npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
+npx @bitnami/readme-generator-for-helm -v shp/values.yaml -r shp/README.md
 ```
 
 ## Parameters
@@ -121,7 +121,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `commonParams.entitlementPolicyBundleRepo`    | entitlement OPA Bundle Repo                        | `docker-registry:5000/entitlements-policybundle` |
 | `commonParams.entitlementPolicyBundleTag`     | entitlement OPA Bundle tag                         | `0.0.2`                                          |
 | `commonParams.entilementPolicyOCIRegistryUrl` | OPA policy endpoint                                | `https://docker-registry:5000`                   |
-| `commonParams.scpImagePullSecretName`         | common pull secret name                            | `nil`                                            |
+| `commonParams.shpImagePullSecretName`         | common pull secret name                            | `nil`                                            |
 | `commonParams.imagePullSecrets[0].name`       | name of pull secret                                | `nil`                                            |
 | `commonParams.jobWaitForIstio`                | Job needs to wait for istio and exit appropriately | `true`                                           |
 
@@ -145,7 +145,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `bootstrap.configsvc.job.image.tag`                 | Image tag                                                                                 | `sha-531eea2`                                 |
 | `bootstrap.configsvc.job.image.pullPolicy`          | Image pull policy                                                                         | `IfNotPresent`                                |
 | `bootstrap.configsvc.job.backoffLimit`              | Job backoff limit                                                                         | `5`                                           |
-| `bootstrap.configsvc.job.configVolumeSecretRefName` | Secret name used to mount configuration artifacts used by the job                         | `scp-bootstrap-configsvc`                     |
+| `bootstrap.configsvc.job.configVolumeSecretRefName` | Secret name used to mount configuration artifacts used by the job                         | `shp-bootstrap-configsvc`                     |
 | `bootstrap.configsvc.job.envSecretRef`              | secret for environment variables                                                          | `nil`                                         |
 | `bootstrap.configFile`                              | The configuration file content (set using --set-file bootstrap.configFile=yourconfig.yaml | `nil`                                         |
 | `bootstrap.entitlementPolicy`                       | Should entitlement policy be bootstrapped                                                 | `true`                                        |
@@ -156,7 +156,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | ---------------------------- | ------------------------------ | --------- |
 | `ingress.existingGateway`    | Use an existing istio gateway  | `nil`     |
 | `ingress.gatewaySelector`    | Name of istio gateway selector | `ingress` |
-| `ingress.name`               | Name base for istio resources  | `scp`     |
+| `ingress.name`               | Name base for istio resources  | `shp`     |
 | `ingress.tls.enabled`        | Require Gateway to use tls     | `false`   |
 | `ingress.tls.existingSecret` | Use existing TLS Secret        | `nil`     |
 
@@ -198,7 +198,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | Name                          | Description                                | Value                         |
 | ----------------------------- | ------------------------------------------ | ----------------------------- |
 | `attributes.fullnameOverride` | Attribute Service Name Override            | `attributes`                  |
-| `attributes.secretRef`        | Secrets for environment variable injection | `name: scp-attributes-secret` |
+| `attributes.secretRef`        | Secrets for environment variable injection | `name: shp-attributes-secret` |
 
 ### Configuration Chart Overrides
 
@@ -207,7 +207,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `configuration.enabled`                  | Configuration Service enabled flag        | `true`                |
 | `configuration.fullnameOverride`         | Configuration svc name override           | `configuration`       |
 | `configuration.server.image.tag`         | Configuration Service Image Tag           | `0.3.6`               |
-| `configuration.server.secretRef`         | Configuration Service Secrets Ref         | `name: scp-configsvc` |
+| `configuration.server.secretRef`         | Configuration Service Secrets Ref         | `name: shp-configsvc` |
 | `configuration.server.postgres.host`     | hostname of postgres                      | `postgresql`          |
 | `configuration.server.postgres.password` | password for postgres - should not be set | `nil`                 |
 | `configuration.server.imagePullSecrets`  | Pull secrets for configuration service    | `nil`                 |
@@ -219,8 +219,8 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `entitlement-policy-bootstrap.bundleRepo`           | Bundle repository                                                                                                                                                                                                                                                                                        | `docker-registry:5000/entitlements-policybundle` |
 | `entitlement-policy-bootstrap.bundleTag`            | Bundle Tag                                                                                                                                                                                                                                                                                               | `0.0.2`                                          |
 | `entitlement-policy-bootstrap.OCIRegistryUrl`       | URL of OCI registry to publish to                                                                                                                                                                                                                                                                        | `https://docker-registry:5000`                   |
-| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                                                                                                                                                                                                                                                 | `scp-bootstrap-entitlement-cm`                   |
-| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy | `scp-bootstrap-entitlement-policy`               |
+| `entitlement-policy-bootstrap.policyConfigMap`      | Config map name used to inject env varibles into the job                                                                                                                                                                                                                                                 | `shp-bootstrap-entitlement-cm`                   |
+| `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic shp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy | `shp-bootstrap-entitlement-policy`               |
 | `entitlement-policy-bootstrap.imagePullSecrets`     | Pull secrets for entitlement policy bootstrap                                                                                                                                                                                                                                                            | `nil`                                            |
 | `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                                                                                                                                                                                                                                                         | `true`                                           |
 | `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                                                                                                                                                                                                                                                       | `sha-531eea2`                                    |
@@ -236,21 +236,21 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `entitlement-pdp.opaConfig.policy.bundleRepo`       | OCI Bundle Repo                                          | `docker-registry:5000/entitlements-policybundle` |
 | `entitlement-pdp.opaConfig.policy.bundleTag`        | OCI bundle tag                                           | `0.0.2`                                          |
 | `entitlement-pdp.config.disableTracing`             | Disable tracing flag                                     | `true`                                           |
-| `entitlement-pdp.secretRef`                         | Secrets for env variables.                               | `name: scp-entitlement-pdp-secret`               |
+| `entitlement-pdp.secretRef`                         | Secrets for env variables.                               | `name: shp-entitlement-pdp-secret`               |
 
 ### Entitlement Store Chart Overrides
 
 | Name                                 | Description                       | Value                                |
 | ------------------------------------ | --------------------------------- | ------------------------------------ |
 | `entitlement-store.fullnameOverride` | Entitlement Store name override   | `entitlement-store`                  |
-| `entitlement-store.secretRef`        | Secrets for environment variables | `name: scp-entitlement-store-secret` |
+| `entitlement-store.secretRef`        | Secrets for environment variables | `name: shp-entitlement-store-secret` |
 
 ### Entitlement Chart Overrides
 
 | Name                            | Description                                    | Value                               |
 | ------------------------------- | ---------------------------------------------- | ----------------------------------- |
 | `entitlements.fullnameOverride` | Entitlements Name Override                     | `entitlements`                      |
-| `entitlements.secretRef`        | Entitlements Secrets for environment variables | `name: scp-entitlements-secret    ` |
+| `entitlements.secretRef`        | Entitlements Secrets for environment variables | `name: shp-entitlements-secret    ` |
 
 ### Entity Resolution Chart Overrides
 
@@ -275,9 +275,9 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | ----------------------------------------------------- | ----------------------------------------------------- | ------------------------------------ |
 | `entitlement-attrdef-bootstrap.entitlements.hostname` | Entitlement svc hostname                              | `http://entitlements:4030`           |
 | `entitlement-attrdef-bootstrap.entitlements.realms`   | Entitlement override realms                           | `nil`                                |
-| `entitlement-attrdef-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `scp-keycloakbootstrap-config`       |
+| `entitlement-attrdef-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `shp-keycloakbootstrap-config`       |
 | `entitlement-attrdef-bootstrap.istioTerminationHack`  | Set istio on/off                                      | `true`                               |
-| `entitlement-attrdef-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: scp-keycloakbootstrap-secret` |
+| `entitlement-attrdef-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: shp-keycloakbootstrap-secret` |
 | `entitlement-attrdef-bootstrap.attributes.hostname`   | Attribute service endpoint accessible to boostrap job | `http://attributes:4020`             |
 | `entitlement-attrdef-bootstrap.attributes.realm`      | Realm for OIDC client auth to attribute service       | `tdf`                                |
 | `entitlement-attrdef-bootstrap.attributes.clientId`   | OIDC client ID used to auth to attribute service      | `dcr-test`                           |
@@ -290,7 +290,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `docker-registry.fullnameOverride`    | Override name of service                              | `docker-registry`           |
 | `docker-registry.persistence.enabled` | Persistence Enabled Flag                              | `true`                      |
 | `docker-registry.persistence.size`    | Size of volume                                        | `1Gi`                       |
-| `docker-registry.tlsSecretName`       | Secret name containing TLS Certs used by the registry | `scp-docker-registry-certs` |
+| `docker-registry.tlsSecretName`       | Secret name containing TLS Certs used by the registry | `shp-docker-registry-certs` |
 
 ### Secret Generation Parameters
 
@@ -332,7 +332,7 @@ npx @bitnami/readme-generator-for-helm -v scp/values.yaml -r scp/README.md
 | `tagging-pdp.gateway.enabled`       | Tagging PDP Rest Gateway enabled flag | `true`                   |
 | `tagging-pdp.gateway.pathPrefix`    | tagging-pdp svc prefix                | `tagging-pdp`            |
 | `tagging-pdp.config.attrSvc.url`    | Set the attribute service url         | `http://attributes:4020` |
-| `tagging-pdp.config.oidcSecretName` | Use existing secret for OIDC Creds    | `scp-tagging-pdp-secret` |
+| `tagging-pdp.config.oidcSecretName` | Use existing secret for OIDC Creds    | `shp-tagging-pdp-secret` |
 | `tagging-pdp.config.oidcClientId`   | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`        |
 | `tdfAdminUsername`                  | The admin user created for tdf.       | `tdf-admin`              |
 

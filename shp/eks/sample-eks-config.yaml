@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: scpsandbox
+  name: shpsandbox
   region: us-west-2
   version: "1.23"
 
@@ -17,7 +17,7 @@ addons:
   - name: vpc-cni
 
 nodeGroups:
-  - name: scpsandbox-ng1
+  - name: shpsandbox-ng1
     instanceType: m5.large
     minSize: 2
     maxSize: 3

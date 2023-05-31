@@ -2,12 +2,12 @@
 1. Export values:
    - namespace for installation of all charts
     ```
-    export ns=scp
+    export ns=shp
     ```
 1. Install Embedded Postgresql, Embedded Keycloak + SHP
    Run from base directory:
     ```
-    ./scp/embedded-install.sh -u <ghcr username> \
+    ./shp/embedded-install.sh -u <ghcr username> \
         -p <ghcr pat> \
         -h <ingress host> \
         -k <optional - path to keycloak trust certs> \

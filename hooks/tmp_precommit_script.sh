@@ -4,7 +4,7 @@ set -e
 
 charts=(
 "common-lib"
-"scp"
+"shp"
 "shp-embedded-keycloak"
 "shp-embedded-postgresql"
 "shp-keycloak-bootstrapper"

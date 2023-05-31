@@ -1,5 +1,5 @@
 # Overview
-Quickstart to deploy istio + scp from scratch
+Quickstart to deploy istio + shp from scratch
 
 # Setup
 ### Set variables
@@ -10,16 +10,16 @@ Quickstart to deploy istio + scp from scratch
 - INGRESS_HOSTNAME: local deployment hostname
 ```shell
 export chartBranch=main
-export ns=scp
+export ns=shp
 export GITHUB_USERNAME=replaceme
 export GITHUB_TOKEN=replaceme
-export INGRESS_HOSTNAME=scp.virtru.local
+export INGRESS_HOSTNAME=shp.virtru.local
 ```
 
 # Install
 Download and execute full install script
 ```shell
-curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/scp/quickstart/full-quickstart-install.sh \
+curl -L https://raw.githubusercontent.com/virtru-corp/virtru-charts/$chartBranch/shp/quickstart/full-quickstart-install.sh \
   -o full-quickstart-install.sh && chmod 755 full-quickstart-install.sh 
 ./full-quickstart-install.sh    
 ```
