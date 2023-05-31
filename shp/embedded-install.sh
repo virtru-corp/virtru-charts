@@ -25,12 +25,12 @@ chartRepo="virtru-charts"
 postgresqlChart="${chartRepo}/shp-embedded-postgresql"
 keycloakChart="${chartRepo}/shp-embedded-keycloak"
 keycloakBootstrapperChart="${chartRepo}/shp-keycloak-bootstrapper"
-scpChart="${chartRepo}/scp"
+shpChart="${chartRepo}/shp"
 # For local install change to chart-version.tgz
 #postgresqlChart="shp-embedded-postgresql-0.1.1.tgz"
 #keycloakChart="shp-embedded-keycloak-0.1.4.tgz"
 #keycloakBootstrapperChart="shp-keycloak-bootstrapper-0.1.4.tgz"
-#scpChart="scp-0.1.8.tgz"
+#shpChart="shp-0.1.8.tgz"
 while getopts "h:t:s:u:p:e:c:o:k:l:ia" arg; do
   case $arg in
     t)
@@ -77,20 +77,20 @@ if [ ! -z "$chartsLocalDir" ]; then
   postgresqlChart="${chartsLocalDir}/shp-embedded-postgresql-*.tgz"
   keycloakChart="${chartsLocalDir}/shp-embedded-keycloak-*.tgz"
   keycloakBootstrapperChart="${chartsLocalDir}/shp-keycloak-bootstrapper-*.tgz"
-  scpChart="${chartsLocalDir}/scp-*.tgz"
+  shpChart="${chartsLocalDir}/shp-*.tgz"
 fi
 
 pullSecretArgs=()
 if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
   echo "Setting pull secret args"
-  scpImagePullSecretName="scp-pull-secret"
-  pullSecretArgs+=("--set" "access-pep.existingImagePullSecret=${scpImagePullSecretName}"
+  shpImagePullSecretName="shp-pull-secret"
+  pullSecretArgs+=("--set" "access-pep.existingImagePullSecret=${shpImagePullSecretName}"
                   "--set" "access-pep.useImagePullSecret=true"
-                  "--set" "configuration.server.imagePullSecrets[0].name=${scpImagePullSecretName}"
-                  "--set" "entitlement-policy-bootstrap.imagePullSecrets[0].name=${scpImagePullSecretName}"
-                  "--set" "tagging-pdp.image.pullSecrets[0].name=${scpImagePullSecretName}"
-                  "--set" "gloabl.imagePullSecrets[0].name=${scpImagePullSecretName}"
-                  "--set" "bootstrap.configsvc.job.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "configuration.server.imagePullSecrets[0].name=${shpImagePullSecretName}"
+                  "--set" "entitlement-policy-bootstrap.imagePullSecrets[0].name=${shpImagePullSecretName}"
+                  "--set" "tagging-pdp.image.pullSecrets[0].name=${shpImagePullSecretName}"
+                  "--set" "gloabl.imagePullSecrets[0].name=${shpImagePullSecretName}"
+                  "--set" "bootstrap.configsvc.job.imagePullSecrets[0].name=${shpImagePullSecretName}"
                   )
 fi
 
@@ -191,8 +191,8 @@ echo "#5 Wait for bootstrap job"
 kubectl wait --for=condition=complete job/shp-keycloak-bootstrapper-job --timeout=120s -n $ns
 
 echo "installing entitlement policy secret"
-kubectl delete secret scp-bootstrap-entitlement-policy --ignore-not-found true -n $ns
-kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=$entitlementPolicyLocation -n $ns
+kubectl delete secret shp-bootstrap-entitlement-policy --ignore-not-found true -n $ns
+kubectl create secret generic shp-bootstrap-entitlement-policy --from-file=$entitlementPolicyLocation -n $ns
 
 securityContextArgs=()
 if $addSecurityContexts; then
@@ -215,10 +215,10 @@ helm upgrade --install -n $ns --create-namespace \
  "${pullSecretArgs[@]}" \
  "${securityContextArgs[@]}" \
  "${overrideValuesArgs[@]}" \
- shp $scpChart
+ shp $shpChart
 
 echo "Wait for Configuration Artifact Bootstrapping"
-kubectl wait --for=condition=complete job/shp-scp-configsvc-bootstrap --timeout=120s -n $ns
+kubectl wait --for=condition=complete job/shp-shp-configsvc-bootstrap --timeout=120s -n $ns
 echo "Wait for Entitlement policy bundle publication"
 kubectl wait --for=condition=complete job/shp-entitlement-policy-bootstrap --timeout=120s -n $ns
 echo "Wait for attribute and entitlement Bootstrapping job"

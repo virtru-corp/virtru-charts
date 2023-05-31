@@ -4,7 +4,7 @@ metadata:
   name: config-svc
 spec:
   gateways:
-    - {{ include "scp.ingress.gateway" . }}
+    - {{ include "shp.ingress.gateway" . }}
   hosts:
     - '*'
   http:

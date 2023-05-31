@@ -1,4 +1,4 @@
-# Default values for scp.
+# Default values for shp.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -15,8 +15,8 @@ commonParams:
   entitlementPolicyBundleTag: &entitlementPolicyBundleTag 0.0.2
   ## @param commonParams.entilementPolicyOCIRegistryUrl OPA policy endpoint
   entilementPolicyOCIRegistryUrl: &entilementPolicyOCIRegistryUrl "https://docker-registry:5000"
-  ## @param commonParams.scpImagePullSecretName common pull secret name
-  scpImagePullSecretName:
+  ## @param commonParams.shpImagePullSecretName common pull secret name
+  shpImagePullSecretName:
   imagePullSecrets:
     ## @param commonParams.imagePullSecrets[0].name name of pull secret
     - name:
@@ -55,7 +55,7 @@ bootstrap:
       ## @param bootstrap.configsvc.job.backoffLimit Job backoff limit
       backoffLimit: 5
       ## @param bootstrap.configsvc.job.configVolumeSecretRefName Secret name used to mount configuration artifacts used by the job
-      configVolumeSecretRefName: scp-bootstrap-configsvc
+      configVolumeSecretRefName: shp-bootstrap-configsvc
       ## @param bootstrap.configsvc.job.envSecretRef secret for environment variables
       envSecretRef:
   ## @param  bootstrap.configFile The configuration file content (set using --set-file bootstrap.configFile=yourconfig.yaml
@@ -70,7 +70,7 @@ ingress:
   ## @param ingress.gatewaySelector Name of istio gateway selector
   gatewaySelector: ingress
   ## @param ingress.name Name base for istio resources
-  name: scp
+  name: shp
   tls:
     ## @param ingress.tls.enabled Require Gateway to use tls
     enabled: false
@@ -105,7 +105,7 @@ global:
   ## @skip global.opentdf
   opentdf:
     common:
-      oidcExternalBaseUrl: https://scp.example.com
+      oidcExternalBaseUrl: https://shp.example.com
       oidcInternalBaseUrl: http://keycloak-http
       oidcUrlPath: auth
       ingress:
@@ -166,7 +166,7 @@ attributes:
   fullnameOverride: attributes
   ## @param attributes.secretRef Secrets for environment variable injection
   secretRef: |-
-    name: scp-attributes-secret
+    name: shp-attributes-secret
 
 ## @section Configuration Chart Overrides
 configuration:
@@ -180,7 +180,7 @@ configuration:
       tag: 0.3.6
     ## @param configuration.server.secretRef Configuration Service Secrets Ref
     secretRef: |-
-      name: scp-configsvc
+      name: shp-configsvc
     postgres:
       ## @param configuration.server.postgres.host hostname of postgres
       host: postgresql
@@ -198,9 +198,9 @@ entitlement-policy-bootstrap:
   ## @param entitlement-policy-bootstrap.OCIRegistryUrl URL of OCI registry to publish to
   OCIRegistryUrl: *entilementPolicyOCIRegistryUrl
   ## @param entitlement-policy-bootstrap.policyConfigMap Config map name used to inject env varibles into the job
-  policyConfigMap: scp-bootstrap-entitlement-cm
-  ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic scp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy
-  policyDataSecretRef: scp-bootstrap-entitlement-policy
+  policyConfigMap: shp-bootstrap-entitlement-cm
+  ## @param entitlement-policy-bootstrap.policyDataSecretRef Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic shp-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy
+  policyDataSecretRef: shp-bootstrap-entitlement-policy
   ## @param entitlement-policy-bootstrap.imagePullSecrets Pull secrets for entitlement policy bootstrap
   imagePullSecrets:
   ## @param entitlement-policy-bootstrap.istioTerminationHack Set istio on/off
@@ -230,7 +230,7 @@ entitlement-pdp:
     disableTracing: *disableTracing
   ## @param entitlement-pdp.secretRef Secrets for env variables.
   secretRef: |-
-    name: scp-entitlement-pdp-secret
+    name: shp-entitlement-pdp-secret
 
 ## @section Entitlement Store Chart Overrides
 entitlement-store:
@@ -238,7 +238,7 @@ entitlement-store:
   fullnameOverride: entitlement-store
   ## @param entitlement-store.secretRef Secrets for environment variables
   secretRef: |-
-    name: scp-entitlement-store-secret
+    name: shp-entitlement-store-secret
 
 ## @section Entitlement Chart Overrides
 entitlements:
@@ -246,7 +246,7 @@ entitlements:
   fullnameOverride: entitlements
   ## @param  entitlements.secretRef Entitlements Secrets for environment variables
   secretRef: |-
-    name: scp-entitlements-secret    
+    name: shp-entitlements-secret    
 
 ## @section Entity Resolution Chart Overrides
 entity-resolution:
@@ -280,12 +280,12 @@ entitlement-attrdef-bootstrap:
     ## @param entitlement-attrdef-bootstrap.entitlements.realms Entitlement override realms
     realms: null
   ## @param entitlement-attrdef-bootstrap.existingConfigSecret Secret name used to Mount bootstrapping data
-  existingConfigSecret: scp-keycloakbootstrap-config
+  existingConfigSecret: shp-keycloakbootstrap-config
   ## @param entitlement-attrdef-bootstrap.istioTerminationHack Set istio on/off
   istioTerminationHack: *istioTerminationHack
   ## @param entitlement-attrdef-bootstrap.secretRef Secret for bootstrap job env variables.
   secretRef: |-
-    name: scp-keycloakbootstrap-secret
+    name: shp-keycloakbootstrap-secret
   attributes:
     ## @param entitlement-attrdef-bootstrap.attributes.hostname Attribute service endpoint accessible to boostrap job
     hostname: *attrEndpoint
@@ -306,7 +306,7 @@ docker-registry:
     ## @param docker-registry.persistence.size Size of volume
     size: 1Gi
   ## @param docker-registry.tlsSecretName Secret name containing TLS Certs used by the registry
-  tlsSecretName: scp-docker-registry-certs
+  tlsSecretName: shp-docker-registry-certs
   ## @skip docker-registry.securityContext
   securityContext:
     enabled: false
@@ -397,7 +397,7 @@ tagging-pdp:
       ## @param tagging-pdp.config.attrSvc.url Set the attribute service url
       url: *attrEndpoint
     ## @param tagging-pdp.config.oidcSecretName Use existing secret for OIDC Creds
-    oidcSecretName: scp-tagging-pdp-secret
+    oidcSecretName: shp-tagging-pdp-secret
     ## @param tagging-pdp.config.oidcClientId OIDC Client ID for tagging pdp
     oidcClientId: shp-tagging-pdp
 
