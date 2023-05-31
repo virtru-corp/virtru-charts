@@ -89,7 +89,7 @@ if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
                   "--set" "configuration.server.imagePullSecrets[0].name=${scpImagePullSecretName}"
                   "--set" "entitlement-policy-bootstrap.imagePullSecrets[0].name=${scpImagePullSecretName}"
                   "--set" "tagging-pdp.image.pullSecrets[0].name=${scpImagePullSecretName}"
-                  "--set" "gloabl.imagePullSecrets[0].name=${scpImagePullSecretName}"
+                  "--set" "global.imagePullSecrets[0].name=${scpImagePullSecretName}"
                   "--set" "bootstrap.configsvc.job.imagePullSecrets[0].name=${scpImagePullSecretName}"
                   )
 fi
