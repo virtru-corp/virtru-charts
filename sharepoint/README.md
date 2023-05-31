@@ -3,7 +3,7 @@
 ## Install Chart
 
 ### Prerequisites 
-- A postgresql database.  See [Example role/db creation](../shp-embedded-postgresql/templates/_sql.sharepoint.tpl)
+- A postgresql database.  See [Example role/db creation](../platform-embedded-postgresql/templates/_sql.sharepoint.tpl)
 - A Deployed TDF Platform See [TDF Platform](../scp)
 - SharePoint Configuration Artifact uploaded to platform configuration service.
 - Istio - Optional

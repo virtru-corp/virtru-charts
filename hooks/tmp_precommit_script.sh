@@ -4,10 +4,10 @@ set -e
 
 charts=(
 "common-lib"
-"shp"
-"shp-embedded-keycloak"
-"shp-embedded-postgresql"
-"shp-keycloak-bootstrapper"
+"platform"
+"platform-embedded-keycloak"
+"platform-embedded-postgresql"
+"platform-keycloak-bootstrapper"
 )
 cwd_abspath="$(realpath "$PWD")"
 for i in "${charts[@]}";
