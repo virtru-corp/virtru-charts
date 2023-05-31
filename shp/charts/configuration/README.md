@@ -30,32 +30,9 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA scp_configuration T
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis credentials (must contain key `redis-password`). When it's set, the `externalRedis.password` parameter is ignored |
-| externalRedis.host | string | `""` | External Redis server host |
-| externalRedis.password | string | `""` | External Redis password |
-| externalRedis.port | int | `6379` | External Redis server port |
-| externalRedis.secretAnnotations | object | `{}` | External Redis Secret annotations |
-| externalRedis.username | string | `""` | External Redis username |
 | fullnameOverride | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | nameOverride | string | `""` |  |
-| redis-ha.enabled | bool | `false` | Enables the Redis HA subchart and disables the custom Redis single node deployment |
-| redis-ha.exporter.enabled | bool | `false` | Enable Prometheus redis-exporter sidecar |
-| redis-ha.exporter.image | string | `"public.ecr.aws/bitnami/redis-exporter"` | Repository to use for the redis-exporter |
-| redis-ha.exporter.tag | string | `"1.45.0"` | Tag to use for the redis-exporter |
-| redis-ha.haproxy.enabled | bool | `false` | Enabled HAProxy LoadBalancing/Proxy |
-| redis-ha.haproxy.metrics.enabled | bool | `false` | HAProxy enable prometheus metric scraping |
-| redis-ha.hardAntiAffinity | bool | `false` |  |
-| redis-ha.image.tag | string | `"7.0.9-alpine"` | Redis tag |
-| redis-ha.networkPolicy.enabled | bool | `true` |  |
-| redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
-| redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
-| redis-ha.redis.config.save | string | `'""'` | Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled |
-| redis-ha.redis.masterGroupName | string | `"scp-configuration"` | Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated |
-| redis-ha.topologySpreadConstraints.enabled | bool | `false` | Enable Redis HA topology spread constraints |
-| redis-ha.topologySpreadConstraints.maxSkew | string | `""` (defaults to `1`) | Max skew of pods tolerated |
-| redis-ha.topologySpreadConstraints.topologyKey | string | `""` (defaults to `topology.kubernetes.io/zone`) | Topology key for spread |
-| redis-ha.topologySpreadConstraints.whenUnsatisfiable | string | `""` (defaults to `ScheduleAnyway`) | Enforcement policy, hard or soft |
 | server.affinity | object | `{}` | Pod scheduling preferences |
 | server.autoscaling.enabled | bool | `false` |  |
 | server.image.pullPolicy | string | `"IfNotPresent"` | The container's `imagePullPolicy` |
@@ -70,7 +47,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA scp_configuration T
 | server.postgres.host | string | `""` |  |
 | server.postgres.port | int | `5432` |  |
 | server.postgres.user | string | `"scp_configuration_manager"` |  |
-| server.redis.host | string | `""` |  |
 | server.replicaCount | int | `1` |  |
 | server.resources | object | `{}` | Specify required limits for deploying this service to a pod. We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. |
 | server.secretRef | string | `nil` |  |
