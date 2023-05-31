@@ -49,7 +49,6 @@ Example:
   ```shell
   export accountId=replaceme
   export clustername=replaceme
-  export iamname=aws-load-balancer-controller
   ```
 1. If IAM policy doesn't exist:
    ```shell
