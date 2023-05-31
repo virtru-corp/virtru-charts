@@ -1,0 +1,45 @@
+{{- if .Values.istioAuth.enabled }}
+{{- $root := . -}}
+{{ range $entry :=  .Values.istioAuth.policies }}
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: {{ include "common.lib.name" $ }}-{{ $entry.name }}-jwt-authentication
+spec:
+  selector:
+    matchLabels:
+      {{- tpl $entry.selectorLabels $ | nindent 6 }}
+  jwtRules:
+    - issuer: {{ include "platform.auth.issuer" $ | quote }}
+      jwksUri: {{ include "platform.auth.jwksUri" $ | quote }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "common.lib.name" $ }}-{{ $entry.name }}-external
+spec:
+  selector:
+    matchLabels:
+      {{- tpl $entry.selectorLabels $ | nindent 6 }}
+  action: ALLOW
+  rules:
+    - from:
+      - source:
+          requestPrincipals: ["*"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "common.lib.name" $ }}-{{ $entry.name }}-internal
+spec:
+  selector:
+    matchLabels:
+      {{- tpl $entry.selectorLabels $ | nindent 6 }}
+  action: ALLOW
+  rules:
+    - from:
+      - source:
+          namespaces: [ {{ $.Release.Namespace }} ]
+---
+{{- end }}
+{{- end }}

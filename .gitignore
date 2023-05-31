@@ -4,5 +4,5 @@ package-lock.json
 /.idea/
 **/charts/*.tgz
 **/Chart.lock
-/scp/quickstart/entitlement-policy/
-/scp/quickstart/embedded-install.sh
+/platform/quickstart/entitlement-policy/
+/platform/quickstart/embedded-install.sh

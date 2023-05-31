@@ -1,0 +1,75 @@
+
+global:
+  ## @skip global.opentdf
+  opentdf:
+    common:
+      oidcExternalBaseUrl: https://demo.com
+      oidcInternalBaseUrl: http://keycloak-http
+      oidcUrlPath: auth
+      ingress:
+        scheme: "https"
+        hostname: "demo.com"
+      postgres:
+        # -- postgres server's k8s name or global DNS for external server
+        host: postgresql
+        # -- postgres server port
+        port: 5432
+
+## @param fullnameOverride Chart full name override
+fullnameOverride: "platform-embedded"
+
+## @section Keycloak Chart Overrides
+keycloak:
+  ## @param keycloak.fullnameOverride keycloak name override
+  fullnameOverride: keycloak
+  image:
+    ## @param keycloak.image.repository Keycloak Image Repo
+    repository: ghcr.io/opentdf/keycloak
+    ## @param keycloak.image.tag Keycloak Image Tag
+    tag: 21.0.1-1.3.0
+    ## @param keycloak.image.pullPolicy Keycloak Image pull policy
+    pullPolicy: IfNotPresent
+  ## @param keycloak.command Command to start the keycloak service
+  command:
+    - "/opt/keycloak/custom_bin/kc_custom_entrypoint.sh"
+    - "--verbose"
+    - "start-dev"
+  postgresql:
+    ## @param keycloak.postgresql.enabled Use keycloak deployed postgres flag
+    enabled: false
+  ## @skip  keycloak.podAnnotations.proxy.istio.io/config
+  podAnnotations:
+    proxy.istio.io/config: '{ "holdApplicationUntilPRoxyStarts": true }'
+  podSecurityContext:
+    ## @skip  keycloak.podSecurityContext.fsGroup
+    fsGroup: null
+  securityContext:
+    ## @skip  keycloak.securityContext.runAsUser
+    runAsUser: null
+  externalDatabase:
+    ## @param keycloak.externalDatabase.database Database name
+    database: keycloak_database
+  ## @param keycloak.extraEnv Extra environment variables.
+  extraEnv: |-
+    {{ include "platform.embedded.keycloak.extraEnv" . }}
+  ## @param keycloak.extraEnvFrom Extra Environment From Reference YAML
+  extraEnvFrom: |-
+    {{ include "platform.embedded.keycloak.extraEnvFrom" . }}
+  ## @param keycloak.extraVolumes Extra Volume YAML
+  extraVolumes: |-
+    {{ include "platform.embedded.keycloak.extraVolumes" . }}
+  ## @param keycloak.extraVolumeMounts Extra Volume Mounts YAML
+  extraVolumeMounts: |-
+    {{ include "platform.embedded.keycloak.extraVolumeMounts" .}}
+
+  ## @param keycloak.trustedCertSecret Name of an existing secret containing certs to be added to the keycloak truststore. (keycloak prefix is used since its part of an include tpl)
+  trustedCertSecret:
+
+secrets:
+  keycloak:
+    ## @param secrets.keycloak.dbPassword postgres password for keycloak svc user
+    dbPassword:
+    ## @param secrets.keycloak.adminUsername keycloak admin user's username
+    adminUsername:
+    ## @param secrets.keycloak.adminPassword Keycloak admin user's password
+    adminPassword:

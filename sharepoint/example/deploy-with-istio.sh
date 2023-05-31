@@ -54,10 +54,10 @@ helm upgrade --install -n $ns --create-namespace \
   --set ingress.istio.enabled=true \
   --set-file config.sharepointPfx=${sharepointPrivateKey} \
   -f $overrideValues \
-  shp-sharepoint $sharepointChart
+  sharepoint $sharepointChart
 
 echo "#2 Wait for sharepoit deployment rollout"
-kubectl rollout status --watch --timeout=120s deployment/shp-sharepoint -n $ns
+kubectl rollout status --watch --timeout=120s deployment/sharepoint -n $ns
 
 
 kubectl scale deployment istiod -n istio-system --replicas=0
