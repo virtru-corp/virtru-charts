@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-{{ .Values.server.name }}
+  name: {{ include "configuration.fullname" . }}
   labels:
     {{- include "configuration.labels" . | nindent 4 }}
 spec:
