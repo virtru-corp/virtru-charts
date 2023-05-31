@@ -1,6 +1,6 @@
 apiVersion: v2
 name: configuration
-description: A Helm chart fo OpenTDF Configuration, a service for providing configuration to applications and other services.
+description: A Helm chart for OpenTDF Configuration, a service for providing configuration to applications and other services.
 type: application
 version: 0.3.0
 appVersion: 0.0.1

@@ -39,8 +39,8 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           envFrom:
-            {{- if .Values.secretRef }}
-            {{- with .Values.secretRef }}
+            {{- if .Values.existingSecret }}
+            {{- with .Values.existingSecret }}
             - secretRef:
                 {{- tpl . $ | nindent 16 }}
             {{- end }}
