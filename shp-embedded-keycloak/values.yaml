@@ -16,7 +16,7 @@ global:
         port: 5432
 
 ## @param fullnameOverride Chart full name override
-fullnameOverride: "scp-embedded"
+fullnameOverride: "shp-embedded"
 
 ## @section Keycloak Chart Overrides
 keycloak:

@@ -218,7 +218,7 @@ helm upgrade --install -n $ns --create-namespace \
  shp $shpChart
 
 echo "Wait for Configuration Artifact Bootstrapping"
-kubectl wait --for=condition=complete job/shp-shp-configsvc-bootstrap --timeout=120s -n $ns
+kubectl wait --for=condition=complete job/shp-configsvc-bootstrap --timeout=120s -n $ns
 echo "Wait for Entitlement policy bundle publication"
 kubectl wait --for=condition=complete job/shp-entitlement-policy-bootstrap --timeout=120s -n $ns
 echo "Wait for attribute and entitlement Bootstrapping job"
