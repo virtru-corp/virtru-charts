@@ -1,0 +1,76 @@
+apiVersion: v2
+name: platform
+description: Self Hosted Data Protection Platform
+type: application
+version: 0.1.12
+appVersion: 0.1.3
+
+otdfVersion: &otdfVersion "1.3.0"
+otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
+
+dependencies:
+  - name: abacus
+    repository: *otdfRepo
+    version: '1.3.0'
+    condition: abacus.enabled
+  - name: attributes
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entitlement-pdp
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entitlement-store
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entitlements
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: entity-resolution
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: kas
+    repository: *otdfRepo
+    version: *otdfVersion
+
+  - name: common-lib
+    repository: file://../common-lib
+    version: 0.1.0
+
+  - name: access-pep
+    repository: oci://ghcr.io/virtru-corp/charts
+    version: '0.1.0-sha-c00bac0'
+    condition: access-pep.enabled
+
+  - name: tagging-pdp
+    repository: file://./charts/tagging-pdp
+    version: '0.1.0'
+    condition: tagging-pdp.enabled
+
+  - name: configuration
+    repository: file://./charts/configuration
+    version: '0.3.0'
+    condition: configuration.enabled
+
+  # Private OCI Registry for OPA Policy Bundles
+  - name: docker-registry
+    repository: https://helm.twun.io
+    version: 2.2.2
+
+  - name: keycloak-bootstrap
+    repository: *otdfRepo
+    version: *otdfVersion
+    condition: bootstrap.attrDefOrEntitlements
+    alias: entitlement-attrdef-bootstrap
+    tags: ["bootstrap"]
+
+  - name: opcr-policy
+    repository: file://./charts/opcr-policy
+    alias: entitlement-policy-bootstrap
+    version: 0.1.0
+    condition: boostrap.entitlementPolicy
+    tags: ["bootstrap"]

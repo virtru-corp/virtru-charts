@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.lib.fullname" . }}
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ include "common.lib.fullname" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.image.repo }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |-
+              {{- if .Values.istioTerminationHack }}
+              trap "curl --max-time 2 -s -f -XPOST http://127.0.0.1:15000/quitquitquit" EXIT
+              while ! curl -s -f http://127.0.0.1:15020/healthz/ready; do sleep 1; done
+              {{- end }}   
+              echo "[INFO] Waiting for service [$OCIRegistryUrl]"
+              while ! curl -f $OCIRegistryUrl --insecure; do
+                sleep 1
+              done
+              echo "[INFO] Service [$OCIRegistryUrl] available"
+              echo "Running Policy Build and Push"
+              sleep 10 && cp /policydata/* . && make policypushinsecure
+          envFrom:
+            {{- with .Values.secretRef }}
+            - secretRef:
+                {{- tpl . $ | nindent 16 }}
+            {{- end }}
+            - configMapRef:
+                name: {{ .Values.policyConfigMap }}
+          volumeMounts:
+            - name: policy-data-volume
+              mountPath: /policydata
+      volumes:
+        - name: policy-data-volume
+          secret:
+            secretName: {{ .Values.policyDataSecretRef }}
+      restartPolicy: Never
+      {{- with (coalesce .Values.imagePullSecrets .Values.global.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  backoffLimit: {{ .Values.backoffLimit }}

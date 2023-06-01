@@ -1,0 +1,44 @@
+attributeDefinitions: &attributeDefinitions
+  - authority: https://opentdf.io
+    name: IntellectualProperty
+    rule: hierarchy
+    state: published
+    order: [ "TradeSecret","Proprietary","BusinessSensitive","Open" ]
+
+
+configArtifacts:
+  - name: sharepoint
+    yamlRefKey: sharepointsvc_config
+    contentType: "application/json"
+    externalFileRef:
+
+sharepointsvc.config:
+  sharepointAuth:
+    "tenantId": "aaaaaaaa-1234-5678-abcd-bbbbbbbbbbbb",
+    "clientId": "bbbbbbbb-1234-5678-abcd-cccccccccccc",
+    "path": "/etc/sharepoint/keys/sharepoint.pfx",
+    "pass": "ABCD1234ABCD1234"
+  services:
+    access:
+      name: "Access PDP"
+      url: "{{platform_url}}/access-pep/access"
+    auth:
+      name: "Auth Service"
+      url: "{{platform_url}}"
+      clientId: "my-client-id"
+      clientSecret: "my-client-secret"
+      organization: "tdf"
+    config:
+      name: "Config Service"
+      url: "{{platform_url}}/configuration"
+    kas:
+      name: "Key Access Server",
+      url: "{{platform_url}}/api/kas"
+    tagExtraction:
+      name: "Tag Extraction API",
+      url: "{{platform_url}}/tagging-pdp"
+  admin: "owner@localhost.com",
+  addedRERUrl: "{platform_url}/sharepoint/sitelist/listen/itemadded",
+  updatedRERUrl: "{platform_url}/sharepoint/sitelist/listen/itemupdated",
+  attributes": *attributeDefinitions
+

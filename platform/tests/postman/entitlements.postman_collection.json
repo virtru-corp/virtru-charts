@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "b13a530d-de86-444c-847e-4c8aa550c643",
+		"name": "Platform-EntitlementsAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3237256"
+	},
+	"item": [
+		{
+			"name": "Entitlements - Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp = pm.response.json()",
+							"var token = resp.access_token",
+							"pm.collectionVariables.set(\"access_token_entitlements\", token);",
+							"",
+							"pm.test(\"Access token is recieved, 200 coded is returned\", function () {",
+							"    pm.expect(token).to.not.equal(null)",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{entitlementsSvcClientId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{entitlementsSvcClientSecret}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/realms/tdf/protocol/openid-connect/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"tdf",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Entitlements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const resp = pm.response.json()",
+							"var existed_entity_ids = Object.keys(resp[0])",
+							"pm.collectionVariables.set(\"existed_entity_id\", existed_entity_ids[0])",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/entitlements/entitlements",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"entitlements",
+						"entitlements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Entitlement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  \"{{authority_for_entitlements_test}}/attr/{{attribute_name_for_entitlements_test}}/value/{{attribute_order_value_for_entitlements_test}}\"\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/entitlements/entitlements/{{existed_entity_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"entitlements",
+						"entitlements",
+						"{{existed_entity_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Entitlement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 202\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  \"{{authority_for_entitlements_test}}/attr/{{attribute_name_for_entitlements_test}}/value/{{attribute_order_value_for_entitlements_test}}\"  \n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/entitlements/entitlements/{{existed_entity_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"entitlements",
+						"entitlements",
+						"{{existed_entity_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token_entitlements}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.collectionVariables.set(\"authority_for_entitlements_test\", pm.iterationData.get(\"authority_for_entitlements_test\"));",
+					"pm.collectionVariables.set(\"attribute_name_for_entitlements_test\", pm.iterationData.get(\"attribute_name_for_entitlements_test\"));",
+					"pm.collectionVariables.set(\"attribute_order_value_for_entitlements_test\", pm.iterationData.get(\"attribute_order_value_for_entitlements_test\"));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token_entitlements",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "existed_entity_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "authority_for_entitlements_test",
+			"value": ""
+		},
+		{
+			"key": "attribute_name_for_entitlements_test",
+			"value": ""
+		},
+		{
+			"key": "attribute_order_value_for_entitlements_test",
+			"value": ""
+		}
+	]
+}

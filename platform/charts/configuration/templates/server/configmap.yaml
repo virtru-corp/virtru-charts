@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "configuration.fullname" . }}-configmap
+  labels:
+    {{- include "configuration.labels" . | nindent 4 }}
+data:
+  SERVER_PORT: {{ .Values.server.service.port | quote  }}
+  POSTGRESQL_HOST: {{ .Values.server.postgres.host | quote  }}
+  POSTGRESQL_PORT: {{ .Values.server.postgres.port | quote  }}
+  POSTGRESQL_DATABASE: {{ .Values.server.postgres.database | quote  }}
+  POSTGRESQL_USER: {{ .Values.server.postgres.user | quote  }}

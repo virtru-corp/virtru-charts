@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.lib.fullname" . }}
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "common.lib.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "common.lib.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with (coalesce .Values.image.pullSecrets .Values.global.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "taggingpdp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.config.configFile }}
+      volumes:
+        - name: tagging-config-volume
+          configMap:
+            name: {{ include "common.lib.fullname" . }}-taggingconfig-cm
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.image.repo }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.lib.fullname" . }}-tagging-cm
+            {{- if .Values.config.oidcSecretName }}
+            - secretRef:
+                name: {{ .Values.config.oidcSecretName }}
+            {{- else }}
+            - secretRef:
+                name: {{ include "common.lib.fullname" . }}-tagging-cm
+            {{- end }}
+          {{- if .Values.config.configFile }}
+          volumeMounts:
+            - name: tagging-config-volume
+              mountPath: /tagging-pdp/config.yaml
+              subPath: config.yaml
+          {{- end }}
+          ports:
+              - name: grpc
+                containerPort: {{ .Values.service.port }}
+                protocol: TCP

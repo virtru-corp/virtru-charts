@@ -1,0 +1,15 @@
+global:
+  imagePullSecrets:
+
+backoffLimit: 5
+# Environment from secret name
+secretRef:
+# Environment from config map
+policyConfigMap:
+
+istioTerminationHack: false
+image:
+  pullPolicy: IfNotPresent
+  repo: ghcr.io/virtru-corp/postman-cli/opcr-policy
+  tag: sha-a2ff4f6
+imagePullSecrets:
