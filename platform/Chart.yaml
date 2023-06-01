@@ -2,7 +2,7 @@ apiVersion: v2
 name: platform
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.1.12
+version: 0.1.13
 appVersion: 0.1.3
 
 otdfVersion: &otdfVersion "1.3.0"
