@@ -27,7 +27,7 @@ spec:
       volumes:
         - name: secret-volume
           secret:
-            secretName: {{ include "common.lib.fullname" . }}-service-secret
+            secretName: {{ include "common.lib.fullname" . }}-service-volume-config
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -53,7 +53,7 @@ spec:
           volumeMounts:
               - name: secret-volume
                 mountPath: /sharepoint/config/privatekey.pfx
-                subPath: sharepoint.pfx
+                subPath: privatekey.pfx
           livenessProbe:
             httpGet:
               path: /health
