@@ -211,7 +211,7 @@ helm upgrade --install -n $ns --create-namespace \
  --set $ingressHostnameSetting \
  --set-file bootstrap.configFile=$configFile \
  --set ingress.tls.enabled=${tlsEnabled} \
- --set ingress.tls.secretName=${tlsSecret} \
+ --set ingress.tls.existingSecret=${tlsSecret} \
  "${pullSecretArgs[@]}" \
  "${securityContextArgs[@]}" \
  "${overrideValuesArgs[@]}" \
