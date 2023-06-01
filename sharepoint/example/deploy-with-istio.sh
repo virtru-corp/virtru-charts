@@ -15,7 +15,9 @@ chartRepo="virtru-charts"
 sharepointChart="${chartRepo}/sharepoint"
 # For local install change to chart-version.tgz
 sharepointChart="sharepoint-0.1.0.tgz"
-while getopts "h:t:s:u:p:o:k:" arg; do
+# Is the platform in the same cluster as the sharepoint deployment
+platformLocal=""
+while getopts "h:t:s:u:p:o:k:l" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -38,9 +40,18 @@ while getopts "h:t:s:u:p:o:k:" arg; do
     k)
       sharepointPrivateKey=${OPTARG}
       ;;
+    l)
+      platformLocal="true"
+      ;;
   esac
 done
 echo "Deploying to hostname=${ingressHostname} with chart overrides = ${overrideValues}"
+configAuthUrl="https://${ingressHostname}"
+# If this is deployed in the same cluster then use internal url
+if [ ! -z "$platformLocal" ]; then
+  configAuthUrl="http://keycloak-http"
+  echo "Setting configAuthUrl to internal address ${configAuthUrl}"
+fi
 
 echo "#1 Deploy Sharepoint Service"
 helm upgrade --install -n $ns --create-namespace \
@@ -49,7 +60,7 @@ helm upgrade --install -n $ns --create-namespace \
   --set "imageCredentials[0].password"="${imagePullPAT}" \
   --set "imageCredentials[0].email"="nope@nah.com" \
   --set "imageCredentials[0].registry"="ghcr.io" \
-  --set config.auth.url="https://${ingressHostname}" \
+  --set config.auth.url="${configAuthUrl}" \
   --set ingress.hostname="${ingressHostname}" \
   --set ingress.istio.enabled=true \
   --set-file config.sharepointPfx=${sharepointPrivateKey} \
