@@ -22,8 +22,8 @@ Platform Ingress gateway name
 */}}
 {{- define "platform.ingress.tlsCredName" -}}
 {{- if .Values.ingress.tls.enabled }}
-{{- if .Values.ingress.existingSecret }}
-{{- printf "%s" .Values.ingress.existingSecret }}
+{{- if .Values.ingress.tls.existingSecret }}
+{{- printf "%s" .Values.ingress.tls.existingSecret }}
 {{- else }}
 {{- printf "%s-gateway-tls" ( include "common.lib.name" . ) }}
 {{- end }}
