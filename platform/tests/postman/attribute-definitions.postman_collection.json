@@ -51,12 +51,12 @@
 						},
 						{
 							"key": "client_secret",
-							"value": "{{attributesClientSecret}}",
+							"value": "{{attributesSvcClientSecret}}",
 							"type": "text"
 						},
 						{
 							"key": "client_id",
-							"value": "{{attributesClientId}}",
+							"value": "{{attributesSvcClientId}}",
 							"type": "text"
 						}
 					]
