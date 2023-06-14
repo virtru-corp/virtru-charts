@@ -1,0 +1,31 @@
+{
+    "entitlement_context":{
+        "object_attributes":[
+            {
+                "http://attribs.com/min_visibility_level":"fuschia"
+            },
+            {
+                "http://attribs.com/user_dissem_list":[
+                    "bupkis@yello.com",
+                    "nolo@contendere.com"
+                ]
+            }
+        ],
+        "subject_attributes":[
+            {
+                "http://attribs.com/visibility_level":"fuschia"
+            },
+            {
+                "http://attribs.com/user_identifier":"bupkis@yello.com"
+            }
+        ],
+        "preferredUsername" : "fuschia",
+        "name": "bupkis",
+        "email": "bupkis@yello.com"
+    },
+    "primary_entity":"74cb12cb-4b53-4c0e-beb6-9ddd8333d6d3",
+    "secondary_entities":[
+        "4f6636ca-c60c-40d1-9f3f-015086303f74",
+        "3f6636ca-c61c-40d1-9f3f-015086303f74"
+    ]
+}

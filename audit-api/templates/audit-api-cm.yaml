@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: audit-api-cm
+  labels:
+    app: audit-api
+data:
+  POSTGRES_HOST: {{ (coalesce .Values.config.db.host) | quote }}
+  POSTGRES_USER: {{ .Values.config.db.user | quote }}
+  POSTGRES_PORT: {{ (coalesce .Values.config.db.port) | quote }}
+  POSTGRES_DB: {{ .Values.config.db.dbName | quote }}
+  POSTGRES_SSLMODE: {{ .Values.config.db.sslMode | quote }}
+  SELF_HOSTED_PLATFORM: "true"

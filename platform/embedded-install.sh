@@ -73,7 +73,7 @@ if [ ! -z "$chartsLocalDir" ]; then
   postgresqlChart="${chartsLocalDir}/platform-embedded-postgresql-*.tgz"
   keycloakChart="${chartsLocalDir}/platform-embedded-keycloak-*.tgz"
   keycloakBootstrapperChart="${chartsLocalDir}/platform-keycloak-bootstrapper-*.tgz"
-  platformChart="${chartsLocalDir}/platform-*.tgz"
+  platformChart="${chartsLocalDir}/platform-0.*.tgz"
 fi
 
 pullSecretArgs=()
@@ -199,7 +199,7 @@ if $addSecurityContexts; then
                         "--set" "configuration.server.securityContext.runAsNonRoot=true")
 fi
 
-echo "#6 Install Self hosted platform"
+echo "#6 Install Self hosted platform" $platformChart
 helm upgrade --install -n $ns --create-namespace \
  --set secrets.imageCredentials.pull-secret.username="${imagePullUsername}" \
  --set secrets.imageCredentials.pull-secret.password="${imagePullPAT}" \

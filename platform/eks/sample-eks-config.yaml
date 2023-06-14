@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: shpsandbox
+  name: audit-api-setup
   region: us-west-2
   version: "1.23"
 
@@ -17,10 +17,10 @@ addons:
   - name: vpc-cni
 
 nodeGroups:
-  - name: shpsandbox-ng1
+  - name: audit-api-setup-ng1
     instanceType: m5.large
     minSize: 2
-    maxSize: 3
+    maxSize: 2
     desiredCapacity: 2
     iam:
       attachPolicyARNs:

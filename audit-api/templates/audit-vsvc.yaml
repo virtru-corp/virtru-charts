@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: audit-vsvc
+spec:
+  gateways:
+    - 'shp-gateway'
+  hosts:
+    - '*'
+  http:
+    - match:
+        - uri:
+            prefix: /audit/
+        - uri:
+            prefix: /audit
+      name: audit
+      route:
+        - destination:
+            host: audit
+            port:
+              number: 8080
