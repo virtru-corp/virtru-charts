@@ -199,7 +199,7 @@ if $addSecurityContexts; then
                         "--set" "configuration.server.securityContext.runAsNonRoot=true")
 fi
 
-echo "#6 Install Self hosted platform" $platformChart
+echo "#6 Install Self hosted platform"
 helm upgrade --install -n $ns --create-namespace \
  --set secrets.imageCredentials.pull-secret.username="${imagePullUsername}" \
  --set secrets.imageCredentials.pull-secret.password="${imagePullPAT}" \
@@ -207,7 +207,7 @@ helm upgrade --install -n $ns --create-namespace \
  --set $ingressHostnameSetting \
  --set-file bootstrap.configFile=$configFile \
  --set ingress.tls.enabled=${tlsEnabled} \
- --set ingress.tls.secretName=${tlsSecret} \
+ --set ingress.tls.existingSecret=${tlsSecret} \
  "${pullSecretArgs[@]}" \
  "${securityContextArgs[@]}" \
  "${overrideValuesArgs[@]}" \
