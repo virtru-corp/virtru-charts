@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "audit-api.fullname" . }}
+  name: {{ include "common.lib.fullname" . }}
   labels:
-    {{- include "audit-api.labels" . | nindent 4 }}
+    {{- include "common.lib.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}

@@ -1,7 +1,0 @@
-{
-	"opentdf": {
-		"entitlements_service": {
-			"url": "http://entitlement-store:5000/entitle"
-		}
-	}
-}

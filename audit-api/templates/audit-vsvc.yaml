@@ -4,18 +4,20 @@ metadata:
   name: audit-vsvc
 spec:
   gateways:
-    - 'shp-gateway'
+    - {{ include "platform.ingress.gateway" . }}
   hosts:
-    - '*'
+  - '*'
   http:
-    - match:
-        - uri:
-            prefix: /audit/
-        - uri:
-            prefix: /audit
-      name: audit
-      route:
-        - destination:
-            host: audit
-            port:
-              number: 8080
+  - match:
+    - uri:
+        prefix: /audit/
+    - uri:
+        prefix: /audit
+    name: audit
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: audit-api
+        port:
+          number: 8080

@@ -1,62 +1,30 @@
 {{/*
-Expand the name of the chart.
+Platform Ingress gateway name
 */}}
-{{- define "audit-api.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "platform.ingress.gateway" -}}
+{{- if .Values.ingress.existingGateway -}}
+{{ .Values.ingress.existingGateway }}
+{{- else -}}
+{{  printf "%s-gateway" .Values.ingress.name }}
+{{- end }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+Platform Ingress gateway name
 */}}
-{{- define "audit-api.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "platform.ingress.tlsCredName" -}}
+{{- if .Values.ingress.tls.enabled }}
+{{- if .Values.ingress.tls.existingSecret }}
+{{- printf "%s" .Values.ingress.tls.existingSecret }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-gateway-tls" ( include "common.lib.name" . ) }}
+{{- end }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{ print "" }}
 {{- end }}
-{{- end }}
+{{- end -}}
+
+{{- define "platform.ingress.tlsNs" -}}
+{{- printf "%s" ( .Values.ingress.istioIngressNS | default "istio-ingress" ) }}
 {{- end }}
 
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "audit-api.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "audit-api.labels" -}}
-helm.sh/chart: {{ include "audit-api.chart" . }}
-{{ include "audit-api.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "audit-api.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "audit-api.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "audit-api.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "audit-api.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}

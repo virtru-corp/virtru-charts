@@ -112,9 +112,11 @@ spec:
             prefix: /audit/
         - uri:
             prefix: /audit
-      name: audit
-      route:
+        name: audit
+        rewrite:
+          uri: /
+        route:
         - destination:
-            host: audit
+            host: audit-api
             port:
               number: 8080
