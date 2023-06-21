@@ -9,6 +9,8 @@ taggingPDPClientSecret: &taggingPDPClientSecret "sample1234"
 
 
 secrets:
+  audit:
+    dbPassword: *postgresPassword
   postgres:
     dbPassword: *postgresPassword
   configuration:

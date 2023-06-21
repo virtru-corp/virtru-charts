@@ -11,3 +11,4 @@ package-lock.json
 /platform/tests/sample.txt.tdf
 /platform/tests/sample_out.txt
 /platform/tests/sample_out.nano.txt
+platform/entitlement-policy

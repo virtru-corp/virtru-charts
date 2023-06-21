@@ -73,7 +73,7 @@ if [ ! -z "$chartsLocalDir" ]; then
   postgresqlChart="${chartsLocalDir}/platform-embedded-postgresql-*.tgz"
   keycloakChart="${chartsLocalDir}/platform-embedded-keycloak-*.tgz"
   keycloakBootstrapperChart="${chartsLocalDir}/platform-keycloak-bootstrapper-*.tgz"
-  platformChart="${chartsLocalDir}/platform-*.tgz"
+  platformChart="${chartsLocalDir}/platform-0.*.tgz"
 fi
 
 pullSecretArgs=()

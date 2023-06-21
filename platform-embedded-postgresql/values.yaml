@@ -6,7 +6,7 @@ postgresql:
     ## @param postgresql.image.debug Debug Flag
     debug: true
     ## @param postgresql.image.tag Image Tag
-    tag: "11"
+    tag: "15"
   auth:
     ## @param postgresql.auth.existingSecret Existing secret for postgres auth settings
     existingSecret: >
@@ -43,5 +43,8 @@ secrets:
     ## @param secrets.keycloak.dbPassword postgres password for keycloak svc user
     dbPassword:
   sharepoint:
+    ## @param secrets.sharepoint.dbPassword postgres password for sharepoint svc user
+    dbPassword:
+  audit:
     ## @param secrets.sharepoint.dbPassword postgres password for sharepoint svc user
     dbPassword:

@@ -107,3 +107,16 @@ spec:
             host: access-pep
             port:
               number: 4455
+    - match:
+        - uri:
+            prefix: /audit/
+        - uri:
+            prefix: /audit
+        name: audit
+        rewrite:
+          uri: /
+        route:
+        - destination:
+            host: audit-api
+            port:
+              number: 8080
