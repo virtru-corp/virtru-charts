@@ -146,17 +146,16 @@ spec:
           volumeMounts:
           - name: shared-data-tagging-pdp-dir
             mountPath: /usr/local/smtp-proxy/tmp # Where we write content to be extracted.
+          {{- if .Values.additionalConfig.abac.taggingConfig }}  
+          - name: tagging-config-volume
+              mountPath: /tagging-pdp/config.yaml
+              subPath: config.yaml
+          {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}-tagging
             - secretRef:
                 name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}-tagging
-          volumeMounts:
-            - name: shared-data-tagging-pdp-dir
-              mountPath: /usr/local/smtp-proxy/tmp
-            - name: tagging-config-volume
-              mountPath: /tagging-pdp/config.yaml
-              subPath: config.yaml
           ports:
             - name: grpc
               containerPort: {{ .Values.taggingService.port }}
@@ -174,9 +173,11 @@ spec:
       {{- if eq .Values.additionalConfig.abac.enabled true }} # Add an empty shared volume that can be added to Gateway / Tagging Pdp.
       - name: shared-data-tagging-pdp-dir
         emptyDir: {}
+      {{- if .Values.additionalConfig.abac.taggingConfig }}  
       - name: tagging-config-volume
         configMap:
             name: {{ .Chart.Name }}-base-configs
+      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

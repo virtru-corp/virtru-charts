@@ -209,7 +209,8 @@ additionalConfig:
     oidcTokenUrl: some-token-url
     taggingPdpLocation: localhost:8080
     accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
-    taggingConfig: "" #Used with set-file
+    taggingConfig: # Used with set-file
+    trimRecipients: false
     configService: # Optional - if set overrides taggingConfig
       taggingArtifactId:
       url:
@@ -228,13 +229,3 @@ istioIngress:
   gatewaySelector: ingress
   ingressHostname: "*"
   name: scp
-virtruProxy:
-  enabled: false
-  port: 8080
-  image:
-    repo: ghcr.io/virtru-corp/tagging-pdp/proxy-service
-    tag: sha-470efff
-  imagePullSecret: gateway-pull-secrets
-  configsvc:
-    endpoint: http://configuration:8080/configuration
-    gatewayKey: gateway.virtru
