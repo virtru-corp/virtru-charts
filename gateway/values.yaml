@@ -9,7 +9,7 @@ image:
 useImagePullSecret: true
 
 taggingPdpImage: 
-  tag: sha-f75ec14
+  tag: 0.1.1-a4c1c8f
   repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
   imageCredentials:
@@ -227,5 +227,5 @@ istioIngress:
   existingGateway:
   # Name of istio gateway selector
   gatewaySelector: ingress
-  ingressHostname: "*"
+  ingressHostname: "*" # Should be primary mailing domain, for best practice.
   name: scp

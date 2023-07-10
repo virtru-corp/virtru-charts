@@ -9,7 +9,7 @@ spec:
   gateways:
     - {{ include "gateway.name" . }}-outbound-dlp
   hosts:
-    - '*'
+    - '*' # Should be changed with the hostname of the mail server.
   tcp:
     - match:
         - port: {{  .Values.gatewayModes.outboundDlp.port }}
