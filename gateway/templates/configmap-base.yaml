@@ -26,8 +26,10 @@ data:
   OIDC_TOKEN_URL: {{ .Values.additionalConfig.abac.oidcTokenUrl | quote }}
   TAGGING_PDP_LOCATION: {{ .Values.additionalConfig.abac.taggingPdpLocation | quote }}
   ACCESS_SERVICE_URL: {{ .Values.additionalConfig.abac.accessServiceUrl | quote }} # ABAC based processing is triggered by this value being present, and not an empty string || null.
-  TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.trimRecipients }}
+  TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.trimRecipients | quote }}
+  {{- if .Values.additionalConfig.abac.taggingConfig }}
   config.yaml: {{ .Values.additionalConfig.abac.taggingConfig | quote }}
+  {{- end }}
   {{- end }}
   {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
