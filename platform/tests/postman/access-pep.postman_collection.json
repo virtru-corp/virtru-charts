@@ -1,0 +1,294 @@
+{
+	"info": {
+		"_postman_id": "bddd1e12-72da-4659-96ce-2f1c2d2b555f",
+		"name": "Platform - Access PEP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3237256"
+	},
+	"item": [
+		{
+			"name": "Access PEP - Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"var bodyToken = responseJson.access_token;",
+							"pm.collectionVariables.set(\"auth_token_access_pep\", bodyToken)",
+							"",
+							"pm.test(\"Access Token\", function () {",
+							"    pm.expect(bodyToken).to.not.equal(null);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{accessPEPClientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{accessPEPClientId}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/realms/tdf/protocol/openid-connect/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"tdf",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/healthz",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/access-pep/healthz",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"access-pep",
+						"healthz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Access Decision Assertions Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"resp = pm.response.json()",
+							"",
+							"",
+							"pm.test(\"access decisions\", function () {",
+							"    var entityUsername = pm.iterationData.get(\"entityUsername\");",
+							"    var entityEmail = pm.iterationData.get(\"entityEmail\");",
+							"    var accessResponse;",
+							"    if (entityUsername){",
+							"        console.log(\"Check username decisisions for \" + entityUsername + \" for \" + pm.iterationData.get(\"attributeName\") +\"/\"+  pm.iterationData.get(\"attributeValue\") +\"=\" + pm.iterationData.get(\"accessDecision\"));",
+							"        accessResponse = resp.decisions_by_username[entityUsername];",
+							"    }else{",
+							"        console.log(\"Check email decisisions for \" + entityEmail + \" for \" + pm.iterationData.get(\"attributeName\") +\"/\"+  pm.iterationData.get(\"attributeValue\") +\"=\" + pm.iterationData.get(\"accessDecision\"));",
+							"        accessResponse = resp.decisions_by_email[entityEmail];",
+							"    }",
+							"    console.log(\"Access response:\" + accessResponse);",
+							"    pm.expect(accessResponse.access).eq(pm.iterationData.get(\"accessDecision\"));",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"attributeName\", pm.iterationData.get(\"attributeName\"));",
+							"pm.collectionVariables.set(\"attributeValue\", pm.iterationData.get(\"attributeValue\"));",
+							"if (pm.iterationData.get(\"entityUsername\")){",
+							"    pm.collectionVariables.set(\"entityUsername\", \"\\\"\" + pm.iterationData.get(\"entityUsername\") +\"\\\"\");",
+							"    pm.collectionVariables.set(\"entityEmail\", \"\");",
+							"}",
+							"if (pm.iterationData.get(\"entityEmail\")){",
+							"    pm.collectionVariables.set(\"entityUsername\", \"\");",
+							"    pm.collectionVariables.set(\"entityEmail\", \"\\\"\" + pm.iterationData.get(\"entityEmail\") +\"\\\"\");",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"data_attributes\": [\n    {\"namespace\": \"{{attributeAuthority}}\", \"name\": \"{{attributeName}}\", \"value\": \"{{attributeValue}}\"}\n  ],\n  \"entity_usernames\": [\"{{entityUsername}}\"],\n  \"entity_emails\": [\"{{entityEmail}}\"]\n}\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/access-pep/access",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"access-pep",
+						"access"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Multidata-Access endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"data_attribute_sets\": [\n    {\"namespace\": \"{{attributeAuthority}}\", \"name\": \"{{attributeName}}\", \"value\": \"{{attributeValue}}\"}\n  ],\n  \"entity_usernames\": [\"{{entityUsername}}\"],\n  \"entity_emails\": [\"{{entityEmail}}\"]\n}\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/access-pep/multidata-access",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"access-pep",
+						"multidata-access"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token_access_pep}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_token_access_pep",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "attributeName",
+			"value": ""
+		},
+		{
+			"key": "attributeValue",
+			"value": ""
+		},
+		{
+			"key": "entityUsername",
+			"value": ""
+		},
+		{
+			"key": "entityEmail",
+			"value": ""
+		}
+	]
+}

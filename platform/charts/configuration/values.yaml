@@ -1,0 +1,63 @@
+# Default values for configuration.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+server:
+  name: server
+  # Configure the container image to use in the deployment.
+  image:
+    # -- The image selector, also called the 'image name' in k8s documentation
+    # and 'image repository' in docker's guides.
+    repository: ghcr.io/virtru-corp/enterprise-tdf/scp-configuration
+    # -- `Chart.AppVersion` will be used for image tag, override here if needed
+    tag:
+    # -- The container's `imagePullPolicy`
+    pullPolicy: IfNotPresent
+  # -- JSON passed to the deployment's `template.spec.imagePullSecrets`.
+  # Overrides `global.opentdf.common.imagePullSecrets`
+  imagePullSecrets:
+  secretRef:
+  service:
+    # -- Service `spec.type`
+    type: ClusterIP
+    # -- Port to assign to the `http` port
+    port: 8080
+  # A service account to create
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: true
+    # -- Annotations to add to the service account
+    annotations: {}
+    # -- The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+  postgres:
+    user: scp_configuration_manager
+    host: ""
+    port: 5432
+    database: tdf_database
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  # -- Values for the deployment `spec.template.metadata.annotations` field
+  podAnnotations: { }
+  # -- Values for deployment's `spec.template.spec.securityContext`
+  podSecurityContext: { }
+  # -- Values for deployment's `spec.template.spec.containers.securityContext`
+  securityContext: { }
+  # -- Specify required limits for deploying this service to a pod.
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube.
+  resources: {}
+  # -- Node labels for pod assignment
+  nodeSelector: { }
+  # -- Tolerations for nodes that have taints on them
+  tolerations: [ ]
+  # -- Pod scheduling preferences
+  affinity: { }
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""

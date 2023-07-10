@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "10d67d19-f59a-4242-a7e1-5862aebbbfaf",
+		"name": "attribute-definitions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23744829"
+	},
+	"item": [
+		{
+			"name": "Autentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"var bodyToken = responseJson.access_token;",
+							"pm.environment.set(\"authToken\", bodyToken)",
+							"",
+							"pm.test(\"Access Token\", function () {",
+							"    pm.expect(bodyToken).to.not.equal(null);",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{attributesSvcClientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{attributesSvcClientId}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/realms/tdf/protocol/openid-connect/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"tdf",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assertion Definition",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"resp = pm.response.json()",
+							"",
+							"",
+							"pm.test(\"assert attribute definition\", function () {",
+							"    var name = pm.iterationData.get(\"name\");",
+							"    var order = pm.iterationData.get(\"order\");",
+							"    var rule = pm.iterationData.get(\"rule\");",
+							"    var match = false;",
+							"    for (i in resp){",
+							"        var attrDef = resp[i]",
+							"        if (attrDef.rule == rule && attrDef.name == name && attrDef.order.length == order.length){",
+							"            var itemsMatch = true;",
+							"            for (i = 0;i<order.length;i++){",
+							"                if (!attrDef.order.includes(order[i])){",
+							"                    itemsMatch = false;",
+							"                }",
+							"            }",
+							"            if (itemsMatch == true){",
+							"                match = true;",
+							"            }",
+							"        }",
+							"    }",
+							"    console.log(\"Check attribute def exists [\" + match +\"]\" + name + \" \" + order +\",\"+ rule);",
+							"    pm.expect(match).eq(true);",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"attributeName\", pm.iterationData.get(\"attributeName\"));",
+							"pm.variables.set(\"attributeValue\", pm.iterationData.get(\"attributeValue\"));",
+							"pm.variables.set(\"entityUsername\", pm.iterationData.get(\"entityUsername\"));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}{{attributeServicePath}}/definitions/attributes?authority={{attributeAuthority}}",
+					"host": [
+						"{{baseUrl}}{{attributeServicePath}}"
+					],
+					"path": [
+						"definitions",
+						"attributes"
+					],
+					"query": [
+						{
+							"key": "authority",
+							"value": "{{attributeAuthority}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

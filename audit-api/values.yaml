@@ -1,0 +1,114 @@
+# Default values for audit-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @param replicaCount Deployment Replica Count
+replicaCount: 1
+
+
+## @section Image parameters
+image:
+  ## @param image.repository Image repository
+  repository: ghcr.io/virtru-corp/audit-api
+  ## @param image.pullPolicy Image Pull Policy
+  pullPolicy: Always
+  ## @param image.tag Image tag
+  tag: 0.22.0-8057e1b
+
+## @section imagePullSecrets Image Pull Secrets - Overrides Global
+imagePullSecrets:
+  ## @param imagePullSecrets[0].name Image Pull Secret Name
+  - name: platform-pull-secret
+## @section Deployment Parameters
+## @param nameOverride Override name of the chart
+nameOverride: ""
+## @param fullnameOverride Override the full name of the chart
+fullnameOverride: ""
+
+config:
+  db:
+    ## @param config.db.host Postgresql DB Host
+    host: "postgresql"
+    ## @param config.db.user Postgresql DB Username
+    user: "audit_manager"
+    ## @param config.db.port Postgresql DB Port
+    port: 5432
+    ## @param config.db.dbName Postgresql DB Name
+    dbName: "audit_database"
+    ## @param config.db.sslMode Postgresql SSL Mode
+    sslMode: "disable"
+  secrets:
+    ## @param config.secrets.dbPassword Postgresql Database password - used if `config.existingSecret` is blank
+    dbPassword:
+
+
+serviceAccount:
+  ## @param serviceAccount.create Specifies whether a service account should be created
+  create: true
+  ## @param serviceAccount.annotations Annotations to add to the service account
+  annotations: {}
+  ## @param serviceAccount.name The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+
+## @section podAnnotations Pod K8S Annotations
+podAnnotations:
+  ## @param podAnnotations.proxy.istio.io/config Istio Proxy Annotations
+  proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+
+## @param podSecurityContext Values for deployment's `spec.template.spec.securityContext`
+podSecurityContext: {}
+  # fsGroup: 2000
+
+## @param securityContext Values for deployment's `spec.template.spec.containers.securityContext`
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+## @section service type of service and port to expose
+service:
+  ## @param service.type type of service to create
+  type: ClusterIP
+  ## @param service.port port to expose
+  port: 8080
+
+## @section Ingress Configuration
+ingress:
+  ## @param ingress.enabled Enable ingress controller resource
+  enabled: false
+  ## @param ingress.className Ingress controller class name
+  className: ""
+  ## @param ingress.annotations Ingress annotations
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  ## @section ingress.hosts Ingress hostnames
+  hosts:
+    ## @param ingress.hosts[0].host Ingress hostname
+    - host: chart-example.local
+      ## @param ingress.hosts[0].paths[0].path Ingress paths
+      paths:
+        - path: /
+          ## @param ingress.hosts[0].paths[0].pathType Ingress path type
+          pathType: ImplementationSpecific
+  ## @param ingress.tls Ingress TLS configuration
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+autoscaling:
+  ## @param autoscaling.enabled Auto Scale deployment
+  enabled:
+
+## @param resources Specify required limits for deploying this service to a pod.  We usually recommend not to specify default resources and to leave this as a conscious  choice for the user. This also increases chances charts run on environments with little resources, such as Minikube.
+resources: {}
+## @param nodeSelector Node labels for pod assignment
+nodeSelector: { }
+## @param tolerations Tolerations for nodes that have taints on them
+tolerations: [ ]
+## @param affinity Pod scheduling preferences
+affinity: { }

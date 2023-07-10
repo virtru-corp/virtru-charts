@@ -1,0 +1,159 @@
+## @section Global parameters
+global:
+  ## @param global.imagePullSecrets Image Pull Secrets
+  imagePullSecrets:
+  auth:
+    ## @param global.auth.organization Auth Organization for OIDC
+    organization: tdf
+  ## @param global.istioEnabled Istio enabled true/false
+  istioEnabled: true
+  opentdf:
+    common:
+      ## @param global.opentdf.common.oidcExternalBaseUrl
+      oidcExternalBaseUrl:
+      ## @param global.opentdf.common.oidcInternalBaseUrl
+      oidcInternalBaseUrl:
+      ## @param global.opentdf.common.oidcUrlPath
+      oidcUrlPath: auth
+      ingress:
+        ## @param global.opentdf.common.ingress.scheme ingress schem
+        scheme: "https"
+        ## @param global.opentdf.common.ingress.hostname ingress hostname
+        hostname:
+      postgres:
+        ## @param global.opentdf.common.postgres.host postgres server's k8s name or global DNS for external server
+        host:
+        ## @param global.opentdf.common.postgres.port postgres server port
+        port:
+
+
+## @section Image parameters
+## @param imagePullSecrets Image Pull Secrets - Overrides Global
+imagePullSecrets:
+image:
+  ## @param image.tag Image tag
+  tag: sha-b51ffd3
+  ## @param image.repo Image repository
+  repo: ghcr.io/virtru-corp/sharepoint-webhooks/sharepoint-webhook-service
+  ## @param image.pullPolicy Image Pull Policy
+  pullPolicy: IfNotPresent
+## @param imageCredentials - If `imagePullSecrets` is NOT set and this is, image pull secrets are generated from this list. list [{name,registry,password, email}]
+imageCredentials: []
+
+## @section Webhook Service Configuration
+service:
+  ## @param service.port Service port
+  port: 8080
+  ## @param service.type Service Type
+  type: ClusterIP
+config:
+  db:
+    ## @param config.db.host Postgresql DB Host
+    host:
+    ## @param config.db.user Postgresql DB Username
+    user:
+    ## @param config.db.port Postgresql DB Port
+    port:
+    ## @param config.db.dbName Postgresql DB Name
+    dbName:
+    ## @param config.db.sslMode Postgresql SSL Mode
+    sslMode: disable
+  auth:
+    ## @param config.auth.url OIDC Auth Endpoint - override global.opentdf.common.oidcExternalBaseUrl
+    url:
+    ## @param config.auth.org OIDC Organization - overrides global.auth.organization
+    org: tdf
+    ## @param config.auth.clientId OIDC Client Id
+    clientId:
+  configSvc:
+    ## @param config.configSvc.url Configuration Service Endpoint
+    url: http://configuration:8080/configuration
+    ## @param config.configSvc.artifactId Configuration Artifact Identifier used by the sharepoint service
+    artifactId: sharepoint
+  ## @param config.existingSecret Existing Secret Name for secret env vars
+  existingSecret:
+  ## @param config.sharepointPfx Set the Private Key PFX used in Sharepoint Authentication - use --set-file to set this value
+  sharepointPfx:
+  secrets:
+    ## @param config.secrets.dbPassword Postgresql Database password - used if `config.existingSecret` is blank
+    dbPassword:
+    ## @param config.secrets.oidcClientSecret OIDC Client Secret - used if `config.existingSecret` is blank
+    oidcClientSecret:
+
+## @section Bootstrap Configuration
+bootstrap:
+  ## @param bootstrap.enabled Enable Flag for Sharepoint Configuration Bootstrapping
+  enabled: false
+  ## @param bootstrap.configFile Configuration yaml for configuration artifacts. Use --set-file bootstrap.configFile=XXX. Expected yaml schema see scp/docs/config_file_schema.json
+  configFile:
+  job:
+    ## @param bootstrap.job.name Name of the job to bootstrap sharepoint configuration
+    name: config-bootstrap
+    image:
+      ## @param bootstrap.job.image.repo Image repository
+      repo: ghcr.io/virtru-corp/postman-cli/opcr-policy
+      ## @param bootstrap.job.image.tag Image tag
+      tag: sha-531eea2
+      ## @param bootstrap.job.image.pullPolicy Image pull policy
+      pullPolicy: IfNotPresent
+    ## @param bootstrap.job.backoffLimit Job backoff limit
+    backoffLimit: 5
+    ## @param bootstrap.job.envSecretRef secret for environment variables
+    envSecretRef:
+    ## @param bootstrap.job.waitForIstio Istio Mesh is active
+    waitForIstio: true
+
+## @section Ingress Configuration
+ingress:
+  ## @param ingress.hostname the ingress hostname
+  hostname:
+  istio:
+    ## @param ingress.istio.enabled  Enable istio ingress, overrides `global.istioEnabled`
+    enabled: true
+    ## @param ingress.istio.existingGateway Name of an exiting ingress gateway to use
+    existingGateway:
+    ## @param ingress.istio.ingressSelector Selector of ingress gateway
+    ingressSelector: ingress
+    ## @param ingress.istio.ingressPrefix Ingress path to expose in the Virtual Service
+    ingressPrefix: "/sharepoint/"
+    tls:
+      ## @param ingress.istio.tls.enabled Is TLS enabled on the gateway. Typically this is handled by a vendor load balancer
+      enabled:
+      ## @param ingress.istio.tls.existingSecret Name of Existing tls secret to be used.
+      existingSecret:
+
+## @section Deployment Parameters
+## @param nameOverride Override name of the chart
+nameOverride: ""
+## @param fullnameOverride Override the full name of the chart
+fullnameOverride: ""
+## @param podAnnotations Pod K8S Annotations
+podAnnotations: { }
+## @param podSecurityContext Values for deployment's `spec.template.spec.securityContext`
+podSecurityContext: { }
+autoscaling:
+  ## @param autoscaling.enabled Auto Scale deployment
+  enabled:
+serviceAccount:
+    ## @param serviceAccount.create Specifies whether a service account should be created
+    create: true
+    ## @param serviceAccount.annotations Annotations to add to the service account
+    annotations: {}
+    ## @param serviceAccount.name The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+    name: null
+## @param replicaCount Deployment Replica Count
+replicaCount: 1
+## @extra securityContext Values for deployment's `spec.template.spec.containers.securityContext`
+## @param securityContext.runAsNonRoot Security Context runAsNonRoot
+## @param securityContext.runAsUser Security Context runAsUser
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+## @param resources Specify required limits for deploying this service to a pod.  We usually recommend not to specify default resources and to leave this as a conscious  choice for the user. This also increases chances charts run on environments with little resources, such as Minikube.
+resources: {}
+## @param nodeSelector Node labels for pod assignment
+nodeSelector: { }
+## @param tolerations Tolerations for nodes that have taints on them
+tolerations: [ ]
+## @param affinity Pod scheduling preferences
+affinity: { }

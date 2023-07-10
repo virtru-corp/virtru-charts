@@ -1,0 +1,11 @@
+apiVersion: v2
+name: opcr-policy
+description: Build and push an opa policy to an OCI registry
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+
+dependencies:
+  - name: common-lib
+    repository: file://../../../common-lib
+    version: 0.1.0

@@ -4,3 +4,11 @@ package-lock.json
 /.idea/
 **/charts/*.tgz
 **/Chart.lock
+/platform/quickstart/entitlement-policy/
+/platform/quickstart/embedded-install.sh
+/platform/tests/sample.txt
+/platform/tests/sample.txt.ntdf
+/platform/tests/sample.txt.tdf
+/platform/tests/sample_out.txt
+/platform/tests/sample_out.nano.txt
+platform/entitlement-policy

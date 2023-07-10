@@ -1,0 +1,11 @@
+apiVersion: v2
+name: tagging-pdp
+description: Tagging PDP Deployment
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+
+dependencies:
+  - name: common-lib
+    repository: file://../../../common-lib
+    version: 0.1.0
