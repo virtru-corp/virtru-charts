@@ -1,0 +1,11 @@
+apiVersion: v2
+name: fluent-bit
+description: Helper chart to deploy fluent-bit
+type: application
+version: 2.1.4
+appVersion: 2.1.
+
+dependencies:
+  - name: fluent-bit
+    repository: https://fluent.github.io/helm-charts
+    version: 0.36.0
