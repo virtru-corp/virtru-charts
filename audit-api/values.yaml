@@ -112,3 +112,102 @@ nodeSelector: { }
 tolerations: [ ]
 ## @param affinity Pod scheduling preferences
 affinity: { }
+
+## @section tags for depenencies
+tags:
+  ## @param tags.fluent-bit Tag for fluent-bit dependency default is true
+  fluent-bit: true
+
+## @skip fluent-bit
+fluent-bit:
+  ## @skip fluent-bit.kind
+  kind: DaemonSet
+  ## @skip fluent-bit.image
+  image:
+    ## @skip fluent-bit.image.repository
+    repository: cr.fluentbit.io/fluent/fluent-bit
+    # Overrides the image tag whose default is {{ .Chart.AppVersion }}
+    ## @skip fluent-bit.image.tag
+    tag: "2.1.4"
+    ## @skip fluent-bit.image.pullPolicy
+    pullPolicy: IfNotPresent
+  ## @skip fluent-bit.podSecurityPolicy
+  podSecurityPolicy:
+    ## @skip fluent-bit.podSecurityPolicy.create
+    create: true
+    ## @skip fluent-bit.podSecurityPolicy.annotations
+    annotations: {}
+  ## @skip fluent-bit.podAnnotations
+  podAnnotations: {}
+  ## @skip fluent-bit.config
+  config:
+    ## @skip fluent-bit.config.service
+    service: |
+      [SERVICE]
+          Daemon                    Off
+          Flush                     1
+          Log_Level                 info
+          Parsers_File              parsers.conf
+          HTTP_Server               On
+          HTTP_Listen               0.0.0.0
+          HTTP_Port                 2020
+          Health_Check              On
+          storage.path              /var/log/flb-storage/
+          storage.sync              normal
+          storage.checksum          off
+          storage.max_chunks_up     256
+          storage.backlog.mem_limit 5M
+          storage.metrics           on
+    ## https://docs.fluentbit.io/manual/pipeline/inputs
+    ## @skip fluent-bit.config.inputs
+    inputs: |
+      [INPUT]
+          Name             tail
+          Path             /var/log/containers/*
+          multiline.parser docker,cri
+          Exclude_Path     /var/log/containers/*fluent-bit*
+          Tag              kube.*
+          Mem_Buf_Limit    10MB
+          Buffer_Chunk_Size 64k
+          Buffer_Max_Size  1MB
+          Skip_Long_Lines  off
+          storage.type     filesystem
+          db               virtru-flb.db
+          db.locking       true
+          db.sync          full
+    ## https://docs.fluentbit.io/manual/pipeline/filters
+    ## @skip fluent-bit.config.filters
+    filters: |
+      [FILTER]
+          Name             kubernetes
+          Match            kube.*
+          Kube_URL         https://kubernetes.default.svc:443
+          Kube_CA_File     /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          Kube_Token_File  /var/run/secrets/kubernetes.io/serviceaccount/token
+          Kube_Tag_Prefix  kube.var.log.containers.
+          Merge_Log        On
+          Buffer_Size      96k
+          Keep_Log         Off
+      [FILTER]
+          Name       record_modifier
+          Match      kube.*
+          Remove_key stream
+          Remove_key _p
+      [FILTER]
+          Name         rewrite_tag
+          Match        kube.var.log.containers.*
+          Rule         $levelname ^(AUDIT)$ audit false
+          Emitter_Name audit_emitter
+    ## https://docs.fluentbit.io/manual/pipeline/outputs
+    ## @skip fluent-bit.config.outputs
+    outputs: |
+      [OUTPUT]
+          Name        http
+          Match       audit
+          Host        audit-api.shp.svc.cluster.local
+          URI         /api/v1/write
+          Port        8080
+          tls         off
+          tls.verify  off
+          Format      json
+          Retry_Limit 8
