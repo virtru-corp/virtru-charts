@@ -9,8 +9,6 @@ fluent-bit:
     create: true
     annotations: {}
   podAnnotations: {}
-  imagePullSecrets:
-  - name: platform-pull-secret
   config:
     service: |
       [SERVICE]
