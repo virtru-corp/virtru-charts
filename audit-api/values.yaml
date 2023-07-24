@@ -113,18 +113,35 @@ tolerations: [ ]
 ## @param affinity Pod scheduling preferences
 affinity: { }
 
+## @section tags for depenencies
+tags:
+  ## @param tags.fluent-bit Tag for fluent-bit dependency default is true
+  fluent-bit: true
+
+## @skip fluent-bit
 fluent-bit:
+  ## @skip fluent-bit.kind
   kind: DaemonSet
+  ## @skip fluent-bit.image
   image:
+    ## @skip fluent-bit.image.repository
     repository: cr.fluentbit.io/fluent/fluent-bit
     # Overrides the image tag whose default is {{ .Chart.AppVersion }}
+    ## @skip fluent-bit.image.tag
     tag: "2.1.4"
+    ## @skip fluent-bit.image.pullPolicy
     pullPolicy: IfNotPresent
+  ## @skip fluent-bit.podSecurityPolicy
   podSecurityPolicy:
+    ## @skip fluent-bit.podSecurityPolicy.create
     create: true
+    ## @skip fluent-bit.podSecurityPolicy.annotations
     annotations: {}
+  ## @skip fluent-bit.podAnnotations
   podAnnotations: {}
+  ## @skip fluent-bit.config
   config:
+    ## @skip fluent-bit.config.service
     service: |
       [SERVICE]
           Daemon                    Off
@@ -142,6 +159,7 @@ fluent-bit:
           storage.backlog.mem_limit 5M
           storage.metrics           on
     ## https://docs.fluentbit.io/manual/pipeline/inputs
+    ## @skip fluent-bit.config.inputs
     inputs: |
       [INPUT]
           Name             tail
@@ -158,6 +176,7 @@ fluent-bit:
           db.locking       true
           db.sync          full
     ## https://docs.fluentbit.io/manual/pipeline/filters
+    ## @skip fluent-bit.config.filters
     filters: |
       [FILTER]
           Name             kubernetes
@@ -180,6 +199,7 @@ fluent-bit:
           Rule         $levelname ^(AUDIT)$ audit false
           Emitter_Name audit_emitter
     ## https://docs.fluentbit.io/manual/pipeline/outputs
+    ## @skip fluent-bit.config.outputs
     outputs: |
       [OUTPUT]
           Name        http
