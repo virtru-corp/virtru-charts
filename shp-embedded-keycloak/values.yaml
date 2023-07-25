@@ -26,7 +26,7 @@ keycloak:
     ## @param keycloak.image.repository Keycloak Image Repo
     repository: ghcr.io/opentdf/keycloak
     ## @param keycloak.image.tag Keycloak Image Tag
-    tag: 21.0.1-1.3.0
+    tag: 21.1.2-1.4.0
     ## @param keycloak.image.pullPolicy Keycloak Image pull policy
     pullPolicy: IfNotPresent
   ## @param keycloak.command Command to start the keycloak service
