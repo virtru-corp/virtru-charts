@@ -2,16 +2,16 @@ apiVersion: v2
 name: scp
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.1.13
+version: 0.2.0
 appVersion: 0.1.3
 
-otdfVersion: &otdfVersion "1.3.0"
+otdfVersion: &otdfVersion "1.4.0"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
   - name: abacus
     repository: *otdfRepo
-    version: '1.3.0'
+    version: '1.4.0'
     condition: abacus.enabled
   - name: attributes
     repository: *otdfRepo
