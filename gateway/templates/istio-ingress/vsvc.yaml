@@ -1,6 +1,5 @@
 {{- if .Values.istioIngress.enabled }}
 {{- if .Values.gatewayModes.outboundDlp.enabled }}
-{{- if .Values.additionalConfig.abac.enabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -18,6 +17,5 @@ spec:
             host: {{ include "gateway.name" . }}-{{ .Values.gatewayModes.outboundDlp.name }}
             port:
               number: {{ .Values.gatewayModes.outboundDlp.port }}
-{{- end }}    
 {{- end }}
 {{- end }}
