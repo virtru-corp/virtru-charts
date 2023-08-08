@@ -3,7 +3,7 @@ entries:
   cks:
   - apiVersion: v2
     appVersion: v1.8.6
-    created: "2023-07-31T14:45:19.654805-04:00"
+    created: "2023-08-08T11:22:26.064975-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 4fd1f2e28a0b868efad841970082116bcb1645cd8f3cb9ef5f4638cc0affaaac
     name: cks
@@ -13,7 +13,7 @@ entries:
     version: 0.7.6
   - apiVersion: v2
     appVersion: v1.8.3
-    created: "2023-07-31T14:45:19.654417-04:00"
+    created: "2023-08-08T11:22:26.064301-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 157fd2c9659a52bf33ffe4137365a41f4386ba26f2d92322ef5371cd0c205a0e
     name: cks
@@ -23,7 +23,7 @@ entries:
     version: 0.7.5
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2023-07-31T14:45:19.653854-04:00"
+    created: "2023-08-08T11:22:26.063613-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -33,7 +33,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2023-07-31T14:45:19.653167-04:00"
+    created: "2023-08-08T11:22:26.063118-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -44,7 +44,7 @@ entries:
   common-lib:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-07-31T14:45:19.654927-04:00"
+    created: "2023-08-08T11:22:26.065237-04:00"
     description: Common helper library
     digest: 66c249a5ad2b9fc12404f69d75638773d500513d628b7a9e0e45798021b77d9f
     name: common-lib
@@ -55,7 +55,7 @@ entries:
   cse:
   - apiVersion: v2
     appVersion: v5.3.1
-    created: "2023-07-31T14:45:19.656494-04:00"
+    created: "2023-08-08T11:22:26.066568-04:00"
     description: A Helm chart for Kubernetes
     digest: 1c687582f911f71375cc0c6a5f3a2411bbf10e493929b2c384928ec0ce5bb021
     name: cse
@@ -65,7 +65,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2023-07-31T14:45:19.655931-04:00"
+    created: "2023-08-08T11:22:26.066068-04:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -75,7 +75,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2023-07-31T14:45:19.655451-04:00"
+    created: "2023-08-08T11:22:26.065657-04:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -86,7 +86,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 2.38.0
-    created: "2023-07-31T14:45:19.659138-04:00"
+    created: "2023-08-08T11:22:26.069244-04:00"
     description: A Helm chart for Kubernetes
     digest: 030245c1e265d535c530acd93578c32ee1cc3f30dfd37cb0387da3b9bde873c4
     name: gateway
@@ -96,7 +96,7 @@ entries:
     version: 2.0.5
   - apiVersion: v2
     appVersion: 2.35.0
-    created: "2023-07-31T14:45:19.658467-04:00"
+    created: "2023-08-08T11:22:26.068629-04:00"
     description: A Helm chart for Kubernetes
     digest: 2f528d55b6bf4c005adeff359bb359a79a15111db5fd856863beb185babf5f13
     name: gateway
@@ -106,7 +106,7 @@ entries:
     version: 2.0.4
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2023-07-31T14:45:19.657838-04:00"
+    created: "2023-08-08T11:22:26.067813-04:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -116,7 +116,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2023-07-31T14:45:19.657114-04:00"
+    created: "2023-08-08T11:22:26.067127-04:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -124,10 +124,25 @@ entries:
     urls:
     - gateway-2.0.2.tgz
     version: 2.0.2
+  o365-abac:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-08-08T11:22:26.07107-04:00"
+    dependencies:
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    description: o365-ABAC Helm Chart
+    digest: 0418cbdb17f844294775cf3d4b933a58d5fb06f3cd5589342da3870549c4c17b
+    name: o365-abac
+    type: application
+    urls:
+    - o365-abac-0.1.0.tgz
+    version: 0.1.0
   platform:
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2023-07-31T14:45:19.676039-04:00"
+    created: "2023-08-08T11:22:26.087486-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -192,7 +207,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2023-07-31T14:45:19.670686-04:00"
+    created: "2023-08-08T11:22:26.08152-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -257,7 +272,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2023-07-31T14:45:19.665323-04:00"
+    created: "2023-08-08T11:22:26.07579-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -323,7 +338,7 @@ entries:
   platform-embedded-keycloak:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-07-31T14:45:19.678937-04:00"
+    created: "2023-08-08T11:22:26.090172-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -341,7 +356,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-07-31T14:45:19.677494-04:00"
+    created: "2023-08-08T11:22:26.088865-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -360,7 +375,7 @@ entries:
   platform-embedded-postgresql:
   - apiVersion: v2
     appVersion: 0.2.0
-    created: "2023-07-31T14:45:19.681546-04:00"
+    created: "2023-08-08T11:22:26.093732-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -379,7 +394,7 @@ entries:
   platform-keycloak-bootstrapper:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-07-31T14:45:19.682694-04:00"
+    created: "2023-08-08T11:22:26.094892-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -399,7 +414,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-07-31T14:45:19.68202-04:00"
+    created: "2023-08-08T11:22:26.094343-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -420,7 +435,7 @@ entries:
   sharepoint:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-07-31T14:45:19.683331-04:00"
+    created: "2023-08-08T11:22:26.095568-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -432,4 +447,4 @@ entries:
     urls:
     - sharepoint-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-31T14:45:19.652471-04:00"
+generated: "2023-08-08T11:22:26.062471-04:00"

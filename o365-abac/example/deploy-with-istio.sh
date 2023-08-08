@@ -8,14 +8,16 @@ imagePullUsername="changeme"
 imagePullPAT="changeme"
 # Hostname for ingress
 ingressHostname=""
+# Config file location; set using -c arg
+bootstrapConfigFile=""
 
 chartRepo="virtru-charts"
 o365abacChart="${chartRepo}/o365-abac"
 # For local install change to chart-version.tgz
-# o365abacChart="o365-abac-0.1.0.tgz"
+o365abacChart="../../o365-abac-0.1.0.tgz"
 # Is the platform in the same cluster as the o365-abac deployment
 platformLocal=""
-while getopts "h:t:s:u:p:o:k:l" arg; do
+while getopts "h:t:s:u:p:o:k:c:l" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -35,6 +37,9 @@ while getopts "h:t:s:u:p:o:k:l" arg; do
     o)
       overrideValues=${OPTARG}
       ;;
+    c)
+      bootstrapConfigFile=${OPTARG}
+      ;;
     l)
       platformLocal="true"
       ;;
@@ -48,6 +53,13 @@ if [ ! -z "$platformLocal" ]; then
   echo "Setting configAuthUrl to internal address ${configAuthUrl}"
 fi
 
+bootstrapArgs=()
+if [[ ! -z $bootstrapConfigFile ]]; then
+  bootstrapArgs+=("--set-file" "bootstrap.configFile=$bootstrapConfigFile"
+                  "--set" "bootstrap.enabled=true")
+  echo "${bootstrapArgs[@]}"
+fi
+
 echo "#1 Deploy o365-ABAC Service"
 helm upgrade --install -n $ns --create-namespace \
   --set "imageCredentials[0].name"="ghcr" \
@@ -58,6 +70,7 @@ helm upgrade --install -n $ns --create-namespace \
   --set config.auth.url="${configAuthUrl}" \
   --set ingress.hostname="${ingressHostname}" \
   --set ingress.istio.enabled=true \
+  "${bootstrapArgs[@]}" \
   -f $overrideValues \
   o365-abac $o365abacChart
 

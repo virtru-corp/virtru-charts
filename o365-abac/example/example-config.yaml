@@ -9,10 +9,10 @@ attributeDefinitions: &attributeDefinitions
 configArtifacts:
   - name: o365-abac.local
     yamlRefKey: o365abacsvc_config
-    contentType: "application/json"
+    contentType: "application/yaml"
     externalFileRef:
 
-o365abacsvc.config:
+o365abacsvc_config:
   autoBlock: false
   services:
     access:
