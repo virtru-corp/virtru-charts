@@ -144,7 +144,7 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
-  oidcClientSecret: <oidc-client-secret>
+  oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
   
   
 
@@ -191,8 +191,8 @@ additionalConfig:
   abac:
     enabled: false
     logLevel: info
-    oidcClientId: example-client
-    oidcTokenUrl: example-url
+    oidcClientId: example-client # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+    oidcTokenUrl: example-url # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
     taggingPdpLocation: tagging-pdp:8080 # Target location.
     accessServiceUrl: http://access-pep:4455 # If this is non-null && not an empty string, we will trigger ABAC processing. If abac is enabled.
     trimRecipients: false
