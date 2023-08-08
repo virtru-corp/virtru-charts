@@ -8,26 +8,12 @@ image:
 
 useImagePullSecret: true
 
-taggingPdpImage: 
-  tag: 0.1.1-a4c1c8f
-  repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
-  # image pull secret, also used by the grpc-gateway image if enabled.
-  imageCredentials:
-    username: replaceme
-    password: replaceme
-    email: replaceme
-    registry: ghcr.io
-  pullPolicy: IfNotPresent
-
 gateway:
   imageCredentials:
     username: replaceme
     password: replaceme
     email: replaceme
     registry: docker.io
-
-taggingService:
-  port: 8080
 
 nameOverride: ""
 fullnameOverride: ""
@@ -122,8 +108,8 @@ gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
 standardConfig:
-  gatewayHostname: gw.example.com
-  primaryMailingDomain: exmample.com
+  gatewayHostname: example.com
+  primaryMailingDomain: example.com
   # Next hop for Virtru gateway, typical mail flow is:
   # mail server => Virtru gateway => back to your mail server => final delivery
   gatewayTransportMaps: "*=>[smtp-relay.gmail.com]:587"
@@ -158,7 +144,7 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
-  oidcClientSecret: <oidc-client-secret>
+  oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
   
   
 
@@ -205,21 +191,11 @@ additionalConfig:
   abac:
     enabled: false
     logLevel: info
-    oidcClientId: example-client
-    oidcTokenUrl: some-token-url
-    taggingPdpLocation: localhost:8080
-    accessServiceUrl: localhost:1112 # If this is non-null && not an empty string, we will trigger ABAC processing.
-    taggingConfig: # Used with set-file
+    oidcClientId: example-client # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+    oidcTokenUrl: example-url # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+    taggingPdpLocation: tagging-pdp:8080 # Target location.
+    accessServiceUrl: http://access-pep:4455 # If this is non-null && not an empty string, we will trigger ABAC processing. If abac is enabled.
     trimRecipients: false
-    configService: # Optional - if set overrides taggingConfig
-      taggingArtifactId:
-      url:
-      pollingMin: 90
-      pollingMax: 300
-    attrService:
-      url: # url to attribute service - optional
-      pollingMin: 90
-      pollingMax: 300
 
 istioIngress:
   enabled: false

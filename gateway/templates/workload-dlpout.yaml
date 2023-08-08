@@ -33,9 +33,8 @@ spec:
         app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
         app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
     spec:
-      {{- with (coalesce .Values.imagePullSecrets .Values.taggingPdpImage.imageCredentials) }}
+      {{- with (coalesce .Values.imagePullSecrets .Values.gateway.imageCredentials) }}
       imagePullSecrets:
-        - name: gateway-pull-secrets
         - name: gateway-docker-pull-secrets
       {{- end }}
       serviceAccountName: {{ include "gateway.serviceAccountName" . }}
@@ -64,10 +63,6 @@ spec:
           {{- end }}
           - name: postfix-dir
             mountPath: /var/spool/postfix
-          {{- if eq .Values.additionalConfig.abac.enabled true }}
-          - name: shared-data-tagging-pdp-dir
-            mountPath: /usr/local/smtp-proxy/tmp # Where we write content to be extracted.
-          {{- end }}
           ports:
             - containerPort: {{ .Values.service.port }}
               protocol: TCP
@@ -138,29 +133,6 @@ spec:
             timeoutSeconds: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        {{- if eq .Values.additionalConfig.abac.enabled true }}    
-        - name: {{ .Chart.Name }}-taggingpdp # Tagging Pdp Container to be added in Gateway Pod
-          securityContext: {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.taggingPdpImage.repo }}:{{ .Values.taggingPdpImage.tag }}"
-          imagePullPolicy: {{ .Values.taggingPdpImage.pullPolicy }}
-          volumeMounts:
-          - name: shared-data-tagging-pdp-dir
-            mountPath: /usr/local/smtp-proxy/tmp # Where we write content to be extracted.
-          {{- if .Values.additionalConfig.abac.taggingConfig }}  
-          - name: tagging-config-volume
-              mountPath: /tagging-pdp/config.yaml
-              subPath: config.yaml
-          {{- end }}
-          envFrom:
-            - configMapRef:
-                name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}-tagging
-            - secretRef:
-                name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}-tagging
-          ports:
-            - name: grpc
-              containerPort: {{ .Values.taggingService.port }}
-              protocol: TCP
-        {{- end }}
       volumes:
       - name: cert-dir
         emptyDir: {}
@@ -169,15 +141,6 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ .Release.Name }}-dkim-secrets
-      {{- end }}
-      {{- if eq .Values.additionalConfig.abac.enabled true }} # Add an empty shared volume that can be added to Gateway / Tagging Pdp.
-      - name: shared-data-tagging-pdp-dir
-        emptyDir: {}
-      {{- if .Values.additionalConfig.abac.taggingConfig }}  
-      - name: tagging-config-volume
-        configMap:
-            name: {{ .Chart.Name }}-base-configs
-      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
