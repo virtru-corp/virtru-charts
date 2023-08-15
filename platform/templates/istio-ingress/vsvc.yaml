@@ -73,7 +73,7 @@ spec:
         - destination:
             host: entitlement-pdp
             port:
-              number: 5000
+              number: 3355
     - match:
         - uri:
             prefix: /api/entitlements/
@@ -96,17 +96,6 @@ spec:
             host: kas
             port:
               number: 8000
-    - match:
-        - uri:
-            prefix: /api/entitlement-pdp/
-      name: entitlement-pdp
-      rewrite:
-        uri: /
-      route:
-        - destination:
-            host: entitlement-pdp
-            port:
-              number: {{ default 3355 .Values.entitlement-pdp.config.listenPort }}
     - match:
         - uri:
             prefix: /access-pep/
