@@ -13,29 +13,36 @@ dependencies:
     repository: *otdfRepo
     version: '1.4.0'
     condition: abacus.enabled
+
   - name: attributes
     repository: *otdfRepo
     version: *otdfVersion
+    condition: attributes.enabled
 
   - name: entitlement-pdp
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entitlement-pdp.enabled
 
   - name: entitlement-store
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entitlement-store.enabled
 
   - name: entitlements
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entitlements.enabled
 
   - name: entity-resolution
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entity-resolution.enabled
 
   - name: kas
     repository: *otdfRepo
     version: *otdfVersion
+    condition: kas.enabled
 
   - name: common-lib
     repository: file://../common-lib
@@ -60,6 +67,7 @@ dependencies:
   - name: docker-registry
     repository: https://helm.twun.io
     version: 2.2.2
+    condition: docker-registry.enabled
 
   - name: keycloak-bootstrap
     repository: *otdfRepo

@@ -162,6 +162,8 @@ access-pep:
 
 ## @section Attribute Chart Overrides
 attributes:
+  ## @param attributes.enabled Attributes Service enabled flag
+  enabled: true
   ## @param attributes.fullnameOverride Attribute Service Name Override
   fullnameOverride: attributes
   ## @param attributes.secretRef Secrets for environment variable injection
@@ -211,6 +213,8 @@ entitlement-policy-bootstrap:
 
 ## @section Entitlement PDP Chart Overrides
 entitlement-pdp:
+  ## @param entitlement-pdp.enabled entitlement-pdp service enabled flag
+  enabled: true
   ## @param entitlement-pdp.fullnameOverride  Entitlement PDP name override
   fullnameOverride: entitlement-pdp
   opaConfig:
@@ -234,6 +238,8 @@ entitlement-pdp:
 
 ## @section Entitlement Store Chart Overrides
 entitlement-store:
+  ## @param entitlement-store.enabled entitlement-store service enabled flag
+  enabled: true
   ## @param entitlement-store.fullnameOverride Entitlement Store name override
   fullnameOverride: entitlement-store
   ## @param entitlement-store.secretRef Secrets for environment variables
@@ -242,6 +248,8 @@ entitlement-store:
 
 ## @section Entitlement Chart Overrides
 entitlements:
+  ## @param entitlements.enabled entitlements service enabled flag
+  enabled: true
   ## @param entitlements.fullnameOverride Entitlements Name Override
   fullnameOverride: entitlements
   ## @param  entitlements.secretRef Entitlements Secrets for environment variables
