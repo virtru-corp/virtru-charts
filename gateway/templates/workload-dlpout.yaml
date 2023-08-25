@@ -33,9 +33,8 @@ spec:
         app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
         app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
     spec:
-      {{- with (coalesce .Values.imagePullSecrets .Values.gateway.imageCredentials) }}
-      imagePullSecrets:
-        - name: gateway-docker-pull-secrets
+      {{- with .Values.imagePullSecrets }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "gateway.serviceAccountName" . }}
       securityContext:
