@@ -66,3 +66,9 @@
 | `nodeSelector`                       | Node labels for pod assignment                                                                                                                                                                                                                                             | `{}`                     |
 | `tolerations`                        | Tolerations for nodes that have taints on them                                                                                                                                                                                                                             | `[]`                     |
 | `affinity`                           | Pod scheduling preferences                                                                                                                                                                                                                                                 | `{}`                     |
+
+### tags for depenencies
+
+| Name              | Description                                   | Value  |
+| ----------------- | --------------------------------------------- | ------ |
+| `tags.fluent-bit` | Tag for fluent-bit dependency default is true | `true` |
