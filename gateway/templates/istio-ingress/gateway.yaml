@@ -1,4 +1,5 @@
 {{- if .Values.istioIngress.enabled }}
+{{- if .Values.gatewayModes.outboundDlp.enabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -12,5 +13,6 @@ spec:
         name: gateway
         protocol: TCP
       hosts:
-        - {{ .Values.standardConfig.gatewayHostname | quote }} # FQDN of the gateway
+        - {{ .Values.istioIngress.ingressHostname | quote }}
+{{- end }}
 {{- end }}

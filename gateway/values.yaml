@@ -194,4 +194,5 @@ istioIngress:
   existingGateway:
   # Name of istio gateway selector
   gatewaySelector: ingress
+  ingressHostname: "*" # Should be primary mailing domain, for best practice.
   name: scp
