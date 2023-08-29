@@ -2,16 +2,16 @@ apiVersion: v2
 name: platform
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.2.3
+version: 0.3.0
 appVersion: 0.1.3
 
-otdfVersion: &otdfVersion "1.4.0"
+otdfVersion: &otdfVersion "1.4.2"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
   - name: abacus
     repository: *otdfRepo
-    version: '1.4.0'
+    version: '1.4.1'
     condition: abacus.enabled
 
   - name: attributes
@@ -50,7 +50,7 @@ dependencies:
 
   - name: access-pep
     repository: oci://ghcr.io/virtru-corp/charts
-    version: '0.1.0-sha-c00bac0'
+    version: '0.1.0-sha-a61d7d3'
     condition: access-pep.enabled
 
   - name: tagging-pdp
@@ -80,5 +80,5 @@ dependencies:
     repository: file://./charts/opcr-policy
     alias: entitlement-policy-bootstrap
     version: 0.1.0
-    condition: boostrap.entitlementPolicy
+    condition: bootstrap.entitlementPolicy
     tags: ["bootstrap"]
