@@ -2,40 +2,47 @@ apiVersion: v2
 name: scp
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.2.0
+version: 0.3.0
 appVersion: 0.1.3
 
-otdfVersion: &otdfVersion "1.4.0"
+otdfVersion: &otdfVersion "1.4.2"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
   - name: abacus
     repository: *otdfRepo
-    version: '1.4.0'
+    version: '1.4.1'
     condition: abacus.enabled
+
   - name: attributes
     repository: *otdfRepo
     version: *otdfVersion
+    condition: attributes.enabled
 
   - name: entitlement-pdp
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entitlement-pdp.enabled
 
   - name: entitlement-store
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entitlement-store.enabled
 
   - name: entitlements
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entitlements.enabled
 
   - name: entity-resolution
     repository: *otdfRepo
     version: *otdfVersion
+    condition: entity-resolution.enabled
 
   - name: kas
     repository: *otdfRepo
     version: *otdfVersion
+    condition: kas.enabled
 
   - name: common-lib
     repository: file://../common-lib
@@ -43,7 +50,7 @@ dependencies:
 
   - name: access-pep
     repository: oci://ghcr.io/virtru-corp/charts
-    version: '0.1.0-sha-c00bac0'
+    version: '0.1.0-sha-a61d7d3'
     condition: access-pep.enabled
 
   - name: tagging-pdp
@@ -60,6 +67,7 @@ dependencies:
   - name: docker-registry
     repository: https://helm.twun.io
     version: 2.2.2
+    condition: docker-registry.enabled
 
   - name: keycloak-bootstrap
     repository: *otdfRepo
@@ -72,5 +80,5 @@ dependencies:
     repository: file://./charts/opcr-policy
     alias: entitlement-policy-bootstrap
     version: 0.1.0
-    condition: boostrap.entitlementPolicy
+    condition: bootstrap.entitlementPolicy
     tags: ["bootstrap"]
