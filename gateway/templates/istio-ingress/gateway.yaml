@@ -13,6 +13,6 @@ spec:
         name: gateway
         protocol: TCP
       hosts:
-        {{- toYaml .Values.istioIngress.ingressHostname | nindent 12 }}
+        {{- toYaml .Values.istioIngress.ingressHostnames | nindent 12 }}
 {{- end }}
 {{- end }}

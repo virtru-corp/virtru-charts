@@ -195,6 +195,6 @@ istioIngress:
   # Name of istio gateway selector
   gatewaySelectors: 
     istio: ingress
-  ingressHostname: 
+  ingressHostnames: 
     - "*" # Add FQDN, as best practice.
   name: scp

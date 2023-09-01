@@ -8,7 +8,8 @@ spec:
   gateways:
     - {{ include "gateway.name" . }}-outbound-dlp
   hosts:
-    {{- toYaml .Values.istioIngress.ingressHostname | nindent 12 }}
+    - {{ include "gateway.name" . }}-{{ .Values.gatewayModes.outboundDlp.name }}
+    - {{- toYaml .Values.istioIngress.ingressHostnames | nindent 12 }}
   tcp:
     - match:
         - port: {{  .Values.gatewayModes.outboundDlp.port }}
