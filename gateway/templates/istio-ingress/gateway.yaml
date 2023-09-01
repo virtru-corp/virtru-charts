@@ -1,18 +1,19 @@
 {{- if .Values.istioIngress.enabled }}
 {{- if .Values.gatewayModes.outboundDlp.enabled }}
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: {{ include "gateway.name" . }}-outbound-dlp
 spec:
   selector:
-    istio: {{ .Values.istioIngress.gatewaySelector }}
+    istio:
+      {{- toYaml .Values.istioIngress.gatewaySelector | nindent 12 }}
   servers:
     - port:
         number: {{ .Values.gatewayModes.outboundDlp.port }}
         name: gateway
         protocol: TCP
       hosts:
-        - {{ .Values.istioIngress.ingressHostname | quote }}
+        {{- toYaml .Values.istioIngress.ingressHostname | nindent 12 }}
 {{- end }}
 {{- end }}

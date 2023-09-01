@@ -184,7 +184,7 @@ additionalConfig:
     logLevel: info
     oidcClientId: example-client # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
     oidcTokenUrl: example-url # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-    taggingPdpLocation: tagging-pdp:8080 # Target location.
+    taggingPdpEndpoint: tagging-pdp:8080 # Target endpoint. <hostname>:<port>, not a URL.
     accessServiceUrl: http://access-pep:4455 # If this is non-null && not an empty string, we will trigger ABAC processing. If abac is enabled.
     trimRecipients: false
 
