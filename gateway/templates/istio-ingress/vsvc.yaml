@@ -3,13 +3,12 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: gateway
+  name: {{ include "gateway.name" . }}-outbound-dlp
 spec:
   gateways:
     - {{ include "gateway.name" . }}-outbound-dlp
   hosts:
-    - {{ include "gateway.name" . }}-{{ .Values.gatewayModes.outboundDlp.name }}
-    - {{- toYaml .Values.istioIngress.ingressHostnames | nindent 12 }}
+    {{- toYaml .Values.istioIngress.ingressHostnames | nindent 12 }}
   tcp:
     - match:
         - port: {{  .Values.gatewayModes.outboundDlp.port }}
