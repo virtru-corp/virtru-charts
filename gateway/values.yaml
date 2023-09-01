@@ -189,7 +189,7 @@ additionalConfig:
     trimRecipients: false
 
 istioIngress:
-  enabled: true
+  enabled: false
   # Use an existing istio gateway
   existingGateway:
   # Name of istio gateway selector
