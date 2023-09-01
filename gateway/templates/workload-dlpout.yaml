@@ -34,7 +34,6 @@ spec:
         app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
     spec:
       {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "gateway.serviceAccountName" . }}
@@ -49,7 +48,7 @@ spec:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
       containers:
-        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
+        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }} # Gateway Container
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -106,6 +105,13 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: gateway-xheader-auth-secret
+                name: {{ .Release.Name }}-secrets
+          {{- end }}
+          {{- if eq .Values.additionalConfig.abac.enabled true }}
+          - name: OIDC_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: oidc-client-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           readinessProbe:
