@@ -6,8 +6,7 @@ metadata:
   name: {{ include "gateway.name" . }}-outbound-dlp
 spec:
   selector:
-    istio:
-      {{- toYaml .Values.istioIngress.gatewaySelector | nindent 12 }}
+    {{- toYaml .Values.istioIngress.gatewaySelectors | nindent 12 }}
   servers:
     - port:
         number: {{ .Values.gatewayModes.outboundDlp.port }}

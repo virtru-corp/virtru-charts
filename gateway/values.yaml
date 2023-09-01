@@ -189,10 +189,12 @@ additionalConfig:
     trimRecipients: false
 
 istioIngress:
-  enabled: false
+  enabled: true
   # Use an existing istio gateway
   existingGateway:
   # Name of istio gateway selector
-  gatewaySelector: ingress
-  ingressHostname: "*" # Add FQDN, as best practice.
+  gatewaySelectors: 
+    istio: ingress
+  ingressHostname: 
+    - "*" # Add FQDN, as best practice.
   name: scp
