@@ -1,0 +1,21 @@
+{{- if .Values.istioIngress.enabled }}
+{{- if .Values.gatewayModes.outboundDlp.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "gateway.name" . }}-outbound-dlp
+spec:
+  gateways:
+    - {{ include "gateway.name" . }}-outbound-dlp
+  hosts:
+    {{- toYaml .Values.istioIngress.ingressHostnames | nindent 12 }}
+  tcp:
+    - match:
+        - port: {{  .Values.gatewayModes.outboundDlp.port }}
+      route:
+        - destination:
+            host: {{ include "gateway.name" . }}-{{ .Values.gatewayModes.outboundDlp.name }}
+            port:
+              number: {{ .Values.gatewayModes.outboundDlp.port }}
+{{- end }}
+{{- end }}
