@@ -73,7 +73,7 @@ spec:
         - destination:
             host: entitlement-pdp
             port:
-              number: 5000
+              number: 3355
     - match:
         - uri:
             prefix: /api/entitlements/
