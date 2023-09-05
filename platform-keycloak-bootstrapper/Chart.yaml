@@ -2,10 +2,10 @@ apiVersion: v2
 name: platform-keycloak-bootstrapper
 description: Helper chart to bootstrap keycloak configuration.
 type: application
-version: 0.1.5
+version: 0.1.6
 appVersion: 0.1.0
 
-otdfVersion: &otdfVersion "1.4.0"
+otdfVersion: &otdfVersion "1.4.2"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
