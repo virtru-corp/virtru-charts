@@ -1,0 +1,36 @@
+attributeDefinitions: &attributeDefinitions
+  - authority: https://opentdf.io
+    name: IntellectualProperty
+    rule: hierarchy
+    state: published
+    order: [ "TradeSecret","Proprietary","BusinessSensitive","Open" ]
+
+
+configArtifacts:
+  - name: o365-abac.local
+    yamlRefKey: o365abacsvc_config
+    contentType: "application/yaml"
+    externalFileRef:
+
+o365abacsvc_config:
+  autoBlock: false
+  services:
+    access:
+      name: "Access PDP"
+      url: "{{platform_url}}/access-pep/access"
+    attributes:
+      name: "Attribute Service"
+      url: "{{platform_url}}/api/attributes"
+    auth:
+      name: "Auth Service"
+      url: "{{platform_url}}"
+      clientId: "my-client-id"
+      clientSecret: "my-client-secret"
+      organization: "tdf"
+    config:
+      name: "Config Service"
+      url: "{{platform_url}}/configuration"
+    tagExtraction:
+      name: "Tag Extraction API"
+      url: "{{platform_url}}/tagging-pdp"
+

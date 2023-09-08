@@ -1,0 +1,23 @@
+{{- if or ( .Values.ingress.istio.enabled ) ( .Values.global.istioEnabled ) }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: o365-abac-svc
+spec:
+  gateways:
+    - {{ include "o365-abac.istio.gateway" . }}
+  hosts:
+    - '*'
+  http:
+    - match:
+        - uri:
+            prefix: {{ .Values.ingress.istio.ingressPrefix }}
+      rewrite:
+        uri: /
+      name: o365-abac
+      route:
+        - destination:
+            host: {{ include "common.lib.fullname" . }}
+            port:
+              number: {{ .Values.service.port }}
+{{- end }}

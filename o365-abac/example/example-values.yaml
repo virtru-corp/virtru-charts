@@ -1,0 +1,10 @@
+deployHostname: &deployHostname "www.example.org"
+
+config:
+  auth:
+    url: *deployHostname
+    org: tdf
+    clientId: o365-abac-oidc-client
+
+  secrets:
+    oidcClientSecret: replaceme

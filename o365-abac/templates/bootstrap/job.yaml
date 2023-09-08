@@ -1,0 +1,51 @@
+{{- if .Values.bootstrap.enabled }}
+{{ $config := .Values.bootstrap.configFile | fromYaml }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.lib.fullname" . }}-{{ .Values.bootstrap.job.name }}
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ include "common.lib.fullname" . }}-{{ .Values.bootstrap.job.name }}
+          imagePullPolicy: {{ .Values.bootstrap.job.image.pullPolicy }}
+          image: {{ .Values.bootstrap.job.image.repo }}:{{ .Values.bootstrap.job.image.tag }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |-
+              {{- if .Values.bootstrap.job.waitForIstio }}
+              trap "curl --max-time 2 -s -f -XPOST http://127.0.0.1:15000/quitquitquit" EXIT
+              while ! curl -s -f http://127.0.0.1:15020/healthz/ready; do sleep 1; done
+              {{- end }}   
+              echo "[INFO] Waiting for service [$ConfigSvcUrl]"
+              while ! curl -f $ConfigSvcUrl --insecure; do
+                sleep 1
+              done
+              echo "[INFO] Service [$ConfigSvcUrl] available"
+              echo "Running configuration svc bootstrapping"
+              sleep 10 
+              {{- range $configArtifact :=  $config.configArtifacts }}
+              {{ printf "cat /configdata/%s" $configArtifact.name }}
+              {{ printf "curl -X POST -H 'Content-Type: %s' $ConfigSvcUrl/%s --data-binary @/configdata/%s -v " $configArtifact.contentType $configArtifact.name $configArtifact.name }}
+              {{- end }}
+          envFrom:
+            {{- with .Values.bootstrap.job.envSecretRef }}
+            - secretRef:
+                {{- tpl . $ | nindent 16 }}
+            {{- end }}
+            - configMapRef:
+                name: {{ include "common.lib.fullname" . }}-{{ .Values.bootstrap.job.name }}-cm
+          volumeMounts:
+            - name: config-data-volume
+              mountPath: /configdata
+      volumes:
+        - name: config-data-volume
+          secret:
+            secretName: {{ include "common.lib.name" . }}-bootstrap-configsvc
+      restartPolicy: Never
+      {{ include "o365-abac.imagePullSecrets" . | nindent 6 }}
+  backoffLimit: {{ .Values.bootstrap.job.backoffLimit }}
+{{- end }}
