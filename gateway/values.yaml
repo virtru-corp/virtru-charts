@@ -81,6 +81,7 @@ gatewayModes:
     name: outbound-dlp
     port: 9005
 
+
 # This will create a persistent volume for each 
 # enabled gateway mode. This will keep your postfix queue 
 # intact when pods are destroyed and recreated. You can modify
@@ -98,8 +99,8 @@ gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
 standardConfig:
-  gatewayHostname: gw.example.com
-  primaryMailingDomain: exmample.com
+  gatewayHostname: example.com
+  primaryMailingDomain: example.com
   # Next hop for Virtru gateway, typical mail flow is:
   # mail server => Virtru gateway => back to your mail server => final delivery
   gatewayTransportMaps: "*=>[smtp-relay.gmail.com]:587"
@@ -134,6 +135,7 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
+  oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
   
   
 
@@ -177,3 +179,22 @@ additionalConfig:
   dkimSigning:
     enabled: false
     selector: gw
+  abac:
+    enabled: false
+    logLevel: info
+    oidcClientId: example-client # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+    oidcTokenUrl: example-url # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+    taggingPdpEndpoint: tagging-pdp:8080 # Target endpoint. <hostname>:<port>, not a URL.
+    accessServiceUrl: http://access-pep:4455 # If this is non-null && not an empty string, we will trigger ABAC processing. If abac is enabled.
+    trimRecipients: false
+
+istioIngress:
+  enabled: false
+  # Use an existing istio gateway
+  existingGateway:
+  # Name of istio gateway selector
+  gatewaySelectors: 
+    istio: ingress
+  ingressHostnames: 
+    - "*" # Add FQDN, as best practice.
+  name: scp

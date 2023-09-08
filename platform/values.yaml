@@ -147,7 +147,7 @@ access-pep:
     ## @param access-pep.image.repo Image Rep
     repo: ghcr.io/virtru-corp/access-pep/access-pep
     ## @param access-pep.image.tag Image tag
-    tag: sha-cac697c
+    tag: 0.1.0-sha-a61d7d3
   config:
     ## @param access-pep.config.disableTracing disable tracing flag
     disableTracing: *disableTracing
@@ -162,6 +162,8 @@ access-pep:
 
 ## @section Attribute Chart Overrides
 attributes:
+  ## @param attributes.enabled Attributes Service enabled flag
+  enabled: true
   ## @param attributes.fullnameOverride Attribute Service Name Override
   fullnameOverride: attributes
   ## @param attributes.secretRef Secrets for environment variable injection
@@ -211,6 +213,8 @@ entitlement-policy-bootstrap:
 
 ## @section Entitlement PDP Chart Overrides
 entitlement-pdp:
+  ## @param entitlement-pdp.enabled entitlement-pdp service enabled flag
+  enabled: true
   ## @param entitlement-pdp.fullnameOverride  Entitlement PDP name override
   fullnameOverride: entitlement-pdp
   opaConfig:
@@ -234,6 +238,8 @@ entitlement-pdp:
 
 ## @section Entitlement Store Chart Overrides
 entitlement-store:
+  ## @param entitlement-store.enabled entitlement-store service enabled flag
+  enabled: true
   ## @param entitlement-store.fullnameOverride Entitlement Store name override
   fullnameOverride: entitlement-store
   ## @param entitlement-store.secretRef Secrets for environment variables
@@ -242,6 +248,8 @@ entitlement-store:
 
 ## @section Entitlement Chart Overrides
 entitlements:
+  ## @param entitlements.enabled entitlements service enabled flag
+  enabled: true
   ## @param entitlements.fullnameOverride Entitlements Name Override
   fullnameOverride: entitlements
   ## @param  entitlements.secretRef Entitlements Secrets for environment variables
@@ -250,6 +258,8 @@ entitlements:
 
 ## @section Entity Resolution Chart Overrides
 entity-resolution:
+  ## @param entity-resolution.enabled entity-resolution service enabled flag
+  enabled: true
   ## @param entity-resolution.fullnameOverride Entity Resolution Name override
   fullnameOverride: entity-resolution
   config:
@@ -261,6 +271,8 @@ entity-resolution:
 
 ## @section KAS Chart Overrides
 kas:
+  ## @param kas.enabled kas service enabled flag
+  enabled: true
   ## @param kas.fullnameOverride  KAS Name Override
   fullnameOverride: kas
   endpoints:
@@ -381,7 +393,7 @@ tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
-    tag: 0.2.0
+    tag: 0.2.1
     ## @param tagging-pdp.image.pullSecrets TaggingPDP image pull secrets
     pullSecrets:
   gateway:
@@ -391,7 +403,7 @@ tagging-pdp:
     pathPrefix: tagging-pdp
     ## @skip tagging-pdp.gateway.image
     image:
-      tag: 0.2.0 
+      tag: 0.2.1 
   config:
     attrSvc:
       ## @param tagging-pdp.config.attrSvc.url Set the attribute service url

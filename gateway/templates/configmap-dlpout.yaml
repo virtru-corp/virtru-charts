@@ -9,6 +9,3 @@ data:
   GATEWAY_MODE: "dlp"
   GATEWAY_TOPOLOGY: "outbound"
 {{- end }}
-
-
-
