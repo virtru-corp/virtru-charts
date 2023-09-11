@@ -10,6 +10,14 @@ Create OIDC External Url
 {{- end }}
 
 
+{{- define "platform.embedded.keycloak.truststoreDir" -}}
+{{- printf "/etc/truststore" }}
+{{- end }}
+
+{{- define "platform.embedded.keycloak.truststorePath" -}}
+{{- printf "%s/truststore.jks" ( include "platform.embedded.keycloak.truststoreDir" . ) }}
+{{- end }}
+
 {{/*
 Create Extra Volumes
 */}}
@@ -18,11 +26,17 @@ Create Extra Volumes
   configMap:
     name: {{ .Values.fullnameOverride }}-custom-entrypoint
     defaultMode: 511
-{{ if .Values.trustedCertSecret -}}
+- name: keystore-script
+  configMap:
+    name: {{ .Values.fullnameOverride }}-keystore
+    defaultMode: 511
+- name: truststore
+  emptyDir: {}
+{{- if and .Values.trustedCertSecret }}
 - name: x509
   secret:
     secretName: {{ .Values.trustedCertSecret }}
-{{- end -}}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -32,10 +46,15 @@ Create Extra Volumes Mounts
 - name: custom-entrypoint
   mountPath: /opt/keycloak/custom_bin/kc_custom_entrypoint.sh
   subPath: kc_custom_entrypoint.sh
-{{ if .Values.trustedCertSecret -}}
+- name: keystore-script
+  mountPath: /opt/keycloak/custom_bin/keystore.sh
+  subPath: keystore.sh
+- name: truststore
+  mountPath: {{ include "platform.embedded.keycloak.truststoreDir" . }}
+{{- if .Values.trustedCertSecret  }}
 - name: x509
   mountPath: /etc/x509/https
-{{- end -}}
+{{- end  }}
 {{- end }}
 
 {{/*
