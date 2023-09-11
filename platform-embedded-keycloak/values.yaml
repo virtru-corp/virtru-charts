@@ -62,8 +62,8 @@ keycloak:
   extraVolumeMounts: |-
     {{ include "platform.embedded.keycloak.extraVolumeMounts" .}}
 
-  ## @param keycloak.trustedCertSecret Name of an existing secret containing certs to be added to the keycloak truststore. (keycloak prefix is used since its part of an include tpl)
-  trustedCertSecret:
+## @param trustedCertSecret Name of an existing secret containing certs to be added to the keycloak truststore. (keycloak prefix is used since its part of an include tpl)
+trustedCertSecret:
 
 secrets:
   keycloak:

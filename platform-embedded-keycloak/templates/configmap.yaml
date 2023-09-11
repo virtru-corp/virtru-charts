@@ -10,20 +10,19 @@ metadata:
   labels:
     {{- include "common.lib.labels" . | nindent 4 }}
 data:
-{{- if .Values.keycloak.trustedCertSecret }}
-{{- $s := (lookup "v1" "Secret" .Release.Namespace .Values.keycloak.trustedCertSecret) }}
 {{- $cert_list:= list }}
+{{- if .Values.trustedCertSecret }}
+{{- $s := (lookup "v1" "Secret" .Release.Namespace .Values.trustedCertSecret) }}
 {{- range $k,$v := index $s "data" }}
 {{- $cert_list = append $cert_list ( printf "/etc/x509/https/%s" $k ) }}
 {{- end }}
+{{- end }}
 {{- $bundlestr := join " " $cert_list }}
   X509_CA_BUNDLE: {{ $bundlestr | quote}}
-  KC_SPI_TRUSTSTORE_FILE_FILE: "/opt/keycloak/conf/truststore.jks"
+  KC_SPI_TRUSTSTORE_FILE_FILE: {{ include "platform.embedded.keycloak.truststorePath" . }}
   KC_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY: "ANY"
-  KC_HTTPS_KEY_STORE_FILE: "/opt/keycloak/conf/truststore.jks"
-{{- else }}
-  X509_CA_BUNDLE: ""
-{{- end}}
+  KC_HTTPS_KEY_STORE_FILE: {{ include "platform.embedded.keycloak.truststorePath" . }}
+  JKS_TRUSTSTORE_PATH: {{ include "platform.embedded.keycloak.truststorePath" . }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -33,6 +32,18 @@ metadata:
     {{- include "common.lib.labels" . | nindent 4 }}
 binaryData:
   {{ range $path, $bytes := .Files.Glob (printf "kc_custom_entrypoint.sh")}}
+  {{ $name := base $path }}
+  {{- printf "%s" $name}}{{ print ": "}}{{ $.Files.Get $path | b64enc }}
+  {{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.keycloak.fullnameOverride }}-keystore
+  labels:
+    {{- include "common.lib.labels" . | nindent 4 }}
+binaryData:
+  {{ range $path, $bytes := .Files.Glob (printf "keystore.sh")}}
   {{ $name := base $path }}
   {{- printf "%s" $name}}{{ print ": "}}{{ $.Files.Get $path | b64enc }}
   {{ end }}
