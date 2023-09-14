@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Does Istio ingress have tls enabled and requires cert setup
 tlsEnabled="false"
 # The existing secret for Istio Gateway TLS config
@@ -20,6 +22,8 @@ chartsLocalDir=""
 scaleIstio=false
 # Add security contexts to keycloak, configuration, and docker-registry
 addSecurityContexts=false
+# Namespace for istio ingress
+istioNamespace="istio-ingress"
 
 chartRepo="virtru-charts"
 postgresqlChart="${chartRepo}/platform-embedded-postgresql"
@@ -27,7 +31,7 @@ keycloakChart="${chartRepo}/platform-embedded-keycloak"
 keycloakBootstrapperChart="${chartRepo}/platform-keycloak-bootstrapper"
 platformChart="${chartRepo}/platform"
 
-while getopts "h:t:s:u:p:e:c:o:k:l:ia" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:l:i:a:n" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -65,6 +69,9 @@ while getopts "h:t:s:u:p:e:c:o:k:l:ia" arg; do
     a)
       addSecurityContexts=true
       ;;
+    n)
+      istioNamespace=${OPTARG}
+      ;;
   esac
 done
 
@@ -74,6 +81,10 @@ if [ ! -z "$chartsLocalDir" ]; then
   keycloakChart="${chartsLocalDir}/platform-embedded-keycloak-*.tgz"
   keycloakBootstrapperChart="${chartsLocalDir}/platform-keycloak-bootstrapper-*.tgz"
   platformChart="${chartsLocalDir}/platform-0.*.tgz"
+  if [ ! -f $postgresqlChart ] && [ ! -f $keycloakChart ] && [ ! -f $keycloakBootstrapperChart ] && [ ! -f $platformChart ]; then
+    echo "ERROR: One or more charts do not exist at the path provided."
+    exit 1;
+  fi
 fi
 
 pullSecretArgs=()
@@ -98,9 +109,59 @@ IFS=$SAVEIFS
 overrideValuesArgs=()
 for i in "${overrideValuesArray[@]}"
 do
-	overrideValuesArgs+=("-f" "$i")
+  if [[ -f $i ]]; then
+    overrideValuesArgs+=("-f $i")
+  fi
 done
+
 # Checks and warnings
+
+# Check if binaries are installed
+if [[ -z $(which kubectl) ]]; then
+  echo "\nERROR: Helm not installed and is required"
+  exit 1;
+fi
+
+if [[ -z $(which helm) ]]; then
+  echo "\nERROR: Helm not installed and is required"
+  exit 1;
+fi
+
+# Check if cluster is reachable
+kubectl cluster-info &> /dev/null
+
+if [[ $? -ne 0 ]]; then
+  echo "ERROR: Kubernetes cluster not is reachable."
+  exit 1;
+fi
+
+# Check if the namespaces exists
+if [[ -z $(kubectl get namespace | grep $istioNamespace) ]]; then
+  echo "ERROR: Namespace '$istioNamespace' does not exist."
+  exit 1;
+fi
+
+if [[ -z $(kubectl get namespace | grep $ns) ]]; then
+  echo "WARNING: Namespace '$ns' not created, creating and labeling for Istio injection"
+  kubectl create ns $ns
+  kubectl label ns $ns istio-injection=enabled
+fi
+
+# Check if the declared secret name exists in the istio-ingress namespace
+if [[ $(tlsSecret) -ne "null"  ]]; then
+  if ! kubectl get secret "$tlsSecret" -n "$istioNamespace" &> /dev/null; then
+    echo "Kubernetes secret '$tlsSecret' does not exist in namespace '$istioNamespace'."
+    exit 1;
+  fi
+fi
+
+# Check if config file exists
+if [[ ! -f $configFile ]]; then
+  echo "ERROR: Config file doesn't exist at '$configFile'."
+  exit 1;
+fi
+
+# Check if required flags are set
 if [[ -z $overrideValues ]]; then
   echo "\nERROR: Chart Overrides Value required; set using the -o flag"
   exit 1;
@@ -117,6 +178,8 @@ if [[ -z $entitlementPolicyLocation ]]; then
   echo "\nERROR: Entitlement policy directory path required; set using the -e flag"
   exit 1;
 fi
+
+# Warn if optional flags aren't set
 if [[ -z $imagePullUsername ]] ; then
   echo "\n------WARNING: Pull credential username NOT provided - an existing image pull secret must exist in the cluster and be referenced in chart values; otherwise set with -u flag\n"
 fi
@@ -136,6 +199,7 @@ echo "istio gateway tls: ${tlsEnabled}"
 echo "keycloak truststore certificate location: ${certificateLocation}"
 echo "scale istio deployment: ${scaleIstio}"
 echo "add security contexts: ${addSecurityContexts}"
+echo "istio namespace: ${istioNamespace}"
 echo "----------------"
 
 oidcExternalBaseUrlSetting="global.opentdf.common.oidcExternalBaseUrl=https://${ingressHostname}"
@@ -200,18 +264,36 @@ if $addSecurityContexts; then
 fi
 
 echo "#6 Install Self hosted platform"
-helm upgrade --install -n $ns --create-namespace \
- --set secrets.imageCredentials.pull-secret.username="${imagePullUsername}" \
- --set secrets.imageCredentials.pull-secret.password="${imagePullPAT}" \
- --set $oidcExternalBaseUrlSetting \
- --set $ingressHostnameSetting \
- --set-file bootstrap.configFile=$configFile \
- --set ingress.tls.enabled=${tlsEnabled} \
- --set ingress.tls.existingSecret=${tlsSecret} \
- "${pullSecretArgs[@]}" \
- "${securityContextArgs[@]}" \
- "${overrideValuesArgs[@]}" \
- platform $platformChart
+if [[ -z $certificateLocation ]]; then
+  helm upgrade --install -n $ns --create-namespace \
+  --set secrets.imageCredentials.pull-secret.username="${imagePullUsername}" \
+  --set secrets.imageCredentials.pull-secret.password="${imagePullPAT}" \
+  --set $oidcExternalBaseUrlSetting \
+  --set $ingressHostnameSetting \
+  --set-file bootstrap.configFile=$configFile \
+  --set ingress.tls.enabled=${tlsEnabled} \
+  --set ingress.tls.existingSecret=${tlsSecret} \
+  --set ingress.istioIngressNS=${istioNamespace} \
+  --set keycloak.trustedCertSecret=null
+  "${pullSecretArgs[@]}" \
+  "${securityContextArgs[@]}" \
+  "${overrideValuesArgs[@]}" \
+  platform $platformChart
+else
+  helm upgrade --install -n $ns --create-namespace \
+  --set secrets.imageCredentials.pull-secret.username="${imagePullUsername}" \
+  --set secrets.imageCredentials.pull-secret.password="${imagePullPAT}" \
+  --set $oidcExternalBaseUrlSetting \
+  --set $ingressHostnameSetting \
+  --set-file bootstrap.configFile=$configFile \
+  --set ingress.tls.enabled=${tlsEnabled} \
+  --set ingress.tls.existingSecret=${tlsSecret} \
+  --set ingress.istioIngressNS=${istioNamespace} \
+  "${pullSecretArgs[@]}" \
+  "${securityContextArgs[@]}" \
+  "${overrideValuesArgs[@]}" \
+  platform $platformChart
+fi
 
 echo "Wait for Configuration Artifact Bootstrapping"
 kubectl wait --for=condition=complete job/platform-configsvc-bootstrap --timeout=120s -n $ns
