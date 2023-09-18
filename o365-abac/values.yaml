@@ -49,7 +49,7 @@ service:
 config:
   auth:
     ## @param config.auth.url OIDC Auth Endpoint - override global.opentdf.common.oidcExternalBaseUrl
-    url:
+    url: http://keycloak-http
     ## @param config.auth.org OIDC Organization - overrides global.auth.organization
     org: tdf
     ## @param config.auth.clientId OIDC Client Id
@@ -113,7 +113,9 @@ nameOverride: ""
 ## @param fullnameOverride Override the full name of the chart
 fullnameOverride: ""
 ## @param podAnnotations Pod K8S Annotations
-podAnnotations: { }
+podAnnotations:
+  ## @param podAnnotations.proxy.istio.io/config Istio Proxy Annotations
+  proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
 ## @param podSecurityContext Values for deployment's `spec.template.spec.securityContext`
 podSecurityContext: { }
 autoscaling:

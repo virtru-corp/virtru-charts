@@ -2,9 +2,12 @@ deployHostname: &deployHostname "www.example.org"
 
 config:
   auth:
-    url: *deployHostname
     org: tdf
-    clientId: o365-abac-oidc-client
+    clientId: "my-client-id"
 
   secrets:
-    oidcClientSecret: replaceme
+    oidcClientSecret: my-client-secret
+
+ingress:
+  istio:
+    existingGateway: platform-gateway
