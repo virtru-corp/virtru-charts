@@ -13,7 +13,7 @@ image:
   ## @param image.pullPolicy Image Pull Policy
   pullPolicy: Always
   ## @param image.tag Image tag
-  tag: 0.22.0-8057e1b
+  tag: 0.23.0
 
 ## @section imagePullSecrets Image Pull Secrets - Overrides Global
 imagePullSecrets:
@@ -37,6 +37,11 @@ config:
     dbName: "audit_database"
     ## @param config.db.sslMode Postgresql SSL Mode
     sslMode: "disable"
+  platform:
+    ## @param config.platform.disableInternalAuth disable internal service auth
+    disableInternalAuth: true
+    ## @param config.platform.defaultOrgId orgId used for queries
+    defaultOrgId:
   secrets:
     ## @param config.secrets.dbPassword Postgresql Database password - used if `config.existingSecret` is blank
     dbPassword:
@@ -75,10 +80,26 @@ service:
   ## @param service.port port to expose
   port: 8080
 
+## @section Istio AuthN/Z Parameters
+istioAuth:
+  ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
+  enabled: true
+  ## @param istioAuth.internalJWTURL Whether to compute and use internal keycloak jwks uri - default false
+  internalJWTURL: true
+  oidc: 
+    ## @param istioAuth.oidc.oidcExternalBaseUrl The external base url of the oidc provider
+    oidcExternalBaseUrl: https://shp.example.com
+    ## @param istioAuth.oidc.oidcUrlPath The path added to the base url to reach the oidc provider
+    oidcUrlPath: auth
+    ## @param istioAuth.oidc.keycloakRealm If using keycloak - the realm name
+    keycloakRealm: tdf
+
 ## @section Ingress Configuration
 ingress:
   ## @param ingress.enabled Enable ingress controller resource
   enabled: false
+  ## @param ingress.existingGateway Use an existing istio gateway
+  existingGateway:
   ## @param ingress.className Ingress controller class name
   className: ""
   ## @param ingress.annotations Ingress annotations
