@@ -6,7 +6,7 @@
 | ------------------ | ----------------- | ------------------------------- |
 | `image.repository` | Image repository  | `ghcr.io/virtru-corp/audit-api` |
 | `image.pullPolicy` | Image Pull Policy | `Always`                        |
-| `image.tag`        | Image tag         | `0.22.0-8057e1b`                |
+| `image.tag`        | Image tag         | `0.23.0`                        |
 
 ### imagePullSecrets Image Pull Secrets - Overrides Global
 
@@ -16,19 +16,21 @@
 
 ### Deployment Parameters
 
-| Name                         | Description                                                                                                            | Value            |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| `nameOverride`               | Override name of the chart                                                                                             | `""`             |
-| `fullnameOverride`           | Override the full name of the chart                                                                                    | `""`             |
-| `config.db.host`             | Postgresql DB Host                                                                                                     | `postgresql`     |
-| `config.db.user`             | Postgresql DB Username                                                                                                 | `audit_manager`  |
-| `config.db.port`             | Postgresql DB Port                                                                                                     | `5432`           |
-| `config.db.dbName`           | Postgresql DB Name                                                                                                     | `audit_database` |
-| `config.db.sslMode`          | Postgresql SSL Mode                                                                                                    | `disable`        |
-| `config.secrets.dbPassword`  | Postgresql Database password - used if `config.existingSecret` is blank                                                | `nil`            |
-| `serviceAccount.create`      | Specifies whether a service account should be created                                                                  | `true`           |
-| `serviceAccount.annotations` | Annotations to add to the service account                                                                              | `{}`             |
-| `serviceAccount.name`        | The name of the service account to use. If not set and create is true, a name is generated using the fullname template | `""`             |
+| Name                                  | Description                                                                                                            | Value            |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| `nameOverride`                        | Override name of the chart                                                                                             | `""`             |
+| `fullnameOverride`                    | Override the full name of the chart                                                                                    | `""`             |
+| `config.db.host`                      | Postgresql DB Host                                                                                                     | `postgresql`     |
+| `config.db.user`                      | Postgresql DB Username                                                                                                 | `audit_manager`  |
+| `config.db.port`                      | Postgresql DB Port                                                                                                     | `5432`           |
+| `config.db.dbName`                    | Postgresql DB Name                                                                                                     | `audit_database` |
+| `config.db.sslMode`                   | Postgresql SSL Mode                                                                                                    | `disable`        |
+| `config.platform.disableInternalAuth` | disable internal service auth                                                                                          | `true`           |
+| `config.platform.defaultOrgId`        | orgId used for queries                                                                                                 | `nil`            |
+| `config.secrets.dbPassword`           | Postgresql Database password - used if `config.existingSecret` is blank                                                | `nil`            |
+| `serviceAccount.create`               | Specifies whether a service account should be created                                                                  | `true`           |
+| `serviceAccount.annotations`          | Annotations to add to the service account                                                                              | `{}`             |
+| `serviceAccount.name`                 | The name of the service account to use. If not set and create is true, a name is generated using the fullname template | `""`             |
 
 ### podAnnotations Pod K8S Annotations
 
@@ -45,13 +47,24 @@
 | `service.type` | type of service to create | `ClusterIP` |
 | `service.port` | port to expose            | `8080`      |
 
+### Istio AuthN/Z Parameters
+
+| Name                                 | Description                                                                                                   | Value                     |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `istioAuth.enabled`                  | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration | `true`                    |
+| `istioAuth.internalJWTURL`           | Whether to compute and use internal keycloak jwks uri - default false                                         | `true`                    |
+| `istioAuth.oidc.oidcExternalBaseUrl` | The external base url of the oidc provider                                                                    | `https://shp.example.com` |
+| `istioAuth.oidc.oidcUrlPath`         | The path added to the base url to reach the oidc provider                                                     | `auth`                    |
+| `istioAuth.oidc.keycloakRealm`       | If using keycloak - the realm name                                                                            | `tdf`                     |
+
 ### Ingress Configuration
 
-| Name                  | Description                        | Value   |
-| --------------------- | ---------------------------------- | ------- |
-| `ingress.enabled`     | Enable ingress controller resource | `false` |
-| `ingress.className`   | Ingress controller class name      | `""`    |
-| `ingress.annotations` | Ingress annotations                | `{}`    |
+| Name                      | Description                        | Value   |
+| ------------------------- | ---------------------------------- | ------- |
+| `ingress.enabled`         | Enable ingress controller resource | `false` |
+| `ingress.existingGateway` | Use an existing istio gateway      | `nil`   |
+| `ingress.className`       | Ingress controller class name      | `""`    |
+| `ingress.annotations`     | Ingress annotations                | `{}`    |
 
 ### ingress.hosts Ingress hostnames
 
