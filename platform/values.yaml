@@ -296,12 +296,12 @@ entitlement-attrdef-bootstrap:
     ## @param entitlement-attrdef-bootstrap.entitlements.realms Entitlement override realms
     realms: null
   ## @param entitlement-attrdef-bootstrap.existingConfigSecret Secret name used to Mount bootstrapping data
-  existingConfigSecret: platform-keycloakbootstrap-config
+  existingConfigSecret: platform-keycloak-bootstrap-config
   ## @param entitlement-attrdef-bootstrap.istioTerminationHack Set istio on/off
   istioTerminationHack: *istioTerminationHack
   ## @param entitlement-attrdef-bootstrap.secretRef Secret for bootstrap job env variables.
   secretRef: |-
-    name: platform-keycloakbootstrap-secret
+    name: platform-keycloak-bootstrap-secret
   attributes:
     ## @param entitlement-attrdef-bootstrap.attributes.hostname Attribute service endpoint accessible to boostrap job
     hostname: *attrEndpoint
