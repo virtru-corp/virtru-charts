@@ -279,16 +279,16 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 ### Attribute Definition / Entitlements Bootstrap Chart Overrides
 
-| Name                                                  | Description                                           | Value                                     |
-| ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------- |
-| `entitlement-attrdef-bootstrap.entitlements.hostname` | Entitlement svc hostname                              | `http://entitlements:4030`                |
-| `entitlement-attrdef-bootstrap.entitlements.realms`   | Entitlement override realms                           | `nil`                                     |
-| `entitlement-attrdef-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `platform-keycloakbootstrap-config`       |
-| `entitlement-attrdef-bootstrap.istioTerminationHack`  | Set istio on/off                                      | `true`                                    |
-| `entitlement-attrdef-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: platform-keycloakbootstrap-secret` |
-| `entitlement-attrdef-bootstrap.attributes.hostname`   | Attribute service endpoint accessible to boostrap job | `http://attributes:4020`                  |
-| `entitlement-attrdef-bootstrap.attributes.realm`      | Realm for OIDC client auth to attribute service       | `tdf`                                     |
-| `entitlement-attrdef-bootstrap.attributes.clientId`   | OIDC client ID used to auth to attribute service      | `dcr-test`                                |
+| Name                                                  | Description                                           | Value                                      |
+| ----------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------ |
+| `entitlement-attrdef-bootstrap.entitlements.hostname` | Entitlement svc hostname                              | `http://entitlements:4030`                 |
+| `entitlement-attrdef-bootstrap.entitlements.realms`   | Entitlement override realms                           | `nil`                                      |
+| `entitlement-attrdef-bootstrap.existingConfigSecret`  | Secret name used to Mount bootstrapping data          | `platform-keycloak-bootstrap-config`       |
+| `entitlement-attrdef-bootstrap.istioTerminationHack`  | Set istio on/off                                      | `true`                                     |
+| `entitlement-attrdef-bootstrap.secretRef`             | Secret for bootstrap job env variables.               | `name: platform-keycloak-bootstrap-secret` |
+| `entitlement-attrdef-bootstrap.attributes.hostname`   | Attribute service endpoint accessible to boostrap job | `http://attributes:4020`                   |
+| `entitlement-attrdef-bootstrap.attributes.realm`      | Realm for OIDC client auth to attribute service       | `tdf`                                      |
+| `entitlement-attrdef-bootstrap.attributes.clientId`   | OIDC client ID used to auth to attribute service      | `dcr-test`                                 |
 
 ### Docker Registry Configuration
 
