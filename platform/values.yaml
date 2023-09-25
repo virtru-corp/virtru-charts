@@ -39,6 +39,10 @@ keycloak:
 bootstrap:
   ## @param bootstrap.attrDefOrEntitlements Should entitlements and/or attributes be bootstrapped.
   attrDefOrEntitlements: true
+  ## @param bootstrap.oidcClientOrg The OIDC Org for bootstrap client authentication
+  oidcClientOrg: tdf
+  ## @param bootstrap.oidcClientId The OIDC ClientID for boostrap client authentication
+  oidcClientId: dcr-test
   configsvc:
     ## @param bootstrap.configsvc.enabled Enable configuration service artifact bootstrapping
     enabled: true
