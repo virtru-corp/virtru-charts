@@ -187,10 +187,14 @@ echo "#5 Wait for bootstrap job"
 kubectl wait --for=condition=complete job/platform-keycloak-bootstrapper-job --timeout=120s -n $ns
 
 echo "getting entitlement policy version"
-entitlementPolicyVersion=$(cat $entitlementPolicyLocation/VERSION.txt)
-if [[ -z $entitlementPolicyVersion ]]; then
-  echo "\nERROR: Entitlement policy directory provided does not contain version file"
-  exit 1;
+entitlementPolicyVersionTagArgs=()
+if [[ -f "$entitlementPolicyLocation/VERSION.txt" ]]; then
+  entitlementPolicyVersion=$(cat $entitlementPolicyLocation/VERSION.txt)
+  echo "setting entitlement policy tag to version $entitlementPolicyVersion"
+  entitlementPolicyVersionTagArgs+=("--set" "entitlement-policy-bootstrap.bundleTag=${entitlementPolicyVersion}"
+                        "--set" "entitlement-pdp.opaConfig.policy.bundleTag=${entitlementPolicyVersion}")
+else
+  echo "\nWARNING: Entitlement policy directory provided does not contain version file, policy tag must be provided in values"
 fi
 
 echo "installing entitlement policy secret"
@@ -215,8 +219,7 @@ helm upgrade --install -n $ns --create-namespace \
  --set-file bootstrap.configFile=$configFile \
  --set ingress.tls.enabled=${tlsEnabled} \
  --set ingress.tls.existingSecret=${tlsSecret} \
- --set entitlement-policy-bootstrap.bundleTag=${entitlementPolicyVersion} \
- --set entitlement-pdp.opaConfig.policy.bundleTag=${entitlementPolicyVersion} \
+ "${entitlementPolicyVersionTagArgs[@]}" \
  "${pullSecretArgs[@]}" \
  "${securityContextArgs[@]}" \
  "${overrideValuesArgs[@]}" \
