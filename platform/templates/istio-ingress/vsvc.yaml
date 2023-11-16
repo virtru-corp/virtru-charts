@@ -65,17 +65,6 @@ spec:
               number: 4020
     - match:
         - uri:
-            prefix: /api/claims/
-      name: claims
-      rewrite:
-        uri: /
-      route:
-        - destination:
-            host: entitlement-pdp
-            port:
-              number: 3355
-    - match:
-        - uri:
             prefix: /api/entitlements/
       name: entitlements
       rewrite:
