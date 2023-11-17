@@ -10,7 +10,6 @@ configArtifacts:
   - name: o365-abac.local
     yamlRefKey: o365abacsvc_config
     contentType: "application/json"
-    externalFileRef:
 
 o365abacsvc_config:
   autoBlock: false

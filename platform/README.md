@@ -57,7 +57,6 @@ configArtifacts:
   - name: chat.us
     yamlRefKey: chatConfig
     contentType: "application/yaml"
-    externalFileRef:
 
 #Chat configuration payload
 chatConfig:
