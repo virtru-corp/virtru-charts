@@ -10,7 +10,6 @@ configArtifacts:
   - name: sharepoint
     yamlRefKey: sharepointsvc_config
     contentType: "application/json"
-    externalFileRef:
 
 sharepointsvc.config:
   sharepointAuth:

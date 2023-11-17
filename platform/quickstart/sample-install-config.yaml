@@ -18,7 +18,6 @@ configArtifacts:
   - name: taggingpdp.config
     yamlRefKey: taggingpdp_config
     contentType: "application/yaml"
-    externalFileRef:
 
 taggingpdp_config:
   contentExtractors:
