@@ -35,8 +35,10 @@ spec:
           envFrom:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
+          {{- if not not .Values.externalAppSecrets }}
           - secretRef:
               name: {{ .Values.appSecrets.virtruAuth.name }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -55,15 +57,19 @@ spec:
             timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if not not .Values.externalAppSecrets }}
           volumeMounts:
           - mountPath: "/app/keys"
             name: {{ .Values.appSecrets.virtruKeys.name }}
             readOnly: true
+          {{- end }}
+      {{- if not not .Values.externalAppSecrets }}
       volumes:
       - name: {{ .Values.appSecrets.virtruKeys.name }}
         secret:
           defaultMode: 420
           secretName: {{ .Values.appSecrets.virtruKeys.name }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

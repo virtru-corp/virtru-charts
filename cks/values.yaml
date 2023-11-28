@@ -31,10 +31,12 @@ testerPod:
   annotations:
     helm.sh/hook: test
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -69,7 +71,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -127,3 +130,13 @@ appSecrets:
         <rsa001 public key>
       rsa001.pem: |
         <rsa001 private key>
+
+#https://external-secrets.io/v0.8.2/introduction/overview/
+#externalAppSecrets:
+#- name: <external secret object name> #secret object will be named the same.
+#  secretsPath: <path of secret in secret store>
+#  secretStoreRef:
+#    kind: <SecretStore or ClusterSecretStore>
+#    name: <name of secret store>
+#  refreshInterval: <how often to reconcile with secret store>
+#
