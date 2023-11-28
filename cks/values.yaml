@@ -7,7 +7,7 @@ replicaCount: 3
 revisionHistoryLimit: 10
 
 image:
-  repository: virtru/cks 
+  repository: virtru/cks
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -59,11 +59,11 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
-      - path: /*
-        pathType: ImplementationSpecific
-        backend:
-          serviceName: cks
-          servicePort: 443
+        - path: /*
+          pathType: ImplementationSpecific
+          backend:
+            serviceName: cks
+            servicePort: 443
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -94,6 +94,20 @@ tolerations: []
 
 affinity: {}
 
+appConfig:
+  virtruOrgId: "<your org id>"
+  authTokenStoreageType: in-memory
+  logRsyslogEnabled: false
+  logStdoutEnabled: true
+  noKeysRule: importPEM
+  publicKeyPath: /run/secrets/rsa001.pub
+  privateKeyPath: /run/secrets/rsa001.pem
+  keyProviderType: file
+  hmacAuthEnabled: true
+  jwtAuthEnabled: true
+  jwtAuthIssuer: https://api.virtru.com
+  jwtAuthJwksPath: /acm/api/jwks
+
 # By default, you can create secrets using the keys below.
 # Important note: Creating secrets in this way is a default option.
 # While a simpler approach with fewer variables, it is recommended you use
@@ -104,7 +118,7 @@ appSecrets:
     name: hmac-auth
     data:
       authTokenJson: <JSON from your CKS>
-      
+
   virtruKeys:
     name: cks-keys
     mountPath: /app/keys
