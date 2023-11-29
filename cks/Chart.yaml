@@ -3,4 +3,4 @@ name: cks
 description: A service for Virtru customers who wish to manage their own keys
 type: application
 version: 0.7.7
-appVersion: v1.8.8
+appVersion: v1.8.11
