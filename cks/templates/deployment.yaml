@@ -35,7 +35,7 @@ spec:
           envFrom:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
-          {{- if not not .Values.externalAppSecrets }}
+          {{- if not .Values.externalAppSecrets }}
           - secretRef:
               name: {{ .Values.appSecrets.virtruAuth.name }}
           {{- end }}
@@ -57,13 +57,13 @@ spec:
             timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if not not .Values.externalAppSecrets }}
+          {{- if not .Values.externalAppSecrets }}
           volumeMounts:
           - mountPath: "/app/keys"
             name: {{ .Values.appSecrets.virtruKeys.name }}
             readOnly: true
           {{- end }}
-      {{- if not not .Values.externalAppSecrets }}
+      {{- if not .Values.externalAppSecrets }}
       volumes:
       - name: {{ .Values.appSecrets.virtruKeys.name }}
         secret:
