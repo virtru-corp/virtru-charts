@@ -46,7 +46,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: hmac-auth-token-json
-                name: {{ .secretsPath }}
+                name: {{ .name }}
           {{- end }}
           {{- end }}
           securityContext:
@@ -94,7 +94,7 @@ spec:
       - name: {{ .name }}
         secret:
           defaultMode: 420
-          secretName: {{ .secretsPath }}
+          secretName: {{ .name }}
       {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
