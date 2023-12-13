@@ -46,7 +46,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: hmac-auth-token-json
-                name: {{ .name }}
+                name: {{ .secretsPath }}
           {{- end }}
           {{- end }}
           securityContext:
