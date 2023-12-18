@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: virtru/gateway
+  repository: containers.virtru.com/gateway
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
