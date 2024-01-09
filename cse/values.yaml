@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: virtru/cse
+  repository: containers.virtru.com/cse
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

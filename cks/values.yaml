@@ -7,7 +7,7 @@ replicaCount: 3
 revisionHistoryLimit: 10
 
 image:
-  repository: virtru/cks
+  repository: containers.virtru.com/cks
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
