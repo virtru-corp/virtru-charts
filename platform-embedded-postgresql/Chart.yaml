@@ -2,8 +2,8 @@ apiVersion: v2
 name: platform-embedded-postgresql
 description: Helper chart to deploy a non production postgresql database into a cluster
 type: application
-version: 0.2.0
-appVersion: 0.2.0
+version: 0.3.0
+appVersion: 0.3.0
 
 dependencies:
   - name: common-lib

@@ -143,6 +143,8 @@ access-pep:
   enabled: true
   ## @param access-pep.name Name override
   name: access-pep
+  ## @param access-pep.fullnameOverride Access-Pep Name Override
+  fullnameOverride: access-pep
   ## @param access-pep.existingImagePullSecret Existing pull secret for the image
   existingImagePullSecret:
   ## @skip access-pep.useImagePullSecret
@@ -416,6 +418,9 @@ tagging-pdp:
     oidcSecretName: platform-tagging-pdp-secret
     ## @param tagging-pdp.config.oidcClientId OIDC Client ID for tagging pdp
     oidcClientId: shp-tagging-pdp
+  ## @skip tagging-pdp.securityContext
+  securityContext:
+    runAsUser: 0
 
 ## @param tdfAdminUsername The admin user created for tdf.
 tdfAdminUsername: tdf-admin

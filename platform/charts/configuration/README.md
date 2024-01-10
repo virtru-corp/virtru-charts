@@ -9,21 +9,20 @@ This chart requires [Istio](https://istio.io) Service Mesh to be installed.
 Use an external PostgreSQL database
 
 ```sql
-CREATE DATABASE tdf_database;
--- use above database
-CREATE SCHEMA IF NOT EXISTS scp_configuration;
-
-CREATE TABLE IF NOT EXISTS scp_configuration.configuration
+CREATE DATABASE config_database;
+\connect config_database;
+CREATE TABLE IF NOT EXISTS configuration
 (
     id        VARCHAR PRIMARY KEY,
     bytes     BYTEA NOT NULL,
-    modified  VARCHAR NOT NULL
+    modified  VARCHAR NOT NULL,
+    contenttype  VARCHAR NOT NULL
 );
 -- user
-CREATE ROLE scp_configuration_manager WITH LOGIN PASSWORD 'myPostgresPassword';
-GRANT USAGE ON SCHEMA scp_configuration TO scp_configuration_manager;
-GRANT USAGE ON ALL SEQUENCES IN SCHEMA scp_configuration TO scp_configuration_manager;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA scp_configuration TO scp_configuration_manager;
+CREATE ROLE configuration_manager WITH LOGIN PASSWORD myPostgresPassword;
+GRANT SELECT, INSERT, UPDATE, DELETE ON configuration TO configuration_manager;
+CREATE ROLE configuration_reader WITH LOGIN PASSWORD myPostgresPassword;
+GRANT SELECT ON configuration TO configuration_reader;
 ```
 
 ## Values
@@ -46,7 +45,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA scp_configuration T
 | server.postgres.database | string | `"tdf_database"` |  |
 | server.postgres.host | string | `""` |  |
 | server.postgres.port | int | `5432` |  |
-| server.postgres.user | string | `"scp_configuration_manager"` |  |
+| server.postgres.user | string | `"configuration_manager"` |  |
 | server.replicaCount | int | `1` |  |
 | server.resources | object | `{}` | Specify required limits for deploying this service to a pod. We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. |
 | server.secretRef | string | `nil` |  |
