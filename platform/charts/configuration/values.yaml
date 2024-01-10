@@ -32,10 +32,10 @@ server:
     # If not set and create is true, a name is generated using the fullname template
     name: null
   postgres:
-    user: scp_configuration_manager
+    user: configuration_manager
     host: ""
     port: 5432
-    database: tdf_database
+    database: config_database
   replicaCount: 1
   autoscaling:
     enabled: false

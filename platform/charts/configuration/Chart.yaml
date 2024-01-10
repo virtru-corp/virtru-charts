@@ -2,7 +2,7 @@ apiVersion: v2
 name: configuration
 description: A Helm chart for OpenTDF Configuration, a service for providing configuration to applications and other services.
 type: application
-version: 0.3.0
+version: 0.4.0
 appVersion: 0.0.1
 kubeVersion: ">=1.23.0-0"
 home: https://github.com/opentdf/backend/tree/main/charts/configuration
