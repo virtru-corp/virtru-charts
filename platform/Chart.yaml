@@ -2,7 +2,7 @@ apiVersion: v2
 name: platform
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.3.3
+version: 0.3.4
 appVersion: 0.1.4
 
 otdfVersion: &otdfVersion "1.5.0"
@@ -60,7 +60,7 @@ dependencies:
 
   - name: configuration
     repository: file://./charts/configuration
-    version: '0.3.0'
+    version: '0.4.0'
     condition: configuration.enabled
 
   # Private OCI Registry for OPA Policy Bundles
