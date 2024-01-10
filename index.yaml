@@ -1,1115 +1,1055 @@
 apiVersion: v1
 entries:
   cks:
-  - apiVersion: v2
-    appVersion: v1.8.12
-    created: "2024-01-10T11:50:17.59332-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: 2ad99c9a11c7d48b969d7f184d92bd991952d6c1ab52734aef55b3e63a8a5e56
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.9.tgz
-    version: 0.7.9
-  - apiVersion: v2
-    appVersion: v1.8.11
-    created: "2024-01-10T11:50:17.592795-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: f9945ceab9dd2f06436a2abc76fd2792f0597a0539ea0f12cececc16b3e6e6ca
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.8.tgz
-    version: 0.7.8
-  - apiVersion: v2
-    appVersion: v1.8.8
-    created: "2024-01-10T11:50:17.592174-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: 78e0cf63e4cba12c7970511dc61f1c4635fa30948cc74da63d6cd54a076f28a1
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.7.tgz
-    version: 0.7.7
-  - apiVersion: v2
-    appVersion: v1.8.6
-    created: "2024-01-10T11:50:17.591459-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: 4fd1f2e28a0b868efad841970082116bcb1645cd8f3cb9ef5f4638cc0affaaac
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.6.tgz
-    version: 0.7.6
-  - apiVersion: v2
-    appVersion: v1.8.3
-    created: "2024-01-10T11:50:17.590944-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: 157fd2c9659a52bf33ffe4137365a41f4386ba26f2d92322ef5371cd0c205a0e
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.5.tgz
-    version: 0.7.5
-  - apiVersion: v2
-    appVersion: v1.6.2
-    created: "2024-01-10T11:50:17.590322-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.4.tgz
-    version: 0.7.4
-  - apiVersion: v2
-    appVersion: v1.6.0
-    created: "2024-01-10T11:50:17.58979-05:00"
-    description: A service for Virtru customers who wish to manage their own keys
-    digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
-    name: cks
-    type: application
-    urls:
-    - cks-0.7.3.tgz
-    version: 0.7.3
+    - apiVersion: v2
+      appVersion: v1.8.12
+      created: "2024-01-10T09:53:07.384916-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: 5d7bc04722c02fc9c6ab78c2a7fd124f8d7a74e13cbbeb3a86ddc6c3675c2004
+      name: cks
+      type: application
+      urls:
+        - cks-0.8.0.tgz
+      version: 0.8.0
+    - apiVersion: v2
+      appVersion: v1.8.12
+      created: "2024-01-10T09:53:07.384451-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: 2ad99c9a11c7d48b969d7f184d92bd991952d6c1ab52734aef55b3e63a8a5e56
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.9.tgz
+      version: 0.7.9
+    - apiVersion: v2
+      appVersion: v1.8.11
+      created: "2024-01-10T09:53:07.383919-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: f9945ceab9dd2f06436a2abc76fd2792f0597a0539ea0f12cececc16b3e6e6ca
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.8.tgz
+      version: 0.7.8
+    - apiVersion: v2
+      appVersion: v1.8.8
+      created: "2024-01-10T09:53:07.383448-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: 78e0cf63e4cba12c7970511dc61f1c4635fa30948cc74da63d6cd54a076f28a1
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.7.tgz
+      version: 0.7.7
+    - apiVersion: v2
+      appVersion: v1.8.6
+      created: "2024-01-10T09:53:07.382912-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: 4fd1f2e28a0b868efad841970082116bcb1645cd8f3cb9ef5f4638cc0affaaac
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.6.tgz
+      version: 0.7.6
+    - apiVersion: v2
+      appVersion: v1.8.3
+      created: "2024-01-10T09:53:07.382551-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: 157fd2c9659a52bf33ffe4137365a41f4386ba26f2d92322ef5371cd0c205a0e
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.5.tgz
+      version: 0.7.5
+    - apiVersion: v2
+      appVersion: v1.6.2
+      created: "2024-01-10T09:53:07.382066-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.4.tgz
+      version: 0.7.4
+    - apiVersion: v2
+      appVersion: v1.6.0
+      created: "2024-01-10T09:53:07.381643-08:00"
+      description: A service for Virtru customers who wish to manage their own keys
+      digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
+      name: cks
+      type: application
+      urls:
+        - cks-0.7.3.tgz
+      version: 0.7.3
   common-lib:
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.593525-05:00"
-    description: Common helper library
-    digest: 66c249a5ad2b9fc12404f69d75638773d500513d628b7a9e0e45798021b77d9f
-    name: common-lib
-    type: library
-    urls:
-    - common-lib-0.1.0.tgz
-    version: 0.1.0
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.385024-08:00"
+      description: Common helper library
+      digest: 66c249a5ad2b9fc12404f69d75638773d500513d628b7a9e0e45798021b77d9f
+      name: common-lib
+      type: library
+      urls:
+        - common-lib-0.1.0.tgz
+      version: 0.1.0
   cse:
-  - apiVersion: v2
-    appVersion: v5.6.0
-    created: "2024-01-10T11:50:17.596704-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 76ae6a56bfacd8d242ef74134d8a627ab85978fcb6384b421fda2945273f477b
-    name: cse
-    type: application
-    urls:
-    - cse-0.7.8.tgz
-    version: 0.7.8
-  - apiVersion: v2
-    appVersion: v5.6.0
-    created: "2024-01-10T11:50:17.59633-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 1c345f53e73ba971a92bc47dc81669f85b91eeba41e13541b95ff05e8823cf1a
-    name: cse
-    type: application
-    urls:
-    - cse-0.7.7.tgz
-    version: 0.7.7
-  - apiVersion: v2
-    appVersion: v5.5.0
-    created: "2024-01-10T11:50:17.595802-05:00"
-    description: A Helm chart for Kubernetes
-    digest: f99a8198ab44942088b6ae00b6008ebc0f5dfa295faa0d0ad7ad8e5e05cf996d
-    name: cse
-    type: application
-    urls:
-    - cse-0.7.6.tgz
-    version: 0.7.6
-  - apiVersion: v2
-    appVersion: v5.3.1
-    created: "2024-01-10T11:50:17.595099-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 1c687582f911f71375cc0c6a5f3a2411bbf10e493929b2c384928ec0ce5bb021
-    name: cse
-    type: application
-    urls:
-    - cse-0.7.4.tgz
-    version: 0.7.4
-  - apiVersion: v2
-    appVersion: v5.2.0
-    created: "2024-01-10T11:50:17.594597-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
-    name: cse
-    type: application
-    urls:
-    - cse-0.7.3.tgz
-    version: 0.7.3
-  - apiVersion: v2
-    appVersion: v5.0.2
-    created: "2024-01-10T11:50:17.594037-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
-    name: cse
-    type: application
-    urls:
-    - cse-0.7.2.tgz
-    version: 0.7.2
+    - apiVersion: v2
+      appVersion: v5.6.0
+      created: "2024-01-10T09:53:07.388119-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 76ae6a56bfacd8d242ef74134d8a627ab85978fcb6384b421fda2945273f477b
+      name: cse
+      type: application
+      urls:
+        - cse-0.7.8.tgz
+      version: 0.7.8
+    - apiVersion: v2
+      appVersion: v5.6.0
+      created: "2024-01-10T09:53:07.387727-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 1c345f53e73ba971a92bc47dc81669f85b91eeba41e13541b95ff05e8823cf1a
+      name: cse
+      type: application
+      urls:
+        - cse-0.7.7.tgz
+      version: 0.7.7
+    - apiVersion: v2
+      appVersion: v5.5.0
+      created: "2024-01-10T09:53:07.387325-08:00"
+      description: A Helm chart for Kubernetes
+      digest: f99a8198ab44942088b6ae00b6008ebc0f5dfa295faa0d0ad7ad8e5e05cf996d
+      name: cse
+      type: application
+      urls:
+        - cse-0.7.6.tgz
+      version: 0.7.6
+    - apiVersion: v2
+      appVersion: v5.3.1
+      created: "2024-01-10T09:53:07.386712-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 1c687582f911f71375cc0c6a5f3a2411bbf10e493929b2c384928ec0ce5bb021
+      name: cse
+      type: application
+      urls:
+        - cse-0.7.4.tgz
+      version: 0.7.4
+    - apiVersion: v2
+      appVersion: v5.2.0
+      created: "2024-01-10T09:53:07.385815-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
+      name: cse
+      type: application
+      urls:
+        - cse-0.7.3.tgz
+      version: 0.7.3
+    - apiVersion: v2
+      appVersion: v5.0.2
+      created: "2024-01-10T09:53:07.385414-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
+      name: cse
+      type: application
+      urls:
+        - cse-0.7.2.tgz
+      version: 0.7.2
   gateway:
-  - apiVersion: v2
-    appVersion: 2.43.0
-    created: "2024-01-10T11:50:17.601111-05:00"
-    description: A Helm chart for Kubernetes
-    digest: e20c91e3bf8d0ef2b790e8582f911df8779dd92a8152c75cd3ab1b9fd3d06666
-    name: gateway
-    type: application
-    urls:
-    - gateway-2.1.1.tgz
-    version: 2.1.1
-  - apiVersion: v2
-    appVersion: 2.41.0
-    created: "2024-01-10T11:50:17.600505-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 00b5980e81a4ed2b09f14554cfca0277aefaacab1f1f72e10f77a71ef5efc90a
-    name: gateway
-    type: application
-    urls:
-    - gateway-2.1.0.tgz
-    version: 2.1.0
-  - apiVersion: v2
-    appVersion: 2.38.0
-    created: "2024-01-10T11:50:17.599799-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 030245c1e265d535c530acd93578c32ee1cc3f30dfd37cb0387da3b9bde873c4
-    name: gateway
-    type: application
-    urls:
-    - gateway-2.0.5.tgz
-    version: 2.0.5
-  - apiVersion: v2
-    appVersion: 2.35.0
-    created: "2024-01-10T11:50:17.598953-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 2f528d55b6bf4c005adeff359bb359a79a15111db5fd856863beb185babf5f13
-    name: gateway
-    type: application
-    urls:
-    - gateway-2.0.4.tgz
-    version: 2.0.4
-  - apiVersion: v2
-    appVersion: 2.30.0
-    created: "2024-01-10T11:50:17.598229-05:00"
-    description: A Helm chart for Kubernetes
-    digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
-    name: gateway
-    type: application
-    urls:
-    - gateway-2.0.3.tgz
-    version: 2.0.3
-  - apiVersion: v2
-    appVersion: 2.27.0
-    created: "2024-01-10T11:50:17.597232-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
-    name: gateway
-    type: application
-    urls:
-    - gateway-2.0.2.tgz
-    version: 2.0.2
+    - apiVersion: v2
+      appVersion: 2.43.0
+      created: "2024-01-10T09:53:07.391799-08:00"
+      description: A Helm chart for Kubernetes
+      digest: e20c91e3bf8d0ef2b790e8582f911df8779dd92a8152c75cd3ab1b9fd3d06666
+      name: gateway
+      type: application
+      urls:
+        - gateway-2.1.1.tgz
+      version: 2.1.1
+    - apiVersion: v2
+      appVersion: 2.41.0
+      created: "2024-01-10T09:53:07.391052-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 00b5980e81a4ed2b09f14554cfca0277aefaacab1f1f72e10f77a71ef5efc90a
+      name: gateway
+      type: application
+      urls:
+        - gateway-2.1.0.tgz
+      version: 2.1.0
+    - apiVersion: v2
+      appVersion: 2.38.0
+      created: "2024-01-10T09:53:07.390388-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 030245c1e265d535c530acd93578c32ee1cc3f30dfd37cb0387da3b9bde873c4
+      name: gateway
+      type: application
+      urls:
+        - gateway-2.0.5.tgz
+      version: 2.0.5
+    - apiVersion: v2
+      appVersion: 2.35.0
+      created: "2024-01-10T09:53:07.389774-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 2f528d55b6bf4c005adeff359bb359a79a15111db5fd856863beb185babf5f13
+      name: gateway
+      type: application
+      urls:
+        - gateway-2.0.4.tgz
+      version: 2.0.4
+    - apiVersion: v2
+      appVersion: 2.30.0
+      created: "2024-01-10T09:53:07.389235-08:00"
+      description: A Helm chart for Kubernetes
+      digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
+      name: gateway
+      type: application
+      urls:
+        - gateway-2.0.3.tgz
+      version: 2.0.3
+    - apiVersion: v2
+      appVersion: 2.27.0
+      created: "2024-01-10T09:53:07.388688-08:00"
+      description: A Helm chart for Kubernetes
+      digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
+      name: gateway
+      type: application
+      urls:
+        - gateway-2.0.2.tgz
+      version: 2.0.2
   o365-abac:
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.602716-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.39348-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+      description: o365-ABAC Helm Chart
+      digest: 11be33550d7a41b6085d5a21fca67099a5499c994152145f9010676ccee5a85f
+      name: o365-abac
+      type: application
+      urls:
+        - o365-abac-0.2.0.tgz
+      version: 0.2.0
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.392797-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+      description: o365-ABAC Helm Chart
+      digest: 0418cbdb17f844294775cf3d4b933a58d5fb06f3cd5589342da3870549c4c17b
+      name: o365-abac
+      type: application
+      urls:
+        - o365-abac-0.1.0.tgz
       version: 0.1.0
-    description: o365-ABAC Helm Chart
-    digest: 11be33550d7a41b6085d5a21fca67099a5499c994152145f9010676ccee5a85f
-    name: o365-abac
-    type: application
-    urls:
-    - o365-abac-0.2.0.tgz
-    version: 0.2.0
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.601901-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    description: o365-ABAC Helm Chart
-    digest: 0418cbdb17f844294775cf3d4b933a58d5fb06f3cd5589342da3870549c4c17b
-    name: o365-abac
-    type: application
-    urls:
-    - o365-abac-0.1.0.tgz
-    version: 0.1.0
   platform:
-  - apiVersion: v2
-    appVersion: 0.1.4
-    created: "2024-01-10T11:50:17.652413-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: attributes.enabled
-      name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entitlement-pdp.enabled
-      name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entitlement-store.enabled
-      name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entitlements.enabled
-      name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entity-resolution.enabled
-      name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: kas.enabled
-      name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-574135b
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.4.0
-    - condition: docker-registry.enabled
-      name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.5.0
-    - alias: entitlement-policy-bootstrap
-      condition: bootstrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 633ac05dc0a75cd608a45785a5c5fc28486becbf7a280e3b0d7e6ce5e25aea32
-    name: platform
-    type: application
-    urls:
-    - platform-0.3.4.tgz
-    version: 0.3.4
-  - apiVersion: v2
-    appVersion: 0.1.4
-    created: "2024-01-10T11:50:17.646888-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: attributes.enabled
-      name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entitlement-pdp.enabled
-      name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entitlement-store.enabled
-      name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entitlements.enabled
-      name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: entity-resolution.enabled
-      name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - condition: kas.enabled
-      name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.5.0
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-574135b
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
+    - apiVersion: v2
+      appVersion: 0.1.4
+      created: "2024-01-10T09:53:07.437753-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - condition: attributes.enabled
+          name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - condition: entitlement-pdp.enabled
+          name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - condition: entitlement-store.enabled
+          name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - condition: entitlements.enabled
+          name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - condition: entity-resolution.enabled
+          name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - condition: kas.enabled
+          name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.5.0
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-574135b
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - condition: docker-registry.enabled
+          name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.5.0
+        - alias: entitlement-policy-bootstrap
+          condition: bootstrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 071b6f686249d40cc356bfbe0d28195d4d54cc1622d721c00ffa47fd60ac8043
+      name: platform
+      type: application
+      urls:
+        - platform-0.3.3.tgz
+      version: 0.3.3
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.43199-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.1
+        - condition: attributes.enabled
+          name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlement-pdp.enabled
+          name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlement-store.enabled
+          name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlements.enabled
+          name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entity-resolution.enabled
+          name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: kas.enabled
+          name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-a61d7d3
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - condition: docker-registry.enabled
+          name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.4.2
+        - alias: entitlement-policy-bootstrap
+          condition: bootstrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 8496b6a7912873f8c3c0451cd4645e3658ed3ed3f1c1274b626257ace7b81aba
+      name: platform
+      type: application
+      urls:
+        - platform-0.3.2.tgz
+      version: 0.3.2
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.426375-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.1
+        - condition: attributes.enabled
+          name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlement-pdp.enabled
+          name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlement-store.enabled
+          name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlements.enabled
+          name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entity-resolution.enabled
+          name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: kas.enabled
+          name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-a61d7d3
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - condition: docker-registry.enabled
+          name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.4.2
+        - alias: entitlement-policy-bootstrap
+          condition: bootstrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: b418fa6269558fed6f6d2556c26c0e108b62871b5ff8cdaa5e066be05046c252
+      name: platform
+      type: application
+      urls:
+        - platform-0.3.1.tgz
+      version: 0.3.1
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.420511-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.1
+        - condition: attributes.enabled
+          name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlement-pdp.enabled
+          name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlement-store.enabled
+          name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entitlements.enabled
+          name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: entity-resolution.enabled
+          name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - condition: kas.enabled
+          name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.2
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-a61d7d3
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - condition: docker-registry.enabled
+          name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.4.2
+        - alias: entitlement-policy-bootstrap
+          condition: bootstrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 58f7c944ff1f4adc83d2e7aa2e8aae29f560bc535cd98722513f89dd8fcf8005
+      name: platform
+      type: application
+      urls:
+        - platform-0.3.0.tgz
       version: 0.3.0
-    - condition: docker-registry.enabled
-      name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.5.0
-    - alias: entitlement-policy-bootstrap
-      condition: bootstrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 071b6f686249d40cc356bfbe0d28195d4d54cc1622d721c00ffa47fd60ac8043
-    name: platform
-    type: application
-    urls:
-    - platform-0.3.3.tgz
-    version: 0.3.3
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.640981-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.1
-    - condition: attributes.enabled
-      name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlement-pdp.enabled
-      name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlement-store.enabled
-      name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlements.enabled
-      name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entity-resolution.enabled
-      name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: kas.enabled
-      name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-a61d7d3
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - condition: docker-registry.enabled
-      name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.4.2
-    - alias: entitlement-policy-bootstrap
-      condition: bootstrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 8496b6a7912873f8c3c0451cd4645e3658ed3ed3f1c1274b626257ace7b81aba
-    name: platform
-    type: application
-    urls:
-    - platform-0.3.2.tgz
-    version: 0.3.2
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.63532-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.1
-    - condition: attributes.enabled
-      name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlement-pdp.enabled
-      name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlement-store.enabled
-      name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlements.enabled
-      name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entity-resolution.enabled
-      name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: kas.enabled
-      name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-a61d7d3
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - condition: docker-registry.enabled
-      name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.4.2
-    - alias: entitlement-policy-bootstrap
-      condition: bootstrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: b418fa6269558fed6f6d2556c26c0e108b62871b5ff8cdaa5e066be05046c252
-    name: platform
-    type: application
-    urls:
-    - platform-0.3.1.tgz
-    version: 0.3.1
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.630007-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.1
-    - condition: attributes.enabled
-      name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlement-pdp.enabled
-      name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlement-store.enabled
-      name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entitlements.enabled
-      name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: entity-resolution.enabled
-      name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - condition: kas.enabled
-      name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.2
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-a61d7d3
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - condition: docker-registry.enabled
-      name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.4.2
-    - alias: entitlement-policy-bootstrap
-      condition: bootstrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 58f7c944ff1f4adc83d2e7aa2e8aae29f560bc535cd98722513f89dd8fcf8005
-    name: platform
-    type: application
-    urls:
-    - platform-0.3.0.tgz
-    version: 0.3.0
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.62466-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-c00bac0
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.4.0
-    - alias: entitlement-policy-bootstrap
-      condition: boostrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 10e18e1e580de07ec9b5b708c7a899511db86305181324d3ecc06f4036b54178
-    name: platform
-    type: application
-    urls:
-    - platform-0.2.2.tgz
-    version: 0.2.2
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.618911-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-c00bac0
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.4.0
-    - alias: entitlement-policy-bootstrap
-      condition: boostrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 84384b9d4d7c32b424b24fb389bea5afbdb16dc39a15f0e397ad7f0b8faacccd
-    name: platform
-    type: application
-    urls:
-    - platform-0.2.1.tgz
-    version: 0.2.1
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.61363-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.4.0
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-c00bac0
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.4.0
-    - alias: entitlement-policy-bootstrap
-      condition: boostrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 28a84272059dbf26386587e38d57c00ec0f76279192f4f11a2e3fa001ba278f6
-    name: platform
-    type: application
-    urls:
-    - platform-0.2.0.tgz
-    version: 0.2.0
-  - apiVersion: v2
-    appVersion: 0.1.3
-    created: "2024-01-10T11:50:17.608912-05:00"
-    dependencies:
-    - condition: abacus.enabled
-      name: abacus
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: attributes
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: entitlement-pdp
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: entitlement-store
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: entitlements
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: entity-resolution
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: kas
-      repository: oci://ghcr.io/opentdf/charts
-      version: 1.3.0
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: access-pep.enabled
-      name: access-pep
-      repository: oci://ghcr.io/virtru-corp/charts
-      version: 0.1.0-sha-c00bac0
-    - condition: tagging-pdp.enabled
-      name: tagging-pdp
-      repository: file://./charts/tagging-pdp
-      version: 0.1.0
-    - condition: configuration.enabled
-      name: configuration
-      repository: file://./charts/configuration
-      version: 0.3.0
-    - name: docker-registry
-      repository: https://helm.twun.io
-      version: 2.2.2
-    - alias: entitlement-attrdef-bootstrap
-      condition: bootstrap.attrDefOrEntitlements
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - bootstrap
-      version: 1.3.0
-    - alias: entitlement-policy-bootstrap
-      condition: boostrap.entitlementPolicy
-      name: opcr-policy
-      repository: file://./charts/opcr-policy
-      tags:
-      - bootstrap
-      version: 0.1.0
-    description: Self Hosted Data Protection Platform
-    digest: 7338b4aa9c7456c3832eaa8a68e543bd2db75475d9c65db67c1aff75a1879d82
-    name: platform
-    type: application
-    urls:
-    - platform-0.1.13.tgz
-    version: 0.1.13
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.415121-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-c00bac0
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.4.0
+        - alias: entitlement-policy-bootstrap
+          condition: boostrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 10e18e1e580de07ec9b5b708c7a899511db86305181324d3ecc06f4036b54178
+      name: platform
+      type: application
+      urls:
+        - platform-0.2.2.tgz
+      version: 0.2.2
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.409301-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-c00bac0
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.4.0
+        - alias: entitlement-policy-bootstrap
+          condition: boostrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 84384b9d4d7c32b424b24fb389bea5afbdb16dc39a15f0e397ad7f0b8faacccd
+      name: platform
+      type: application
+      urls:
+        - platform-0.2.1.tgz
+      version: 0.2.1
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.403957-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.4.0
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-c00bac0
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.4.0
+        - alias: entitlement-policy-bootstrap
+          condition: boostrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 28a84272059dbf26386587e38d57c00ec0f76279192f4f11a2e3fa001ba278f6
+      name: platform
+      type: application
+      urls:
+        - platform-0.2.0.tgz
+      version: 0.2.0
+    - apiVersion: v2
+      appVersion: 0.1.3
+      created: "2024-01-10T09:53:07.398366-08:00"
+      dependencies:
+        - condition: abacus.enabled
+          name: abacus
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: attributes
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: entitlement-pdp
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: entitlement-store
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: entitlements
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: entity-resolution
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: kas
+          repository: oci://ghcr.io/opentdf/charts
+          version: 1.3.0
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: access-pep.enabled
+          name: access-pep
+          repository: oci://ghcr.io/virtru-corp/charts
+          version: 0.1.0-sha-c00bac0
+        - condition: tagging-pdp.enabled
+          name: tagging-pdp
+          repository: file://./charts/tagging-pdp
+          version: 0.1.0
+        - condition: configuration.enabled
+          name: configuration
+          repository: file://./charts/configuration
+          version: 0.3.0
+        - name: docker-registry
+          repository: https://helm.twun.io
+          version: 2.2.2
+        - alias: entitlement-attrdef-bootstrap
+          condition: bootstrap.attrDefOrEntitlements
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - bootstrap
+          version: 1.3.0
+        - alias: entitlement-policy-bootstrap
+          condition: boostrap.entitlementPolicy
+          name: opcr-policy
+          repository: file://./charts/opcr-policy
+          tags:
+            - bootstrap
+          version: 0.1.0
+      description: Self Hosted Data Protection Platform
+      digest: 7338b4aa9c7456c3832eaa8a68e543bd2db75475d9c65db67c1aff75a1879d82
+      name: platform
+      type: application
+      urls:
+        - platform-0.1.13.tgz
+      version: 0.1.13
   platform-embedded-keycloak:
-  - apiVersion: v2
-    appVersion: 0.1.1
-    created: "2024-01-10T11:50:17.661174-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: 0a29672eebd86ba951b8f4c585bb660ea90b24e88e7d4e22f6a94ba98ad47225
-    name: platform-embedded-keycloak
-    type: application
-    urls:
-    - platform-embedded-keycloak-0.1.8.tgz
-    version: 0.1.8
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.659454-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: 49cfdeb8bf345bc1bf9cd5977c8765cffdd69c78630c1c2fd37544940f835526
-    name: platform-embedded-keycloak
-    type: application
-    urls:
-    - platform-embedded-keycloak-0.1.7.tgz
-    version: 0.1.7
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.657469-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: 32c7dbaa1cc5722aec7b0673891c945f2f48d15037e4ac7ee2a45d381dd33447
-    name: platform-embedded-keycloak
-    type: application
-    urls:
-    - platform-embedded-keycloak-0.1.6.tgz
-    version: 0.1.6
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.655816-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: a072d4f17e791db5aec27f0afabaeb7e69fd644cbd66af1013ee5eeb31c11b2c
-    name: platform-embedded-keycloak
-    type: application
-    urls:
-    - platform-embedded-keycloak-0.1.5.tgz
-    version: 0.1.5
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.654084-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - alias: keycloak
-      name: keycloakx
-      repository: https://codecentric.github.io/helm-charts
-      version: 2.1.1
-    description: Helper chart to deploy a Non-production keycloak into a cluster
-    digest: d15f7254735404cb0c3d6d146f4ec478ae520c2a8853176b6312fba7cd8622e6
-    name: platform-embedded-keycloak
-    type: application
-    urls:
-    - platform-embedded-keycloak-0.1.4.tgz
-    version: 0.1.4
+    - apiVersion: v2
+      appVersion: 0.1.1
+      created: "2024-01-10T09:53:07.446304-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - alias: keycloak
+          name: keycloakx
+          repository: https://codecentric.github.io/helm-charts
+          version: 2.1.1
+      description: Helper chart to deploy a Non-production keycloak into a cluster
+      digest: 0a29672eebd86ba951b8f4c585bb660ea90b24e88e7d4e22f6a94ba98ad47225
+      name: platform-embedded-keycloak
+      type: application
+      urls:
+        - platform-embedded-keycloak-0.1.8.tgz
+      version: 0.1.8
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.444397-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - alias: keycloak
+          name: keycloakx
+          repository: https://codecentric.github.io/helm-charts
+          version: 2.1.1
+      description: Helper chart to deploy a Non-production keycloak into a cluster
+      digest: 49cfdeb8bf345bc1bf9cd5977c8765cffdd69c78630c1c2fd37544940f835526
+      name: platform-embedded-keycloak
+      type: application
+      urls:
+        - platform-embedded-keycloak-0.1.7.tgz
+      version: 0.1.7
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.442765-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - alias: keycloak
+          name: keycloakx
+          repository: https://codecentric.github.io/helm-charts
+          version: 2.1.1
+      description: Helper chart to deploy a Non-production keycloak into a cluster
+      digest: 32c7dbaa1cc5722aec7b0673891c945f2f48d15037e4ac7ee2a45d381dd33447
+      name: platform-embedded-keycloak
+      type: application
+      urls:
+        - platform-embedded-keycloak-0.1.6.tgz
+      version: 0.1.6
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.441171-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - alias: keycloak
+          name: keycloakx
+          repository: https://codecentric.github.io/helm-charts
+          version: 2.1.1
+      description: Helper chart to deploy a Non-production keycloak into a cluster
+      digest: a072d4f17e791db5aec27f0afabaeb7e69fd644cbd66af1013ee5eeb31c11b2c
+      name: platform-embedded-keycloak
+      type: application
+      urls:
+        - platform-embedded-keycloak-0.1.5.tgz
+      version: 0.1.5
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.439456-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - alias: keycloak
+          name: keycloakx
+          repository: https://codecentric.github.io/helm-charts
+          version: 2.1.1
+      description: Helper chart to deploy a Non-production keycloak into a cluster
+      digest: d15f7254735404cb0c3d6d146f4ec478ae520c2a8853176b6312fba7cd8622e6
+      name: platform-embedded-keycloak
+      type: application
+      urls:
+        - platform-embedded-keycloak-0.1.4.tgz
+      version: 0.1.4
   platform-embedded-postgresql:
-  - apiVersion: v2
-    appVersion: 0.3.0
-    created: "2024-01-10T11:50:17.667176-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 12.1.8
-    description: Helper chart to deploy a non production postgresql database into
-      a cluster
-    digest: 6d6698e9a903d1972bc48245f62327dc05e5aa524f594686f0a6b9a1e480d32d
-    name: platform-embedded-postgresql
-    type: application
-    urls:
-    - platform-embedded-postgresql-0.3.0.tgz
-    version: 0.3.0
-  - apiVersion: v2
-    appVersion: 0.2.0
-    created: "2024-01-10T11:50:17.664156-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 12.1.8
-    description: Helper chart to deploy a non production postgresql database into
-      a cluster
-    digest: 2304a5f2fbcbdc3ea13b7eb5dcb56ffbab0982ddedf10d6ec381307baff8a45a
-    name: platform-embedded-postgresql
-    type: application
-    urls:
-    - platform-embedded-postgresql-0.2.0.tgz
-    version: 0.2.0
+    - apiVersion: v2
+      appVersion: 0.3.0
+      created: "2024-01-10T11:50:17.667176-05:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - name: postgresql
+          repository: https://charts.bitnami.com/bitnami
+          version: 12.1.8
+      description:
+        Helper chart to deploy a non production postgresql database into
+        a cluster
+      digest: 6d6698e9a903d1972bc48245f62327dc05e5aa524f594686f0a6b9a1e480d32d
+      name: platform-embedded-postgresql
+      type: application
+      urls:
+        - platform-embedded-postgresql-0.3.0.tgz
+      version: 0.3.0
+    - apiVersion: v2
+      appVersion: 0.2.0
+      created: "2024-01-10T09:53:07.449303-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - name: postgresql
+          repository: https://charts.bitnami.com/bitnami
+          version: 12.1.8
+      description:
+        Helper chart to deploy a non production postgresql database into
+        a cluster
+      digest: 2304a5f2fbcbdc3ea13b7eb5dcb56ffbab0982ddedf10d6ec381307baff8a45a
+      name: platform-embedded-postgresql
+      type: application
+      urls:
+        - platform-embedded-postgresql-0.2.0.tgz
+      version: 0.2.0
   platform-keycloak-bootstrapper:
-  - apiVersion: v2
-    appVersion: 0.1.1
-    created: "2024-01-10T11:50:17.670104-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: bootstrap.keycloak
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - utility
-      version: 1.5.0
-    description: Helper chart to bootstrap keycloak configuration.
-    digest: 90bc18a94edfebeaf038e82b38dccc9c89eda924aa397fbe7dadf348210caf37
-    name: platform-keycloak-bootstrapper
-    type: application
-    urls:
-    - platform-keycloak-bootstrapper-0.1.8.tgz
-    version: 0.1.8
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.669373-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: bootstrap.keycloak
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - utility
-      version: 1.4.2
-    description: Helper chart to bootstrap keycloak configuration.
-    digest: 13ac80da2b2c7ef27f9aa2e09bdddab16f10a20189a55a017505eb256d22eddb
-    name: platform-keycloak-bootstrapper
-    type: application
-    urls:
-    - platform-keycloak-bootstrapper-0.1.7.tgz
-    version: 0.1.7
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.668712-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: bootstrap.keycloak
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - utility
-      version: 1.4.2
-    description: Helper chart to bootstrap keycloak configuration.
-    digest: 011b02c978f9e8a0a1d458ab874fafc461221d254388471b153d05027b8f35ce
-    name: platform-keycloak-bootstrapper
-    type: application
-    urls:
-    - platform-keycloak-bootstrapper-0.1.6.tgz
-    version: 0.1.6
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.668223-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: bootstrap.keycloak
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - utility
-      version: 1.4.0
-    description: Helper chart to bootstrap keycloak configuration.
-    digest: 0b86a2a08e109b2ec426da9c275e0c194a5f26436647e883882e7a0a5f141cc6
-    name: platform-keycloak-bootstrapper
-    type: application
-    urls:
-    - platform-keycloak-bootstrapper-0.1.5.tgz
-    version: 0.1.5
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.667703-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - condition: bootstrap.keycloak
-      name: keycloak-bootstrap
-      repository: oci://ghcr.io/opentdf/charts
-      tags:
-      - utility
-      version: 1.3.0
-    description: Helper chart to bootstrap keycloak configuration.
-    digest: 3151770a298bcd88868c6d1749f8b2fc3aa2155932c5d7642098a35f1eb3146d
-    name: platform-keycloak-bootstrapper
-    type: application
-    urls:
-    - platform-keycloak-bootstrapper-0.1.4.tgz
-    version: 0.1.4
+    - apiVersion: v2
+      appVersion: 0.1.1
+      created: "2024-01-10T09:53:07.452649-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: bootstrap.keycloak
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - utility
+          version: 1.5.0
+      description: Helper chart to bootstrap keycloak configuration.
+      digest: 90bc18a94edfebeaf038e82b38dccc9c89eda924aa397fbe7dadf348210caf37
+      name: platform-keycloak-bootstrapper
+      type: application
+      urls:
+        - platform-keycloak-bootstrapper-0.1.8.tgz
+      version: 0.1.8
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.452016-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: bootstrap.keycloak
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - utility
+          version: 1.4.2
+      description: Helper chart to bootstrap keycloak configuration.
+      digest: 13ac80da2b2c7ef27f9aa2e09bdddab16f10a20189a55a017505eb256d22eddb
+      name: platform-keycloak-bootstrapper
+      type: application
+      urls:
+        - platform-keycloak-bootstrapper-0.1.7.tgz
+      version: 0.1.7
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.451467-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: bootstrap.keycloak
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - utility
+          version: 1.4.2
+      description: Helper chart to bootstrap keycloak configuration.
+      digest: 011b02c978f9e8a0a1d458ab874fafc461221d254388471b153d05027b8f35ce
+      name: platform-keycloak-bootstrapper
+      type: application
+      urls:
+        - platform-keycloak-bootstrapper-0.1.6.tgz
+      version: 0.1.6
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.450497-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: bootstrap.keycloak
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - utility
+          version: 1.4.0
+      description: Helper chart to bootstrap keycloak configuration.
+      digest: 0b86a2a08e109b2ec426da9c275e0c194a5f26436647e883882e7a0a5f141cc6
+      name: platform-keycloak-bootstrapper
+      type: application
+      urls:
+        - platform-keycloak-bootstrapper-0.1.5.tgz
+      version: 0.1.5
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.449843-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+        - condition: bootstrap.keycloak
+          name: keycloak-bootstrap
+          repository: oci://ghcr.io/opentdf/charts
+          tags:
+            - utility
+          version: 1.3.0
+      description: Helper chart to bootstrap keycloak configuration.
+      digest: 3151770a298bcd88868c6d1749f8b2fc3aa2155932c5d7642098a35f1eb3146d
+      name: platform-keycloak-bootstrapper
+      type: application
+      urls:
+        - platform-keycloak-bootstrapper-0.1.4.tgz
+      version: 0.1.4
   sharepoint:
-  - apiVersion: v2
-    appVersion: 0.2.0
-    created: "2024-01-10T11:50:17.672124-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
+    - apiVersion: v2
+      appVersion: 0.2.0
+      created: "2024-01-10T09:53:07.453999-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+      description: Sharepoint ABAC Enforcement Helm Chart
+      digest: 1e55b697ad4669b51e973f1ed56780afc771b2fcd1ad66c99ae00b93b4a9871e
+      name: sharepoint
+      type: application
+      urls:
+        - sharepoint-0.2.0.tgz
+      version: 0.2.0
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2024-01-10T09:53:07.453326-08:00"
+      dependencies:
+        - name: common-lib
+          repository: file://../common-lib
+          version: 0.1.0
+      description: Sharepoint ABAC Enforcement Helm Chart
+      digest: 500ac26896130b554db1fcfa8fa0c29715ed7812f1c38c0cd83760638f979af0
+      name: sharepoint
+      type: application
+      urls:
+        - sharepoint-0.1.0.tgz
       version: 0.1.0
-    description: Sharepoint ABAC Enforcement Helm Chart
-    digest: 1e55b697ad4669b51e973f1ed56780afc771b2fcd1ad66c99ae00b93b4a9871e
-    name: sharepoint
-    type: application
-    urls:
-    - sharepoint-0.2.0.tgz
-    version: 0.2.0
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-01-10T11:50:17.671285-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    description: Sharepoint ABAC Enforcement Helm Chart
-    digest: 500ac26896130b554db1fcfa8fa0c29715ed7812f1c38c0cd83760638f979af0
-    name: sharepoint
-    type: application
-    urls:
-    - sharepoint-0.1.0.tgz
-    version: 0.1.0
-generated: "2024-01-10T11:50:17.587595-05:00"
+generated: "2024-01-10T09:53:07.380756-08:00"

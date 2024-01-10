@@ -54,7 +54,7 @@ Update your secrets to match the values from your local CKS config as mapped bel
 
 | Filename | Value from CKS setup script |
 | -------- | --------------------------- |
-| `hmac-auth` | `env/cks.env => AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` |
+| `hmac-auth`  | `env/cks.env => AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON` |
 | `rsa001.pub` | `keys/rsa001.pub` |
 | `rsa001.pem` | `keys/rsa001.pem` |
 

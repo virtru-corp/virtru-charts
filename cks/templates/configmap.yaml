@@ -5,11 +5,17 @@ metadata:
   labels:
     {{- include "cks.labels" . | nindent 4 }}
 data:
-  AUTH_TOKEN_STORAGE_TYPE: "in-memory"
-  LOG_RSYSLOG_ENABLED: "false"
-  LOG_CONSOLE_ENABLED: "true"
+  AUTH_TOKEN_STORAGE_TYPE: {{ default "in-memory" .Values.appConfig.authTokenStoreageType }}
+  LOG_RSYSLOG_ENABLED: "{{ default false .Values.appConfig.logRsyslogEnabled }}"
+  LOG_CONSOLE_ENABLED: "{{ default true .Values.appConfig.logConsoleEnabled }}"
   PORT: "{{ .Values.deployment.port }}"
-  BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: "/run/secrets/rsa001.pub"
-  BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: "/run/secrets/rsa001.pem"
-  KEY_PROVIDER_PATH: {{ .Values.appSecrets.virtruKeys.mountPath }}
-  KEY_PROVIDER_TYPE: "file"
+  BOOT_CHECKER_NOKEYS_RULE: {{ default "importPEM" .Values.appConfig.noKeysRule }}
+  BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: {{ default "/run/secrets/rsa001.pub" .Values.appConfig.publicKeyPath }}
+  BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: {{ default "/run/secrets/rsa001.pem" .Values.appConfig.privateKeyPath }}
+  KEY_PROVIDER_PATH: {{ default "/app/keys" .Values.appSecrets.virtruKeys.mountPath }}
+  KEY_PROVIDER_TYPE: {{ default "file" .Values.appConfig.keyProviderType }}
+  HMAC_AUTH_ENABLED: "{{ default true .Values.appConfig.hmacAuthEnabled }}"
+  JWT_AUTH_ENABLED: "{{ default true .Values.appConfig.jwtAuthEnabled }}"
+  JWT_AUTH_ISSUER: {{ default "https://api.virtru.com" .Values.appConfig.jwtAuthIssuer }}
+  JWT_AUTH_JWKS_PATH: {{ default "/acm/api/jwks" .Values.appConfig.jwtAuthJwksPath }}
+  JWT_AUTH_AUDIENCE: {{ .Values.appConfig.virtruOrgId }}
