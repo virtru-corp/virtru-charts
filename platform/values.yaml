@@ -409,7 +409,7 @@ tagging-pdp:
     pathPrefix: tagging-pdp
     ## @skip tagging-pdp.gateway.image
     image:
-      tag: 0.2.7
+      tag: 0.2.7-82b7d18
   config:
     attrSvc:
       ## @param tagging-pdp.config.attrSvc.url Set the attribute service url
@@ -418,9 +418,6 @@ tagging-pdp:
     oidcSecretName: platform-tagging-pdp-secret
     ## @param tagging-pdp.config.oidcClientId OIDC Client ID for tagging pdp
     oidcClientId: shp-tagging-pdp
-  ## @skip tagging-pdp.securityContext
-  securityContext:
-    runAsUser: 0
 
 ## @param tdfAdminUsername The admin user created for tdf.
 tdfAdminUsername: tdf-admin
