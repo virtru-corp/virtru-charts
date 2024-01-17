@@ -19,14 +19,14 @@ spec:
               {{- if .Values.bootstrap.job.waitForIstio }}
               trap "curl --max-time 2 -s -f -XPOST http://127.0.0.1:15000/quitquitquit" EXIT
               while ! curl -s -f http://127.0.0.1:15020/healthz/ready; do sleep 1; done
-              {{- end }}   
+              {{- end }}
               echo "[INFO] Waiting for service [$ConfigSvcUrl]"
               while ! curl -f $ConfigSvcUrl --insecure; do
                 sleep 1
               done
               echo "[INFO] Service [$ConfigSvcUrl] available"
               echo "Running configuration svc bootstrapping"
-              sleep 10 
+              sleep 10
               {{- range $configArtifact :=  $config.configArtifacts }}
               {{ printf "cat /configdata/%s" $configArtifact.name }}
               {{ printf "curl -X POST -H 'Content-Type: %s' $ConfigSvcUrl/%s --data-binary @/configdata/%s -v " $configArtifact.contentType $configArtifact.name $configArtifact.name }}
@@ -45,6 +45,7 @@ spec:
         - name: config-data-volume
           secret:
             secretName: {{ .Values.bootstrap.job.configVolumeSecretRefName }}
+            optional: true
       restartPolicy: Never
       {{ include "sharepoint.imagePullSecrets" . | nindent 6 }}
   backoffLimit: {{ .Values.bootstrap.job.backoffLimit }}
