@@ -10,6 +10,9 @@ config:
     url: *deployHostname
     org: tdf
     clientId: sharepoint-oidc-client
+  configsvc:
+    #match name in example-config.yaml
+    artifactId: sharepointsvc.config
 
   secrets:
     dbPassword: replaceme
