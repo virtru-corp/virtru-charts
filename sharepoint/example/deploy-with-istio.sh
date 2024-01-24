@@ -8,16 +8,20 @@ imagePullUsername="changeme"
 imagePullPAT="changeme"
 # Hostname for ingress
 ingressHostname=""
+# Config file location; set using -c arg
+bootstrapConfigFile=""
 # Location to sharepoint private key
 sharepointPrivateKey=""
 
 chartRepo="virtru-charts"
 sharepointChart="${chartRepo}/sharepoint"
 # For local install change to chart-version.tgz
-sharepointChart="sharepoint-0.1.0.tgz"
+# sharepointChart="sharepoint-0.1.0.tgz"
+# For other local install change to chart directory location
+# sharepointChart="../."
 # Is the platform in the same cluster as the sharepoint deployment
 platformLocal=""
-while getopts "h:t:s:u:p:o:k:l" arg; do
+while getopts "h:t:s:u:p:o:k:c:l" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -37,6 +41,9 @@ while getopts "h:t:s:u:p:o:k:l" arg; do
     o)
       overrideValues=${OPTARG}
       ;;
+    c)
+      bootstrapConfigFile=${OPTARG}
+      ;;
     k)
       sharepointPrivateKey=${OPTARG}
       ;;
@@ -53,8 +60,15 @@ if [ ! -z "$platformLocal" ]; then
   echo "Setting configAuthUrl to internal address ${configAuthUrl}"
 fi
 
+bootstrapArgs=()
+if [[ ! -z $bootstrapConfigFile ]]; then
+  bootstrapArgs+=("--set-file" "bootstrap.configFile=$bootstrapConfigFile"
+                  "--set" "bootstrap.enabled=true")
+  echo "${bootstrapArgs[@]}"
+fi
+
 echo "#1 Deploy Sharepoint Service"
-helm upgrade --install -n $ns --create-namespace \
+helm template -n $ns --create-namespace \
   --set "imageCredentials[0].name"="ghcr" \
   --set "imageCredentials[0].username"="${imagePullUsername}" \
   --set "imageCredentials[0].password"="${imagePullPAT}" \
@@ -64,6 +78,7 @@ helm upgrade --install -n $ns --create-namespace \
   --set ingress.hostname="${ingressHostname}" \
   --set ingress.istio.enabled=true \
   --set-file config.sharepointPfx=${sharepointPrivateKey} \
+  "${bootstrapArgs[@]}" \
   -f $overrideValues \
   sharepoint $sharepointChart
 
