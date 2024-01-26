@@ -43,6 +43,7 @@ securityContext: {}
 service:
   annotations: {}
   type: LoadBalancer
+  #loadBalancerIP: <x.x.x.x>
   port: 443
   protocol: TCP
 
@@ -103,6 +104,11 @@ appConfig:
   useSsl: "true"
   useCks: "false"
   cksUrl: "https://cks-example.local"
+### Values to fill out if using Drive Labels integration: See: https://support.virtru.com/hc/en-us/articles/4409220098199-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-ENV-variables
+  driveLabels:
+   enabled: "false"
+   serviceAccountEmail: "<admin-email-here>"
+   driveTime: "15"
 
 appSecrets:
   hmac:
@@ -115,6 +121,7 @@ appSecrets:
   cksHmac:
     tokenId: "from-your-cks" 
     tokenSecret: "from-your-cks" 
+  googleApplicationCredentials: /app/cse/credentials.json 
 
 #https://external-secrets.io/v0.8.2/introduction/overview/
 #externalAppSecrets:

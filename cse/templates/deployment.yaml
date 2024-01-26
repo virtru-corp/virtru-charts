@@ -106,14 +106,25 @@ spec:
                 key: cse-secret-key
                 name: {{ include "cse.fullname" . }}
           {{- end }}
-          {{- if eq .Values.appConfig.useSsl "true" }}
           volumeMounts:
+           {{- if eq .Values.appConfig.driveLabels.enabled "true" }}
+            - mountPath: /app/cse/credentials.json
+              name: keyfile
+              readOnly: true
+          {{- end }}
+          {{- if eq .Values.appConfig.useSsl "true" }}
             - mountPath: /run/secrets
               name: cse-preinstall
               readOnly: true
           {{- end }}
-      {{- if eq .Values.appConfig.useSsl "true" }}
       volumes:
+        {{- if eq .Values.appConfig.driveLabels.enabled "true" }}
+        - name: keyfile
+          hostPath:
+            path: <path-to-keyfile-in-host>/keyfile.json
+            type: File
+        {{- end }}
+        {{- if eq .Values.appConfig.useSsl "true" }}
         - name: cse-ssl
           secret:
             secretName: {{ include "cse.fullname" . }}
