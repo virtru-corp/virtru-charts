@@ -14,4 +14,4 @@ data:
   AUTH_ORGANIZATION: {{ (coalesce .Values.config.auth.org .Values.global.auth.organization ) | quote }}
   AUTH_CLIENT_ID: {{ .Values.config.auth.clientId | quote }}
   CONFIG_URL: {{ .Values.config.configSvc.url | quote }}
-
+  CONFIG_KEY: {{ .Values.config.configSvc.artifactId | quote }}

@@ -37,15 +37,15 @@ spec:
                 {{- tpl . $ | nindent 16 }}
             {{- end }}
             - configMapRef:
-                name: {{ include "common.lib.fullname" . }}--{{ .Values.bootstrap.job.name }}-cm
+                name: {{ include "common.lib.fullname" . }}-{{ .Values.bootstrap.job.name }}-cm
           volumeMounts:
             - name: config-data-volume
               mountPath: /configdata
       volumes:
         - name: config-data-volume
           secret:
-            secretName: {{ .Values.bootstrap.job.configVolumeSecretRefName }}
-            optional: true
+            secretName: {{ include "common.lib.name" . }}-bootstrap-configsvc
+            # secretName: {{ .Values.bootstrap.job.configVolumeSecretRefName }}
       restartPolicy: Never
       {{ include "sharepoint.imagePullSecrets" . | nindent 6 }}
   backoffLimit: {{ .Values.bootstrap.job.backoffLimit }}
