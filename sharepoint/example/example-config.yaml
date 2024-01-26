@@ -13,9 +13,9 @@ configArtifacts:
 
 sharepointsvc.config:
   sharepointAuth:
-    "tenantId": "aaaaaaaa-1234-5678-abcd-bbbbbbbbbbbb",
-    "clientId": "bbbbbbbb-1234-5678-abcd-cccccccccccc",
-    "path": "/etc/sharepoint/keys/sharepoint.pfx",
+    "tenantId": "aaaaaaaa-1234-5678-abcd-bbbbbbbbbbbb"
+    "clientId": "bbbbbbbb-1234-5678-abcd-cccccccccccc"
+    "path": "/etc/sharepoint/keys/sharepoint.pfx"
     "pass": "ABCD1234ABCD1234"
   services:
     access:
@@ -31,13 +31,12 @@ sharepointsvc.config:
       name: "Config Service"
       url: "{{platform_url}}/configuration"
     kas:
-      name: "Key Access Server",
+      name: "Key Access Server"
       url: "{{platform_url}}/api/kas"
     tagExtraction:
-      name: "Tag Extraction API",
+      name: "Tag Extraction API"
       url: "{{platform_url}}/tagging-pdp"
-  admin: "owner@localhost.com",
-  addedRERUrl: "{platform_url}/sharepoint/sitelist/listen/itemadded",
-  updatedRERUrl: "{platform_url}/sharepoint/sitelist/listen/itemupdated",
+  admin: "owner@localhost.com"
+  addedRERUrl: "{platform_url}/sharepoint/sitelist/listen/itemadded"
+  updatedRERUrl: "{platform_url}/sharepoint/sitelist/listen/itemupdated"
   attributes": *attributeDefinitions
-
