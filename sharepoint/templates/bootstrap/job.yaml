@@ -45,7 +45,6 @@ spec:
         - name: config-data-volume
           secret:
             secretName: {{ include "common.lib.name" . }}-bootstrap-configsvc
-            # secretName: {{ .Values.bootstrap.job.configVolumeSecretRefName }}
       restartPolicy: Never
       {{ include "sharepoint.imagePullSecrets" . | nindent 6 }}
   backoffLimit: {{ .Values.bootstrap.job.backoffLimit }}
