@@ -6,6 +6,7 @@ metadata:
     {{- include "cks.labels" . | nindent 4 }}
 data:
   AUTH_TOKEN_STORAGE_TYPE: {{ default "in-memory" .Values.appConfig.authTokenStoreageType }}
+  AUTH_TOKEN_STORAGE_IN_MEMORY_ENCODING: {{ default "base64" .Values.appConfig.authTokenStoreageMemoryEncoding }}
   LOG_RSYSLOG_ENABLED: "{{ default false .Values.appConfig.logRsyslogEnabled }}"
   LOG_CONSOLE_ENABLED: "{{ default true .Values.appConfig.logConsoleEnabled }}"
   PORT: "{{ .Values.deployment.port }}"
