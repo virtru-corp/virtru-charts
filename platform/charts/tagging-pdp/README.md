@@ -19,6 +19,7 @@ Tagging PDP Deployment
 | config.configSvc.artifactId | string | `"taggingpdp.test"` |  |
 | config.configSvc.url | string | `"http://configuration:8080/configuration"` |  |
 | config.logLevel | string | `"INFO"` |  |
+| config.maxMessageSizeMB | int | `1024` |  |
 | fullnameOverride | string | `""` | The fully qualified appname override |
 | gateway.enabled | bool | `true` |  |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` |  |

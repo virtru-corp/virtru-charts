@@ -330,16 +330,17 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 ### Tagging PDP Chart Overrides
 
-| Name                                | Description                           | Value                         |
-| ----------------------------------- | ------------------------------------- | ----------------------------- |
-| `tagging-pdp.enabled`               | enabled flag                          | `true`                        |
-| `tagging-pdp.fullnameOverride`      | override name                         | `tagging-pdp`                 |
-| `tagging-pdp.image.tag`             | Tagging PDP Image Tag                 | `0.2.1`                       |
-| `tagging-pdp.image.pullSecrets`     | TaggingPDP image pull secrets         | `nil`                         |
-| `tagging-pdp.gateway.enabled`       | Tagging PDP Rest Gateway enabled flag | `true`                        |
-| `tagging-pdp.gateway.pathPrefix`    | tagging-pdp svc prefix                | `tagging-pdp`                 |
-| `tagging-pdp.config.attrSvc.url`    | Set the attribute service url         | `http://attributes:4020`      |
-| `tagging-pdp.config.oidcSecretName` | Use existing secret for OIDC Creds    | `platform-tagging-pdp-secret` |
-| `tagging-pdp.config.oidcClientId`   | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`             |
-| `tdfAdminUsername`                  | The admin user created for tdf.       | `tdf-admin`                   |
+| Name                                  | Description                           | Value                         |
+| ------------------------------------- | ------------------------------------- | ----------------------------- |
+| `tagging-pdp.enabled`                 | enabled flag                          | `true`                        |
+| `tagging-pdp.fullnameOverride`        | override name                         | `tagging-pdp`                 |
+| `tagging-pdp.image.tag`               | Tagging PDP Image Tag                 | `0.2.1`                       |
+| `tagging-pdp.image.pullSecrets`       | TaggingPDP image pull secrets         | `nil`                         |
+| `tagging-pdp.gateway.enabled`         | Tagging PDP Rest Gateway enabled flag | `true`                        |
+| `tagging-pdp.gateway.pathPrefix`      | tagging-pdp svc prefix                | `tagging-pdp`                 |
+| `tagging-pdp.config.attrSvc.url`      | Set the attribute service url         | `http://attributes:4020`      |
+| `tagging-pdp.config.oidcSecretName`   | Use existing secret for OIDC Creds    | `platform-tagging-pdp-secret` |
+| `tagging-pdp.config.oidcClientId`     | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`             |
+| `tagging-pdp.config.maxMessageSizeMB` | Maximum supported message size (MB)   | `1024`                        |
+| `tdfAdminUsername`                    | The admin user created for tdf.       | `tdf-admin`                   |
 
