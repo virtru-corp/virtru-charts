@@ -32,7 +32,7 @@ global:
 imagePullSecrets:
 image:
   ## @param image.tag Image tag
-  tag: sha-abc31cf
+  tag: sha-78e048e
   ## @param image.repo Image repository
   repo: ghcr.io/virtru-corp/sharepoint-webhooks/sharepoint-webhook-service
   ## @param image.pullPolicy Image Pull Policy
