@@ -103,6 +103,10 @@ istioAuth:
       selectorLabels: |
         app.kubernetes.io/name: {{ index $.Values "configuration" "fullnameOverride" }}
         app.kubernetes.io/instance: {{ $.Release.Name }}
+    - name: entitlement-pdp
+      selectorLabels: |
+        app.kubernetes.io/name: {{ index $.Values "entitlement-pdp" "fullnameOverride" }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
 global:
   ## @param global.istioEnabled Istio enabled true/false
   istioEnabled: true
