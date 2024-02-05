@@ -124,4 +124,14 @@ appSecrets:
 #    kind: <SecretStore or ClusterSecretStore>
 #    name: <name of secret store>
 #  refreshInterval: <how often to reconcile with secret store>
-#
+
+volumes: []
+#- name: secret-volume
+#  volume:
+#    secret:
+#      secretName: keyfile-secret //name of secret object containing the keyfile
+#      items:
+#      - key: keyfile.json //key of the secret object
+#        path: keyfile.json
+#  volumeMount:
+#    mountPath: /secret-volume-path

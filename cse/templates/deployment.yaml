@@ -106,20 +106,34 @@ spec:
                 key: cse-secret-key
                 name: {{ include "cse.fullname" . }}
           {{- end }}
-          {{- if eq .Values.appConfig.useSsl "true" }}
+          {{- /*include the volumes section if appConfig.useSsl is true or if the volumes list value is defined */}}
+          {{- if or (.Values.volumes) (eq .Values.appConfig.useSsl "true" ) }}
           volumeMounts:
-            - mountPath: /run/secrets
-              name: cse-preinstall
-              readOnly: true
+          {{- if eq .Values.appConfig.useSsl "true" }}
+          - mountPath: /run/secrets
+            name: cse-preinstall
+            readOnly: true
           {{- end }}
-      {{- if eq .Values.appConfig.useSsl "true" }}
+          {{- range .Values.volumes }}
+          - name: {{ .name }}
+            {{- toYaml .volumeMount | nindent 12 }}
+          {{- end }}
+          {{- end }}
+      {{- /*include the volumes section if appConfig.useSsl is true or if the volumes list value is defined */}}
+      {{- if or (.Values.volumes) (eq .Values.appConfig.useSsl "true" ) }}
       volumes:
-        - name: cse-ssl
-          secret:
-            secretName: {{ include "cse.fullname" . }}
-            defaultMode: 420
-        - name: cse-preinstall
-          emptyDir: {}
+      {{- if eq .Values.appConfig.useSsl "true" }}
+      - name: cse-ssl
+        secret:
+          secretName: {{ include "cse.fullname" . }}
+          defaultMode: 420
+      - name: cse-preinstall
+        emptyDir: {}
+      {{- end }}
+      {{- range .Values.volumes }}
+      - name: {{ .name }}
+        {{- toYaml .volume | nindent 8 }}
+      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
