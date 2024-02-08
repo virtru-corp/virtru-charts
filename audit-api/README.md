@@ -10,9 +10,9 @@
 
 ### imagePullSecrets Image Pull Secrets - Overrides Global
 
-| Name                       | Description            | Value                  |
-| -------------------------- | ---------------------- | ---------------------- |
-| `imagePullSecrets[0].name` | Image Pull Secret Name | `platform-pull-secret` |
+| Name                       | Description            | Value                   |
+| -------------------------- | ---------------------- | ----------------------- |
+| `imagePullSecrets[0].name` | Image Pull Secret Name | `audit-api-pull-secret` |
 
 ### Deployment Parameters
 
@@ -56,6 +56,17 @@
 | `istioAuth.oidc.oidcExternalBaseUrl` | The external base url of the oidc provider                                                                    | `https://shp.example.com` |
 | `istioAuth.oidc.oidcUrlPath`         | The path added to the base url to reach the oidc provider                                                     | `auth`                    |
 | `istioAuth.oidc.keycloakRealm`       | If using keycloak - the realm name                                                                            | `tdf`                     |
+
+### Secret Generation Parameters
+
+| Name                                            | Description                                                               | Value          |
+| ----------------------------------------------- | ------------------------------------------------------------------------- | -------------- |
+| `secrets.imageCredentials`                      | Map of key (pull name) to auth information.  Each key creates a pull cred |                |
+| `secrets.imageCredentials.pull-secret`          | Container registry auth for "install name"-pull-secret                    |                |
+| `secrets.imageCredentials.pull-secret.registry` | Registry repo                                                             | `ghcr.io`      |
+| `secrets.imageCredentials.pull-secret.username` | Registry Auth username                                                    | `username`     |
+| `secrets.imageCredentials.pull-secret.password` | Registry Auth password                                                    | `password`     |
+| `secrets.imageCredentials.pull-secret.email`    | Registry Auth email                                                       | `nope@nah.com` |
 
 ### Ingress Configuration
 

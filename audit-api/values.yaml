@@ -96,8 +96,18 @@ istioAuth:
 
 ## @section Secret Generation Parameters
 secrets:
+  ## @extra secrets.imageCredentials Map of key (pull name) to auth information.  Each key creates a pull cred
   imageCredentials:
+    ## @extra secrets.imageCredentials.pull-secret Container registry auth for "install name"-pull-secret
     pull-secret:
+      ## @param secrets.imageCredentials.pull-secret.registry Registry repo
+      registry: ghcr.io
+      ## @param secrets.imageCredentials.pull-secret.username Registry Auth username
+      username: username
+      ## @param secrets.imageCredentials.pull-secret.password Registry Auth password
+      password: password
+      ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
+      email: nope@nah.com
 
 ## @section Ingress Configuration
 ingress:
