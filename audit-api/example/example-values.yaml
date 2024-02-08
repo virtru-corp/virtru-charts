@@ -1,0 +1,27 @@
+postresPassword: &postgresPassword "changeme"
+
+config:
+  secrets:
+    dbPassword: *postgresPassword
+
+# using existing platform istio gateway
+# (format if in different namespace: namespace/gateway-name)
+ingress:
+  existingGateway: platform-gateway
+
+fluent-bit:
+  autoscaling:
+    maxReplicas: 1
+  # replace 'shp' with the namespace in which audit-api is being installed
+  config:
+    outputs: |
+      [OUTPUT]
+          Name        http
+          Match       audit
+          Host        audit-api.platform.svc.cluster.local
+          URI         /api/v1/write
+          Port        8080
+          tls         off
+          tls.verify  off
+          Format      json
+          Retry_Limit 8

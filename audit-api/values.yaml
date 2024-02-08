@@ -18,7 +18,7 @@ image:
 ## @section imagePullSecrets Image Pull Secrets - Overrides Global
 imagePullSecrets:
   ## @param imagePullSecrets[0].name Image Pull Secret Name
-  - name: platform-pull-secret
+  - name: audit-api-pull-secret
 ## @section Deployment Parameters
 ## @param nameOverride Override name of the chart
 nameOverride: ""
@@ -93,6 +93,11 @@ istioAuth:
     oidcUrlPath: auth
     ## @param istioAuth.oidc.keycloakRealm If using keycloak - the realm name
     keycloakRealm: tdf
+
+## @section Secret Generation Parameters
+secrets:
+  imageCredentials:
+    pull-secret:
 
 ## @section Ingress Configuration
 ingress:

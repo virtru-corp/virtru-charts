@@ -11,5 +11,5 @@ data:
   POSTGRES_DB: {{ .Values.config.db.dbName | quote }}
   POSTGRES_SSLMODE: {{ .Values.config.db.sslMode | quote }}
   SELF_HOSTED_PLATFORM: "true"
-  PLATFORM_DISABLE_AUTH: {{ .Values.image.disableInternalAuth | default "true" }}
-  CONFIG_ORG_ID: {{ .Values.config.platform.defaultOrgId | default "00000000-0000-0000-0000-000000000000" }}
+  PLATFORM_DISABLE_AUTH: {{ .Values.image.disableInternalAuth | default "true" | quote }}
+  CONFIG_ORG_ID: {{ .Values.config.platform.defaultOrgId | default "00000000-0000-0000-0000-000000000000" | quote }}

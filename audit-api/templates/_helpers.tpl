@@ -5,7 +5,7 @@ Platform Ingress gateway name
 {{- if .Values.ingress.existingGateway -}}
 {{ .Values.ingress.existingGateway }}
 {{- else -}}
-{{  printf "%s-gateway" .Values.ingress.name }}
+{{  printf "%s-gateway" ( include "common.lib.name" . ) }}
 {{- end }}
 {{- end }}
 

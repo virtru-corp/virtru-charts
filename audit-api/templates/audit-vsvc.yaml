@@ -3,21 +3,20 @@ kind: VirtualService
 metadata:
   name: audit-vsvc
 spec:
-  gateways:
-    - {{ include "platform.ingress.gateway" . }}
+  gateways: [{{ include "platform.ingress.gateway" . }}]
   hosts:
-  - '*'
+    - '*'
   http:
-  - match:
-    - uri:
-        prefix: /audit/
-    - uri:
-        prefix: /audit
-    name: audit
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: audit-api
-        port:
-          number: 8080
+    - match:
+      - uri:
+          prefix: /audit/
+      - uri:
+          prefix: /audit
+      name: audit
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: audit-api
+          port:
+            number: {{ .Values.service.port }}
