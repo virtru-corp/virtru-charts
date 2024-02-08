@@ -8,6 +8,8 @@ imagePullUsername="changeme"
 imagePullPAT="changeme"
 # Hostname for ingress
 ingressHostname=""
+# Config file location; set using -c arg
+bootstrapConfigFile=""
 # Location to sharepoint private key
 sharepointPrivateKey=""
 
@@ -17,32 +19,35 @@ sharepointChart="${chartRepo}/sharepoint"
 sharepointChart="sharepoint-0.1.0.tgz"
 # Is the platform in the same cluster as the sharepoint deployment
 platformLocal=""
-while getopts "h:t:s:u:p:o:k:l" arg; do
+while getopts "h:t:s:u:p:o:c:k:l" arg; do
   case $arg in
-    t)
-      tlsEnabled=${OPTARG}
-      ;;
-    s)
-      tlsSecret=${OPTARG}
-      ;;
-    u)
-      imagePullUsername=${OPTARG}
-      ;;
-    p)
-      imagePullPAT=${OPTARG}
-      ;;
-    h)
-      ingressHostname=${OPTARG}
-      ;;
-    o)
-      overrideValues=${OPTARG}
-      ;;
-    k)
-      sharepointPrivateKey=${OPTARG}
-      ;;
-    l)
-      platformLocal="true"
-      ;;
+  t)
+    tlsEnabled=${OPTARG}
+    ;;
+  s)
+    tlsSecret=${OPTARG}
+    ;;
+  u)
+    imagePullUsername=${OPTARG}
+    ;;
+  p)
+    imagePullPAT=${OPTARG}
+    ;;
+  h)
+    ingressHostname=${OPTARG}
+    ;;
+  o)
+    overrideValues=${OPTARG}
+    ;;
+  c)
+    bootstrapConfigFile=${OPTARG}
+    ;;
+  k)
+    sharepointPrivateKey=${OPTARG}
+    ;;
+  l)
+    platformLocal="true"
+    ;;
   esac
 done
 echo "Deploying to hostname=${ingressHostname} with chart overrides = ${overrideValues}"
@@ -51,6 +56,13 @@ configAuthUrl="https://${ingressHostname}"
 if [ ! -z "$platformLocal" ]; then
   configAuthUrl="http://keycloak-http"
   echo "Setting configAuthUrl to internal address ${configAuthUrl}"
+fi
+
+bootstrapArgs=()
+if [[ ! -z $bootstrapConfigFile ]]; then
+  bootstrapArgs+=("--set-file" "bootstrap.configFile=$bootstrapConfigFile"
+    "--set" "bootstrap.enabled=true")
+  echo "${bootstrapArgs[@]}"
 fi
 
 echo "#1 Deploy Sharepoint Service"
@@ -64,12 +76,12 @@ helm upgrade --install -n $ns --create-namespace \
   --set ingress.hostname="${ingressHostname}" \
   --set ingress.istio.enabled=true \
   --set-file config.sharepointPfx=${sharepointPrivateKey} \
+  "${bootstrapArgs[@]}" \
   -f $overrideValues \
   sharepoint $sharepointChart
 
 echo "#2 Wait for sharepoit deployment rollout"
 kubectl rollout status --watch --timeout=120s deployment/sharepoint -n $ns
-
 
 kubectl scale deployment istiod -n istio-system --replicas=0
 kubectl scale deployment istiod -n istio-system --replicas=1

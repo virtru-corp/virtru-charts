@@ -21,5 +21,6 @@ data:
   ATTR_SERVICE_AUTH_CLIENT_ID: {{ .Values.config.oidcClientId | quote}}
   ATTR_SERVICE_ENDPOINT: {{ .Values.config.attrSvc.url | quote}}
 {{- end}}
+  GRPC_MAX_INBOUND_MESSAGE_SIZE: {{ .Values.config.maxMessageSizeMB | quote }}
 {{- end }}
 

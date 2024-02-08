@@ -26,6 +26,8 @@ config:
   oidcClientSecret:
   # Existing client secret w/ AUTH_CLIENT_SECRET key
   oidcSecretName:
+  # Default max supported message size: 1GB
+  maxMessageSizeMB: 1024
 
 service:
   type: ClusterIP

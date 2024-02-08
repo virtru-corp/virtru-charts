@@ -57,7 +57,6 @@ configArtifacts:
   - name: chat.us
     yamlRefKey: chatConfig
     contentType: "application/yaml"
-    externalFileRef:
 
 #Chat configuration payload
 chatConfig:
@@ -139,6 +138,8 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | Name                                                | Description                                                                               | Value                                         |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------- |
 | `bootstrap.attrDefOrEntitlements`                   | Should entitlements and/or attributes be bootstrapped.                                    | `true`                                        |
+| `bootstrap.oidcClientOrg`                           | The OIDC Org for bootstrap client authentication                                          | `tdf`                                         |
+| `bootstrap.oidcClientId`                            | The OIDC ClientID for boostrap client authentication                                      | `dcr-test`                                    |
 | `bootstrap.configsvc.enabled`                       | Enable configuration service artifact bootstrapping                                       | `true`                                        |
 | `bootstrap.configsvc.job.name`                      | Name of the job                                                                           | `configsvc-bootstrap`                         |
 | `bootstrap.configsvc.job.image.repo`                | Image repository                                                                          | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |
@@ -186,7 +187,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | `access-pep.name`                                     | Name override                                            | `access-pep`                                |
 | `access-pep.existingImagePullSecret`                  | Existing pull secret for the image                       | `nil`                                       |
 | `access-pep.image.repo`                               | Image Rep                                                | `ghcr.io/virtru-corp/access-pep/access-pep` |
-| `access-pep.image.tag`                                | Image tag                                                | `sha-cac697c`                               |
+| `access-pep.image.tag`                                | Image tag                                                | `0.1.0-sha-a61d7d3`                         |
 | `access-pep.config.disableTracing`                    | disable tracing flag                                     | `true`                                      |
 | `access-pep.config.attrAuthorityHost`                 | Attribute Service Endpoint                               | `http://attributes:4020`                    |
 | `access-pep.config.entitlementPdpHost`                | entitlement pdp endpoint                                 | `http://entitlement-pdp:3355`               |
@@ -197,6 +198,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 | Name                          | Description                                | Value                              |
 | ----------------------------- | ------------------------------------------ | ---------------------------------- |
+| `attributes.enabled`          | Attributes Service enabled flag            | `true`                             |
 | `attributes.fullnameOverride` | Attribute Service Name Override            | `attributes`                       |
 | `attributes.secretRef`        | Secrets for environment variable injection | `name: platform-attributes-secret` |
 
@@ -229,6 +231,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 | Name                                                | Description                                              | Value                                            |
 | --------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------ |
+| `entitlement-pdp.enabled`                           | entitlement-pdp service enabled flag                     | `true`                                           |
 | `entitlement-pdp.fullnameOverride`                  | Entitlement PDP name override                            | `entitlement-pdp`                                |
 | `entitlement-pdp.opaConfig.policy.useStaticPolicy`  | Use static policy flag - false to pull from oci registry | `false`                                          |
 | `entitlement-pdp.opaConfig.policy.allowInsecureTLS` | Allow insecure comms to oci registry                     | `true`                                           |
@@ -240,30 +243,34 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 ### Entitlement Store Chart Overrides
 
-| Name                                 | Description                       | Value                                     |
-| ------------------------------------ | --------------------------------- | ----------------------------------------- |
-| `entitlement-store.fullnameOverride` | Entitlement Store name override   | `entitlement-store`                       |
-| `entitlement-store.secretRef`        | Secrets for environment variables | `name: platform-entitlement-store-secret` |
+| Name                                 | Description                            | Value                                     |
+| ------------------------------------ | -------------------------------------- | ----------------------------------------- |
+| `entitlement-store.enabled`          | entitlement-store service enabled flag | `true`                                    |
+| `entitlement-store.fullnameOverride` | Entitlement Store name override        | `entitlement-store`                       |
+| `entitlement-store.secretRef`        | Secrets for environment variables      | `name: platform-entitlement-store-secret` |
 
 ### Entitlement Chart Overrides
 
 | Name                            | Description                                    | Value                                    |
 | ------------------------------- | ---------------------------------------------- | ---------------------------------------- |
+| `entitlements.enabled`          | entitlements service enabled flag              | `true`                                   |
 | `entitlements.fullnameOverride` | Entitlements Name Override                     | `entitlements`                           |
 | `entitlements.secretRef`        | Entitlements Secrets for environment variables | `name: platform-entitlements-secret    ` |
 
 ### Entity Resolution Chart Overrides
 
-| Name                                       | Description                     | Value               |
-| ------------------------------------------ | ------------------------------- | ------------------- |
-| `entity-resolution.fullnameOverride`       | Entity Resolution Name override | `entity-resolution` |
-| `entity-resolution.config.disableTracing`  | Disable Tracing Flag            | `true`              |
-| `entity-resolution.config.keycloak.legacy` | Legacy Keycloak Tracing Flag    | `true`              |
+| Name                                       | Description                            | Value               |
+| ------------------------------------------ | -------------------------------------- | ------------------- |
+| `entity-resolution.enabled`                | entity-resolution service enabled flag | `true`              |
+| `entity-resolution.fullnameOverride`       | Entity Resolution Name override        | `entity-resolution` |
+| `entity-resolution.config.disableTracing`  | Disable Tracing Flag                   | `true`              |
+| `entity-resolution.config.keycloak.legacy` | Legacy Keycloak Tracing Flag           | `true`              |
 
 ### KAS Chart Overrides
 
 | Name                     | Description                           | Value                    |
 | ------------------------ | ------------------------------------- | ------------------------ |
+| `kas.enabled`            | kas service enabled flag              | `true`                   |
 | `kas.fullnameOverride`   | KAS Name Override                     | `kas`                    |
 | `kas.endpoints.attrHost` | Attributes hostname accessible to KAS | `http://attributes:4020` |
 | `kas.pdp.verbose`        | Verbose Logging Flag                  | `true`                   |
@@ -323,16 +330,17 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 ### Tagging PDP Chart Overrides
 
-| Name                                | Description                           | Value                         |
-| ----------------------------------- | ------------------------------------- | ----------------------------- |
-| `tagging-pdp.enabled`               | enabled flag                          | `true`                        |
-| `tagging-pdp.fullnameOverride`      | override name                         | `tagging-pdp`                 |
-| `tagging-pdp.image.tag`             | Tagging PDP Image Tag                 | `sha-6a63938`                 |
-| `tagging-pdp.image.pullSecrets`     | TaggingPDP image pull secrets         | `nil`                         |
-| `tagging-pdp.gateway.enabled`       | Tagging PDP Rest Gateway enabled flag | `true`                        |
-| `tagging-pdp.gateway.pathPrefix`    | tagging-pdp svc prefix                | `tagging-pdp`                 |
-| `tagging-pdp.config.attrSvc.url`    | Set the attribute service url         | `http://attributes:4020`      |
-| `tagging-pdp.config.oidcSecretName` | Use existing secret for OIDC Creds    | `platform-tagging-pdp-secret` |
-| `tagging-pdp.config.oidcClientId`   | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`             |
-| `tdfAdminUsername`                  | The admin user created for tdf.       | `tdf-admin`                   |
+| Name                                  | Description                           | Value                         |
+| ------------------------------------- | ------------------------------------- | ----------------------------- |
+| `tagging-pdp.enabled`                 | enabled flag                          | `true`                        |
+| `tagging-pdp.fullnameOverride`        | override name                         | `tagging-pdp`                 |
+| `tagging-pdp.image.tag`               | Tagging PDP Image Tag                 | `0.2.1`                       |
+| `tagging-pdp.image.pullSecrets`       | TaggingPDP image pull secrets         | `nil`                         |
+| `tagging-pdp.gateway.enabled`         | Tagging PDP Rest Gateway enabled flag | `true`                        |
+| `tagging-pdp.gateway.pathPrefix`      | tagging-pdp svc prefix                | `tagging-pdp`                 |
+| `tagging-pdp.config.attrSvc.url`      | Set the attribute service url         | `http://attributes:4020`      |
+| `tagging-pdp.config.oidcSecretName`   | Use existing secret for OIDC Creds    | `platform-tagging-pdp-secret` |
+| `tagging-pdp.config.oidcClientId`     | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`             |
+| `tagging-pdp.config.maxMessageSizeMB` | Maximum supported message size (MB)   | `1024`                        |
+| `tdfAdminUsername`                    | The admin user created for tdf.       | `tdf-admin`                   |
 

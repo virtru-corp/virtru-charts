@@ -7,7 +7,7 @@ replicaCount: 3
 revisionHistoryLimit: 10
 
 image:
-  repository: virtru/cks 
+  repository: containers.virtru.com/cks
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -31,10 +31,12 @@ testerPod:
   annotations:
     helm.sh/hook: test
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -59,17 +61,18 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
-      - path: /*
-        pathType: ImplementationSpecific
-        backend:
-          serviceName: cks
-          servicePort: 443
+        - path: /*
+          pathType: ImplementationSpecific
+          backend:
+            serviceName: cks
+            servicePort: 443
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -94,6 +97,21 @@ tolerations: []
 
 affinity: {}
 
+appConfig:
+  virtruOrgId: "<your org id>"
+  authTokenStoreageType: in-memory
+  authTokenStoreageMemoryEncoding: base64
+  logRsyslogEnabled: false
+  logStdoutEnabled: true
+  noKeysRule: importPEM
+  publicKeyPath: /run/secrets/rsa001.pub
+  privateKeyPath: /run/secrets/rsa001.pem
+  keyProviderType: file
+  hmacAuthEnabled: true
+  jwtAuthEnabled: true
+  jwtAuthIssuer: https://api.virtru.com
+  jwtAuthJwksPath: /acm/api/jwks
+
 # By default, you can create secrets using the keys below.
 # Important note: Creating secrets in this way is a default option.
 # While a simpler approach with fewer variables, it is recommended you use
@@ -104,7 +122,7 @@ appSecrets:
     name: hmac-auth
     data:
       authTokenJson: <JSON from your CKS>
-      
+
   virtruKeys:
     name: cks-keys
     mountPath: /app/keys
@@ -113,3 +131,13 @@ appSecrets:
         <rsa001 public key>
       rsa001.pem: |
         <rsa001 private key>
+
+#https://external-secrets.io/v0.8.2/introduction/overview/
+#externalAppSecrets:
+#- name: <external secret object name> #secret object will be named the same.
+#  secretsPath: <path of secret in secret store>
+#  secretStoreRef:
+#    kind: <SecretStore or ClusterSecretStore>
+#    name: <name of secret store>
+#  refreshInterval: <how often to reconcile with secret store>
+#

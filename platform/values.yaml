@@ -39,6 +39,10 @@ keycloak:
 bootstrap:
   ## @param bootstrap.attrDefOrEntitlements Should entitlements and/or attributes be bootstrapped.
   attrDefOrEntitlements: true
+  ## @param bootstrap.oidcClientOrg The OIDC Org for bootstrap client authentication
+  oidcClientOrg: tdf
+  ## @param bootstrap.oidcClientId The OIDC ClientID for boostrap client authentication
+  oidcClientId: dcr-test
   configsvc:
     ## @param bootstrap.configsvc.enabled Enable configuration service artifact bootstrapping
     enabled: true
@@ -49,7 +53,7 @@ bootstrap:
         ## @param bootstrap.configsvc.job.image.repo Image repository
         repo: ghcr.io/virtru-corp/postman-cli/opcr-policy
         ## @param bootstrap.configsvc.job.image.tag Image tag
-        tag: sha-531eea2
+        tag: sha-91e572c
         ## @param bootstrap.configsvc.job.image.pullPolicy Image pull policy
         pullPolicy: IfNotPresent
       ## @param bootstrap.configsvc.job.backoffLimit Job backoff limit
@@ -99,6 +103,10 @@ istioAuth:
       selectorLabels: |
         app.kubernetes.io/name: {{ index $.Values "configuration" "fullnameOverride" }}
         app.kubernetes.io/instance: {{ $.Release.Name }}
+    - name: entitlement-pdp
+      selectorLabels: |
+        app.kubernetes.io/name: {{ index $.Values "entitlement-pdp" "fullnameOverride" }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
 global:
   ## @param global.istioEnabled Istio enabled true/false
   istioEnabled: true
@@ -139,6 +147,8 @@ access-pep:
   enabled: true
   ## @param access-pep.name Name override
   name: access-pep
+  ## @param access-pep.fullnameOverride Access-Pep Name Override
+  fullnameOverride: access-pep
   ## @param access-pep.existingImagePullSecret Existing pull secret for the image
   existingImagePullSecret:
   ## @skip access-pep.useImagePullSecret
@@ -147,7 +157,7 @@ access-pep:
     ## @param access-pep.image.repo Image Rep
     repo: ghcr.io/virtru-corp/access-pep/access-pep
     ## @param access-pep.image.tag Image tag
-    tag: 0.1.0-sha-a61d7d3
+    tag: 0.1.0-sha-574135b
   config:
     ## @param access-pep.config.disableTracing disable tracing flag
     disableTracing: *disableTracing
@@ -179,7 +189,7 @@ configuration:
   server:
     image:
       ## @param configuration.server.image.tag Configuration Service Image Tag
-      tag: 0.3.6
+      tag: 0.9.1
     ## @param configuration.server.secretRef Configuration Service Secrets Ref
     secretRef: |-
       name: platform-configsvc
@@ -209,7 +219,7 @@ entitlement-policy-bootstrap:
   istioTerminationHack: *istioTerminationHack
   image:
     ## @param entitlement-policy-bootstrap.image.tag ocpr container tag
-    tag: sha-531eea2
+    tag: sha-91e572c
 
 ## @section Entitlement PDP Chart Overrides
 entitlement-pdp:
@@ -393,7 +403,7 @@ tagging-pdp:
   fullnameOverride: tagging-pdp
   image:
     ## @param tagging-pdp.image.tag Tagging PDP Image Tag
-    tag: 0.2.1
+    tag: 0.2.7
     ## @param tagging-pdp.image.pullSecrets TaggingPDP image pull secrets
     pullSecrets:
   gateway:
@@ -403,7 +413,7 @@ tagging-pdp:
     pathPrefix: tagging-pdp
     ## @skip tagging-pdp.gateway.image
     image:
-      tag: 0.2.1 
+      tag: 0.2.7-82b7d18
   config:
     attrSvc:
       ## @param tagging-pdp.config.attrSvc.url Set the attribute service url
