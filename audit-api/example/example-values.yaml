@@ -12,16 +12,3 @@ ingress:
 fluent-bit:
   autoscaling:
     maxReplicas: 1
-  # replace 'shp' with the namespace in which audit-api is being installed
-  config:
-    outputs: |
-      [OUTPUT]
-          Name        http
-          Match       audit
-          Host        audit-api.shp.svc.cluster.local
-          URI         /api/v1/write
-          Port        8080
-          tls         off
-          tls.verify  off
-          Format      json
-          Retry_Limit 8

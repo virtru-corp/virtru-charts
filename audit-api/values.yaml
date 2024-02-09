@@ -240,7 +240,7 @@ fluent-bit:
       [OUTPUT]
           Name        http
           Match       audit
-          Host        audit-api.shp.svc.cluster.local
+          Host        audit-api
           URI         /api/v1/write
           Port        8080
           tls         off
