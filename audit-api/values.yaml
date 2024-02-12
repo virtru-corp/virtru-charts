@@ -13,12 +13,12 @@ image:
   ## @param image.pullPolicy Image Pull Policy
   pullPolicy: Always
   ## @param image.tag Image tag
-  tag: 0.22.0-8057e1b
+  tag: 0.23.0
 
 ## @section imagePullSecrets Image Pull Secrets - Overrides Global
 imagePullSecrets:
   ## @param imagePullSecrets[0].name Image Pull Secret Name
-  - name: platform-pull-secret
+  - name: audit-api-pull-secret
 ## @section Deployment Parameters
 ## @param nameOverride Override name of the chart
 nameOverride: ""
@@ -37,6 +37,11 @@ config:
     dbName: "audit_database"
     ## @param config.db.sslMode Postgresql SSL Mode
     sslMode: "disable"
+  platform:
+    ## @param config.platform.disableInternalAuth disable internal service auth
+    disableInternalAuth: true
+    ## @param config.platform.defaultOrgId orgId used for queries
+    defaultOrgId:
   secrets:
     ## @param config.secrets.dbPassword Postgresql Database password - used if `config.existingSecret` is blank
     dbPassword:
@@ -75,10 +80,41 @@ service:
   ## @param service.port port to expose
   port: 8080
 
+## @section Istio AuthN/Z Parameters
+istioAuth:
+  ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
+  enabled: true
+  ## @param istioAuth.internalJWTURL Whether to compute and use internal keycloak jwks uri - default false
+  internalJWTURL: true
+  oidc: 
+    ## @param istioAuth.oidc.oidcExternalBaseUrl The external base url of the oidc provider
+    oidcExternalBaseUrl: https://shp.example.com
+    ## @param istioAuth.oidc.oidcUrlPath The path added to the base url to reach the oidc provider
+    oidcUrlPath: auth
+    ## @param istioAuth.oidc.keycloakRealm If using keycloak - the realm name
+    keycloakRealm: tdf
+
+## @section Secret Generation Parameters
+secrets:
+  ## @extra secrets.imageCredentials Map of key (pull name) to auth information.  Each key creates a pull cred
+  imageCredentials:
+    ## @extra secrets.imageCredentials.pull-secret Container registry auth for "install name"-pull-secret
+    pull-secret:
+      ## @param secrets.imageCredentials.pull-secret.registry Registry repo
+      registry: ghcr.io
+      ## @param secrets.imageCredentials.pull-secret.username Registry Auth username
+      username: username
+      ## @param secrets.imageCredentials.pull-secret.password Registry Auth password
+      password: password
+      ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
+      email: nope@nah.com
+
 ## @section Ingress Configuration
 ingress:
   ## @param ingress.enabled Enable ingress controller resource
   enabled: false
+  ## @param ingress.existingGateway Use an existing istio gateway
+  existingGateway:
   ## @param ingress.className Ingress controller class name
   className: ""
   ## @param ingress.annotations Ingress annotations
@@ -204,7 +240,7 @@ fluent-bit:
       [OUTPUT]
           Name        http
           Match       audit
-          Host        audit-api.shp.svc.cluster.local
+          Host        audit-api
           URI         /api/v1/write
           Port        8080
           tls         off

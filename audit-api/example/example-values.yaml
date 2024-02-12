@@ -1,0 +1,14 @@
+postresPassword: &postgresPassword "changeme"
+
+config:
+  secrets:
+    dbPassword: *postgresPassword
+
+# using existing platform istio gateway
+# (format if in different namespace: namespace/gateway-name)
+ingress:
+  existingGateway: platform-gateway
+
+fluent-bit:
+  autoscaling:
+    maxReplicas: 1
