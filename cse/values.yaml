@@ -43,6 +43,7 @@ securityContext: {}
 service:
   annotations: {}
   type: LoadBalancer
+#  loadBalancerIP: <your-ip-address>
   port: 443
   protocol: TCP
 
@@ -103,6 +104,10 @@ appConfig:
   useSsl: "true"
   useCks: "false"
   cksUrl: "https://cks-example.local"
+  driveLabels:
+   enabled: "false"
+   serviceAccountEmail: "<your-drive-admin-email-address>"
+   driveTime: "15"
 
 appSecrets:
   hmac:
@@ -113,8 +118,10 @@ appSecrets:
     privateKey: <base64 private rsa key>
     certificate: <base64 private ssl cert>
   cksHmac:
-    tokenId: "from-your-cks" 
-    tokenSecret: "from-your-cks" 
+    tokenId: "from-your-cks"
+    tokenSecret: "from-your-cks"
+  googleApplicationCredentials: /app/cse/credentials.json
+
 
 #https://external-secrets.io/v0.8.2/introduction/overview/
 #externalAppSecrets:
@@ -124,4 +131,16 @@ appSecrets:
 #    kind: <SecretStore or ClusterSecretStore>
 #    name: <name of secret store>
 #  refreshInterval: <how often to reconcile with secret store>
-#
+
+### Uncomment lines below volumes if utilizing the Drive Labels integration (See https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE)
+volumes: []
+#- name: credentials-volume
+#  volume:
+#    secret:
+#      secretName: keyfile-secret
+#      items:
+#      - key: keyfile.json
+#        path: credentials.json
+#  volumeMount:
+#    mountPath: /app/cse/credentials.json
+#    subPath: credentials.json
