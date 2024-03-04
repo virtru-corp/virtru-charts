@@ -6,6 +6,7 @@ metadata:
     app: audit-api
 data:
   POSTGRES_HOST: {{ (coalesce .Values.config.db.host) | quote }}
+  POSTGRES_READER: {{ (coalesce .Values.config.db.reader) | quote }}
   POSTGRES_USER: {{ .Values.config.db.user | quote }}
   POSTGRES_PORT: {{ (coalesce .Values.config.db.port) | quote }}
   POSTGRES_DB: {{ .Values.config.db.dbName | quote }}

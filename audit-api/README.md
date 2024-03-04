@@ -96,3 +96,19 @@
 | Name              | Description                                   | Value  |
 | ----------------- | --------------------------------------------- | ------ |
 | `tags.fluent-bit` | Tag for fluent-bit dependency default is true | `true` |
+
+### Fluent Bit Configuration (optional)
+if you would like to enable fluentbit to send audit events to splunk, you can adjust the fluentbit config in the values.yaml file. You'll want to add an additional output plugin to the fluentbit config. The following is an example of how to add a splunk output plugin to the fluentbit config:
+
+```yaml
+[OUTPUT]
+          Name        splunk
+          Match       audit
+          Port        8088
+          Host        <splunk-host>
+          TLS         On
+          TLS.Verify  Off
+          Splunk_Token <splunk-token>
+          splunk_send_raw On
+```
+For more information on how to configure fluentbit and splunk, please refer to the [fluentbit documentation](https://docs.fluentbit.io/manual/pipeline/outputs/splunk#configuration-parameters)

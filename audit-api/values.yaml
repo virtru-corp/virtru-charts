@@ -13,7 +13,7 @@ image:
   ## @param image.pullPolicy Image Pull Policy
   pullPolicy: Always
   ## @param image.tag Image tag
-  tag: 0.23.0
+  tag: 0.32.0
 
 ## @section imagePullSecrets Image Pull Secrets - Overrides Global
 imagePullSecrets:
@@ -29,6 +29,8 @@ config:
   db:
     ## @param config.db.host Postgresql DB Host
     host: "postgresql"
+    ## @param config.db.reader Postgresql DB Host
+    reader: "postgresql"
     ## @param config.db.user Postgresql DB Username
     user: "audit_manager"
     ## @param config.db.port Postgresql DB Port
@@ -247,3 +249,12 @@ fluent-bit:
           tls.verify  off
           Format      json
           Retry_Limit 8
+      [OUTPUT]
+          Name        splunk
+          Match       audit
+          Port        8088
+          Host        <splunk-host>
+          TLS         On
+          TLS.Verify  Off
+          Splunk_Token <token>
+          splunk_send_raw On
