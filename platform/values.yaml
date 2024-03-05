@@ -394,6 +394,7 @@ secrets:
       password: password
       ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
       email: nope@nah.com
+    ## @extra secrets.imageCredentials.gar-pull-secret Container registry auth for "install name"-gar-pull-secret
     gar-pull-secret:
       ## @param secrets.imageCredentials.gar-pull-secret.registry Registry repo
       registry: us-docker.pkg.dev

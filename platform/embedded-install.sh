@@ -86,7 +86,7 @@ if [ ! -z "$chartsLocalDir" ]; then
 fi
 
 pullSecretArgs=()
-if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
+if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullPAT" = "null" ]; then
   echo "Setting pull secret args"
   platformImagePullSecretName="platform-pull-secret"
   pullSecretArgs+=("--set" "access-pep.existingImagePullSecret=${platformImagePullSecretName}"
@@ -100,8 +100,8 @@ if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
 fi
 
 pullSecretArgs2=()
-if [ ! "$imagePullUsername2" = "null" ]; then
-  echo "Setting pull secret args"
+if [ ! "$imagePullPAT2" = "null" ]; then
+  echo "Setting gar pull secret args"
   platformGARImagePullSecretName="platform-gar-pull-secret"
   pullSecretArgs+=("--set" "configuration.server.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
                   "--set" "entitlement-policy-bootstrap.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
