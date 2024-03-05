@@ -75,10 +75,6 @@ while getopts "h:t:s:u:p:e:c:o:k:l:iag:r:" arg; do
     r)
       imagePullPAT2=${OPTARG}
       ;;
-    :)  
-      echo "ERROR: Option -$OPTARG requires an argument"
-      usage
-      ;;
     \?)
       echo "ERROR: Invalid option -$OPTARG"
       usage
