@@ -394,6 +394,15 @@ secrets:
       password: password
       ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
       email: nope@nah.com
+    gar-pull-secret:
+      ## @param secrets.imageCredentials.pull-secret.registry Registry repo
+      registry: us-docker.pkg.dev
+      ## @param secrets.imageCredentials.pull-secret.username Registry Auth username
+      username: username
+      ## @param secrets.imageCredentials.pull-secret.password Registry Auth password
+      password: password
+      ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
+      email: nope@nah.com
 
 ## @section Tagging PDP Chart Overrides
 tagging-pdp:

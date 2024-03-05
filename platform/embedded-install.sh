@@ -6,6 +6,10 @@ tlsSecret="null"
 imagePullUsername=""
 # Image pull username
 imagePullPAT=""
+# Secondary Pull Username for gar
+imagePullUsername2=""
+# Secondary Image pull PAT for GAR
+imagePullPAT2=""
 # Hostname for ingress
 ingressHostname=""
 # Entitlement policy location
@@ -27,7 +31,7 @@ keycloakChart="${chartRepo}/platform-embedded-keycloak"
 keycloakBootstrapperChart="${chartRepo}/platform-keycloak-bootstrapper"
 platformChart="${chartRepo}/platform"
 
-while getopts "h:t:s:u:p:e:c:o:k:l:ia" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:l:iag:r:" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -65,6 +69,20 @@ while getopts "h:t:s:u:p:e:c:o:k:l:ia" arg; do
     a)
       addSecurityContexts=true
       ;;
+    g)
+      imagePullUsername2=${OPTARG}
+      ;;
+    r)
+      imagePullPAT2=${OPTARG}
+      ;;
+    :)  
+      echo "ERROR: Option -$OPTARG requires an argument"
+      usage
+      ;;
+    \?)
+      echo "ERROR: Invalid option -$OPTARG"
+      usage
+      ;;
   esac
 done
 
@@ -88,6 +106,19 @@ if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
                   "--set" "global.imagePullSecrets[0].name=${platformImagePullSecretName}"
                   "--set" "bootstrap.configsvc.job.imagePullSecrets[0].name=${platformImagePullSecretName}"
                   )
+fi
+
+pullSecretArgs2=()
+if [ ! -z "$imagePullUsername2" ] && [ ! "$imagePullUsername2" = "null" ]; then
+  echo "Setting pull secret args"
+  platformGARImagePullSecretName="platform-gar-pull-secret"
+  pullSecretArgs+=("--set" "configuration.server.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
+                  "--set" "entitlement-policy-bootstrap.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
+                  "--set" "tagging-pdp.image.pullSecrets[1].name=${platformGARImagePullSecretName}"
+                  "--set" "global.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
+                  "--set" "bootstrap.configsvc.job.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
+                  "--set" "secrets.imageCredentials.gar-pull-secret.username=${imagePullUsername2}" \
+                  "--set" "secrets.imageCredentials.gar-pull-secret.password=${imagePullPAT2}")
 fi
 
 echo "Setting override value files"
@@ -221,6 +252,7 @@ helm upgrade --install -n $ns --create-namespace \
  --set ingress.tls.existingSecret=${tlsSecret} \
  "${entitlementPolicyVersionTagArgs[@]}" \
  "${pullSecretArgs[@]}" \
+ "${pullSecretArgs2[@]}" \
  "${securityContextArgs[@]}" \
  "${overrideValuesArgs[@]}" \
  platform $platformChart
