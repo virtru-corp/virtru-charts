@@ -10,8 +10,7 @@
     ./platform/embedded-install.sh -u <ghcr username> \
         -p <ghcr pat> \
         -h <ingress host> \
-        -g <gar username> \
-        -r <gar pat> \
+        -g <gar pat> \
         -k <optional - path to keycloak trust certs> \
         -e <pathToEntitlementPolicyDir> \
         -c <pathToInstallationConfigFile> \

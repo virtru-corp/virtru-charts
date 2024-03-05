@@ -6,8 +6,6 @@ tlsSecret="null"
 imagePullUsername=""
 # Image pull username
 imagePullPAT=""
-# Secondary Pull Username for gar
-imagePullUsername2=""
 # Secondary Image pull PAT for GAR
 imagePullPAT2=""
 # Hostname for ingress
@@ -31,7 +29,7 @@ keycloakChart="${chartRepo}/platform-embedded-keycloak"
 keycloakBootstrapperChart="${chartRepo}/platform-keycloak-bootstrapper"
 platformChart="${chartRepo}/platform"
 
-while getopts "h:t:s:u:p:e:c:o:k:l:iag:r:" arg; do
+while getopts "h:t:s:u:p:e:c:o:k:l:iag:" arg; do
   case $arg in
     t)
       tlsEnabled=${OPTARG}
@@ -70,9 +68,6 @@ while getopts "h:t:s:u:p:e:c:o:k:l:iag:r:" arg; do
       addSecurityContexts=true
       ;;
     g)
-      imagePullUsername2=${OPTARG}
-      ;;
-    r)
       imagePullPAT2=${OPTARG}
       ;;
     \?)
@@ -105,7 +100,7 @@ if [ ! -z "$imagePullUsername" ] && [ ! "$imagePullUsername" = "null" ]; then
 fi
 
 pullSecretArgs2=()
-if [ ! -z "$imagePullUsername2" ] && [ ! "$imagePullUsername2" = "null" ]; then
+if [ ! "$imagePullUsername2" = "null" ]; then
   echo "Setting pull secret args"
   platformGARImagePullSecretName="platform-gar-pull-secret"
   pullSecretArgs+=("--set" "configuration.server.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
@@ -113,7 +108,6 @@ if [ ! -z "$imagePullUsername2" ] && [ ! "$imagePullUsername2" = "null" ]; then
                   "--set" "tagging-pdp.image.pullSecrets[1].name=${platformGARImagePullSecretName}"
                   "--set" "global.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
                   "--set" "bootstrap.configsvc.job.imagePullSecrets[1].name=${platformGARImagePullSecretName}"
-                  "--set" "secrets.imageCredentials.gar-pull-secret.username=${imagePullUsername2}" \
                   "--set" "secrets.imageCredentials.gar-pull-secret.password=${imagePullPAT2}")
 fi
 

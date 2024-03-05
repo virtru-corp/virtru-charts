@@ -398,7 +398,7 @@ secrets:
       ## @param secrets.imageCredentials.gar-pull-secret.registry Registry repo
       registry: us-docker.pkg.dev
       ## @param secrets.imageCredentials.gar-pull-secret.username Registry Auth username
-      username: username
+      username: oauth2accesstoken
       ## @param secrets.imageCredentials.gar-pull-secret.password Registry Auth password
       password: password
       ## @param secrets.imageCredentials.gar-pull-secret.email Registry Auth email

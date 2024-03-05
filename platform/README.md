@@ -329,7 +329,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | `secrets.imageCredentials.pull-secret.password`     | Registry Auth password                                                                         | `password`          |
 | `secrets.imageCredentials.pull-secret.email`        | Registry Auth email                                                                            | `nope@nah.com`      |
 | `secrets.imageCredentials.gar-pull-secret.registry` | Registry repo                                                                                  | `us-docker.pkg.dev` |
-| `secrets.imageCredentials.gar-pull-secret.username` | Registry Auth username                                                                         | `username`          |
+| `secrets.imageCredentials.gar-pull-secret.username` | Registry Auth username                                                                         | `oauth2accesstoken` |
 | `secrets.imageCredentials.gar-pull-secret.password` | Registry Auth password                                                                         | `password`          |
 | `secrets.imageCredentials.gar-pull-secret.email`    | Registry Auth email                                                                            | `nope@nah.com`      |
 
