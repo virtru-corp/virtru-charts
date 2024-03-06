@@ -5,13 +5,13 @@ type: application
 version: 0.3.8
 appVersion: 0.1.4
 
-otdfVersion: &otdfVersion "1.5.0"
+otdfVersion: &otdfVersion "1.6.0"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
   - name: abacus
     repository: *otdfRepo
-    version: '1.5.0'
+    version: '1.6.0'
     condition: abacus.enabled
 
   - name: attributes
