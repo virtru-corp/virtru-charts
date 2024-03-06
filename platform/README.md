@@ -143,7 +143,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | `bootstrap.configsvc.enabled`                       | Enable configuration service artifact bootstrapping                                       | `true`                                        |
 | `bootstrap.configsvc.job.name`                      | Name of the job                                                                           | `configsvc-bootstrap`                         |
 | `bootstrap.configsvc.job.image.repo`                | Image repository                                                                          | `ghcr.io/virtru-corp/postman-cli/opcr-policy` |
-| `bootstrap.configsvc.job.image.tag`                 | Image tag                                                                                 | `sha-531eea2`                                 |
+| `bootstrap.configsvc.job.image.tag`                 | Image tag                                                                                 | `sha-91e572c`                                 |
 | `bootstrap.configsvc.job.image.pullPolicy`          | Image pull policy                                                                         | `IfNotPresent`                                |
 | `bootstrap.configsvc.job.backoffLimit`              | Job backoff limit                                                                         | `5`                                           |
 | `bootstrap.configsvc.job.configVolumeSecretRefName` | Secret name used to mount configuration artifacts used by the job                         | `platform-bootstrap-configsvc`                |
@@ -185,9 +185,10 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | ----------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------- |
 | `access-pep.enabled`                                  | Enable access-pep flag                                   | `true`                                      |
 | `access-pep.name`                                     | Name override                                            | `access-pep`                                |
+| `access-pep.fullnameOverride`                         | Access-Pep Name Override                                 | `access-pep`                                |
 | `access-pep.existingImagePullSecret`                  | Existing pull secret for the image                       | `nil`                                       |
 | `access-pep.image.repo`                               | Image Rep                                                | `ghcr.io/virtru-corp/access-pep/access-pep` |
-| `access-pep.image.tag`                                | Image tag                                                | `0.1.0-sha-a61d7d3`                         |
+| `access-pep.image.tag`                                | Image tag                                                | `0.1.0-sha-574135b`                         |
 | `access-pep.config.disableTracing`                    | disable tracing flag                                     | `true`                                      |
 | `access-pep.config.attrAuthorityHost`                 | Attribute Service Endpoint                               | `http://attributes:4020`                    |
 | `access-pep.config.entitlementPdpHost`                | entitlement pdp endpoint                                 | `http://entitlement-pdp:3355`               |
@@ -208,7 +209,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | ---------------------------------------- | ----------------------------------------- | -------------------------- |
 | `configuration.enabled`                  | Configuration Service enabled flag        | `true`                     |
 | `configuration.fullnameOverride`         | Configuration svc name override           | `configuration`            |
-| `configuration.server.image.tag`         | Configuration Service Image Tag           | `0.3.6`                    |
+| `configuration.server.image.tag`         | Configuration Service Image Tag           | `0.9.1`                    |
 | `configuration.server.secretRef`         | Configuration Service Secrets Ref         | `name: platform-configsvc` |
 | `configuration.server.postgres.host`     | hostname of postgres                      | `postgresql`               |
 | `configuration.server.postgres.password` | password for postgres - should not be set | `nil`                      |
@@ -225,7 +226,7 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 | `entitlement-policy-bootstrap.policyDataSecretRef`  | Secret name used to mount policy artifacts into the job. To support source files outside this chart a secret created separate from this chart is required. Example to mount all files in directory: kubectl create secret generic platform-bootstrap-entitlement-policy --from-file=pathTo/entitlement-policy | `platform-bootstrap-entitlement-policy`          |
 | `entitlement-policy-bootstrap.imagePullSecrets`     | Pull secrets for entitlement policy bootstrap                                                                                                                                                                                                                                                                 | `nil`                                            |
 | `entitlement-policy-bootstrap.istioTerminationHack` | Set istio on/off                                                                                                                                                                                                                                                                                              | `true`                                           |
-| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                                                                                                                                                                                                                                                            | `sha-531eea2`                                    |
+| `entitlement-policy-bootstrap.image.tag`            | ocpr container tag                                                                                                                                                                                                                                                                                            | `sha-91e572c`                                    |
 
 ### Entitlement PDP Chart Overrides
 
@@ -301,46 +302,50 @@ npx @bitnami/readme-generator-for-helm -v platform/values.yaml -r platform/READM
 
 ### Secret Generation Parameters
 
-| Name                                            | Description                                                                                    | Value          |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
-| `secrets.enabled`                               | Generate secrets from the values provided below.  If false, another bootstrapping              | `true`         |
-| `secrets.postgresql.dbPassword`                 | password for postgres user                                                                     | `nil`          |
-| `secrets.attributes.clientSecret`               | oidc client secret used by attributes svc to auth to idp and enforce svc authorization         | `nil`          |
-| `secrets.attributes.dbPassword`                 | postgres password for attributes svc user                                                      | `nil`          |
-| `secrets.configuration.dbPassword`              | postgres password for config svc user                                                          | `nil`          |
-| `secrets.entitlementStore.dbPassword`           | postgres password for entitlement-store svc user                                               | `nil`          |
-| `secrets.entitlements.clientSecret`             | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization       | `nil`          |
-| `secrets.entitlements.dbPassword`               | postgres password for entitlements svc user                                                    | `nil`          |
-| `secrets.keycloak.adminUsername`                | Optional for bootstrapping - keycloak username for user with admin role                        | `nil`          |
-| `secrets.keycloak.adminPassword`                | Optional for bootstrapping - keycloak password for user with admin role                        | `nil`          |
-| `secrets.keycloakBootstrap.attributesUsername`  | username for attribute service auth                                                            | `nil`          |
-| `secrets.keycloakBootstrap.attributesPassword`  | password for attribute service auth                                                            | `nil`          |
-| `secrets.keycloakBootstrap.users`               | list of users to be added [{"username":"","password":""}]                                      | `nil`          |
-| `secrets.keycloakBootstrap.clients`             | list of custom oidc clients added [{"clientId":<>,"clientSecret":"","audienceMappers":["aud]}] | `nil`          |
-| `secrets.keycloakBootstrap.clientSecret`        | client secret assigned to standard bootstrapper clients                                        | `nil`          |
-| `secrets.keycloakBootstrap.customConfig`        | Override for custom config to none                                                             | `nil`          |
-| `secrets.opaPolicyPullSecret`                   | oci registry pull secret for OPA policy                                                        | `nil`          |
-| `secrets.taggingPDP.clientSecret`               | OIDC Client Secret for Tagging PDP                                                             | `nil`          |
-| `secrets.imageCredentials`                      | Map of key (pull name) to auth information.  Each key creates a pull cred                      |                |
-| `secrets.imageCredentials.pull-secret`          | Container registry auth for "install name"-pull-secret                                         |                |
-| `secrets.imageCredentials.pull-secret.registry` | Registry repo                                                                                  | `ghcr.io`      |
-| `secrets.imageCredentials.pull-secret.username` | Registry Auth username                                                                         | `username`     |
-| `secrets.imageCredentials.pull-secret.password` | Registry Auth password                                                                         | `password`     |
-| `secrets.imageCredentials.pull-secret.email`    | Registry Auth email                                                                            | `nope@nah.com` |
+| Name                                                | Description                                                                                    | Value               |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------- |
+| `secrets.enabled`                                   | Generate secrets from the values provided below.  If false, another bootstrapping              | `true`              |
+| `secrets.postgresql.dbPassword`                     | password for postgres user                                                                     | `nil`               |
+| `secrets.attributes.clientSecret`                   | oidc client secret used by attributes svc to auth to idp and enforce svc authorization         | `nil`               |
+| `secrets.attributes.dbPassword`                     | postgres password for attributes svc user                                                      | `nil`               |
+| `secrets.configuration.dbPassword`                  | postgres password for config svc user                                                          | `nil`               |
+| `secrets.entitlementStore.dbPassword`               | postgres password for entitlement-store svc user                                               | `nil`               |
+| `secrets.entitlements.clientSecret`                 | oidc client secret used by entitlements svc to auth to idp and enforce svc authorization       | `nil`               |
+| `secrets.entitlements.dbPassword`                   | postgres password for entitlements svc user                                                    | `nil`               |
+| `secrets.keycloak.adminUsername`                    | Optional for bootstrapping - keycloak username for user with admin role                        | `nil`               |
+| `secrets.keycloak.adminPassword`                    | Optional for bootstrapping - keycloak password for user with admin role                        | `nil`               |
+| `secrets.keycloakBootstrap.attributesUsername`      | username for attribute service auth                                                            | `nil`               |
+| `secrets.keycloakBootstrap.attributesPassword`      | password for attribute service auth                                                            | `nil`               |
+| `secrets.keycloakBootstrap.users`                   | list of users to be added [{"username":"","password":""}]                                      | `nil`               |
+| `secrets.keycloakBootstrap.clients`                 | list of custom oidc clients added [{"clientId":<>,"clientSecret":"","audienceMappers":["aud]}] | `nil`               |
+| `secrets.keycloakBootstrap.clientSecret`            | client secret assigned to standard bootstrapper clients                                        | `nil`               |
+| `secrets.keycloakBootstrap.customConfig`            | Override for custom config to none                                                             | `nil`               |
+| `secrets.opaPolicyPullSecret`                       | oci registry pull secret for OPA policy                                                        | `nil`               |
+| `secrets.taggingPDP.clientSecret`                   | OIDC Client Secret for Tagging PDP                                                             | `nil`               |
+| `secrets.imageCredentials`                          | Map of key (pull name) to auth information.  Each key creates a pull cred                      |                     |
+| `secrets.imageCredentials.pull-secret`              | Container registry auth for "install name"-pull-secret                                         |                     |
+| `secrets.imageCredentials.pull-secret.registry`     | Registry repo                                                                                  | `ghcr.io`           |
+| `secrets.imageCredentials.pull-secret.username`     | Registry Auth username                                                                         | `username`          |
+| `secrets.imageCredentials.pull-secret.password`     | Registry Auth password                                                                         | `password`          |
+| `secrets.imageCredentials.pull-secret.email`        | Registry Auth email                                                                            | `nope@nah.com`      |
+| `secrets.imageCredentials.gar-pull-secret`          | Container registry auth for "install name"-gar-pull-secret                                     |                     |
+| `secrets.imageCredentials.gar-pull-secret.registry` | Registry repo                                                                                  | `us-docker.pkg.dev` |
+| `secrets.imageCredentials.gar-pull-secret.username` | Registry Auth username                                                                         | `oauth2accesstoken` |
+| `secrets.imageCredentials.gar-pull-secret.password` | Registry Auth password                                                                         | `password`          |
+| `secrets.imageCredentials.gar-pull-secret.email`    | Registry Auth email                                                                            | `nope@nah.com`      |
 
 ### Tagging PDP Chart Overrides
 
-| Name                                  | Description                           | Value                         |
-| ------------------------------------- | ------------------------------------- | ----------------------------- |
-| `tagging-pdp.enabled`                 | enabled flag                          | `true`                        |
-| `tagging-pdp.fullnameOverride`        | override name                         | `tagging-pdp`                 |
-| `tagging-pdp.image.tag`               | Tagging PDP Image Tag                 | `0.2.1`                       |
-| `tagging-pdp.image.pullSecrets`       | TaggingPDP image pull secrets         | `nil`                         |
-| `tagging-pdp.gateway.enabled`         | Tagging PDP Rest Gateway enabled flag | `true`                        |
-| `tagging-pdp.gateway.pathPrefix`      | tagging-pdp svc prefix                | `tagging-pdp`                 |
-| `tagging-pdp.config.attrSvc.url`      | Set the attribute service url         | `http://attributes:4020`      |
-| `tagging-pdp.config.oidcSecretName`   | Use existing secret for OIDC Creds    | `platform-tagging-pdp-secret` |
-| `tagging-pdp.config.oidcClientId`     | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`             |
-| `tagging-pdp.config.maxMessageSizeMB` | Maximum supported message size (MB)   | `1024`                        |
-| `tdfAdminUsername`                    | The admin user created for tdf.       | `tdf-admin`                   |
+| Name                                | Description                           | Value                         |
+| ----------------------------------- | ------------------------------------- | ----------------------------- |
+| `tagging-pdp.enabled`               | enabled flag                          | `true`                        |
+| `tagging-pdp.fullnameOverride`      | override name                         | `tagging-pdp`                 |
+| `tagging-pdp.image.tag`             | Tagging PDP Image Tag                 | `0.2.7`                       |
+| `tagging-pdp.image.pullSecrets`     | TaggingPDP image pull secrets         | `nil`                         |
+| `tagging-pdp.gateway.enabled`       | Tagging PDP Rest Gateway enabled flag | `true`                        |
+| `tagging-pdp.gateway.pathPrefix`    | tagging-pdp svc prefix                | `tagging-pdp`                 |
+| `tagging-pdp.config.attrSvc.url`    | Set the attribute service url         | `http://attributes:4020`      |
+| `tagging-pdp.config.oidcSecretName` | Use existing secret for OIDC Creds    | `platform-tagging-pdp-secret` |
+| `tagging-pdp.config.oidcClientId`   | OIDC Client ID for tagging pdp        | `shp-tagging-pdp`             |
+| `tdfAdminUsername`                  | The admin user created for tdf.       | `tdf-admin`                   |
 

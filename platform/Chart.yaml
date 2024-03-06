@@ -55,7 +55,7 @@ dependencies:
 
   - name: tagging-pdp
     repository: file://./charts/tagging-pdp
-    version: '0.1.0'
+    version: '0.2.0'
     condition: tagging-pdp.enabled
 
   - name: configuration
