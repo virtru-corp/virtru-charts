@@ -65,8 +65,8 @@ serviceAccount:
   name: null
 
 image:
-  tag: sha-f3f0116
-  repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc
+  tag: main-a746f20-SNAPSHOT
+  repo: us-docker.pkg.dev/prj-infra-automation-ktbz/internal/tagging-pdp-grpc
   # image pull secret, also used by the grpc-gateway image if enabled.
   pullSecrets: []
   pullPolicy: IfNotPresent
@@ -80,6 +80,6 @@ gateway:
   # additional prefix for path(e.g. ingress) for swagger ui
   pathPrefix: ""
   image:
-    tag: 0.1.0
-    repo: ghcr.io/virtru-corp/tagging-pdp/tagging-pdp-grpc-gateway
+    tag: main-a746f20-SNAPSHOT
+    repo: us-docker.pkg.dev/prj-infra-automation-ktbz/internal/tagging-pdp-grpc-gateway
     pullPolicy: IfNotPresent
