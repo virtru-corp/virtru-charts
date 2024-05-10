@@ -117,6 +117,7 @@ standardConfig:
 # a third party secret storage option.
 
 appSecrets:
+  createSecret: true
   amplitudeToken: <your-amplitude-token>
   gatewayApiTokenName: <your-api-token>
   gatewayApiSecret: <your-api-secret>
