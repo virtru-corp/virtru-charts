@@ -6,7 +6,7 @@
 | ------------------ | ----------------- | ------------------------------- |
 | `image.repository` | Image repository  | `ghcr.io/virtru-corp/audit-api` |
 | `image.pullPolicy` | Image Pull Policy | `Always`                        |
-| `image.tag`        | Image tag         | `0.23.0`                        |
+| `image.tag`        | Image tag         | `0.32.0`                        |
 
 ### imagePullSecrets Image Pull Secrets - Overrides Global
 
@@ -47,16 +47,6 @@
 | `service.type` | type of service to create | `ClusterIP` |
 | `service.port` | port to expose            | `8080`      |
 
-### Istio AuthN/Z Parameters
-
-| Name                                 | Description                                                                                                   | Value                     |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `istioAuth.enabled`                  | Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration | `true`                    |
-| `istioAuth.internalJWTURL`           | Whether to compute and use internal keycloak jwks uri - default false                                         | `true`                    |
-| `istioAuth.oidc.oidcExternalBaseUrl` | The external base url of the oidc provider                                                                    | `https://shp.example.com` |
-| `istioAuth.oidc.oidcUrlPath`         | The path added to the base url to reach the oidc provider                                                     | `auth`                    |
-| `istioAuth.oidc.keycloakRealm`       | If using keycloak - the realm name                                                                            | `tdf`                     |
-
 ### Secret Generation Parameters
 
 | Name                                            | Description                                                               | Value          |
@@ -70,12 +60,11 @@
 
 ### Ingress Configuration
 
-| Name                      | Description                        | Value   |
-| ------------------------- | ---------------------------------- | ------- |
-| `ingress.enabled`         | Enable ingress controller resource | `false` |
-| `ingress.existingGateway` | Use an existing istio gateway      | `nil`   |
-| `ingress.className`       | Ingress controller class name      | `""`    |
-| `ingress.annotations`     | Ingress annotations                | `{}`    |
+| Name                  | Description                        | Value   |
+| --------------------- | ---------------------------------- | ------- |
+| `ingress.enabled`     | Enable ingress controller resource | `false` |
+| `ingress.className`   | Ingress controller class name      | `""`    |
+| `ingress.annotations` | Ingress annotations                | `{}`    |
 
 ### ingress.hosts Ingress hostnames
 
