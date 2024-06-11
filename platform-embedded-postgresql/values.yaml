@@ -46,5 +46,5 @@ secrets:
     ## @param secrets.sharepoint.dbPassword postgres password for sharepoint svc user
     dbPassword:
   audit:
-    ## @param secrets.audit.dbPassword postgres password for audit svc user
+    ## @param secrets.sharepoint.dbPassword postgres password for sharepoint svc user
     dbPassword:
