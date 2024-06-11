@@ -18,3 +18,9 @@ data:
   {{- if eq .Values.appConfig.useCks "true" }}
   CKS_URL: "{{ .Values.appConfig.cksUrl }}"
   {{- end }}
+  {{- if eq .Values.appConfig.driveLabels.enabled "true" }}
+  DRIVE_LABELS: "{{ .Values.appConfig.driveLabels.enabled }}"
+  SERVICE_ACCOUNT_EMAIL: "{{ .Values.appConfig.driveLabels.serviceAccountEmail }}"
+  DRIVE_TIME: "{{ .Values.appConfig.driveLabels.driveTime }}"
+  GOOGLE_APPLICATION_CREDENTIALS: "{{ .Values.appSecrets.googleApplicationCredentials }}"
+  {{- end }}

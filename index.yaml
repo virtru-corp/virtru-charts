@@ -1,29 +1,29 @@
 apiVersion: v1
 entries:
-  audit-api:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2024-02-08T17:27:40.969186-05:00"
-    dependencies:
-    - name: common-lib
-      repository: file://../common-lib
-      version: 0.1.0
-    - name: fluent-bit
-      repository: https://fluent.github.io/helm-charts
-      tags:
-      - fluent-bit
-      version: 0.36.0
-    description: A Helm chart for Kubernetes
-    digest: ccac778ce60592d57c2d04fc776f2797974d371df7f52782d830526dca3e26f9
-    name: audit-api
-    type: application
-    urls:
-    - audit-api-0.2.0.tgz
-    version: 0.2.0
   cks:
   - apiVersion: v2
+    appVersion: v1.10.0
+    created: "2024-05-13T13:17:47.114435-04:00"
+    description: A service for Virtru customers who wish to manage their own keys
+    digest: 366716a9b69c570ed8a74b418a9e869951634a342ec6925c07311f5fc90b0785
+    name: cks
+    type: application
+    urls:
+    - cks-0.8.4.tgz
+    version: 0.8.4
+  - apiVersion: v2
+    appVersion: v1.9.0
+    created: "2024-05-13T13:17:47.114007-04:00"
+    description: A service for Virtru customers who wish to manage their own keys
+    digest: 87cd4642f207d2a5b743d25b17113f03a9309a3e6632ead10cc86d6a42e9f05d
+    name: cks
+    type: application
+    urls:
+    - cks-0.8.3.tgz
+    version: 0.8.3
+  - apiVersion: v2
     appVersion: v1.8.12
-    created: "2024-02-08T17:27:40.974669-05:00"
+    created: "2024-05-13T13:17:47.113566-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 7a031b14e8fd50d19cf5bb13e01c628758223e435b9fc70cfafd967ddec112cd
     name: cks
@@ -33,7 +33,7 @@ entries:
     version: 0.8.2
   - apiVersion: v2
     appVersion: v1.8.12
-    created: "2024-02-08T17:27:40.973734-05:00"
+    created: "2024-05-13T13:17:47.11307-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: fed7d5f5990af51889b0bad8e190883064db83afc6b3d9c2d41f43a1a0dfb338
     name: cks
@@ -43,7 +43,7 @@ entries:
     version: 0.8.1
   - apiVersion: v2
     appVersion: v1.8.12
-    created: "2024-02-08T17:27:40.97329-05:00"
+    created: "2024-05-13T13:17:47.112555-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 5d7bc04722c02fc9c6ab78c2a7fd124f8d7a74e13cbbeb3a86ddc6c3675c2004
     name: cks
@@ -53,7 +53,7 @@ entries:
     version: 0.8.0
   - apiVersion: v2
     appVersion: v1.8.12
-    created: "2024-02-08T17:27:40.972893-05:00"
+    created: "2024-05-13T13:17:47.112112-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 2ad99c9a11c7d48b969d7f184d92bd991952d6c1ab52734aef55b3e63a8a5e56
     name: cks
@@ -63,7 +63,7 @@ entries:
     version: 0.7.9
   - apiVersion: v2
     appVersion: v1.8.11
-    created: "2024-02-08T17:27:40.972425-05:00"
+    created: "2024-05-13T13:17:47.111704-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: f9945ceab9dd2f06436a2abc76fd2792f0597a0539ea0f12cececc16b3e6e6ca
     name: cks
@@ -73,7 +73,7 @@ entries:
     version: 0.7.8
   - apiVersion: v2
     appVersion: v1.8.8
-    created: "2024-02-08T17:27:40.97193-05:00"
+    created: "2024-05-13T13:17:47.111276-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 78e0cf63e4cba12c7970511dc61f1c4635fa30948cc74da63d6cd54a076f28a1
     name: cks
@@ -83,7 +83,7 @@ entries:
     version: 0.7.7
   - apiVersion: v2
     appVersion: v1.8.6
-    created: "2024-02-08T17:27:40.971408-05:00"
+    created: "2024-05-13T13:17:47.110584-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 4fd1f2e28a0b868efad841970082116bcb1645cd8f3cb9ef5f4638cc0affaaac
     name: cks
@@ -93,7 +93,7 @@ entries:
     version: 0.7.6
   - apiVersion: v2
     appVersion: v1.8.3
-    created: "2024-02-08T17:27:40.970849-05:00"
+    created: "2024-05-13T13:17:47.10984-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 157fd2c9659a52bf33ffe4137365a41f4386ba26f2d92322ef5371cd0c205a0e
     name: cks
@@ -103,7 +103,7 @@ entries:
     version: 0.7.5
   - apiVersion: v2
     appVersion: v1.6.2
-    created: "2024-02-08T17:27:40.970318-05:00"
+    created: "2024-05-13T13:17:47.109435-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 14d6d1c956f0eed736d3298fd8a7d1ed849b111e96398b1cd418267c98471c14
     name: cks
@@ -113,7 +113,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v1.6.0
-    created: "2024-02-08T17:27:40.969734-05:00"
+    created: "2024-05-13T13:17:47.10901-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: d72b71869c825ae27c281f68594d2651c2bee1494f41d5bfbe6f65d8f4d45d45
     name: cks
@@ -124,7 +124,7 @@ entries:
   common-lib:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:40.974946-05:00"
+    created: "2024-05-13T13:17:47.11454-04:00"
     description: Common helper library
     digest: 66c249a5ad2b9fc12404f69d75638773d500513d628b7a9e0e45798021b77d9f
     name: common-lib
@@ -134,8 +134,38 @@ entries:
     version: 0.1.0
   cse:
   - apiVersion: v2
+    appVersion: v5.7.3
+    created: "2024-05-13T13:17:47.115496-04:00"
+    description: A Helm chart for Kubernetes
+    digest: cfb101c7db9a19a416e376396e0c68b2767adfb163b044179cc3f520dee8a038
+    name: cse
+    type: application
+    urls:
+    - cse-0.7.11.tgz
+    version: 0.7.11
+  - apiVersion: v2
+    appVersion: v5.7.1
+    created: "2024-05-13T13:17:47.115022-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 6ed78a229dd39fe38948a34aa103af20ed086c53ca09d373c60cc88bcfd9eb4f
+    name: cse
+    type: application
+    urls:
+    - cse-0.7.10.tgz
+    version: 0.7.10
+  - apiVersion: v2
+    appVersion: v5.7.0
+    created: "2024-05-13T13:17:47.12025-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 3d7bc2cae32cd64e93d8f67be2a283db8ea7536a35ff5af1f70463a74b8d9f8a
+    name: cse
+    type: application
+    urls:
+    - cse-0.7.9.tgz
+    version: 0.7.9
+  - apiVersion: v2
     appVersion: v5.6.0
-    created: "2024-02-08T17:27:40.97762-05:00"
+    created: "2024-05-13T13:17:47.119761-04:00"
     description: A Helm chart for Kubernetes
     digest: 76ae6a56bfacd8d242ef74134d8a627ab85978fcb6384b421fda2945273f477b
     name: cse
@@ -145,7 +175,7 @@ entries:
     version: 0.7.8
   - apiVersion: v2
     appVersion: v5.6.0
-    created: "2024-02-08T17:27:40.977223-05:00"
+    created: "2024-05-13T13:17:47.119294-04:00"
     description: A Helm chart for Kubernetes
     digest: 1c345f53e73ba971a92bc47dc81669f85b91eeba41e13541b95ff05e8823cf1a
     name: cse
@@ -155,7 +185,7 @@ entries:
     version: 0.7.7
   - apiVersion: v2
     appVersion: v5.5.0
-    created: "2024-02-08T17:27:40.976822-05:00"
+    created: "2024-05-13T13:17:47.118844-04:00"
     description: A Helm chart for Kubernetes
     digest: f99a8198ab44942088b6ae00b6008ebc0f5dfa295faa0d0ad7ad8e5e05cf996d
     name: cse
@@ -165,7 +195,7 @@ entries:
     version: 0.7.6
   - apiVersion: v2
     appVersion: v5.3.1
-    created: "2024-02-08T17:27:40.976337-05:00"
+    created: "2024-05-13T13:17:47.118263-04:00"
     description: A Helm chart for Kubernetes
     digest: 1c687582f911f71375cc0c6a5f3a2411bbf10e493929b2c384928ec0ce5bb021
     name: cse
@@ -175,7 +205,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: v5.2.0
-    created: "2024-02-08T17:27:40.975821-05:00"
+    created: "2024-05-13T13:17:47.117613-04:00"
     description: A Helm chart for Kubernetes
     digest: 15a5a228992ed2a1fa5d16b75b8bebf7c935c915301baa21a649a8670a947dd8
     name: cse
@@ -185,7 +215,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: v5.0.2
-    created: "2024-02-08T17:27:40.975383-05:00"
+    created: "2024-05-13T13:17:47.11596-04:00"
     description: A Helm chart for Kubernetes
     digest: 510ff442f57d86d257e1fe6bdae3e8932e955c32551905ce931c7191a27016cf
     name: cse
@@ -195,8 +225,38 @@ entries:
     version: 0.7.2
   gateway:
   - apiVersion: v2
+    appVersion: v2.48.0
+    created: "2024-05-13T13:17:47.126798-04:00"
+    description: A Helm chart for Kubernetes
+    digest: c2bb5f4c97adbdc8f5e1ca7c303e631d633456c35395467ddb20d6ecf6dce210
+    name: gateway
+    type: application
+    urls:
+    - gateway-2.1.4.tgz
+    version: 2.1.4
+  - apiVersion: v2
+    appVersion: v2.46.0
+    created: "2024-05-13T13:17:47.126101-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 2aeea166d5638ec8b633f0aa3e533c46253924831953b1ee325e02c6583b013f
+    name: gateway
+    type: application
+    urls:
+    - gateway-2.1.3.tgz
+    version: 2.1.3
+  - apiVersion: v2
+    appVersion: v2.45.0
+    created: "2024-05-13T13:17:47.125403-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 7f760d49b6231f5edc996f70891ad81a88c2a6db776e1bebd3a6f25a663bc042
+    name: gateway
+    type: application
+    urls:
+    - gateway-2.1.2.tgz
+    version: 2.1.2
+  - apiVersion: v2
     appVersion: 2.43.0
-    created: "2024-02-08T17:27:40.982428-05:00"
+    created: "2024-05-13T13:17:47.1247-04:00"
     description: A Helm chart for Kubernetes
     digest: e20c91e3bf8d0ef2b790e8582f911df8779dd92a8152c75cd3ab1b9fd3d06666
     name: gateway
@@ -206,7 +266,7 @@ entries:
     version: 2.1.1
   - apiVersion: v2
     appVersion: 2.41.0
-    created: "2024-02-08T17:27:40.981808-05:00"
+    created: "2024-05-13T13:17:47.123563-04:00"
     description: A Helm chart for Kubernetes
     digest: 00b5980e81a4ed2b09f14554cfca0277aefaacab1f1f72e10f77a71ef5efc90a
     name: gateway
@@ -216,7 +276,7 @@ entries:
     version: 2.1.0
   - apiVersion: v2
     appVersion: 2.38.0
-    created: "2024-02-08T17:27:40.980243-05:00"
+    created: "2024-05-13T13:17:47.122879-04:00"
     description: A Helm chart for Kubernetes
     digest: 030245c1e265d535c530acd93578c32ee1cc3f30dfd37cb0387da3b9bde873c4
     name: gateway
@@ -226,7 +286,7 @@ entries:
     version: 2.0.5
   - apiVersion: v2
     appVersion: 2.35.0
-    created: "2024-02-08T17:27:40.979496-05:00"
+    created: "2024-05-13T13:17:47.122164-04:00"
     description: A Helm chart for Kubernetes
     digest: 2f528d55b6bf4c005adeff359bb359a79a15111db5fd856863beb185babf5f13
     name: gateway
@@ -236,7 +296,7 @@ entries:
     version: 2.0.4
   - apiVersion: v2
     appVersion: 2.30.0
-    created: "2024-02-08T17:27:40.978816-05:00"
+    created: "2024-05-13T13:17:47.121524-04:00"
     description: A Helm chart for Kubernetes
     digest: a075f521f59b7baa2008f0efb0775666069b92aa2c580497ca22a8620aa27afb
     name: gateway
@@ -246,7 +306,7 @@ entries:
     version: 2.0.3
   - apiVersion: v2
     appVersion: 2.27.0
-    created: "2024-02-08T17:27:40.978183-05:00"
+    created: "2024-05-13T13:17:47.120879-04:00"
     description: A Helm chart for Kubernetes
     digest: 1e7c68f7f1c465eda6887e079ec74f93aebe7d486db12fc67c20c64cce64e7f8
     name: gateway
@@ -257,7 +317,7 @@ entries:
   o365-abac:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:40.983757-05:00"
+    created: "2024-05-13T13:17:47.127988-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -271,7 +331,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:40.983119-05:00"
+    created: "2024-05-13T13:17:47.127411-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -285,8 +345,224 @@ entries:
     version: 0.1.0
   platform:
   - apiVersion: v2
+    appVersion: 0.1.6
+    created: "2024-05-13T13:17:47.225733-04:00"
+    dependencies:
+    - condition: abacus.enabled
+      name: abacus
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: attributes.enabled
+      name: attributes
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entitlement-pdp.enabled
+      name: entitlement-pdp
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entitlement-store.enabled
+      name: entitlement-store
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entitlements.enabled
+      name: entitlements
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entity-resolution.enabled
+      name: entity-resolution
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: kas.enabled
+      name: kas
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - condition: access-pep.enabled
+      name: access-pep
+      repository: oci://ghcr.io/virtru-corp/charts
+      version: 0.1.0-sha-574135b
+    - condition: tagging-pdp.enabled
+      name: tagging-pdp
+      repository: file://./charts/tagging-pdp
+      version: 0.2.0
+    - condition: configuration.enabled
+      name: configuration
+      repository: file://./charts/configuration
+      version: 0.4.0
+    - condition: docker-registry.enabled
+      name: docker-registry
+      repository: https://helm.twun.io
+      version: 2.2.2
+    - alias: entitlement-attrdef-bootstrap
+      condition: bootstrap.attrDefOrEntitlements
+      name: keycloak-bootstrap
+      repository: oci://ghcr.io/opentdf/charts
+      tags:
+      - bootstrap
+      version: 1.6.0
+    - alias: entitlement-policy-bootstrap
+      condition: bootstrap.entitlementPolicy
+      name: opcr-policy
+      repository: file://./charts/opcr-policy
+      tags:
+      - bootstrap
+      version: 0.1.0
+    description: Self Hosted Data Protection Platform
+    digest: 75235fdb72af582d26de21fdb58d9830acaa7741848afa7a76ecc0db9539df0c
+    name: platform
+    type: application
+    urls:
+    - platform-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    appVersion: 0.1.5
+    created: "2024-05-13T13:17:47.219421-04:00"
+    dependencies:
+    - condition: abacus.enabled
+      name: abacus
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: attributes.enabled
+      name: attributes
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entitlement-pdp.enabled
+      name: entitlement-pdp
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entitlement-store.enabled
+      name: entitlement-store
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entitlements.enabled
+      name: entitlements
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: entity-resolution.enabled
+      name: entity-resolution
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - condition: kas.enabled
+      name: kas
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.6.0
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - condition: access-pep.enabled
+      name: access-pep
+      repository: oci://ghcr.io/virtru-corp/charts
+      version: 0.1.0-sha-574135b
+    - condition: tagging-pdp.enabled
+      name: tagging-pdp
+      repository: file://./charts/tagging-pdp
+      version: 0.2.0
+    - condition: configuration.enabled
+      name: configuration
+      repository: file://./charts/configuration
+      version: 0.4.0
+    - condition: docker-registry.enabled
+      name: docker-registry
+      repository: https://helm.twun.io
+      version: 2.2.2
+    - alias: entitlement-attrdef-bootstrap
+      condition: bootstrap.attrDefOrEntitlements
+      name: keycloak-bootstrap
+      repository: oci://ghcr.io/opentdf/charts
+      tags:
+      - bootstrap
+      version: 1.6.0
+    - alias: entitlement-policy-bootstrap
+      condition: bootstrap.entitlementPolicy
+      name: opcr-policy
+      repository: file://./charts/opcr-policy
+      tags:
+      - bootstrap
+      version: 0.1.0
+    description: Self Hosted Data Protection Platform
+    digest: 0156cbfa9a163689aafc1fcabd86ce3f82c12deae9110f9136eefcc34c9cc77c
+    name: platform
+    type: application
+    urls:
+    - platform-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     appVersion: 0.1.4
-    created: "2024-02-08T17:27:41.050202-05:00"
+    created: "2024-05-13T13:17:47.212623-04:00"
+    dependencies:
+    - condition: abacus.enabled
+      name: abacus
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: attributes.enabled
+      name: attributes
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: entitlement-pdp.enabled
+      name: entitlement-pdp
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: entitlement-store.enabled
+      name: entitlement-store
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: entitlements.enabled
+      name: entitlements
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: entity-resolution.enabled
+      name: entity-resolution
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - condition: kas.enabled
+      name: kas
+      repository: oci://ghcr.io/opentdf/charts
+      version: 1.5.0
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - condition: access-pep.enabled
+      name: access-pep
+      repository: oci://ghcr.io/virtru-corp/charts
+      version: 0.1.0-sha-574135b
+    - condition: tagging-pdp.enabled
+      name: tagging-pdp
+      repository: file://./charts/tagging-pdp
+      version: 0.2.0
+    - condition: configuration.enabled
+      name: configuration
+      repository: file://./charts/configuration
+      version: 0.4.0
+    - condition: docker-registry.enabled
+      name: docker-registry
+      repository: https://helm.twun.io
+      version: 2.2.2
+    - alias: entitlement-attrdef-bootstrap
+      condition: bootstrap.attrDefOrEntitlements
+      name: keycloak-bootstrap
+      repository: oci://ghcr.io/opentdf/charts
+      tags:
+      - bootstrap
+      version: 1.5.0
+    - alias: entitlement-policy-bootstrap
+      condition: bootstrap.entitlementPolicy
+      name: opcr-policy
+      repository: file://./charts/opcr-policy
+      tags:
+      - bootstrap
+      version: 0.1.0
+    description: Self Hosted Data Protection Platform
+    digest: febd13c4c5bf363c8ea15da94e30923f293a936f885f2828c784416e02a61cfc
+    name: platform
+    type: application
+    urls:
+    - platform-0.3.9.tgz
+    version: 0.3.9
+  - apiVersion: v2
+    appVersion: 0.1.4
+    created: "2024-05-13T13:17:47.20586-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -350,7 +626,7 @@ entries:
       - bootstrap
       version: 0.1.0
     description: Self Hosted Data Protection Platform
-    digest: f1623a5127c9d129ae47dfdef86a617521a1ce6a262929106178753ef2243695
+    digest: 0e47c1114ee2b86d122ed74a2057877964e6f4482eae1246ec4ec05ae20de9b3
     name: platform
     type: application
     urls:
@@ -358,7 +634,7 @@ entries:
     version: 0.3.7
   - apiVersion: v2
     appVersion: 0.1.4
-    created: "2024-02-08T17:27:41.044713-05:00"
+    created: "2024-05-13T13:17:47.199138-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -430,7 +706,7 @@ entries:
     version: 0.3.6
   - apiVersion: v2
     appVersion: 0.1.4
-    created: "2024-02-08T17:27:41.039365-05:00"
+    created: "2024-05-13T13:17:47.192837-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -502,7 +778,7 @@ entries:
     version: 0.3.5
   - apiVersion: v2
     appVersion: 0.1.4
-    created: "2024-02-08T17:27:41.033348-05:00"
+    created: "2024-05-13T13:17:47.186202-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -574,7 +850,7 @@ entries:
     version: 0.3.4
   - apiVersion: v2
     appVersion: 0.1.4
-    created: "2024-02-08T17:27:41.02779-05:00"
+    created: "2024-05-13T13:17:47.17945-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -646,7 +922,7 @@ entries:
     version: 0.3.3
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:41.022412-05:00"
+    created: "2024-05-13T13:17:47.172823-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -718,7 +994,7 @@ entries:
     version: 0.3.2
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:41.016817-05:00"
+    created: "2024-05-13T13:17:47.166265-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -790,7 +1066,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:41.010737-05:00"
+    created: "2024-05-13T13:17:47.159823-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -862,7 +1138,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:41.005627-05:00"
+    created: "2024-05-13T13:17:47.153328-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -927,7 +1203,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:41.000123-05:00"
+    created: "2024-05-13T13:17:47.146893-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -992,7 +1268,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:40.994664-05:00"
+    created: "2024-05-13T13:17:47.140878-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -1057,7 +1333,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2024-02-08T17:27:40.989631-05:00"
+    created: "2024-05-13T13:17:47.134469-04:00"
     dependencies:
     - condition: abacus.enabled
       name: abacus
@@ -1122,8 +1398,26 @@ entries:
     version: 0.1.13
   platform-embedded-keycloak:
   - apiVersion: v2
+    appVersion: 0.1.2
+    created: "2024-05-13T13:17:47.236321-04:00"
+    dependencies:
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - alias: keycloak
+      name: keycloakx
+      repository: https://codecentric.github.io/helm-charts
+      version: 2.1.1
+    description: Helper chart to deploy a Non-production keycloak into a cluster
+    digest: daea4f78ec850e338e0749095208a827770acb0e345e2687e1d124963173be58
+    name: platform-embedded-keycloak
+    type: application
+    urls:
+    - platform-embedded-keycloak-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
     appVersion: 0.1.1
-    created: "2024-02-08T17:27:41.058636-05:00"
+    created: "2024-05-13T13:17:47.234687-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1141,7 +1435,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.057196-05:00"
+    created: "2024-05-13T13:17:47.233014-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1159,7 +1453,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.055418-05:00"
+    created: "2024-05-13T13:17:47.230936-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1177,7 +1471,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.053923-05:00"
+    created: "2024-05-13T13:17:47.229342-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1195,7 +1489,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.051869-05:00"
+    created: "2024-05-13T13:17:47.227641-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1214,7 +1508,7 @@ entries:
   platform-embedded-postgresql:
   - apiVersion: v2
     appVersion: 0.3.0
-    created: "2024-02-08T17:27:41.064423-05:00"
+    created: "2024-05-13T13:17:47.243307-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1232,7 +1526,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-02-08T17:27:41.061766-05:00"
+    created: "2024-05-13T13:17:47.240031-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1250,8 +1544,28 @@ entries:
     version: 0.2.0
   platform-keycloak-bootstrapper:
   - apiVersion: v2
+    appVersion: 0.1.2
+    created: "2024-05-13T13:17:47.246928-04:00"
+    dependencies:
+    - name: common-lib
+      repository: file://../common-lib
+      version: 0.1.0
+    - condition: bootstrap.keycloak
+      name: keycloak-bootstrap
+      repository: oci://ghcr.io/opentdf/charts
+      tags:
+      - utility
+      version: 1.6.0
+    description: Helper chart to bootstrap keycloak configuration.
+    digest: c165fca3dac2c8288341757ebec71187994e57fab96712fc4967a5be99a11e30
+    name: platform-keycloak-bootstrapper
+    type: application
+    urls:
+    - platform-keycloak-bootstrapper-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
     appVersion: 0.1.1
-    created: "2024-02-08T17:27:41.067028-05:00"
+    created: "2024-05-13T13:17:47.246301-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1271,7 +1585,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.066512-05:00"
+    created: "2024-05-13T13:17:47.245705-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1291,7 +1605,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.066002-05:00"
+    created: "2024-05-13T13:17:47.245122-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1311,7 +1625,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.06548-05:00"
+    created: "2024-05-13T13:17:47.244527-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1331,7 +1645,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.064972-05:00"
+    created: "2024-05-13T13:17:47.243926-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1352,7 +1666,7 @@ entries:
   sharepoint:
   - apiVersion: v2
     appVersion: 0.6.0
-    created: "2024-02-08T17:27:41.070749-05:00"
+    created: "2024-05-13T13:17:47.251006-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1366,7 +1680,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 0.5.0
-    created: "2024-02-08T17:27:41.070179-05:00"
+    created: "2024-05-13T13:17:47.250386-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1380,7 +1694,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 0.4.0
-    created: "2024-02-08T17:27:41.069635-05:00"
+    created: "2024-05-13T13:17:47.249776-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1394,7 +1708,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 0.3.0
-    created: "2024-02-08T17:27:41.06909-05:00"
+    created: "2024-05-13T13:17:47.249142-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1408,7 +1722,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.2.0
-    created: "2024-02-08T17:27:41.068543-05:00"
+    created: "2024-05-13T13:17:47.248508-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1422,7 +1736,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-02-08T17:27:41.067726-05:00"
+    created: "2024-05-13T13:17:47.247856-04:00"
     dependencies:
     - name: common-lib
       repository: file://../common-lib
@@ -1434,4 +1748,4 @@ entries:
     urls:
     - sharepoint-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-08T17:27:40.967748-05:00"
+generated: "2024-05-13T13:17:47.108475-04:00"

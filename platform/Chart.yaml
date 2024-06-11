@@ -2,10 +2,10 @@ apiVersion: v2
 name: platform
 description: Self Hosted Data Protection Platform
 type: application
-version: 0.3.7
-appVersion: 0.1.4
+version: 0.4.1
+appVersion: 0.1.6
 
-otdfVersion: &otdfVersion "1.5.0"
+otdfVersion: &otdfVersion "1.6.0"
 otdfRepo: &otdfRepo "oci://ghcr.io/opentdf/charts"
 
 dependencies:
@@ -55,7 +55,7 @@ dependencies:
 
   - name: tagging-pdp
     repository: file://./charts/tagging-pdp
-    version: '0.1.0'
+    version: '0.2.0'
     condition: tagging-pdp.enabled
 
   - name: configuration

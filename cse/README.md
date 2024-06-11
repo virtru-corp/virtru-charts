@@ -58,6 +58,10 @@ This section will detail potential changes that you will need to make to your `v
 * `jwtKaclsUrl` - URL for your CSE service. This should match the SSL certificate provisioned in the previous steps
 * `useCks` - Default false. Switch to true if using a Virtru CKS in tandem with your CSE KMS
 * `cksUrl` - Leave as default if not using CKS. If using CKS, this is the FQDN of your running CKS service (example: `https://cks.example.com`)
+* `driveLabels` - Leave as default if not utilizing the Drive Labels integration. See `https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE` for more details
+
+
+
 
 #### `appSecrets`
 
@@ -77,6 +81,11 @@ In the `appSecrets` section, the `hmac`, `secretKey`, and `cksHmac` (if using CK
 * `ssl.certificate` - Your certificate's cert chain, base-64 encoded
 * `cksHmac.tokenId` - The `tokenId` from your CKS configuration (only used if `useCks` is set to true)
 * `cksHmac.tokenSecret` - The `encryptedToken secret` from your CKS configuration (only used if `useCks` is set to true)
+* `googleApplicationCredentials` - Leave as default values. See `https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE` for more details.
+
+#### `volumes`
+
+Uncomment the default values that are prepopulated if utilizing the Drive Labels integration (See https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE)
 
 ### Installing the CSE
 

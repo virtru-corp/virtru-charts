@@ -21,7 +21,6 @@ spec:
             host: tagging-pdp
             port:
               number: 8080
-      timeout: 10s
     {{- if $gatewayEnabled }}
     - match:
         - uri:
