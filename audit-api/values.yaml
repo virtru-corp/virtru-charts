@@ -101,8 +101,6 @@ secrets:
 ingress:
   ## @param ingress.enabled Enable ingress controller resource
   enabled: false
-  ## @param ingress.existingGateway Use an existing istio gateway
-  existingGateway:
   ## @param ingress.className Ingress controller class name
   className: ""
   ## @param ingress.annotations Ingress annotations
@@ -228,7 +226,7 @@ fluent-bit:
       [OUTPUT]
           Name        http
           Match       audit
-          Host        audit-api
+          Host        audit-api.shp.svc.cluster.local
           URI         /api/v1/write
           Port        8080
           tls         off
