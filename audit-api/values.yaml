@@ -85,7 +85,7 @@ service:
 ## @section Istio AuthN/Z Parameters
 istioAuth:
   ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
-  enabled: true
+  enabled: false
   ## @param istioAuth.internalJWTURL Whether to compute and use internal keycloak jwks uri - default false
   internalJWTURL: true
   oidc: 
