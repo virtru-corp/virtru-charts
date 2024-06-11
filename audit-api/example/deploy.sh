@@ -3,7 +3,7 @@ imagePullUsername="changeme"
 # Image pull username
 imagePullPAT="changeme"
 
-while getopts "u:p" arg; do
+while getopts ":u:p:" arg; do
   case $arg in
     u)
       imagePullUsername=${OPTARG}
