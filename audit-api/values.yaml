@@ -82,20 +82,6 @@ service:
   ## @param service.port port to expose
   port: 8080
 
-## @section Istio AuthN/Z Parameters
-istioAuth:
-  ## @param istioAuth.enabled Turn on/off istio authentication configuration for services defined by the `istioAuth.policies` configuration
-  enabled: false
-  ## @param istioAuth.internalJWTURL Whether to compute and use internal keycloak jwks uri - default false
-  internalJWTURL: true
-  oidc: 
-    ## @param istioAuth.oidc.oidcExternalBaseUrl The external base url of the oidc provider
-    oidcExternalBaseUrl: https://shp.example.com
-    ## @param istioAuth.oidc.oidcUrlPath The path added to the base url to reach the oidc provider
-    oidcUrlPath: auth
-    ## @param istioAuth.oidc.keycloakRealm If using keycloak - the realm name
-    keycloakRealm: tdf
-
 ## @section Secret Generation Parameters
 secrets:
   ## @extra secrets.imageCredentials Map of key (pull name) to auth information.  Each key creates a pull cred
