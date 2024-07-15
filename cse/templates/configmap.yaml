@@ -22,5 +22,7 @@ data:
   DRIVE_LABELS: "{{ .Values.appConfig.driveLabels.enabled }}"
   SERVICE_ACCOUNT_EMAIL: "{{ .Values.appConfig.driveLabels.serviceAccountEmail }}"
   DRIVE_TIME: "{{ .Values.appConfig.driveLabels.driveTime }}"
+  DRIVE_LABELS_TIME: "{{ .Values.appConfig.driveLabels.driveLabelsTime }}"
+  ADMIN_TIME: "{{ .Values.appConfig.driveLabels.adminTime }}"
   GOOGLE_APPLICATION_CREDENTIALS: "{{ .Values.appSecrets.googleApplicationCredentials }}"
   {{- end }}
