@@ -1,6 +1,6 @@
 apiVersion: v2
 name: cse
-description: A Helm chart for Kubernetes
+description: A Helm chart for Kubernetes - Virtru CSE
 type: application
 version: 0.7.12
 appVersion: v5.7.3

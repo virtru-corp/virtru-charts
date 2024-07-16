@@ -134,7 +134,7 @@ appSecrets:
 #    name: <name of secret store>
 #  refreshInterval: <how often to reconcile with secret store>
 
-### Uncomment lines below volumes and remove brackets if utilizing the Drive Labels integration (See https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE)
+### Uncomment lines below volumes and remove square brackets if utilizing the Drive Labels integration (See https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE)
 volumes: []
 #- name: credentials-volume
 #  volume:
