@@ -6,7 +6,7 @@ metadata:
     {{- include "cse.labels" . | nindent 4 }}
   {{- if .Values.service.annotations}}
   annotations:
-  {{- toYaml .Values.service.annotations  | nindent 4 }}
+    {{- toYaml .Values.service.annotations  | nindent 4 }}
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
@@ -14,7 +14,10 @@ spec:
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
   ports:
-    - port: {{ .Values.service.port }}
+    - {{- if .Values.service.portName }}
+      name: {{ .Values.service.portName }}
+      {{- end }}
+      port: {{ .Values.service.port }}
       protocol: {{ .Values.service.protocol }}
       targetPort: {{ .Values.deployment.port }}
   selector:
