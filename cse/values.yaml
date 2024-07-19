@@ -104,6 +104,19 @@ appConfig:
   jwtKaclsUrl: "https://cse-example.local"
   processNumberOverride: "5"
   useSsl: "true"
+  probes:
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 2
+    successThreshold: 1
+  liveness:
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 2
+    successThreshold: 1
   useCks: "false"
   cksUrl: "https://cks-example.local"
   driveLabels:
