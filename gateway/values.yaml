@@ -135,7 +135,7 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
-  oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+    gatewayAbacOidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
   
   
 
@@ -181,12 +181,17 @@ additionalConfig:
     selector: gw
   abac:
     enabled: false
-    logLevel: info
-    oidcClientId: example-client # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-    oidcTokenUrl: example-url # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-    taggingPdpEndpoint: tagging-pdp:8080 # Target endpoint. <hostname>:<port>, not a URL.
-    accessServiceUrl: http://access-pep:4455 # If this is non-null && not an empty string, we will trigger ABAC processing. If abac is enabled.
-    trimRecipients: false
+    abacOidcClientId: '' # the client id that gateway should use to communicate with the platform 
+    abacPlatformEndpoint: '' # the endpoint where the platform is deployed
+    abacTaggingPdpEndpoint: '' # the endpoint where the tagging PDP is deployed
+    abacTrimBlockedRecipients: "1" # remove header recipients that are not entitled to receive an email
+    abacSdkTrustedCertDirectory: '' # a directory containing additional certificate authorities to trust when 
+    # communicating with the platform and the tagging PDP. Only one of `gatewayAbacSdkTrustedCertDirectory` and 
+    # `gatewayAbacSdkTruststorePath` can be set
+    abacSdkTruststorePath: '' # path to a Java truststore containing CAs to trust as in `gatewayAbacSdkTrustedCertDirectory`
+    abacSdkTruststorePassword: '' # the passsword for the above truststore 
+    abacPlaintextConnection: "0" # whether we should communicate with the platform and the tagging PDP over a plaintext connection
+    abacEncryptEmail: "1" # whether we should encrypt email sent through this mode
 
 istioIngress:
   enabled: false
