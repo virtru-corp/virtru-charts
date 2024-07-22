@@ -5,10 +5,6 @@ metadata:
     app: gateway
   name: {{ .Chart.Name }}-base-configs
 data:
-  GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
-  GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
-  GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
-  GATEWAY_HOSTNAME: {{ .Values.standardConfig.gatewayHostname }}
   GATEWAY_ORGANIZATION_DOMAIN: {{ .Values.standardConfig.primaryMailingDomain }}
   GATEWAY_TRANSPORT_MAPS: {{ .Values.standardConfig.gatewayTransportMaps | quote }}
   GATEWAY_RELAY_ADDRESSES: {{ .Values.standardConfig.inboundRelayAddresses }}
@@ -18,8 +14,6 @@ data:
   QUEUE_RUN_DELAY: {{ .Values.additionalConfig.queueRunDelay }}
   GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
-  GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
-  GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
   {{- if eq .Values.additionalConfig.abac.enabled true }}
   OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.oidcClientId | quote }}
@@ -27,6 +21,13 @@ data:
   TAGGING_PDP_LOCATION: {{ .Values.additionalConfig.abac.taggingPdpEndpoint | quote }}
   ACCESS_SERVICE_URL: {{ .Values.additionalConfig.abac.accessServiceUrl | quote }} # ABAC based processing is triggered by this value being present, and not an empty string || null.
   TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.trimRecipients | quote }}
+  {{- else }}
+  GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
+  GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
+  GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
+  GATEWAY_HOSTNAME: {{ .Values.standardConfig.gatewayHostname }}
+  GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
+  GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   {{- end }}
   {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
