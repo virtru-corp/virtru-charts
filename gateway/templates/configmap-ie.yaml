@@ -1,4 +1,4 @@
-{{- if eq .Values.gatewayModes.inboundEncrypt.enabled true }}
+{{- if not .Values.gatewayModes.inboundEncrypt.enabled (not .Values.additionalConfig.abac.enabled) }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
