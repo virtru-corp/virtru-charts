@@ -135,8 +135,7 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
-    gatewayAbacOidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-  
+  oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
   
 
 additionalConfig:
