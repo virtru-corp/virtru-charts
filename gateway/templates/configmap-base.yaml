@@ -5,6 +5,7 @@ metadata:
     app: gateway
   name: {{ .Chart.Name }}-base-configs
 data:
+  GATEWAY_HOSTNAME: {{ .Values.standardConfig.gatewayHostname }}
   GATEWAY_ORGANIZATION_DOMAIN: {{ .Values.standardConfig.primaryMailingDomain }}
   GATEWAY_TRANSPORT_MAPS: {{ .Values.standardConfig.gatewayTransportMaps | quote }}
   GATEWAY_RELAY_ADDRESSES: {{ .Values.standardConfig.inboundRelayAddresses }}
@@ -25,7 +26,6 @@ data:
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
   GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
   GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
-  GATEWAY_HOSTNAME: {{ .Values.standardConfig.gatewayHostname }}
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   {{- end }}
