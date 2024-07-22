@@ -17,6 +17,7 @@ data:
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
   {{- if eq .Values.additionalConfig.abac.enabled true }}
+  # ABAC operation. Get tags from the tagging service and access decisions from the access service
   GATEWAY_ABAC_OIDC_CLIENT_ID: {{ .Values.additionalConfig.gatewayAbacOidcClientId }}
   GATEWAY_ABAC_OIDC_CLIENT_SECRET: {{ .Values.additionalConfig.gatewayAbacOidcClientSecret }}
   GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.gatewayAbacPlatformEndpoint }}
@@ -28,6 +29,7 @@ data:
   GATEWAY_ABAC_PLAINTEXT_CONNECTION: {{ .Values.additionalConfig.gatewayAbacPlaintextConnection }}
   GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.additionalConfig.gatewayAbacEncryptEmail }}
   {{- else }}
+  # normal DLP/Encryption operation. get settings and DLP rules from gateway accounts services and create policies using ACM
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
   GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
   GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
