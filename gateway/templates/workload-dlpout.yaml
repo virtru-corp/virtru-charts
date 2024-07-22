@@ -108,10 +108,10 @@ spec:
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           {{- if eq .Values.additionalConfig.abac.enabled true }}
-          - name: OIDC_CLIENT_SECRET
+          - name: GATEWAY_ABAC_OIDC_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                key: oidc-client-secret
+                key: gateway-abac-oidc-client-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           readinessProbe:
