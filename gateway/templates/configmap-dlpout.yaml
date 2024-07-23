@@ -11,4 +11,7 @@ data:
   {{- if .Values.additionalConfig.abac.abacExtraCas }}
   GATEWAY_ABAC_SDK_TRUSTED_CERT_DIRECTORY: /etc/virtru-gateway/abac-cas
   {{- end }}
+  {{- range $index, $value := .Values.additionalConfig.abac.abacExtraCas }}
+  ABAC_CA_{{ $index }}: {{ toJson $value }}
+  {{- end }}
 {{- end }}
