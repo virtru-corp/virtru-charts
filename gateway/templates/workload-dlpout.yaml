@@ -60,9 +60,10 @@ spec:
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
           {{- end }}
-          {{- if not (eq .Values.additionalConfig.abac.trustedCertDir "")}}
-          - name: abac-trusted-certs
-            mountPath: /etc/virtru-gateway/abac-certs
+          {{- if .Values.additionalConfig.abac.abacExtraCas }}
+          - name: abac-cas
+            mountPath: /etc/virtru-gateway/abac-cas
+            readOnly: true
           {{- end }} 
           - name: postfix-dir
             mountPath: /var/spool/postfix
@@ -137,6 +138,16 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
+      {{- if .Values.additionalConfig.abac.abacExtraCas }}
+      - name: abac-cas
+        configMap:
+          name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
+          {{- range $index, $unused := .Values.additionalConfig.abac.abacExtraCas }}
+          items:
+            - key: ABAC_CA_{{ $index }}
+              path: abac-ca-{{ $index }}.crt
+          {{- end }}
+      {{- end }}
       - name: cert-dir
         emptyDir: {}
       {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}

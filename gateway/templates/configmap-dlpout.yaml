@@ -8,4 +8,7 @@ metadata:
 data:
   GATEWAY_MODE: "dlp"
   GATEWAY_TOPOLOGY: "outbound"
+  {{- if .Values.additionalConfig.abac.abacExtraCas }}
+  GATEWAY_ABAC_SDK_TRUSTED_CERT_DIRECTORY: /etc/virtru-gateway/abac-cas
+  {{- end }}
 {{- end }}
