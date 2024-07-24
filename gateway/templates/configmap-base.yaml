@@ -18,12 +18,12 @@ data:
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
   {{- if eq .Values.additionalConfig.abac.enabled true }}
   # ABAC operation. Get tags from the tagging service and access decisions from the access service
-  GATEWAY_ABAC_OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.abacOidcClientId }}
-  GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.abac.abacPlatformEndpoint }}
-  GATEWAY_ABAC_TAGGING_PDP_ENDPOINT: {{ .Values.additionalConfig.abac.abacTaggingPdpEndpoint }}
-  GATEWAY_ABAC_TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.abacTrimBlockedRecipients }}
-  GATEWAY_ABAC_PLAINTEXT_CONNECTION: {{ .Values.additionalConfig.abac.abacPlaintextConnection }}
-  GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.additionalConfig.abac.abacEncryptEmail }}
+  GATEWAY_ABAC_OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.abacOidcClientId | quote }}
+  GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.abac.abacPlatformEndpoint | quote }}
+  GATEWAY_ABAC_TAGGING_PDP_ENDPOINT: {{ .Values.additionalConfig.abac.abacTaggingPdpEndpoint | quote }}
+  GATEWAY_ABAC_TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.abacTrimBlockedRecipients | quote }}
+  GATEWAY_ABAC_PLAINTEXT_CONNECTION: {{ .Values.additionalConfig.abac.abacPlaintextConnection | quote }}
+  GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.additionalConfig.abac.abacEncryptEmail | quote }}
   {{- else }}
   # normal DLP/Encryption operation. get settings and DLP rules from gateway accounts services and create policies using ACM
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
