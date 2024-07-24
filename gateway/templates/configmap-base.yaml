@@ -22,8 +22,6 @@ data:
   GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.abacPlatformEndpoint }}
   GATEWAY_ABAC_TAGGING_PDP_ENDPOINT: {{ .Values.additionalConfig.abacTaggingPdpEndpoint }}
   GATEWAY_ABAC_TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abacTrimBlockedRecipients }}
-  GATEWAY_ABAC_SDK_TRUSTED_CERT_DIRECTORY: {{ .Values.additionalConfig.abacSdkTrustedCertDirectory }}
-  GATEWAY_ABAC_SDK_TRUSTSTORE_PATH: {{ .Values.additionalConfig.abacSdkSruststorePath }}
   GATEWAY_ABAC_SDK_TRUSTSTORE_PASSWORD: {{ .Values.additionalConfig.abacSdkTruststorePassword }}
   GATEWAY_ABAC_PLAINTEXT_CONNECTION: {{ .Values.additionalConfig.abacPlaintextConnection }}
   GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.additionalConfig.abacEncryptEmail }}
