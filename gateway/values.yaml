@@ -135,7 +135,8 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
-  abacOidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
+  abac:
+    oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
   
 
 additionalConfig:
@@ -180,13 +181,13 @@ additionalConfig:
     selector: gw
   abac:
     enabled: false
-    abacOidcClientId: "" # the client id that gateway should use to communicate with the platform
-    abacPlatformEndpoint: "" # the endpoint where the platform is deployed
-    abacTaggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
-    abacTrimBlockedRecipients: "1" # remove header recipients that are not entitled to receive an email
-    abacPlaintextConnection: "0" # whether we should communicate with the platform and the tagging PDP over a plaintext connection
-    abacEncryptEmail: "1" # whether we should encrypt email sent through this mode
-    abacExtraCas: []
+    oidcClientId: "" # the client id that gateway should use to communicate with the platform
+    platformEndpoint: "" # the endpoint where the platform is deployed
+    taggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
+    trimBlockedRecipients: "1" # remove header recipients that are not entitled to receive an email
+    plaintextConnection: "0" # whether we should communicate with the platform and the tagging PDP over a plaintext connection
+    encryptEmail: "1" # whether we should encrypt email sent through this mode
+    extraCas: []
 
 istioIngress:
   enabled: false
