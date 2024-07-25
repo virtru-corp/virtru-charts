@@ -60,7 +60,7 @@ spec:
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
           {{- end }}
-          {{- if .Values.additionalConfig.abac.abacExtraCas }}
+          {{- if .Values.additionalConfig.abac.extraCas }}
           - name: abac-cas
             mountPath: /etc/virtru-gateway/abac-cas
             readOnly: true
