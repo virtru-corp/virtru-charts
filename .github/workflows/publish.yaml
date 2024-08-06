@@ -1,0 +1,9 @@
+name: publish to github pages
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  publish:
+    uses: virtru-corp/.github/.github/workflows/github-pages-publish.yaml@SRE-4834/add-github-pages-publish-workflow
