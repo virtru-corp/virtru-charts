@@ -44,7 +44,7 @@ service:
   annotations: {}
   type: LoadBalancer
 #  loadBalancerIP: <your-ip-address>
-  portName: virtru-https 
+#  portName: virtru-https 
 #  Sample named port
   port: 443
   protocol: TCP
