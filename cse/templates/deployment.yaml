@@ -52,11 +52,11 @@ spec:
               {{- else }}
               scheme: HTTP
               {{- end }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 10
-            failureThreshold: 2
-            successThreshold: 1
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+            successThreshold: {{ .Values.probes.readiness.successThreshold }}
           livenessProbe:
             httpGet:
               path: /status
@@ -66,11 +66,11 @@ spec:
               {{- else }}
               scheme: HTTP
               {{- end }}
-            initialDelaySeconds: 40
-            periodSeconds: 10
-            timeoutSeconds: 10
-            failureThreshold: 2
-            successThreshold: 1
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+            successThreshold: {{ .Values.probes.liveness.successThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           envFrom:

@@ -44,6 +44,8 @@ service:
   annotations: {}
   type: LoadBalancer
 #  loadBalancerIP: <your-ip-address>
+#  portName: virtru-https 
+#  Sample named port
   port: 443
   protocol: TCP
 
@@ -79,6 +81,20 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+probes:
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 2
+    successThreshold: 1
+  liveness:
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 2
+    successThreshold: 1
 
 autoscaling:
   enabled: false
