@@ -184,6 +184,7 @@ additionalConfig:
     oidcClientId: "" # the client id that gateway should use to communicate with the platform
     platformEndpoint: "" # the endpoint where the platform is deployed
     taggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
+    taggingPdpAssertionType: "urn:us:gov:ic:edh" # the assertion type to use with the tagging pdp, currently `urn:us:gov:ic:ed` or `urn:nato:stanag:5636:A:1:elements:json`
     trimBlockedRecipients: "1" # remove header recipients that are not entitled to receive an email
     plaintextConnection: "0" # whether we should communicate with the platform and the tagging PDP over a plaintext connection
     encryptEmail: "1" # whether we should encrypt email sent through this mode
