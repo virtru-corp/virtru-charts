@@ -135,8 +135,8 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key>
-  oidcClientSecret: <oidc-client-secret> # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-  
+  abac:
+    oidcClientSecret: <oidc-client-secret> # The client secret used when authenticating against platform services.
   
 
 additionalConfig:
@@ -181,12 +181,14 @@ additionalConfig:
     selector: gw
   abac:
     enabled: false
-    logLevel: info
-    oidcClientId: example-client # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-    oidcTokenUrl: example-url # Used for making reqs to an OIDC provider to obtain an access token. Specifically when making reqs to access-pep.
-    taggingPdpEndpoint: tagging-pdp:8080 # Target endpoint. <hostname>:<port>, not a URL.
-    accessServiceUrl: http://access-pep:4455 # If this is non-null && not an empty string, we will trigger ABAC processing. If abac is enabled.
-    trimRecipients: false
+    oidcClientId: "" # the client id that gateway should use to communicate with the platform
+    platformEndpoint: "" # the endpoint where the platform is deployed
+    taggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
+    taggingPdpAssertionType: "urn:us:gov:ic:edh" # the assertion type to use with the tagging pdp, currently `urn:us:gov:ic:ed` or `urn:nato:stanag:5636:A:1:elements:json`
+    trimBlockedRecipients: "1" # remove header recipients that are not entitled to receive an email
+    plaintextConnection: "0" # whether we should communicate with the platform and the tagging PDP over a plaintext connection
+    encryptEmail: "1" # whether we should encrypt email sent through this mode
+    extraCas: []
 
 istioIngress:
   enabled: false
