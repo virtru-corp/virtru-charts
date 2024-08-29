@@ -142,8 +142,8 @@ spec:
       - name: abac-cas
         configMap:
           name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
-          {{- range $index, $unused := .Values.additionalConfig.abac.extraCas }}
           items:
+          {{- range $index, $unused := .Values.additionalConfig.abac.extraCas }}
             - key: ABAC_CA_{{ $index }}
               path: abac-ca-{{ $index }}.crt
           {{- end }}
