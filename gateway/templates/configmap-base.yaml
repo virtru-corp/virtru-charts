@@ -44,9 +44,9 @@ data:
   {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
   GATEWAY_SMTP_USE_TLS: "1"
-  {{- end }}
   {{- if eq .Values.additionalConfig.smtpTlsComplianceDownstream.enabled true }}
   GATEWAY_SMTP_TLS_COMPLIANCE_DOWNSTREAM: {{ .Values.additionalConfig.smtpTlsComplianceDownstream.compliance }}
+  {{- end }}
   {{- end }}
   {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
   GATEWAY_SMTP_SASL_ENABLED_DOWNSTREAM: "1"
