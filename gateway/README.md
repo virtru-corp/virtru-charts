@@ -150,7 +150,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `abac.oidcClientId` | The client id that gateway should use to communicate with the DSP platform. |
 | `abac.platformEndpoint` | The endpoint where the DSP platform is deployed. |
 | `abac.taggingPdpEndpoint` | The endpoint where the tagging PDP is deployed. |
-| `abac.taggingPdpAssertionType` | "urn:us:gov:ic:edh" # the assertion type to use with the tagging pdp, currently `urn:us:gov:ic:ed` or `urn:nato:stanag:5636:A:1:elements:json` |
+| `abac.taggingPdpAssertionType` | The assertion type to use with the tagging pdp; either `urn:us:gov:ic:ed` or `urn:nato:stanag:5636:A:1:elements:json`. |
 | `abac.trimBlockedRecipients` | Whether we should remove header recipients that are not entitled to receive an email. |
 | `abac.plaintextConnection` | Whether we should communicate with the platform and the tagging PDP over a plaintext connection. |
 | `abac.encryptEmail` | Whether we should encrypt all email sent through this mode. |
