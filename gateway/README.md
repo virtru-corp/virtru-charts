@@ -147,6 +147,14 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
 | `dkimSigning.selector` | Generates the subdomain for `GATEWAY_DKIM_DOMAINS` (`<dkimSigning.selector>._domainkey.primaryMailingDomain`)
+| `abac.oidcClientId` | The client id that gateway should use to communicate with the DSP platform. |
+| `abac.platformEndpoint` | The endpoint where the DSP platform is deployed. |
+| `abac.taggingPdpEndpoint` | The endpoint where the tagging PDP is deployed. |
+| `abac.taggingPdpAssertionType` | "urn:us:gov:ic:edh" # the assertion type to use with the tagging pdp, currently `urn:us:gov:ic:ed` or `urn:nato:stanag:5636:A:1:elements:json` |
+| `abac.trimBlockedRecipients` | Whether we should remove header recipients that are not entitled to receive an email. |
+| `abac.plaintextConnection` | Whether we should communicate with the platform and the tagging PDP over a plaintext connection. |
+| `abac.encryptEmail` | Whether we should encrypt all email sent through this mode. |
+| `abac.extraCas` | A list of extra CAs to trust. Usually the cert for the DSP platform. |
 
 ### `inboundRelayAddresses` values for Gmail and Office 365
 

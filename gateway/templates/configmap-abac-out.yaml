@@ -4,8 +4,8 @@ apiVersion: v1
 metadata:
   labels:
     app: gateway
-  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundAbac.name }}
 data:
-  GATEWAY_MODE: "dlp"
+  GATEWAY_MODE: "abac"
   GATEWAY_TOPOLOGY: "outbound"
 {{- end }}
