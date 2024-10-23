@@ -1,18 +1,18 @@
-{{- if .Values.gatewayModes.inboundAbac.enabled }}
+{{- if .Values.gatewayModes.inboundAbacEncrypt.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
   labels:
     {{- include "gateway.labels" . | nindent 4 }}
-    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
-    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
+    app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
-      app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
-  serviceName: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
+      app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
+      app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
+  serviceName: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
   replicas: {{ .Values.replicas }}
   volumeClaimTemplates:
     - metadata:
@@ -30,8 +30,8 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
-        app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
+        app.kubernetes.io/instance: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
     spec:
       {{- with .Values.imagePullSecrets }}
         {{- toYaml . | nindent 8 }}
@@ -48,7 +48,7 @@ spec:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
       containers:
-        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }} # Gateway Container
+        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }} # Gateway Container
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -72,7 +72,7 @@ spec:
               protocol: TCP
           envFrom:
           - configMapRef:
-              name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbac.name }}
+              name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundAbacEncrypt.name }}
           - configMapRef:
               name: {{ .Chart.Name }}-base-configs
           env:

@@ -16,7 +16,7 @@ data:
   GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
-  {{- if or .Values.gatewayModes.outboundAbac.enabled .Values.gatewayModes.inboundAbac.enabled }}
+  {{- if or .Values.gatewayModes.outboundAbacDecrypt.enabled .Values.gatewayModes.inboundAbacEncrypt.enabled }}
   # ABAC operation. Get tags from the tagging service and access decisions from the access service
   GATEWAY_ABAC_OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.oidcClientId }}
   GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.abac.platformEndpoint }}

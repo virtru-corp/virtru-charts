@@ -80,13 +80,13 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
-  outboundAbac:
+  outboundAbacDecrypt:
     enabled: false
-    name: outbound-abac
+    name: outbound-abac-decrypt
     port: 9006
-  inboundAbac:
+  inboundAbacEncrypt:
     enabled: false
-    name: inbound-abac
+    name: inbound-abac-encrypt
     port: 9007
 
 
