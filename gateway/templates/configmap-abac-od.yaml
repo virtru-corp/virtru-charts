@@ -1,0 +1,11 @@
+{{- if .Values.gatewayModes.outboundAbacDecrypt.enabled }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    app: gateway
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundAbacDecrypt.name }}
+data:
+  GATEWAY_MODE: "abac-decrypt"
+  GATEWAY_TOPOLOGY: "outbound"
+{{- end }}
