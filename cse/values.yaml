@@ -109,6 +109,8 @@ tolerations: []
 
 affinity: {}
 
+imagePullSecrets: {}
+
 appConfig:
   accountsUrl: "https://api.virtru.com/accounts/api"
   acmUrl: "https://api.virtru.com/acm/api"
