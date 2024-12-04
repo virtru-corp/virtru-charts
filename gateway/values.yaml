@@ -80,6 +80,14 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
+  outboundAbacDecrypt:
+    enabled: false
+    name: outbound-abac-decrypt
+    port: 9006
+  inboundAbacEncrypt:
+    enabled: false
+    name: inbound-abac-encrypt
+    port: 9007
 
 
 # This will create a persistent volume for each 
@@ -93,7 +101,6 @@ persistentVolumes:
 
 # Environment Variables:
 # For descriptions of all variables, see the README.md file
-
 gatewayAccountsUrl: https://api.virtru.com/accounts
 gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
@@ -180,7 +187,6 @@ additionalConfig:
     enabled: false
     selector: gw
   abac:
-    enabled: false
     oidcClientId: "" # the client id that gateway should use to communicate with the platform
     platformEndpoint: "" # the endpoint where the platform is deployed
     taggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
