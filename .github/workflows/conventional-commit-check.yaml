@@ -1,0 +1,21 @@
+# conventional-commit-check.yaml
+name: Conventional Commit Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+permissions:
+  pull-requests: write
+
+jobs:
+  ccc:
+    uses: virtru-corp/.github/.github/workflows/conventional-commit-check.yaml@v1
+    with:
+      requireScope: false
