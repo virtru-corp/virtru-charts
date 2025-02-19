@@ -9,7 +9,7 @@ replicaCount: 3
 revisionHistoryLimit: 10
 
 # -- Location of container image. 
-# -- For version, see https://support.virtru.com/hc/en-us/articles/360034039233-Release-Notes-Virtru-Private-Keystore-for-Virtru-Solutions-Formerly-Virtru-Customer-Key-Server-CKS.
+# -- For the latest version, see https://support.virtru.com/hc/en-us/articles/360034039233-Release-Notes-Virtru-Private-Keystore-for-Virtru-Solutions-Formerly-Virtru-Customer-Key-Server-CKS.
 image:
   repository: containers.virtru.com/cks
   pullPolicy: IfNotPresent
