@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-oauth2-token-refresher
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: gateway
+spec:
+  schedule: "*/55 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: oauth2-token-refresher
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              command: ["java", "-jar", "*/smtpproxy.jar", "com/virtru/gateway/smtpproxy/oauth2/TokenRefresher.java"]
+              env:
+                - name: OAUTH2_REFRESH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: oauth2-secret
+                      key: OAUTH2_REFRESH_TOKEN
+                - name: OAUTH2_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: oauth2-secret
+                      key: OAUTH2_CLIENT_ID
+                - name: OAUTH2_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: oauth2-secret
+                      key: OAUTH2_CLIENT_SECRET
+          restartPolicy: OnFailure
