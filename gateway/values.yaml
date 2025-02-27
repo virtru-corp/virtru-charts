@@ -55,8 +55,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-# Gateway Modes to enable, 
-# each enabled mode will create a separate 
+# Gateway Modes to enable,
+# each enabled mode will create a separate
 # deployment, service, and configmap
 
 gatewayModes:
@@ -90,8 +90,8 @@ gatewayModes:
     port: 9007
 
 
-# This will create a persistent volume for each 
-# enabled gateway mode. This will keep your postfix queue 
+# This will create a persistent volume for each
+# enabled gateway mode. This will keep your postfix queue
 # intact when pods are destroyed and recreated. You can modify
 # the size of the volume below.
 
@@ -144,7 +144,11 @@ appSecrets:
       <dkim-private-key>
   abac:
     oidcClientSecret: <oidc-client-secret> # The client secret used when authenticating against platform services.
-  
+  oauth2:
+    clientId: <oauth2-client-id>
+    clientSecret: <oauth2-client-secret>
+    refreshToken: <oauth2-refresh-token>
+    accessToken: <oauth2-access-token
 
 additionalConfig:
   saslAuth:
@@ -201,8 +205,8 @@ istioIngress:
   # Use an existing istio gateway
   existingGateway:
   # Name of istio gateway selector
-  gatewaySelectors: 
+  gatewaySelectors:
     istio: ingress
-  ingressHostnames: 
+  ingressHostnames:
     - "*" # Add FQDN, as best practice.
   name: scp
