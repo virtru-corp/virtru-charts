@@ -18,6 +18,21 @@ data:
   QUEUE_RUN_DELAY: {{ .Values.additionalConfig.queueRunDelay }}
   GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
+  GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
+  {{- if eq .Values.additionalConfig.abac.enabled true }}
+  # ABAC operation. Get tags from the tagging service and access decisions from the access service
+  GATEWAY_ABAC_OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.oidcClientId | quote }}
+  GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.abac.platformEndpoint | quote }}
+  GATEWAY_ABAC_TAGGING_PDP_ENDPOINT: {{ .Values.additionalConfig.abac.taggingPdpEndpoint | quote }}
+  GATEWAY_ABAC_TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.trimBlockedRecipients | quote }}
+  GATEWAY_ABAC_PLAINTEXT_CONNECTION: {{ .Values.additionalConfig.abac.plaintextConnection | quote }}
+  GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.additionalConfig.abac.encryptEmail | quote }}
+  GATEWAY_ABAC_TAGGING_PDP_ASSERTION_TYPE: {{ .Values.additionalConfig.abac.taggingPdpAssertionType | quote }}
+  {{- else }}
+  # normal DLP/Encryption operation. get settings and DLP rules from gateway accounts services and create policies using ACM
+  GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
+  GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
+  GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}

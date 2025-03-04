@@ -60,6 +60,11 @@ spec:
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
           {{- end }}
+          {{- if .Values.additionalConfig.abac.extraCas }}
+          - name: abac-cas
+            mountPath: /etc/virtru-gateway/abac-cas
+            readOnly: true
+          {{- end }} 
           - name: postfix-dir
             mountPath: /var/spool/postfix
           ports:
@@ -86,21 +91,21 @@ spec:
               secretKeyRef:
                 key: gateway-api-token-name
                 name: {{ .Release.Name }}-secrets
-          {{- if .Values.additionalConfig.saslAuth.smtpDownstream.enabled }}
+          {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
           - name: GATEWAY_SMTP_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: gateway-sasl-auth-downstream
                 name: {{ .Release.Name }}-secrets
           {{- end }}
-          {{- if .Values.additionalConfig.saslAuth.smtpdUpstream.enabled }}
+          {{- if eq .Values.additionalConfig.saslAuth.smtpdUpstream.enabled true }}
           - name: GATEWAY_SMTPD_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: gateway-sasl-auth-upstream
                 name: {{ .Release.Name }}-secrets
           {{- end }}
-          {{- if .Values.standardConfig.headers.xHeaderAuthEnabled }}
+          {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
           - name: GATEWAY_XHEADER_AUTH_SECRET
             valueFrom:
               secretKeyRef:
@@ -108,10 +113,10 @@ spec:
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           {{- if eq .Values.additionalConfig.abac.enabled true }}
-          - name: OIDC_CLIENT_SECRET
+          - name: GATEWAY_ABAC_OIDC_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                key: oidc-client-secret
+                key: gateway-abac-oidc-client-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           readinessProbe:
@@ -137,8 +142,8 @@ spec:
       - name: abac-cas
         configMap:
           name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
-          {{- range $index, $unused := .Values.additionalConfig.abac.extraCas }}
           items:
+          {{- range $index, $unused := .Values.additionalConfig.abac.extraCas }}
             - key: ABAC_CA_{{ $index }}
               path: abac-ca-{{ $index }}.crt
           {{- end }}
