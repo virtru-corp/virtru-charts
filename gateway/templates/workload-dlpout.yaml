@@ -1,4 +1,4 @@
-{{- if .Values.gatewayModes.outboundDlp.enabled }}
+{{- if eq .Values.gatewayModes.outboundDlp.enabled true }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -105,6 +105,13 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: gateway-xheader-auth-secret
+                name: {{ .Release.Name }}-secrets
+          {{- end }}
+          {{- if eq .Values.additionalConfig.abac.enabled true }}
+          - name: OIDC_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: oidc-client-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           readinessProbe:

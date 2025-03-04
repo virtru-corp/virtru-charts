@@ -1,4 +1,4 @@
-{{- if .Values.gatewayModes.inboundDecrypt.enabled }}
+{{- if eq .Values.gatewayModes.inboundDecrypt.enabled true }}
 apiVersion: v1
 kind: Service
 metadata:

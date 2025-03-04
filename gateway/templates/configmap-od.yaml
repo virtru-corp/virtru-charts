@@ -1,4 +1,4 @@
-{{- if .Values.gatewayModes.outboundDecrypt.enabled }}
+{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
