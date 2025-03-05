@@ -38,8 +38,6 @@ service:
 
 # abacOidcClientId is the client id that gateway should use to communicate with the platform
 abacOidcClientId: "" # the client id that gateway should use to communicate with the platform
-# abacOiDcClientSecret is the client secret that gateway should use to communicate with the platform
-abacOidcClientSecret: ""
 # abacPlatformEndpoint is the URL where the platform is deployed. Hostname and port
 abacPlatformEndpoint: "" # the endpoint where the platform is deployed
 # abacTaggingPdpEndpoint is the URL where the tagging PDP is deployed. Hostname and port
@@ -85,31 +83,20 @@ queueRunDelay: "30s"
 primaryMailingDomain: ""
 # dkimSelector is the selector for the DKIM key to use for mail
 dkimSelector: ""
-# dkimPrivateKey is the private key for the DKIM key
-dkimPrivateKey: ""
 # replaceFromEnabled is whether the gateway should replace the from address with the authenticated address
 replaceFromEnabled: false
 # proxyProtocol is whether the gateway should use the proxy protocol
 proxyProtocol: false
 # verboseLogging is whether the gateway should log verbose information
 verboseLogging: false
-# xHeaderAuthSecret is the secret used to authenticate senders via xHeaders. If set the `X-Header-Virtru-Auth` header must be set to this value
-#   in order to send mail through the gateway
-xHeaderAuthSecret: ""
 # smtpUseTls is whether the gateway should use TLS when sending mail
 smtpUseTls: true
 # smtpSecurityLevel is the security level the gateway should use when sending mail
 smtpSecurityLevel: "mandatory"
 # smtpTlsComplianceDownstream is the compliance level the gateway should use when sending mail downstream
 smtpTlsComplianceDownstream: "MEDIUM"
-# saslDownstreamCredentials maps usernames to passwords for downstream authentication (gateway sending email).
-#   e.g. username1=>password1,username2=>password2
-saslDownstreamCredentials: ""
 # saslDownstreamSecurityOptions is the security options the gateway should use when authenticating downstream
 saslDownstreamSecurityOptions: "noanonymous"
-# saslUpstreamCredentials maps usernames to passwords for upstream authentication (gateway receiving email). e.g. username1=>password1,username2=>password2
-#   e.g. username1=>password1,username2=>password2
-saslUpstreamCredentials: ""
 # saslUpstreamMechanisms is the mechanisms the gateway should use when receiving email
 saslUpstreamMechanisms: "PLAIN"
 # smtpdUseTls is whether the gateway should use TLS when receiving mail
