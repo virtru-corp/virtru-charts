@@ -1,4 +1,4 @@
-{{- if and .Values.gatewayModes.outboundDecrypt.enabled (not .Values.additionalConfig.abac.enabled) }}
+{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

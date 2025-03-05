@@ -1,4 +1,4 @@
-{{- if and .Values.gatewayModes.outboundDecrypt.enabled (not .Values.additionalConfig.abac.enabled) }}
+{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
 apiVersion: v1
 kind: Service
 metadata:

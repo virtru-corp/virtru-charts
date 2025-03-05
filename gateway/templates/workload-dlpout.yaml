@@ -1,4 +1,4 @@
-{{- if .Values.gatewayModes.outboundDlp.enabled }}
+{{- if eq .Values.gatewayModes.outboundDlp.enabled true }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -60,11 +60,6 @@ spec:
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
           {{- end }}
-          {{- if .Values.additionalConfig.abac.extraCas }}
-          - name: abac-cas
-            mountPath: /etc/virtru-gateway/abac-cas
-            readOnly: true
-          {{- end }} 
           - name: postfix-dir
             mountPath: /var/spool/postfix
           ports:
@@ -113,10 +108,10 @@ spec:
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           {{- if eq .Values.additionalConfig.abac.enabled true }}
-          - name: GATEWAY_ABAC_OIDC_CLIENT_SECRET
+          - name: OIDC_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                key: gateway-abac-oidc-client-secret
+                key: oidc-client-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
           readinessProbe:
@@ -138,16 +133,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-      {{- if .Values.additionalConfig.abac.extraCas }}
-      - name: abac-cas
-        configMap:
-          name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
-          {{- range $index, $unused := .Values.additionalConfig.abac.extraCas }}
-          items:
-            - key: ABAC_CA_{{ $index }}
-              path: abac-ca-{{ $index }}.crt
-          {{- end }}
-      {{- end }}
       - name: cert-dir
         emptyDir: {}
       {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
