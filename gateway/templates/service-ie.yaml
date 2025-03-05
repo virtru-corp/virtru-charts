@@ -1,4 +1,4 @@
-{{- if .Values.gatewayModes.inboundEncrypt.enabled }}
+{{- if and .Values.gatewayModes.inboundEncrypt.enabled (not .Values.additionalConfig.abac.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:

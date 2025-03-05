@@ -1,4 +1,4 @@
-{{- if .Values.gatewayModes.inboundEncrypt.enabled }}
+{{- if and .Values.gatewayModes.inboundEncrypt.enabled (not .Values.additionalConfig.abac.enabled) }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
