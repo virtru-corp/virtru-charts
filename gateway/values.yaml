@@ -99,7 +99,7 @@ gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
 standardConfig:
   gatewayHostname: gw.example.com
-  primaryMailingDomain: exmample.com
+  primaryMailingDomain: example.com
   # Next hop for Virtru gateway, typical mail flow is:
   # mail server => Virtru gateway => back to your mail server => final delivery
   gatewayTransportMaps: "*=>[smtp-relay.gmail.com]:587"
