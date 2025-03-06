@@ -33,7 +33,7 @@ service:
   port: 25
 
 ingress:
-  enabled: true 
+  enabled: false
 
 resources: {}
   # limits:
