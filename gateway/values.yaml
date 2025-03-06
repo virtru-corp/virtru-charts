@@ -29,10 +29,11 @@ securityContext: {}
 
 service:
   type: LoadBalancer
+  loadBalancerIP: ""
   port: 25
 
 ingress:
-  enabled: false
+  enabled: true 
 
 resources: {}
   # limits:
