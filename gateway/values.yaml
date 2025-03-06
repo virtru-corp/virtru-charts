@@ -80,6 +80,10 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
+  inboundDlp:
+    enabled: false
+    name: outbound-dlp
+    port: 9006
 
 # This will create a persistent volume for each 
 # enabled gateway mode. This will keep your postfix queue 
