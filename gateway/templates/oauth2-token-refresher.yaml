@@ -14,21 +14,25 @@ spec:
           containers:
             - name: oauth2-token-refresher
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-              command: ["java", "-jar", "*/smtpproxy.jar", "com/virtru/gateway/smtpproxy/oauth2/TokenRefresher.java"]
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.oauth2.TokenRefresher
               env:
                 - name: OAUTH2_REFRESH_TOKEN
                   valueFrom:
                     secretKeyRef:
-                      name: oauth2-secret
-                      key: OAUTH2_REFRESH_TOKEN
+                      name: {{ .Release.Name }}-oauth2-secret
+                      key: oauth2-refresh-token
                 - name: OAUTH2_CLIENT_ID
                   valueFrom:
                     secretKeyRef:
-                      name: oauth2-secret
-                      key: OAUTH2_CLIENT_ID
+                      name: {{ .Release.Name }}-oauth2-secret
+                      key: oauth2-client-id
                 - name: OAUTH2_CLIENT_SECRET
                   valueFrom:
                     secretKeyRef:
-                      name: oauth2-secret
-                      key: OAUTH2_CLIENT_SECRET
+                      name: {{ .Release.Name }}-oauth2-secret
+                      key: oauth2-client-secret
           restartPolicy: OnFailure
