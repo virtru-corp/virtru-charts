@@ -11,6 +11,7 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: {{ include "gateway.serviceAccountName" . }}
           containers:
             - name: oauth2-token-refresher
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -18,21 +19,20 @@ spec:
                 - "/bin/sh"
                 - "-c"
                 - |
+                  echo "Starting Token Refresher"
                   java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.oauth2.TokenRefresher
+                  echo "Token Refresher Finished"
+              volumeMounts:
+                - mountPath: "/etc/oauth2"
+                  readOnly: true
+                  name: oauth2-secret-volume
               env:
-                - name: OAUTH2_REFRESH_TOKEN
+                - name: NAMESPACE
                   valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-oauth2-secret
-                      key: oauth2-refresh-token
-                - name: OAUTH2_CLIENT_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-oauth2-secret
-                      key: oauth2-client-id
-                - name: OAUTH2_CLIENT_SECRET
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-oauth2-secret
-                      key: oauth2-client-secret
+                    fieldRef:
+                      fieldPath: metadata.namespace
+          volumes:
+            - name: oauth2-secret-volume
+              secret:
+                secretName: oauth2-secret
           restartPolicy: OnFailure
