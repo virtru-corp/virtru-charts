@@ -31,8 +31,10 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
+                - name: KUBE_SECRET_NAME
+                  value: "{{ .Release.Name }}-oauth2-secret"
           volumes:
             - name: oauth2-secret-volume
               secret:
-                secretName: oauth2-secret
+                secretName: {{ .Release.Name }}-oauth2-secret
           restartPolicy: OnFailure
