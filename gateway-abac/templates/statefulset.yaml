@@ -9,7 +9,7 @@ spec:
     matchLabels:
     {{- include "gateway.labels" . | nindent 6 }}
   serviceName:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.replicaCount }}
   volumeClaimTemplates:
     - metadata:
         name: postfix-dir
