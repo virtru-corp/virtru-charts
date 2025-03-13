@@ -145,7 +145,6 @@ appSecrets:
   abac:
     oidcClientSecret: <oidc-client-secret> # The client secret used when authenticating against platform services.
   oauth2:
-    clientId: <oauth2-client-id>
     clientSecret: <oauth2-client-secret>
     refreshToken: <oauth2-refresh-token>
     accessToken: <oauth2-access-token
@@ -199,6 +198,10 @@ additionalConfig:
     plaintextConnection: "0" # whether we should communicate with the platform and the tagging PDP over a plaintext connection
     encryptEmail: "1" # whether we should encrypt email sent through this mode
     extraCas: []
+  oauth2:
+    enabled: false
+    clientId: <oauth2-client-id>
+
 
 istioIngress:
   enabled: false
