@@ -1,40 +1,49 @@
-# Default values for cks.
+# Default values for the Virtru Private Keystore (CKS).
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# --  Number of instances (pods) to run for the application. Default is 3 but can be customized to fit your org's needs.
 replicaCount: 3
 
+# -- Number of old deployments retained for rollback purposes. Default is 10.
 revisionHistoryLimit: 10
 
+# -- Location of container image. 
+# -- For the latest version, see https://support.virtru.com/hc/en-us/articles/360034039233-Release-Notes-Virtru-Private-Keystore-for-Virtru-Solutions-Formerly-Virtru-Customer-Key-Server-CKS.
 image:
   repository: containers.virtru.com/cks
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
+  # Overrides the image tag whose default is the Chart.yaml's appVersion.
   tag: ""
 
+# -- Optional name override for the CKS release.
 nameOverride: ""
+# -- Optional override for the full resource name.
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created. A service account is created by default.
   create: true
-  # Annotations to add to the service account
+  # -- Metadata annotations to add to the service account. Defaults to empty.
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # -- The name of the service account to use. If not set and create is set to true, a name is generated using the fullname template.
   name: ""
 
+# -- Optional annotations for pods, useful for monitoring or automation.
 podAnnotations: {}
 
+# -- Test pod is created by default.
 testerPod:
   enabled: true
   annotations:
     helm.sh/hook: test
 
+# -- Defines security settings at the pod level (e.g., group permissions). Defaults to empty, can be customized to better fit your organization's needs.
 podSecurityContext:
   {}
   # fsGroup: 2000
 
+# -- Defines security settings at the container level, such as running as a non-root user. Defaults to empty for flexibility.
 securityContext:
   {}
   # capabilities:
@@ -44,22 +53,29 @@ securityContext:
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# -- Service Configuration
 service:
   annotations: {}
+  # -- Service type is ClusterIP by default.
   type: ClusterIP
   port: 443
   protocol: TCP
 
+# -- Internal application port used for the deployment.
 deployment:
+  # -- The CKS will use the default internal port 9000.
   port: 9000
 
+# -- Ingress Configuration. To serve traffic appropriately, you must have an ingress controller for your CKS service
+# -- This is enabled by default.
 ingress:
   enabled: true
   annotations:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+      # -- Change fqdn.yourdomain.com to match the FQDN of your CKS.
+    - host: fqdn.yourdomain.com
       paths:
         - path: /*
           pathType: ImplementationSpecific
@@ -71,10 +87,11 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# -- Allows defining CPU/memory limits and requests for the application. Defaults to empty for flexibility.
 resources:
   {}
   # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
+  # choice for the customer. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
@@ -84,20 +101,29 @@ resources:
   #   cpu: 100m
   #   memory: 128Mi
 
+# -- Autoscaling is disabled by default.
 autoscaling:
   enabled: false
+  # -- Minimum number of pods
   minReplicas: 1
+  # -- Maximum number of pods
   maxReplicas: 100
+  # -- CPU threshold for scaling. Default is 80%
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+# -- Optional: Specifies node labels for pod placement.
 nodeSelector: {}
 
+# -- Optional: Defines tolerations to allow pods to be scheduled on tainted nodes.
 tolerations: []
 
+# -- Optional: Controls scheduling rules to optimize workload distribution.
 affinity: {}
 
+# -- Application Configuration
 appConfig:
+  # -- The orgId will be provided to you by your Virtru representative.
   virtruOrgId: "<your org id>"
   authTokenStoreageType: in-memory
   authTokenStoreageMemoryEncoding: base64
@@ -117,21 +143,25 @@ appConfig:
 # While a simpler approach with fewer variables, it is recommended you use
 # a third party secret storage option.
 
+# -- Secrets Management 
 appSecrets:
   virtruAuth:
     name: hmac-auth
     data:
-      authTokenJson: <JSON from your CKS>
+     # -- This base64-encoded value for authTokenJson can be generated by running these steps here: https://support.virtru.com/hc/en-us/articles/17797745877655-Virtru-Private-Keystore-for-Virtru-Solutions-Install-First-Instance-Linux-Server
+      authTokenJson: <base64-encoded-JSON-from-your-CKS>
 
   virtruKeys:
     name: cks-keys
     mountPath: /app/keys
     data:
+      # -- The values for rsa001.pub and rsa001.pem can be generated by running these steps here: https://support.virtru.com/hc/en-us/articles/17797745877655-Virtru-Private-Keystore-for-Virtru-Solutions-Install-First-Instance-Linux-Server
       rsa001.pub: |
         <rsa001 public key>
       rsa001.pem: |
         <rsa001 private key>
 
+# -- Configuration for integrating with external secret management solutions.
 #https://external-secrets.io/v0.8.2/introduction/overview/
 #externalAppSecrets:
 #- name: <external secret object name> #secret object will be named the same.
@@ -140,4 +170,3 @@ appSecrets:
 #    kind: <SecretStore or ClusterSecretStore>
 #    name: <name of secret store>
 #  refreshInterval: <how often to reconcile with secret store>
-#
