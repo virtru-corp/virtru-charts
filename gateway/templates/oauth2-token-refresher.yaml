@@ -1,0 +1,42 @@
+{{- if .Values.additionalConfig.oauth2.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-oauth2-token-refresher
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: gateway
+spec:
+  schedule: "*/55 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "gateway.serviceAccountName" . }}
+          containers:
+            - name: oauth2-token-refresher
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  echo "Starting Token Refresher"
+                  java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.oauth2.TokenRefresher
+                  echo "Token Refresher Finished"
+              volumeMounts:
+                - mountPath: "/etc/oauth2"
+                  readOnly: true
+                  name: oauth2-secret-volume
+              env:
+                - name: NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: KUBE_SECRET_NAME
+                  value: "{{ .Release.Name }}-oauth2-secret"
+          volumes:
+            - name: oauth2-secret-volume
+              secret:
+                secretName: {{ .Release.Name }}-oauth2-secret
+          restartPolicy: OnFailure
+{{- end }}
