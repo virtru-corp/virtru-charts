@@ -19,6 +19,7 @@ data:
   GATEWAY_ORGANIZATION_DOMAIN: {{ required "primaryMailingDomain is required" .Values.primaryMailingDomain | quote }}
   GATEWAY_TRANSPORT_MAPS: {{ .Values.gatewayTransportMaps | quote }}
   GATEWAY_RELAY_ADDRESSES: {{ .Values.inboundRelayAddresses | quote }}
+  GATEWAY_LOG_LEVEL: {{ .Values.logLevel | default "info" | upper | quote }}
   MAX_QUEUE_LIFETIME: {{ .Values.maxQueueLifetime | quote }}
   MAX_BACKOFF_TIME: {{ .Values.maxBackoffTime | quote }}
   MIN_BACKOFF_TIME: {{ .Values.minBackoffTime | quote }}

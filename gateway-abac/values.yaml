@@ -113,3 +113,6 @@ cacheSmtpConnectionsTimeLimit: "5s"
 # tlsPolicyMaps maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies
 #   can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy
 tlsPolicyMaps: ""
+# logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode
+# ciphertexts are logged
+logLevel: "info"
