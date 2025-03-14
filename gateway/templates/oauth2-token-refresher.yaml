@@ -34,6 +34,8 @@ spec:
                       fieldPath: metadata.namespace
                 - name: KUBE_SECRET_NAME
                   value: "{{ .Release.Name }}-oauth2-secret"
+                - name: GATEWAY_OAUTH2_CLIENT_ID
+                  value: "{{ .Values.additionalConfig.oauth2.clientId }}"
           volumes:
             - name: oauth2-secret-volume
               secret:

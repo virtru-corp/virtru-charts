@@ -76,6 +76,9 @@ data:
   {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
   GATEWAY_DKIM_DOMAINS: {{ .Values.additionalConfig.dkimSigning.selector }}._domainkey.{{ .Values.standardConfig.primaryMailingDomain }}
   {{- end }}
-
+  {{- if .Values.additionalConfig.oauth2.enabled }}
+  GATEWAY_SMTP_SASL_ENABLED_XOAUTH2: "1"
+  GATEWAY_OAUTH2_CLIENT_ID: {{ .Values.additionalConfig.oauth2.clientId }}
+  {{- end }}
 
 
