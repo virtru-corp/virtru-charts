@@ -80,15 +80,6 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
-  outboundAbacDecrypt:
-    enabled: false
-    name: outbound-abac-decrypt
-    port: 9006
-  inboundAbacEncrypt:
-    enabled: false
-    name: inbound-abac-encrypt
-    port: 9007
-
 
 # This will create a persistent volume for each 
 # enabled gateway mode. This will keep your postfix queue 
