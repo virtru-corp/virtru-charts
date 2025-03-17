@@ -132,10 +132,7 @@ appSecrets:
     publicKey: |
       <dkim-public-key>
     privateKey: |
-      <dkim-private-key>
-  abac:
-    oidcClientSecret: <oidc-client-secret> # The client secret used when authenticating against platform services.
-  
+      <dkim-private-key> 
 
 additionalConfig:
   saslAuth:
