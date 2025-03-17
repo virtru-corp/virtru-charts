@@ -16,31 +16,12 @@ data:
   GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
-  {{- if or .Values.gatewayModes.outboundAbacDecrypt.enabled .Values.gatewayModes.inboundAbacEncrypt.enabled }}
-  # ABAC operation. Get tags from the tagging service and access decisions from the access service
-  GATEWAY_ABAC_OIDC_CLIENT_ID: {{ .Values.additionalConfig.abac.oidcClientId }}
-  GATEWAY_ABAC_PLATFORM_ENDPOINT: {{ .Values.additionalConfig.abac.platformEndpoint }}
-  GATEWAY_ABAC_TAGGING_PDP_ENDPOINT: {{ .Values.additionalConfig.abac.taggingPdpEndpoint }}
-  GATEWAY_ABAC_TRIM_BLOCKED_RECIPIENTS: {{ .Values.additionalConfig.abac.trimBlockedRecipients | quote }}
-  GATEWAY_ABAC_PLAINTEXT_CONNECTION: {{ .Values.additionalConfig.abac.plaintextConnection | quote }}
-  GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.additionalConfig.abac.encryptEmail | quote }}
-  GATEWAY_ABAC_TAGGING_PDP_ASSERTION_TYPE: {{ .Values.additionalConfig.abac.taggingPdpAssertionType }}
-  {{- if .Values.additionalConfig.abac.extraCas }}
-  GATEWAY_ABAC_SDK_TRUSTED_CERT_DIRECTORY: /etc/virtru-gateway/abac-cas
-  {{- range $index, $value := .Values.additionalConfig.abac.extraCas }}
-  ABAC_CA_{{ $index }}: {{ toJson $value }}
-  {{- end }}
-  {{- end }}
-  {{- end }}
-  {{- if or .Values.gatewayModes.outboundEncrypt.enabled .Values.gatewayModes.inboundEncrypt.enabled
-    .Values.gatewayModes.outboundDecrypt.enabled .Values.gatewayModes.inboundDecrypt.enabled .Values.gatewayModes.outboundDlp.enabled }}
   # normal DLP/Encryption operation. get settings and DLP rules from gateway accounts services and create policies using ACM
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
   GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
   GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
-  {{- end }}
   {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
   GATEWAY_SMTP_USE_TLS: "1"
