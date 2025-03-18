@@ -29,7 +29,6 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  loadBalancerIP: ""
   port: 25
 
 ingress:
@@ -103,7 +102,7 @@ gatewayAcmUrl: https://api.virtru.com/acm
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
 standardConfig:
-  gatewayHostname: gw.example.com
+  gatewayHostname: example.com
   primaryMailingDomain: example.com
   # Next hop for Virtru gateway, typical mail flow is:
   # mail server => Virtru gateway => back to your mail server => final delivery
