@@ -138,7 +138,13 @@ appSecrets:
     publicKey: |
       <dkim-public-key>
     privateKey: |
+<<<<<<< HEAD
+      <dkim-private-key>
+  
+  
+=======
       <dkim-private-key> 
+>>>>>>> origin/main
 
 additionalConfig:
   saslAuth:
@@ -180,3 +186,14 @@ additionalConfig:
   dkimSigning:
     enabled: false
     selector: gw
+
+istioIngress:
+  enabled: false
+  # Use an existing istio gateway
+  existingGateway:
+  # Name of istio gateway selector
+  gatewaySelectors: 
+    istio: ingress
+  ingressHostnames: 
+    - "*" # Add FQDN, as best practice.
+  name: scp
