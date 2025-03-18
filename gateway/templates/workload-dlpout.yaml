@@ -1,4 +1,4 @@
-{{- if eq .Values.gatewayModes.outboundDlp.enabled true }}
+{{- if .Values.gatewayModes.outboundDlp.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -49,7 +49,7 @@ spec:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.standardConfig.gatewayHostname }}
       containers:
-        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }}
+        - name: {{ .Chart.Name }}-{{ .Values.gatewayModes.outboundDlp.name }} # Gateway Container
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -87,21 +87,21 @@ spec:
               secretKeyRef:
                 key: gateway-api-token-name
                 name: {{ .Release.Name }}-secrets
-          {{- if eq .Values.additionalConfig.saslAuth.smtpDownstream.enabled true }}
+          {{- if .Values.additionalConfig.saslAuth.smtpDownstream.enabled }}
           - name: GATEWAY_SMTP_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: gateway-sasl-auth-downstream
                 name: {{ .Release.Name }}-secrets
           {{- end }}
-          {{- if eq .Values.additionalConfig.saslAuth.smtpdUpstream.enabled true }}
+          {{- if .Values.additionalConfig.saslAuth.smtpdUpstream.enabled }}
           - name: GATEWAY_SMTPD_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: gateway-sasl-auth-upstream
                 name: {{ .Release.Name }}-secrets
           {{- end }}
-          {{- if eq .Values.standardConfig.headers.xHeaderAuthEnabled true }}
+          {{- if .Values.standardConfig.headers.xHeaderAuthEnabled }}
           - name: GATEWAY_XHEADER_AUTH_SECRET
             valueFrom:
               secretKeyRef:

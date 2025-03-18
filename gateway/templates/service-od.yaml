@@ -1,4 +1,4 @@
-{{- if eq .Values.gatewayModes.outboundDecrypt.enabled true }}
+{{- if .Values.gatewayModes.outboundDecrypt.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,9 +13,6 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
-  {{- if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
-  {{- end }}
   ports:
     - port: {{ .Values.gatewayModes.outboundDecrypt.port }}
       targetPort: {{ .Values.service.port }}
