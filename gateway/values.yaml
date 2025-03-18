@@ -83,7 +83,7 @@ gatewayModes:
     port: 9005
   inboundDlp:
     enabled: false
-    name: outbound-dlp
+    name: inbound-dlp
     port: 9006
 
 # This will create a persistent volume for each 
@@ -138,9 +138,7 @@ appSecrets:
     publicKey: |
       <dkim-public-key>
     privateKey: |
-      <dkim-private-key>
-  
-  
+      <dkim-private-key> 
 
 additionalConfig:
   saslAuth:
