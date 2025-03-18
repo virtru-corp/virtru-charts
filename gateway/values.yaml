@@ -136,13 +136,7 @@ appSecrets:
     publicKey: |
       <dkim-public-key>
     privateKey: |
-<<<<<<< HEAD
       <dkim-private-key>
-  
-  
-=======
-      <dkim-private-key> 
->>>>>>> origin/main
 
 additionalConfig:
   saslAuth:
