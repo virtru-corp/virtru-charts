@@ -144,10 +144,10 @@ appSecrets:
       <dkim-private-key>
   abac:
     oidcClientSecret: <oidc-client-secret> # The client secret used when authenticating against platform services.
-  oauth2:
-    clientSecret: <oauth2-client-secret>
-    refreshToken: <oauth2-refresh-token>
-    accessToken: <oauth2-access-token
+  xoauth2:
+    clientSecret: <xoauth2-client-secret>
+    refreshToken: <xoauth2-refresh-token>
+    accessToken: <xoauth2-access-token
 
 additionalConfig:
   saslAuth:
@@ -199,9 +199,9 @@ additionalConfig:
     encryptEmail: "1" # whether we should encrypt email sent through this mode
     extraCas: []
   oauth2:
+  xoauth2:
     enabled: false
-    clientId: <oauth2-client-id>
-
+    clientId: <xoauth2-client-id>
 
 istioIngress:
   enabled: false

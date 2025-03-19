@@ -1,8 +1,8 @@
-{{- if .Values.additionalConfig.oauth2.enabled }}
+{{- if .Values.additionalConfig.xoauth2.enabled }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-oauth2-token-refresher
+  name: {{ .Release.Name }}-xoauth2-token-refresher
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/component: gateway
@@ -14,17 +14,17 @@ spec:
         spec:
           serviceAccountName: {{ include "gateway.serviceAccountName" . }}
           containers:
-            - name: oauth2-token-refresher
+            - name: xoauth2-token-refresher
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               command:
                 - "/bin/sh"
                 - "-c"
                 - |
                   echo "Starting Token Refresher"
-                  java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.oauth2.TokenRefresher
+                  java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.xoauth2.TokenRefresher
                   echo "Token Refresher Finished"
               volumeMounts:
-                - mountPath: "/etc/oauth2"
+                - mountPath: "/etc/xoauth2"
                   readOnly: true
                   name: oauth2-secret-volume
               env:
@@ -33,12 +33,12 @@ spec:
                     fieldRef:
                       fieldPath: metadata.namespace
                 - name: KUBE_SECRET_NAME
-                  value: "{{ .Release.Name }}-oauth2-secret"
-                - name: GATEWAY_OAUTH2_CLIENT_ID
-                  value: "{{ .Values.additionalConfig.oauth2.clientId }}"
+                  value: "{{ .Release.Name }}-xoauth2-secret"
+                - name: GATEWAY_XOAUTH2_CLIENT_ID
+                  value: "{{ .Values.additionalConfig.xoauth2.clientId }}"
           volumes:
-            - name: oauth2-secret-volume
+            - name: xoauth2-secret-volume
               secret:
-                secretName: {{ .Release.Name }}-oauth2-secret
+                secretName: {{ .Release.Name }}-xoauth2-secret
           restartPolicy: OnFailure
 {{- end }}
