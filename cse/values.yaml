@@ -2,36 +2,41 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Number of pod replicas to deploy. Default is 1.
 replicaCount: 1
 
+# -- Container image repository. Defaults to the Chart.yaml's appVersion.
 image:
   repository: containers.virtru.com/cse
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: ""
-    
+
+# -- Optional name override for resources.
 nameOverride: ""
 fullnameOverride: ""
 
+# -- A Kubernetes service account is created by default. A name is auto-generated if left blank.
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account. Defaults to empty.
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# -- Custom annotations for pods. Defaults to empty.
 podAnnotations: {}
 
+# -- Optional: Specifies if a test pod should be deployed. Defaults to false.
 testerPod:
   enabled: false
   annotations:
+    # -- Marks this pod as a Helm test hook.
     helm.sh/hook: test
 
+# -- Security settings for the entire pod.
 podSecurityContext: {}
   # fsGroup: 2000
 
+# -- Security settings for containers. We encourage you to follow your organization's security policies for compliance and security.
 securityContext: {}
   # capabilities:
   #   drop:
@@ -40,36 +45,44 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# -- Determines the type of Kubernetes service. A load balancer is created by default.
 service:
   annotations: {}
+  # -- Annotations for the Kubernetes service.
   type: LoadBalancer
-#  loadBalancerIP: <your-ip-address>
-#  portName: virtru-https 
-#  Sample named port
+  #  loadBalancerIP: <your-static-ip-address>
+  #  portName: virtru-https 
   port: 443
   protocol: TCP
 
+# -- Port exposed by the deployment. Defaults to 9000.
 deployment:
   port: 9000
 
+# -- Ingress service is disabled by default. A load balancer service is created in its place.
 ingress:
   enabled: false
+  # -- Custom annotations for the ingress resource.
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: cse-example.local
+    # -- fqdn.yourdomain.com must match the FQDN of your CSE service.
+    - host: fqdn.yourdomain.com
       paths:
       - path: /*
         pathType: ImplementationSpecific
         backend:
           serviceName: cse
           servicePort: 9000
+  # -- TLS certificate configuration for ingress. Remove brackets to configure TLS as a secret.
+  # -- Alternatively, appSecrets.ssl.privateKey and appSecrets.ssl.certificate can be used for TLS certificate configuration.
   tls: []
   #  - secretName: cse-example-tls
   #    hosts:
-  #      - cse-example.local
+  #      - fqdn.yourdomain.com
 
+# -- CPU and memory resource limits and requests for the pod. Defaults to empty for flexibility.
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -82,6 +95,7 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+# -- Readiness probe settings to check if the pod is ready to receive traffic.
 probes:
   readiness:
     initialDelaySeconds: 30
@@ -89,6 +103,7 @@ probes:
     timeoutSeconds: 10
     failureThreshold: 2
     successThreshold: 1
+  # -- Liveness probe settings to restart the pod if it becomes unresponsive.  
   liveness:
     initialDelaySeconds: 40
     periodSeconds: 10
@@ -96,69 +111,96 @@ probes:
     failureThreshold: 2
     successThreshold: 1
 
+# --  Horizontal pod scaling. Defaults to false. We recommend the customer adheres to their organization's policies for autoscaling.
 autoscaling:
   enabled: false
+  # -- Minimum number of pod replicas.
   minReplicas: 1
+  # -- Maximum number of pod replicas.
   maxReplicas: 100
+  # -- CPU utilization threshold for scaling.
   targetCPUUtilizationPercentage: 80
+  # -- Memory utilization threshold for scaling (optional).
   # targetMemoryUtilizationPercentage: 80
 
+# -- Specifies node labels for pod scheduling.
 nodeSelector: {}
 
+# -- List of tolerations to allow scheduling on tainted nodes.
 tolerations: []
 
+# -- Node affinity rules for pod scheduling.
 affinity: {}
 
+# By default, you can create secrets using appConfig and appSecrets below.
+# Important note: Creating secrets in this way is a default option.
+# While a simpler approach with fewer variables, it is recommended you use
+# a third party secret storage option. 
+# As always, we encourage you to follow your organization's security policies for compliance and security.
+
+# -- Application Configuration
 appConfig:
   accountsUrl: "https://api.virtru.com/accounts/api"
   acmUrl: "https://api.virtru.com/acm/api"
+  # -- Refer to https://support.virtru.com/hc/en-us/articles/4409220098199-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-ENV-Variables for more information.
   jwksAuthnIssuers: "base64 encoded authn issuers object"
+  # -- The default Google JWKS AUTHZ variables are provided below.
   jwksAuthzIssuers: "eyAiZ3N1aXRlY3NlLXRva2VuaXNzdWVyLWRyaXZlQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3NlcnZpY2VfYWNjb3VudHMvdjEvandrL2dzdWl0ZWNzZS10b2tlbmlzc3Vlci1kcml2ZUBzeXN0ZW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImdzdWl0ZWNzZS10b2tlbmlzc3Vlci1tZWV0QHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3NlcnZpY2VfYWNjb3VudHMvdjEvandrL2dzdWl0ZWNzZS10b2tlbmlzc3Vlci1tZWV0QHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIiwiZ3N1aXRlY3NlLXRva2VuaXNzdWVyLWNhbGVuZGFyQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3NlcnZpY2VfYWNjb3VudHMvdjEvandrL2dzdWl0ZWNzZS10b2tlbmlzc3Vlci1jYWxlbmRhckBzeXN0ZW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImdzdWl0ZWNzZS10b2tlbmlzc3Vlci1nbWFpbEBzeXN0ZW0uZ3NlcnZpY2VhY2NvdW50LmNvbSI6ICJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9zZXJ2aWNlX2FjY291bnRzL3YxL2p3ay9nc3VpdGVjc2UtdG9rZW5pc3N1ZXItZ21haWxAc3lzdGVtLmdzZXJ2aWNlYWNjb3VudC5jb20iIH0K"
   jwtAud: "base64 encoded jwt audience object"
-  jwtKaclsUrl: "https://cse-example.local"
+  # -- The URL for KACLS JWT validation should be the FQDN for your CSE service.
+  jwtKaclsUrl: "https://fqdn.yourdomain.com"
   processNumberOverride: "5"
   useSsl: "true"
+  # -- Enable or disable connection to the Virtru CKS. Defaults to false.
   useCks: "false"
-  cksUrl: "https://cks-example.local"
+  # -- Optional: URL for the CKS if integrating with the Virtru CKS.
+  cksUrl: "https://cks.yourdomain.com"
   driveLabels:
+   # -- Enable or disable Drive Labels integration. Defaults to false. See https://support.virtru.com/hc/en-us/articles/27150297991319-Reference-Drive-Label-Variables for more info.
    enabled: "false"
    serviceAccountEmail: "<your-drive-admin-email-address>"
    driveTime: "15"
    driveLabelsTime: "15"
    adminTime: "15"
 
+# -- Application Secrets Configuration
 appSecrets:
+  # -- HMAC token for authentication will be provided to you by Virtru.
   hmac:
     tokenId: "provided-by-virtru"
     tokenSecret: "provided-by-virtru"
+  # -- appSecrets.secretKey is required only if NOT using Virtru CKS. Must be in base64 format. Comment this out if using CKS.
   secretKey: "secretkey:<base64-encoded-secret-key>"
+  # -- SSL private key and certificate in base64 format.
   ssl:
     privateKey: <base64 private rsa key>
     certificate: <base64 private ssl cert>
+  # -- Optional: Provide CKS tokenId and tokenSecret if integrating with the CKS.  
   cksHmac:
     tokenId: "from-your-cks"
     tokenSecret: "from-your-cks"
+  # -- Optional: For Google Drive Labels integration. Leave as-is if not using Drive Labels feature.
   googleApplicationCredentials: /app/cse/credentials.json
 
+# -- External secrets integration, disabled by default. Reference: https://external-secrets.io/v0.8.2/introduction/overview/
+# externalAppSecrets:
+# - name: <external secret object name>
+#   secretsPath: <path of secret in secret store>
+#   secretStoreRef:
+#     kind: <SecretStore or ClusterSecretStore>
+#     name: <name of secret store>
+#   refreshInterval: <how often to reconcile with secret store>
 
-#https://external-secrets.io/v0.8.2/introduction/overview/
-#externalAppSecrets:
-#- name: <external secret object name> #secret object will be named the same.
-#  secretsPath: <path of secret in secret store>
-#  secretStoreRef:
-#    kind: <SecretStore or ClusterSecretStore>
-#    name: <name of secret store>
-#  refreshInterval: <how often to reconcile with secret store>
-
-### Uncomment lines below volumes and remove brackets if utilizing the Drive Labels integration (See https://support.virtru.com/hc/en-us/articles/20411711509527-Reference-Virtru-Private-Keystore-for-Google-Workspace-CSE-Configuring-Drive-Labels-with-CSE)
+# -- Uncomment lines below volumes and remove brackets if using the Drive Labels integration.
 volumes: []
-#- name: credentials-volume
-#  volume:
-#    secret:
-#      secretName: keyfile-secret
-#      items:
-#      - key: keyfile.json
-#        path: credentials.json
-#  volumeMount:
-#    mountPath: /app/cse/credentials.json
-#    subPath: credentials.json
+# -- List of volumes for mounting secrets or configurations.
+# - name: credentials-volume
+#   volume:
+#     secret:
+#       secretName: keyfile-secret
+#       items:
+#       - key: keyfile.json
+#         path: credentials.json
+#   volumeMount:
+#     mountPath: /app/cse/credentials.json
+#     subPath: credentials.json
