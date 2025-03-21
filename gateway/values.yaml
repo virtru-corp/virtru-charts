@@ -55,8 +55,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-# Gateway Modes to enable, 
-# each enabled mode will create a separate 
+# Gateway Modes to enable,
+# each enabled mode will create a separate
 # deployment, service, and configmap
 
 gatewayModes:
@@ -81,8 +81,8 @@ gatewayModes:
     name: outbound-dlp
     port: 9005
 
-# This will create a persistent volume for each 
-# enabled gateway mode. This will keep your postfix queue 
+# This will create a persistent volume for each
+# enabled gateway mode. This will keep your postfix queue
 # intact when pods are destroyed and recreated. You can modify
 # the size of the volume below.
 
@@ -133,6 +133,11 @@ appSecrets:
       <dkim-public-key>
     privateKey: |
       <dkim-private-key> 
+      <dkim-private-key>
+  xoauth2:
+    clientSecret: <xoauth2-client-secret>
+    refreshToken: <xoauth2-refresh-token>
+    accessToken: <xoauth2-access-token
 
 additionalConfig:
   saslAuth:
@@ -174,14 +179,18 @@ additionalConfig:
   dkimSigning:
     enabled: false
     selector: gw
+  oauth2:
+  xoauth2:
+    enabled: false
+    clientId: <xoauth2-client-id>
 
 istioIngress:
   enabled: false
   # Use an existing istio gateway
   existingGateway:
   # Name of istio gateway selector
-  gatewaySelectors: 
+  gatewaySelectors:
     istio: ingress
-  ingressHostnames: 
+  ingressHostnames:
     - "*" # Add FQDN, as best practice.
   name: scp

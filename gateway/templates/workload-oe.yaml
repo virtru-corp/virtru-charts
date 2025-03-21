@@ -63,6 +63,10 @@ spec:
           {{- end }}
           - name: postfix-dir
             mountPath: /var/spool/postfix
+          {{- if eq .Values.additionalConfig.xoauth2.enabled true }}
+          - mountPath: "/etc/xoauth2"
+            name: xoauth2-secret-volume
+          {{- end }}
           ports:
             - containerPort: {{ .Values.service.port }}
               protocol: TCP
@@ -134,6 +138,11 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ .Release.Name }}-dkim-secrets
+      {{- end }}
+      {{- if .Values.additionalConfig.xoauth2.enabled }}
+      - name: xoauth2-secret-volume
+        secret:
+          secretName: {{ .Release.Name }}-xoauth2-secret
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
