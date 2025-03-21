@@ -26,7 +26,7 @@ spec:
               volumeMounts:
                 - mountPath: "/etc/xoauth2"
                   readOnly: true
-                  name: oauth2-secret-volume
+                  name: xoauth2-secret-volume
               env:
                 - name: NAMESPACE
                   valueFrom:
