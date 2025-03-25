@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/component: gateway
 spec:
-  schedule: "*/55 * * * *"
+  schedule: "*/3 * * * *"
   jobTemplate:
     spec:
       template:
@@ -62,65 +62,33 @@ spec:
                     sleep 1
                   done
 
-                  # Create a simple update script
-                  cat > /tmp/token-update.sh << 'SCRIPT'
-                  #!/bin/bash
-
-                  # Copy updated token from mounted Secret
-                  if [ -f "/etc/xoauth2/xoauth2-access-token" ]; then
-                    TOKEN=$(cat /etc/xoauth2/xoauth2-access-token)
-
-                    # Update JSON files for all users
-                    for TOKEN_FILE in /etc/sasl2/oauth/*; do
-                      if [ -f "$TOKEN_FILE" ] && [[ "$TOKEN_FILE" != *"template"* ]]; then
-                        # Update JSON with new token
-                        TMP_FILE=$(mktemp)
-                        cat "$TOKEN_FILE" | jq --arg token "$TOKEN" '.access_token = $token' > $TMP_FILE
-                        mv $TMP_FILE "$TOKEN_FILE"
-                        chmod 600 "$TOKEN_FILE"
-                        chown postfix:postfix "$TOKEN_FILE"
-
-                        # Also update in chroot environment
-                        CHROOT_PATH="/var/spool/postfix$TOKEN_FILE"
-                        if [ -f "$CHROOT_PATH" ]; then
-                          cp "$TOKEN_FILE" "$CHROOT_PATH"
-                          chmod 600 "$CHROOT_PATH"
-                          chown postfix:postfix "$CHROOT_PATH"
-                        fi
-                      fi
-                    done
-
-                    # Reload Postfix to apply changes
-                    postfix reload
-                    echo "Token updated"
-                  else
-                    echo "ERROR: Token file not found in /etc/xoauth2/"
-                  fi
-                  SCRIPT
-
-                  echo "Finding Gateway pods with direct query"
+                  # Find Gateway pods, excluding refresher jobs
+                  echo "Finding Gateway pods"
                   ALL_PODS=$(kubectl get pods -n $NAMESPACE -o jsonpath='{.items[*].metadata.name}')
                   GATEWAY_PODS=""
                   for POD in $ALL_PODS; do
                     if [[ $POD == *"gateway"* ]] && [[ $POD != *"refresher"* ]]; then
-                    GATEWAY_PODS="$GATEWAY_PODS $POD"
+                      GATEWAY_PODS="$GATEWAY_PODS $POD"
                     fi
                   done
 
                   echo "Found Gateway pods: $GATEWAY_PODS"
 
-                  echo "Found Gateway pods: $GATEWAY_PODS"
-                  # Update each pod
+                  # Update each pod using the built-in script
                   for POD in $GATEWAY_PODS; do
                     echo "Updating token in pod $POD"
 
-                    # Check if jq is available (for updating JSON)
-                    kubectl exec $POD -n $NAMESPACE -- bash -c "command -v jq >/dev/null 2>&1 || { apt-get update && apt-get install -y jq; }"
+                    # Execute the built-in script directly
+                    kubectl exec $POD -n $NAMESPACE -- /usr/local/bin/update_xoauth2_token.sh
 
-                    # Copy update script
-                    kubectl cp /tmp/token-update.sh $NAMESPACE/$POD:/tmp/token-update.sh
-                    kubectl exec $POD -n $NAMESPACE -- bash -c "chmod +x /tmp/token-update.sh && /tmp/token-update.sh"
+                    if [ $? -eq 0 ]; then
+                      echo "Successfully updated token in pod $POD"
+                    else
+                      echo "WARNING: Token update in pod $POD failed with error code $?"
+                    fi
                   done
+
+                  echo "Token update process completed"
               env:
                 - name: NAMESPACE
                   valueFrom:
