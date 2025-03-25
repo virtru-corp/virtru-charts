@@ -13,20 +13,33 @@ spec:
       template:
         spec:
           serviceAccountName: {{ include "gateway.serviceAccountName" . }}
-          containers:
+          volumes:
+            - name: xoauth2-secret-volume
+              secret:
+                secretName: {{ .Release.Name }}-xoauth2-secret
+            - name: shared-data
+              emptyDir: { }
+          initContainers:
             - name: xoauth2-token-refresher
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               command:
-                - "/bin/sh"
+                - "/bin/bash"
                 - "-c"
                 - |
                   echo "Starting Token Refresher"
+                  echo "NAMESPACE=$NAMESPACE"
+                  echo "KUBE_SECRET_NAME=$KUBE_SECRET_NAME"
+                  echo "GATEWAY_XOAUTH2_CLIENT_ID=$GATEWAY_XOAUTH2_CLIENT_ID"
                   java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.xoauth2.TokenRefresher
+
                   echo "Token Refresher Finished"
+                  touch /shared/token-refreshed
               volumeMounts:
                 - mountPath: "/etc/xoauth2"
-                  readOnly: true
                   name: xoauth2-secret-volume
+                  readOnly: true
+                - mountPath: "/shared"
+                  name: shared-data
               env:
                 - name: NAMESPACE
                   valueFrom:
@@ -36,9 +49,90 @@ spec:
                   value: "{{ .Release.Name }}-xoauth2-secret"
                 - name: GATEWAY_XOAUTH2_CLIENT_ID
                   value: "{{ .Values.additionalConfig.xoauth2.clientId }}"
-          volumes:
-            - name: xoauth2-secret-volume
-              secret:
-                secretName: {{ .Release.Name }}-xoauth2-secret
+          containers:
+            - name: pod-updater
+              image: bitnami/kubectl:latest
+              command:
+                - "/bin/bash"
+                - "-c"
+                - |
+                  # Wait for token refresh to complete
+                  while [ ! -f /shared/token-refreshed ]; do
+                    echo "Waiting for token refresh..."
+                    sleep 1
+                  done
+
+                  # Create a simple update script
+                  cat > /tmp/token-update.sh << 'SCRIPT'
+                  #!/bin/bash
+
+                  # Copy updated token from mounted Secret
+                  if [ -f "/etc/xoauth2/xoauth2-access-token" ]; then
+                    TOKEN=$(cat /etc/xoauth2/xoauth2-access-token)
+
+                    # Update JSON files for all users
+                    for TOKEN_FILE in /etc/sasl2/oauth/*; do
+                      if [ -f "$TOKEN_FILE" ] && [[ "$TOKEN_FILE" != *"template"* ]]; then
+                        # Update JSON with new token
+                        TMP_FILE=$(mktemp)
+                        cat "$TOKEN_FILE" | jq --arg token "$TOKEN" '.access_token = $token' > $TMP_FILE
+                        mv $TMP_FILE "$TOKEN_FILE"
+                        chmod 600 "$TOKEN_FILE"
+                        chown postfix:postfix "$TOKEN_FILE"
+
+                        # Also update in chroot environment
+                        CHROOT_PATH="/var/spool/postfix$TOKEN_FILE"
+                        if [ -f "$CHROOT_PATH" ]; then
+                          cp "$TOKEN_FILE" "$CHROOT_PATH"
+                          chmod 600 "$CHROOT_PATH"
+                          chown postfix:postfix "$CHROOT_PATH"
+                        fi
+                      fi
+                    done
+
+                    # Reload Postfix to apply changes
+                    postfix reload
+                    echo "Token updated"
+                  else
+                    echo "ERROR: Token file not found in /etc/xoauth2/"
+                  fi
+                  SCRIPT
+
+                  echo "Finding Gateway pods with direct query"
+                  ALL_PODS=$(kubectl get pods -n $NAMESPACE -o jsonpath='{.items[*].metadata.name}')
+                  GATEWAY_PODS=""
+                  for POD in $ALL_PODS; do
+                    if [[ $POD == *"gateway"* ]] && [[ $POD != *"refresher"* ]]; then
+                    GATEWAY_PODS="$GATEWAY_PODS $POD"
+                    fi
+                  done
+
+                  echo "Found Gateway pods: $GATEWAY_PODS"
+
+                  echo "Found Gateway pods: $GATEWAY_PODS"
+                  # Update each pod
+                  for POD in $GATEWAY_PODS; do
+                    echo "Updating token in pod $POD"
+
+                    # Check if jq is available (for updating JSON)
+                    kubectl exec $POD -n $NAMESPACE -- bash -c "command -v jq >/dev/null 2>&1 || { apt-get update && apt-get install -y jq; }"
+
+                    # Copy update script
+                    kubectl cp /tmp/token-update.sh $NAMESPACE/$POD:/tmp/token-update.sh
+                    kubectl exec $POD -n $NAMESPACE -- bash -c "chmod +x /tmp/token-update.sh && /tmp/token-update.sh"
+                  done
+              env:
+                - name: NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: RELEASE_NAME
+                  value: "{{ .Release.Name }}"
+              volumeMounts:
+                - mountPath: "/shared"
+                  name: shared-data
+                - mountPath: "/etc/xoauth2"
+                  name: xoauth2-secret-volume
+                  readOnly: true
           restartPolicy: OnFailure
 {{- end }}
