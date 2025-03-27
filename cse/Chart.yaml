@@ -1,6 +1,6 @@
 apiVersion: v2
-name: cse
-description: A Helm chart for Kubernetes
-type: application
-version: 0.8.2
 appVersion: v5.9.1
+description: A Helm chart for the Virtru Private Keystore for Google Client Side Encryption (CSE)
+name: cse
+type: application
+version: 1.0.0
