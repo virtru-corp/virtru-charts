@@ -1,0 +1,49 @@
+{{- if .Values.additionalConfig.xoauth2.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-xoauth2-token-refresher
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/component: gateway
+spec:
+  schedule: "*/55 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "gateway.serviceAccountName" . }}
+          volumes:
+            - name: xoauth2-secret-volume
+              secret:
+                secretName: {{ .Release.Name }}-xoauth2-secret
+            - name: shared-data
+              emptyDir: { }
+          containers:
+          - name: xoauth2-token-refresher
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            command:
+              - "/bin/bash"
+              - "-c"
+              - |
+                echo "Starting Token Refresher"
+                echo "NAMESPACE=$NAMESPACE"
+                echo "KUBE_SECRET_NAME=$KUBE_SECRET_NAME"
+                echo "GATEWAY_XOAUTH2_CLIENT_ID=$GATEWAY_XOAUTH2_CLIENT_ID"
+                java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.xoauth2.TokenRefresher
+                echo "Token Refresher Finished"
+            volumeMounts:
+              - mountPath: "/etc/xoauth2"
+                name: xoauth2-secret-volume
+                readOnly: true
+            env:
+              - name: NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+              - name: KUBE_SECRET_NAME
+                value: "{{ .Release.Name }}-xoauth2-secret"
+              - name: GATEWAY_XOAUTH2_CLIENT_ID
+                value: "{{ .Values.additionalConfig.xoauth2.clientId }}"
+          restartPolicy: OnFailure
+{{- end }}
