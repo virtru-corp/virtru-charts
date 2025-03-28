@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/component: gateway
 spec:
-  schedule: "*/3 * * * *"
+  schedule: "*/55 * * * *"
   jobTemplate:
     spec:
       template:
@@ -19,88 +19,31 @@ spec:
                 secretName: {{ .Release.Name }}-xoauth2-secret
             - name: shared-data
               emptyDir: { }
-          initContainers:
-            - name: xoauth2-token-refresher
-              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-              command:
-                - "/bin/bash"
-                - "-c"
-                - |
-                  echo "Starting Token Refresher"
-                  echo "NAMESPACE=$NAMESPACE"
-                  echo "KUBE_SECRET_NAME=$KUBE_SECRET_NAME"
-                  echo "GATEWAY_XOAUTH2_CLIENT_ID=$GATEWAY_XOAUTH2_CLIENT_ID"
-                  java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.xoauth2.TokenRefresher
-
-                  echo "Token Refresher Finished"
-                  touch /shared/token-refreshed
-              volumeMounts:
-                - mountPath: "/etc/xoauth2"
-                  name: xoauth2-secret-volume
-                  readOnly: true
-                - mountPath: "/shared"
-                  name: shared-data
-              env:
-                - name: NAMESPACE
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.namespace
-                - name: KUBE_SECRET_NAME
-                  value: "{{ .Release.Name }}-xoauth2-secret"
-                - name: GATEWAY_XOAUTH2_CLIENT_ID
-                  value: "{{ .Values.additionalConfig.xoauth2.clientId }}"
           containers:
-            - name: pod-updater
-              image: bitnami/kubectl:latest
-              command:
-                - "/bin/bash"
-                - "-c"
-                - |
-                  # Wait for token refresh to complete
-                  while [ ! -f /shared/token-refreshed ]; do
-                    echo "Waiting for token refresh..."
-                    sleep 1
-                  done
-
-                  # Find Gateway pods, excluding refresher jobs
-                  echo "Finding Gateway pods"
-                  ALL_PODS=$(kubectl get pods -n $NAMESPACE -o jsonpath='{.items[*].metadata.name}')
-                  GATEWAY_PODS=""
-                  for POD in $ALL_PODS; do
-                    if [[ $POD == *"gateway"* ]] && [[ $POD != *"refresher"* ]]; then
-                      GATEWAY_PODS="$GATEWAY_PODS $POD"
-                    fi
-                  done
-
-                  echo "Found Gateway pods: $GATEWAY_PODS"
-
-                  # Update each pod using the built-in script
-                  for POD in $GATEWAY_PODS; do
-                    echo "Updating token in pod $POD"
-
-                    # Execute the built-in script directly
-                    kubectl exec $POD -n $NAMESPACE -- /usr/local/bin/update_xoauth2_token.sh
-
-                    if [ $? -eq 0 ]; then
-                      echo "Successfully updated token in pod $POD"
-                    else
-                      echo "WARNING: Token update in pod $POD failed with error code $?"
-                    fi
-                  done
-
-                  echo "Token update process completed"
-              env:
-                - name: NAMESPACE
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.namespace
-                - name: RELEASE_NAME
-                  value: "{{ .Release.Name }}"
-              volumeMounts:
-                - mountPath: "/shared"
-                  name: shared-data
-                - mountPath: "/etc/xoauth2"
-                  name: xoauth2-secret-volume
-                  readOnly: true
+          - name: xoauth2-token-refresher
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            command:
+              - "/bin/bash"
+              - "-c"
+              - |
+                echo "Starting Token Refresher"
+                echo "NAMESPACE=$NAMESPACE"
+                echo "KUBE_SECRET_NAME=$KUBE_SECRET_NAME"
+                echo "GATEWAY_XOAUTH2_CLIENT_ID=$GATEWAY_XOAUTH2_CLIENT_ID"
+                java -cp "/usr/local/smtp-proxy/smtp-proxy/target/lib/smtp-proxy-{{ .Values.appVersion }}.jar:/usr/local/smtp-proxy/smtp-proxy/target/lib/*" com.virtru.gateway.smtpproxy.xoauth2.TokenRefresher
+                echo "Token Refresher Finished"
+            volumeMounts:
+              - mountPath: "/etc/xoauth2"
+                name: xoauth2-secret-volume
+                readOnly: true
+            env:
+              - name: NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+              - name: KUBE_SECRET_NAME
+                value: "{{ .Release.Name }}-xoauth2-secret"
+              - name: GATEWAY_XOAUTH2_CLIENT_ID
+                value: "{{ .Values.additionalConfig.xoauth2.clientId }}"
           restartPolicy: OnFailure
 {{- end }}
