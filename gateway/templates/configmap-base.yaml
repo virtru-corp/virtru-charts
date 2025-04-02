@@ -5,6 +5,9 @@ metadata:
     app: gateway
   name: {{ .Chart.Name }}-base-configs
 data:
+  GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
+  GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
+  GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
   GATEWAY_HOSTNAME: {{ .Values.standardConfig.gatewayHostname }}
   GATEWAY_ORGANIZATION_DOMAIN: {{ .Values.standardConfig.primaryMailingDomain }}
   GATEWAY_TRANSPORT_MAPS: {{ .Values.standardConfig.gatewayTransportMaps | quote }}
@@ -15,13 +18,9 @@ data:
   QUEUE_RUN_DELAY: {{ .Values.additionalConfig.queueRunDelay }}
   GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
-  GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
-  # normal DLP/Encryption operation. get settings and DLP rules from gateway accounts services and create policies using ACM
-  GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
-  GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
-  GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
+  GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
   {{- if eq .Values.additionalConfig.smtpUseTls true }}
   GATEWAY_SMTP_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpSecurityLevel }}
   GATEWAY_SMTP_USE_TLS: "1"
