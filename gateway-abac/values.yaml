@@ -54,8 +54,8 @@ abacEncryptEmail: true # whether we should encrypt when running in inbound encry
 abacEncryptEmailBody: true # whether we should encrypt the email body when running in inbound encrypt mode. if this is not set we encrypt the attachments only
 # abacExtraCas is a list of additional CAs to trust when communicating with the platform and the tagging PDP in PEM format
 abacExtraCas: []
-# abacCreateLegacy tdfs says whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by
-# DSP versions 2.0.2 and lower
+# abacCreateLegacyTdfs says whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by
+# DSP versions 2.0.2 and and earlier
 abacCreateLegacyTdfs: false
 
 # gatewayMode is the mode the gateway should run in, either encrypt or decrypt
