@@ -83,6 +83,11 @@ data:
   ABAC_CA_{{ $index }}: {{ $value | quote }}
   {{- end }}
   {{- end }}
+  {{-if .Values.abacCreateLegacyTdfs }}
+  GATEWAY_ABAC_TDF_TARGET_MODE: "4.2.2"
+  {{- else }}
+  GATEWAY_ABAC_TDF_TARGET_MODE: ""
+  {{-end }}
   {{- if .Values.xHeaderAuthSecret }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
   {{- end }}
