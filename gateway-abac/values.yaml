@@ -56,7 +56,7 @@ abacEncryptEmailBody: true # whether we should encrypt the email body when runni
 abacExtraCas: []
 # abacCreateLegacyTdfs says whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by
 # DSP versions 2.0.2 and and earlier
-abacCreateLegacyTdfs: false
+abacCreateLegacyTdfs: true
 
 # gatewayMode is the mode the gateway should run in, either encrypt or decrypt
 gatewayMode: "encrypt"
