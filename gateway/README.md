@@ -77,7 +77,10 @@ Set the values based on the information below:
   * If using DKIM signing
     * `publicKey` - The public key from your DKIM record in your DNS
     * `privateKey` - The private key matching your DKIM record's public key
-
+  * If using OAuth2 authentication (XOAUTH2)
+    * `xoauth2.clientSecret` - OAuth2 client secret
+    * `xoauth2.refreshToken` - OAuth2 refresh token
+    * `xoauth2.accessToken` - Initial OAuth2 access token (will be automatically refreshed)
 #### `additionalConfig`
 
 You may, depending on your email needs, wish to update a few values in this section. Below are a few of the primary variables you may wish to adjust:
@@ -97,6 +100,12 @@ helm install -n virtru -f ./values.yaml gateway ./ --create-namespace
 ### Additional Config to go live
 
 Refer to standard documentation for Gateway configuration. You can get your endpoints to set as smart hosts by running the following command:
+* If using OAuth2 authentication (XOAUTH2)
+    * `xoauth2` - OAuth2 authentication settings for SMTP:
+    * `enabled` - Enable XOAUTH2 support (default: `false`)
+    * `clientId` - OAuth2 client ID obtained when registering your OAuth application
+    * `domains` - Domains configured for OAuth2 (comma-separated)
+    * `user` - User on behalf of whom to authenticate
 
 ```sh
 kubectl -n virtru get services
@@ -146,7 +155,13 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `cacheSmtpConnections.enabled` | `GATEWAY_SMTP_CACHE_CONNECTIONS` |
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
-| `dkimSigning.selector` | Generates the subdomain for `GATEWAY_DKIM_DOMAINS` (`<dkimSigning.selector>._domainkey.primaryMailingDomain`)
+| `dkimSigning.selector` | Generates the subdomain for `GATEWAY_DKIM_DOMAINS` (`<dkimSigning.selector>._domainkey.primaryMailingDomain`) |
+| `xoauth2.enabled` | `GATEWAY_SMTP_SASL_ENABLED_XOAUTH2` |
+| `xoauth2.clientId` | `GATEWAY_XOAUTH2_CLIENT_ID` |
+| `xoauth2.domains` | `GATEWAY_XOAUTH2_DOMAINS` |
+| `xoauth2.user` | `GATEWAY_XOAUTH2_USER` |
+| - | `GATEWAY_SMTP_XOAUTH2_RELAY_HOST` (default smtp.gmail.com) |
+| - | `GATEWAY_SMTP_XOAUTH2_RELAY_PORT` (default 587) |
 
 ### `inboundRelayAddresses` values for Gmail and Office 365
 
@@ -154,3 +169,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | ------------- | ----------- |
 | Gmail | 35.190.247.0/24,64.233.160.0/19,66.102.0.0/20,66.249.80.0/20,72.14.192.0/18,74.125.0.0/16,108.177.8.0/21,173.194.0.0/16,209.85.128.0/17,216.58.192.0/19,216.239.32.0/19,172.217.0.0/19,172.217.32.0/20,172.217.128.0/19,172.217.160.0/20,172.217.192.0/19,108.177.96.0/19,35.191.0.0/16,130.211.0.0/22 |
 | Office 365 | 23.103.132.0/22,23.103.136.0/21,23.103.144.0/20,23.103.198.0/23,23.103.200.0/22,23.103.212.0/22,40.92.0.0/14,40.107.0.0/17,40.107.128.0/18,52.100.0.0/14,65.55.88.0/24,65.55.169.0/24,94.245.120.64/26,104.47.0.0/17,104.212.58.0/23,134.170.132.0/24,134.170.140.0/24,157.55.234.0/24,157.56.110.0/23,157.56.112.0/24,207.46.51.64/26,207.46.100.0/24,207.46.163.0/24,213.199.154.0/24,213.199.180.128/26,216.32.180.0/23 |
+
+### Note on Using OAuth2 and SASL Simultaneously
+
+If you have both OAuth2 (`xoauth2.enabled: true`) and standard SASL downstream authentication (`saslAuth.smtpDownstream.enabled: true`) enabled, ensure they are configured for different domains or different mail paths. Otherwise, OAuth2 will take precedence.
