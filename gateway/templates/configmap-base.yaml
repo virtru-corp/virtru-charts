@@ -60,6 +60,8 @@ data:
   {{- if .Values.additionalConfig.xoauth2.enabled }}
   GATEWAY_SMTP_SASL_ENABLED_XOAUTH2: "1"
   GATEWAY_XOAUTH2_CLIENT_ID: {{ .Values.additionalConfig.xoauth2.clientId }}
+  GATEWAY_XOAUTH2_USER: {{ .Values.additionalConfig.xoauth2.user }}
+  GATEWAY_XOAUTH2_DOMAINS: {{ .Values.additionalConfig.xoauth2.domains }}
   {{- end }}
 
 
