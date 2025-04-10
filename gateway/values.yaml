@@ -137,7 +137,7 @@ appSecrets:
   xoauth2:
     clientSecret: <xoauth2-client-secret>
     refreshToken: <xoauth2-refresh-token>
-    accessToken: <xoauth2-access-token
+    accessToken: <xoauth2-access-token>
 
 additionalConfig:
   saslAuth:
@@ -183,6 +183,8 @@ additionalConfig:
   xoauth2:
     enabled: false
     clientId: <xoauth2-client-id>
+    user: <the user that xoauth2 is configured for>
+    domains: <the domains that xoauth2 is configured for>
 
 istioIngress:
   enabled: false
