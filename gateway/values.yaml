@@ -80,6 +80,10 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
+  inboundDlp:
+    enabled: false
+    name: inbound-dlp
+    port: 9006
 
 # This will create a persistent volume for each 
 # enabled gateway mode. This will keep your postfix queue 
@@ -132,7 +136,7 @@ appSecrets:
     publicKey: |
       <dkim-public-key>
     privateKey: |
-      <dkim-private-key> 
+      <dkim-private-key>
 
 additionalConfig:
   saslAuth:

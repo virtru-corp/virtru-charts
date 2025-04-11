@@ -1,0 +1,12 @@
+{{- if .Values.gatewayModes.inboundDlp.enabled }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    app: gateway
+  name: {{ .Chart.Name }}-{{ .Values.gatewayModes.inboundDlp.name }}
+data:
+  GATEWAY_MODE: "dlp"
+  GATEWAY_TOPOLOGY: "inbound"
+  GATEWAY_REPLACEMENT_FROM_ENABLED: {{ .Values.additionalConfig.replaceFromEnabled | quote }}
+{{- end }}
