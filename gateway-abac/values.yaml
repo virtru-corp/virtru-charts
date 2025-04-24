@@ -37,21 +37,21 @@ service:
   port: 25
 
 # abacOidcClientId is the client id that gateway should use to communicate with the platform
-abacOidcClientId: "" # the client id that gateway should use to communicate with the platform
+abacOidcClientId: ""
 # abacPlatformEndpoint is the URL where the platform is deployed. Hostname and port
-abacPlatformEndpoint: "" # the endpoint where the platform is deployed
+abacPlatformEndpoint: ""
 # abacTaggingPdpEndpoint is the URL where the tagging PDP is deployed. Hostname and port
-abacTaggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
+abacTaggingPdpEndpoint: "" 
 # abacTaggingPdpAssertionType is the assertion type to use, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`.
-abacTaggingPdpAssertionType: "urn:nato:stanag:5636:A:1:elements:json" # the assertion type to use with the tagging pdp, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`
+abacTaggingPdpAssertionType: "urn:nato:stanag:5636:A:1:elements:json"
 # abacTrimBlockedRecipients is whether we should remove header recipients that are not entitled to receive an email
-abacTrimBlockedRecipients: true # remove header recipients that are not entitled to receive an email
+abacTrimBlockedRecipients: true
 # abacPlaintextConnection is whether we should communicate with the platform and the tagging PDP over a plaintext connection
-abacPlaintextConnection: false # whether we should communicate with the platform and the tagging PDP over a plaintext connection
+abacPlaintextConnection: false
 # abaEncryptEmail is whether we should encrypt when running in encrypt mode
-abacEncryptEmail: true # whether we should encrypt when running in inbound encrypt mode. if this is not set we only do access checks and blocking
+abacEncryptEmail: true
 # abacEncryptEmailBody is whether we should encrypt the email body when running in encrypt mode
-abacEncryptEmailBody: true # whether we should encrypt the email body when running in inbound encrypt mode. if this is not set we encrypt the attachments only
+abacEncryptEmailBody: true
 # abacExtraCas is a list of additional CAs to trust when communicating with the platform and the tagging PDP in PEM format
 abacExtraCas: []
 # abacCreateLegacyTdfs says whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by
