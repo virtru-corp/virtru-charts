@@ -77,6 +77,8 @@ data:
   GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.abacEncryptEmail | ternary "1" "0" | quote }}
   GATEWAY_ABAC_ENCRYPT_EMAIL_BODY: {{ .Values.abacEncryptEmailBody | ternary "1" "0" | quote}}
   GATEWAY_ABAC_TAGGING_PDP_ASSERTION_TYPE: {{ .Values.abacTaggingPdpAssertionType | quote }}
+  GATEWAY_ABAC_KAS_ALLOWLIST: {{ join "," .Values.abacKasAllowlist | quote }}
+  GATEWAY_ABAC_IGNORE_KAS_ALLOWLIST: {{ .Values.abacIgnoreKasAllowlist | ternary "1" "0" | quote }}
   {{- if .Values.abacExtraCas }}
   GATEWAY_ABAC_SDK_TRUSTED_CERT_DIRECTORY: /etc/virtru-gateway/abac-cas
   {{- range $index, $value := .Values.abacExtraCas }}

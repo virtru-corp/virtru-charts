@@ -57,6 +57,11 @@ abacExtraCas: []
 # abacCreateLegacyTdfs says whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by
 # DSP versions 2.0.2 and and earlier
 abacCreateLegacyTdfs: true
+# abacKasAllowlist is a list of KAS URLs that are allowed to be used for decryption.
+abacKasAllowlist: []
+# ignoreKasAllowlist tells gateway whether or not to ignore the kasAllowlist when decrypting. If this is set then
+# authorization tokens may be sent to malicious KAS servers if gateway processes a maliciously crafted TDF.
+abacIgnoreKasAllowlist: false
 
 # gatewayMode is the mode the gateway should run in, either encrypt or decrypt
 gatewayMode: "encrypt"
