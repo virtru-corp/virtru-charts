@@ -36,6 +36,16 @@ service:
   loadBalancerIP: ''
   port: 25
 
+smtp:
+  tls:
+    # Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up)
+    enabled: false
+    # Use existing secret containing TLS certificate and key
+    existingSecret: ""
+    # Cert and key data in PEM format (alternative to existingSecret)
+    certificate: ""
+    privateKey: ""
+
 # abacOidcClientId is the client id that gateway should use to communicate with the platform
 abacOidcClientId: ""
 # abacPlatformEndpoint is the URL where the platform is deployed. Hostname and port
