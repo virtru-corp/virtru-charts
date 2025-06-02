@@ -37,17 +37,17 @@ spec:
       initContainers:
         {{- if not .Values.smtp.tls.enabled }}
         - name: cert-generator
-          image: &gateway_image "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           command: ['sh', '-c', 'openssl genrsa -out /etc/postfix/tls/{{ .Values.gatewayHostname }}/client.key 2048 && openssl req -new -key /etc/postfix/tls/{{ .Values.gatewayHostname }}/client.key -x509 -subj /CN={{ .Values.gatewayHostname }} -days 3650 -out /etc/postfix/tls/{{ .Values.gatewayHostname }}/client.pem']
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.gatewayHostname }}
-       {{- end }}
+        {{- end }}
       containers:
         - name: gateway # Gateway Container
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: *gateway_image
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.gatewayHostname }}
