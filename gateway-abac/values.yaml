@@ -124,3 +124,6 @@ tlsPolicyMaps: ""
 # logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode
 # ciphertexts are logged
 logLevel: "info"
+# the amplitude API key to enable Virtru to monitor your Gateway instance for activity and errors. Leave empty to
+# disable
+amplitudeApiKey: ''
