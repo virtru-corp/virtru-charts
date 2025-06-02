@@ -42,6 +42,8 @@ smtp:
     enabled: false
     # Use existing secret containing TLS certificate and key
     existingSecret: ""
+    # Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value
+    certificate: ""
 
 # abacOidcClientId is the client id that gateway should use to communicate with the platform
 abacOidcClientId: ""
