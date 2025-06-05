@@ -1,6 +1,7 @@
 package.json
 package-lock.json
 .DS_Store
+**/.DS_Store
 **/node_modules
 /.idea/
 **/charts/*.tgz
