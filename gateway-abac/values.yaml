@@ -99,7 +99,8 @@ proxyProtocol: false
 verboseLogging: false
 # smtpUseTls is whether the gateway should use TLS when sending mail
 smtpUseTls: true
-# smtpSecurityLevel is the security level the gateway should use when sending mail
+# smtpSecurityLevel is the security level the gateway should use when sending mail, either `mandatory` or `opportunistic`. To use `mandatory`
+# smtpUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`.
 smtpSecurityLevel: "mandatory"
 # smtpTlsComplianceDownstream is the compliance level the gateway should use when sending mail downstream
 smtpTlsComplianceDownstream: "MEDIUM"
@@ -109,7 +110,9 @@ saslDownstreamSecurityOptions: "noanonymous"
 saslUpstreamMechanisms: "PLAIN"
 # smtpdUseTls is whether the gateway should use TLS when receiving mail
 smtpdUseTls: true
-# smtpdSecurityLevel is the security level the gateway should use when receiving mail
+# smtpdSecurityLevel is the security level the gateway should use when receiving mail, either `mandatory` or `opportunistic`. To use
+# `mandatory` smtpdUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`.
+# `mandatory` also implies that authentication may only take place over TLS (`smtpd_tls_auth_only` = yes)
 smtpdSecurityLevel: "mandatory"
 # smtpdTlsComplianceUpstream is the compliance level the gateway should use when receiving mail upstream
 smtpdTlsComplianceUpstream: "MEDIUM"
