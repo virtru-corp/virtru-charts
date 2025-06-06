@@ -35,17 +35,19 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+        {{- if not .Values.smtp.tls.enabled }}
         - name: cert-generator
-          image: &gateway_image "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           command: ['sh', '-c', 'openssl genrsa -out /etc/postfix/tls/{{ .Values.gatewayHostname }}/client.key 2048 && openssl req -new -key /etc/postfix/tls/{{ .Values.gatewayHostname }}/client.key -x509 -subj /CN={{ .Values.gatewayHostname }} -days 3650 -out /etc/postfix/tls/{{ .Values.gatewayHostname }}/client.pem']
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.gatewayHostname }}
+        {{- end }}
       containers:
         - name: gateway # Gateway Container
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: *gateway_image
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.gatewayHostname }}
@@ -123,7 +125,25 @@ spec:
           {{- end }}
       {{- end }}
       - name: cert-dir
+        {{- if .Values.smtp.tls.enabled }}
+        projected:
+          sources:
+          - secret:
+              {{- if .Values.smtp.tls.existingSecret }}
+              name: {{ .Values.smtp.tls.existingSecret }}
+              {{- else }}
+              name: "{{ include "gateway.fullname" . }}-smtp-tls"
+              {{- end }}
+              items:
+              - key: tls.crt
+                path: client.pem
+                mode: 0644
+              - key: tls.key
+                path: client.key
+                mode: 0600
+        {{- else }}
         emptyDir: {}
+        {{- end }}
       {{- if or .Values.dkimPublicKey .Values.dkimPrivateKey }}
       - name: dkim-dir
         secret:
