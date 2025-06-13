@@ -8,7 +8,7 @@ A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data S
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Virtru | <support@virtru.com> | <https://www.virtru.com> |
+| Virtru | <support@virtru.com> |  |
 
 ## Values
 
