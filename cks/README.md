@@ -7,6 +7,14 @@ This Helm chart will deploy Virtru's Customer Key Server (CKS). You can read thi
 * [Kubernetes Prerequisites](https://support.virtru.com/hc/en-us/articles/5747166730903-CKS-Kubernetes-cluster)
 * [CKS Helm Deployment](https://support.virtru.com/hc/en-us/articles/5746713557015-CKS-Install-Kubernetes-)
 
+### v1.2.0 Upgrade Notes
+
+**Relevant to users leveraging `.Values.externalAppSecrets`**
+
+Upgrading from `< v1.2.0` to `>= v1.2.0` chart version while using the `.Values.externalAppSecrets` requires your in-cluster external-secrets operator to be on v0.16.0+. In chart version v1.2.0+, upgrades to the `ExternalSecrets` object to use `external-secrets.io/v1` apiVersion have been made. Previously the external secret created used `external-secrets.io/v1beta1`.
+
+This upgrade in line with external-secrets operator no longer serving v1beta1 APIs in v0.17.0+. v1 APIs were promoted in v0.16.0, and will be the default in Virtru provided charts moving forward.
+
 ### Assumptions
 
 * The namespace for the deployment is `virtru`
