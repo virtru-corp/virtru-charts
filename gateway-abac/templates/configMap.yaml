@@ -93,3 +93,8 @@ data:
   {{- if .Values.xHeaderAuthSecret }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
   {{- end }}
+  {{- if .Values.amplitudeApiKey }}
+  GATEWAY_AMPLITUDE_API_KEY: {{ .Values.amplitudeApiKey | quote }}
+  {{- else }}
+  GATEWAY_AMPLITUDE_API_KEY: "DISABLED"
+  {{- end }}

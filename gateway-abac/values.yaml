@@ -36,6 +36,15 @@ service:
   loadBalancerIP: ''
   port: 25
 
+smtp:
+  tls:
+    # Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up)
+    enabled: false
+    # Use existing secret containing TLS certificate and key
+    existingSecret: ""
+    # Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value
+    certificate: ""
+
 # -- The client-id that gateway should use to communicate with the platform
 abacOidcClientId: ""
 # -- The URL where the platform is deployed. Hostname and port
