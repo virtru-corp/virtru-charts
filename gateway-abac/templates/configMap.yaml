@@ -77,12 +77,24 @@ data:
   GATEWAY_ABAC_ENCRYPT_EMAIL: {{ .Values.abacEncryptEmail | ternary "1" "0" | quote }}
   GATEWAY_ABAC_ENCRYPT_EMAIL_BODY: {{ .Values.abacEncryptEmailBody | ternary "1" "0" | quote}}
   GATEWAY_ABAC_TAGGING_PDP_ASSERTION_TYPE: {{ .Values.abacTaggingPdpAssertionType | quote }}
+  GATEWAY_ABAC_KAS_ALLOWLIST: {{ join "," .Values.abacKasAllowlist | quote }}
+  GATEWAY_ABAC_IGNORE_KAS_ALLOWLIST: {{ .Values.abacIgnoreKasAllowlist | ternary "1" "0" | quote }}
   {{- if .Values.abacExtraCas }}
   GATEWAY_ABAC_SDK_TRUSTED_CERT_DIRECTORY: /etc/virtru-gateway/abac-cas
   {{- range $index, $value := .Values.abacExtraCas }}
   ABAC_CA_{{ $index }}: {{ $value | quote }}
   {{- end }}
   {{- end }}
+  {{- if .Values.abacCreateLegacyTdfs }}
+  GATEWAY_ABAC_TDF_TARGET_MODE: "4.2.2"
+  {{- else }}
+  GATEWAY_ABAC_TDF_TARGET_MODE: ""
+  {{- end }}
   {{- if .Values.xHeaderAuthSecret }}
   GATEWAY_XHEADER_AUTH_ENABLED: "1"
+  {{- end }}
+  {{- if .Values.amplitudeApiKey }}
+  GATEWAY_AMPLITUDE_API_KEY: {{ .Values.amplitudeApiKey | quote }}
+  {{- else }}
+  GATEWAY_AMPLITUDE_API_KEY: "DISABLED"
   {{- end }}

@@ -168,7 +168,65 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | Mail Provider | CIDR Blocks |
 | ------------- | ----------- |
 | Gmail | 35.190.247.0/24,64.233.160.0/19,66.102.0.0/20,66.249.80.0/20,72.14.192.0/18,74.125.0.0/16,108.177.8.0/21,173.194.0.0/16,209.85.128.0/17,216.58.192.0/19,216.239.32.0/19,172.217.0.0/19,172.217.32.0/20,172.217.128.0/19,172.217.160.0/20,172.217.192.0/19,108.177.96.0/19,35.191.0.0/16,130.211.0.0/22 |
-| Office 365 | 23.103.132.0/22,23.103.136.0/21,23.103.144.0/20,23.103.198.0/23,23.103.200.0/22,23.103.212.0/22,40.92.0.0/14,40.107.0.0/17,40.107.128.0/18,52.100.0.0/14,65.55.88.0/24,65.55.169.0/24,94.245.120.64/26,104.47.0.0/17,104.212.58.0/23,134.170.132.0/24,134.170.140.0/24,157.55.234.0/24,157.56.110.0/23,157.56.112.0/24,207.46.51.64/26,207.46.100.0/24,207.46.163.0/24,213.199.154.0/24,213.199.180.128/26,216.32.180.0/23 |
+| Office 365 | 23.103.132.0/22,23.103.136.0/21,23.103.144.0/20,23.103.198.0/23,23.103.200.0/22,23.103.212.0/22,40.92.0.0/14,40.107.0.0/17,40.107.128.0/18,52.100.0.0/14,65.55.88.0/24,65.55.169.0/24,94.245.120.64/26,104.47.0.0/17,104.212.58.0/23,134.170.132.0/24,134.170.140.0/24,157.55.234.0/24,157.56.110.0/23,157.56.112.0/24,207.46.51.64/26,207.46.100.0/24,207.46.163.0/24,213.199.154.0/24,213.199.180.128/26,216.32.180.0/23 
+
+## Values Descriptions
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| additionalConfig | object | `{"cacheSmtpConnections":{"connectionCacheTimeLimit":"5s","enabled":true},"cks":{"keyProvider":"CKS","sessionKeyExpiry":"360"},"decryptPfpFiles":"1","decryptThenEncrypt":"0","dkimSigning":{"enabled":false,"selector":"gw"},"dlpRuleCache":"30","maxBackoffTime":"45s","maxQueueLifetime":"5m","minBackoffTime":"30s","proxyProtocol":"0","queueRunDelay":"30s","replaceFromEnabled":"1","saslAuth":{"smtpDownstream":{"enabled":false,"securityOptions":"noanonymous"},"smtpdUpstream":{"enabled":false,"mechanisms":"PLAIN"}},"smtpSecurityLevel":"opportunistic","smtpTlsComplianceDownstream":{"compliance":"MEDIUM","enabled":false},"smtpUseTls":true,"smtpdSecurityLevel":"opportunistic","smtpdTlsComplianceUpstream":{"compliance":"MEDIUM","enabled":false},"smtpdUseTls":true,"tlsPolicyMaps":{"enabled":false,"policyMaps":"example.com=>none,example.net=>maybe"},"verboseLogging":"0"}` | See https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for reference. |
+| affinity | object | `{}` | Optional: Affinity rules for pod scheduling. |
+| appSecrets | object | `{"amplitudeToken":"<your-amplitude-token>","dkimSigning":{"privateKey":"<dkim-private-key>  \n","publicKey":"<dkim-public-key>  \n"},"gatewayApiSecret":"<your-api-secret>","gatewayApiTokenName":"<your-api-token>","headers":{"xHeaderAuthSecret":"<your-auth-secret-123456789>"},"saslAuth":{"smtpDownstream":{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"},"smtpdUpstream":{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"}}}` | a third party secret storage option. |
+| appSecrets.amplitudeToken | string | `"<your-amplitude-token>"` | Token used for Amplitude analytics. Provided by Virtru. |
+| appSecrets.dkimSigning | object | `{"privateKey":"<dkim-private-key>  \n","publicKey":"<dkim-public-key>  \n"}` | See https://support.virtru.com/hc/en-us/articles/24643801445527-Customer-Hosted-Kubernetes-DKIM-Signing. |
+| appSecrets.dkimSigning.privateKey | string | `"<dkim-private-key>  \n"` | Private DKIM key used to sign outbound emails. |
+| appSecrets.dkimSigning.publicKey | string | `"<dkim-public-key>  \n"` | Set additionalConfig.dkimSigning.enabled to true if configuring GW for DKIM. |
+| appSecrets.gatewayApiSecret | string | `"<your-api-secret>"` | Secret value of the API token. Provided by Virtru. |
+| appSecrets.gatewayApiTokenName | string | `"<your-api-token>"` | Name of the token used to authenticate API calls. Provided by Virtru. |
+| appSecrets.headers.xHeaderAuthSecret | string | `"<your-auth-secret-123456789>"` | Only configure if standardConfig.headers.xHeaderAuthEnabled == true |
+| appSecrets.saslAuth.smtpDownstream | object | `{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"}` | Optional: SMTP credentials for downstream authentication. |
+| appSecrets.saslAuth.smtpDownstream.accounts | string | `"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"` | Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true |
+| appSecrets.saslAuth.smtpdUpstream | object | `{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"}` | Optional: SMTP credentials for upstream authentication. |
+| appSecrets.saslAuth.smtpdUpstream.accounts | string | `"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"` | Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true |
+| autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | Enable horizontal pod autoscaling. Defaults to false. |
+| autoscaling.maxReplicas | int | `100` | Maximum number of replicas if autoscaling is enabled. |
+| autoscaling.minReplicas | int | `1` | Minimum number of replicas if autoscaling is enabled.  |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` | Optional target average memory usage. |
+| fullnameOverride | string | `""` |  |
+| gatewayAccountsUrl | string | `"https://api.virtru.com/accounts"` | URL for Virtru Accounts API. |
+| gatewayAcmUrl | string | `"https://api.virtru.com/acm"` | URL for Virtru ACM API. |
+| gatewayModes | object | `{"inboundDecrypt":{"enabled":false,"name":"inbound-decrypt","port":9004},"inboundDlp":{"enabled":false,"name":"inbound-dlp","port":9006},"inboundEncrypt":{"enabled":false,"name":"inbound-encrypt","port":9003},"outboundDecrypt":{"enabled":false,"name":"outbound-decrypt","port":9002},"outboundDlp":{"enabled":false,"name":"outbound-dlp","port":9005},"outboundEncrypt":{"enabled":true,"name":"outbound-encrypt","port":9001}}` | Each enabled mode becomes a separate deployment, service, and configmap. |
+| gatewayRemoteContentBaseUrl | string | `"https://secure.virtru.com/start"` | URL for remote content used by the gateway. |
+| image | object | `{"pullPolicy":"Always","repository":"containers.virtru.com/gateway","tag":""}` | Image repository for the gateway. |
+| image.tag | string | `""` | Optional override for image tag; defaults to Chart.yaml's appVersion. |
+| ingress | object | `{"enabled":false}` | Enable or disable Kubernetes ingress resource. Defaults to false. |
+| istioIngress | object | `{"enabled":false,"existingGateway":null,"gatewaySelectors":{"istio":"ingress"},"ingressHostnames":["*"],"name":"scp"}` | Optional Istio configurations. Defaults to false. |
+| istioIngress.existingGateway | string | `nil` | Use an existing istio gateway |
+| istioIngress.gatewaySelectors | object | `{"istio":"ingress"}` | Name of istio gateway selector |
+| istioIngress.ingressHostnames | list | `["*"]` | Add FQDN, as best practice. |
+| nameOverride | string | `""` | Optional: Override the default name of the chart and release. |
+| nodeSelector | object | `{}` | Optional: Node selection constraints for scheduling pods. |
+| persistentVolumes | object | `{"storageClassName":"standard","volumeSize":"1Gi"}` | the size of the volume below. |
+| persistentVolumes.storageClassName | string | `"standard"` | Name of the Kubernetes StorageClass to use. |
+| persistentVolumes.volumeSize | string | `"1Gi"` | Size of the persistent volume per mode deployment. Defaults to 1Gi. |
+| podAnnotations | object | `{}` | Optional additional annotations for the pod. Defaults to emptyfor flexibility. |
+| podSecurityContext | object | `{}` | Security context settings for the pod. Defaults to empty for flexibility. |
+| replicaCount | int | `2` | Number of pod replicas to deploy for high availability. |
+| resources | object | `{}` | Resource requests and limits for the containers. Defaults to empty for flexibility. |
+| securityContext | object | `{}` | Security context settings for individual containers. Defaults to empty for flexibility. |
+| service | object | `{"port":25,"type":"LoadBalancer"}` | Service type to be created. Defaults to LoadBalancer. |
+| service.port | int | `25` | Defaults to port 25 for SMTP traffic. |
+| serviceAccount | object | `{"annotations":{},"create":false,"name":""}` | Determines if a Service Account should be created. Defaults to false. |
+| serviceAccount.annotations | object | `{}` | Optional: Annotations to add to the service account. |
+| serviceAccount.name | string | `""` | Name of the service account to use; defaults to empty. If not set and create is true, a name is generated. |
+| standardConfig | object | `{"gatewayHostname":"example.com","gatewayTransportMaps":"*=>[smtp-relay.gmail.com]:587","headers":{"xHeaderAuthEnabled":true},"inboundRelayAddresses":"0.0.0.0/0","primaryMailingDomain":"example.com"}` | Refer to https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for details on variables used. |
+| standardConfig.gatewayHostname | string | `"example.com"` | Hostname used by the gateway. |
+| standardConfig.gatewayTransportMaps | string | `"*=>[smtp-relay.gmail.com]:587"` | Next hop for Virtru gateway, typical mail flow is: mail server => Virtru gateway => back to your mail server => final delivery |
+| standardConfig.headers | object | `{"xHeaderAuthEnabled":true}` | Secret managed in appSecrets.headers |
+| standardConfig.inboundRelayAddresses | string | `"0.0.0.0/0"` | Default is open and to lock down firewall on the VPC |
+| standardConfig.primaryMailingDomain | string | `"example.com"` | Primary mailing domain for the Gateway. |
+| tolerations | list | `[]` | Optional: Tolerations for taints on nodes. |
+
 
 ### Note on Using OAuth2 and SASL Simultaneously
 

@@ -36,81 +36,100 @@ service:
   loadBalancerIP: ''
   port: 25
 
-# abacOidcClientId is the client id that gateway should use to communicate with the platform
-abacOidcClientId: "" # the client id that gateway should use to communicate with the platform
-# abacPlatformEndpoint is the URL where the platform is deployed. Hostname and port
-abacPlatformEndpoint: "" # the endpoint where the platform is deployed
-# abacTaggingPdpEndpoint is the URL where the tagging PDP is deployed. Hostname and port
-abacTaggingPdpEndpoint: "" # the endpoint where the tagging PDP is deployed
-# abacTaggingPdpAssertionType is the assertion type to use, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`.
-abacTaggingPdpAssertionType: "urn:nato:stanag:5636:A:1:elements:json" # the assertion type to use with the tagging pdp, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`
-# abacTrimBlockedRecipients is whether we should remove header recipients that are not entitled to receive an email
-abacTrimBlockedRecipients: true # remove header recipients that are not entitled to receive an email
-# abacPlaintextConnection is whether we should communicate with the platform and the tagging PDP over a plaintext connection
-abacPlaintextConnection: false # whether we should communicate with the platform and the tagging PDP over a plaintext connection
-# abaEncryptEmail is whether we should encrypt when running in encrypt mode
-abacEncryptEmail: true # whether we should encrypt when running in inbound encrypt mode. if this is not set we only do access checks and blocking
-# abacEncryptEmailBody is whether we should encrypt the email body when running in encrypt mode
-abacEncryptEmailBody: true # whether we should encrypt the email body when running in inbound encrypt mode. if this is not set we encrypt the attachments only
-# abacExtraCas is a list of additional CAs to trust when communicating with the platform and the tagging PDP in PEM format
-abacExtraCas: []
+smtp:
+  tls:
+    # Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up)
+    enabled: false
+    # Use existing secret containing TLS certificate and key
+    existingSecret: ""
+    # Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value
+    certificate: ""
 
-# gatewayMode is the mode the gateway should run in, either encrypt or decrypt
+# -- The client-id that gateway should use to communicate with the platform
+abacOidcClientId: ""
+# -- The URL where the platform is deployed. Hostname and port
+abacPlatformEndpoint: ""
+# -- The URL where the taggingService is deployed. Hostname and port
+abacTaggingPdpEndpoint: ""
+# -- The assertion type to use, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`.
+abacTaggingPdpAssertionType: "urn:nato:stanag:5636:A:1:elements:json"
+# -- Controls whether recipients that are not entitled to receive an email are removed.
+abacTrimBlockedRecipients: true
+# -- Controls whether communication with the platform is over a plaintext connection
+abacPlaintextConnection: false
+# -- Controls whether encryption is enabled in encrypt mode. If this is set to false, the gateway will not encrypt emails.
+abacEncryptEmail: true
+# -- Controls whether the email body is encrypted in encrypt mode
+abacEncryptEmailBody: true
+# -- A list of additional Certificate Authorities(CAs) to trust when communicating with the platform in PEM format
+abacExtraCas: []
+# Controls whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by DSP versions 2.0.2 and earlier
+abacCreateLegacyTdfs: true
+# -- A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy.
+abacKasAllowlist: []
+# -- This setting tells the Gateway whether or not to ignore the `kasAllowlist` when decrypting. If this is set to true, the `kasAllowlist` will be ignored and all KAS servers will be used for decryption.
+# -- Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF.
+abacIgnoreKasAllowlist: false
+
+# -- The mode the gateway should run in, either encrypt or decrypt
 gatewayMode: "encrypt"
-# gatewayTopology is the topology the gateway should run in, either inbound or outbound
+# -- The topology the gateway should run in, either inbound or outbound
 gatewayTopology: "inbound"
-# gatewayHostname is the hostname that the gateway should use. A self-signed certificate will be generated for this hostname
+# -- The hostname that the gateway should use. A self-signed certificate will be generated for this hostname
 gatewayHostname: ""
-# gatewayTransportMaps maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net
+# This setting maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net
 gatewayTransportMaps: ""
-# comma-separated list of CIDR addresses that are allowed to relay mail through the gateway
+# Comma-separated list of CIDR addresses that are allowed to relay mail through the gateway
 inboundRelayAddresses: "0.0.0.0/0"
 
-# persistentVolumeStorageClassName is the storage class to use for the persistent volume that we use to store the email queue
+# -- The storage class to use for the persistent volume that we use to store the email queue
 persistentVolumeStorageClassName: "standard"
-# persistentVolumeSize is the size of the persistent volume that we use to store the email queue
+# -- The size of the persistent volume that we use to store the email queue
 persistentVolumeSize: "1Gi"
-# maxQueueLifetime is the maximum amount of time a message can stay in the queue before being bounced (postfix maximal_queue_lifetime)
+# -- The maximum amount of time a message can stay in the queue before being bounced (postfix maximal_queue_lifetime)
 maxQueueLifetime: "5m"
-# maxBackoffTime is the maximum amount of time the gateway will wait before retrying a message (postfix maximal_backoff_time)
+# -- The maximum amount of time the gateway will wait before retrying a message (postfix maximal_backoff_time)
 maxBackoffTime: "45s"
-# minBackoffTime is the minimum amount of time the gateway will wait before retrying a message (postfix minimal_backoff_time)
+# -- The minimum amount of time the gateway will wait before retrying a message (postfix minimal_backoff_time)
 minBackoffTime: "30s"
-# queueRunDelay is the amount of time the gateway will wait before checking the queue for messages to send (postfix queue_run_delay)
+# -- The amount of time the gateway will wait before checking the queue for messages to send (postfix queue_run_delay)
 queueRunDelay: "30s"
-# primaryMailingDomain is the domain we use to rewrite the from address for inbound mail. This allows us to deliver email that is
+# -- The domain we use to rewrite the from address for inbound mail. This allows us to deliver email that is
 #   authenticated by DKIM. In order for this to work DKIM must be set up for this domain
 primaryMailingDomain: ""
-# dkimSelector is the selector for the DKIM key to use for mail
+# -- The selector for the DKIM key to use for mail
 dkimSelector: ""
-# replaceFromEnabled is whether the gateway should replace the from address with the authenticated address
+# -- Controls whether the gateway should replace the from address with the authenticated address
 replaceFromEnabled: false
-# proxyProtocol is whether the gateway should use the proxy protocol
+# -- Controls whether the gateway should use the proxy protocol
 proxyProtocol: false
-# verboseLogging is whether the gateway should log verbose information
+# -- Controls whether the gateway should log verbose information
 verboseLogging: false
-# smtpUseTls is whether the gateway should use TLS when sending mail
+# -- Controls whether the gateway should use TLS when sending mail
 smtpUseTls: true
-# smtpSecurityLevel is the security level the gateway should use when sending mail
+# -- The security level the gateway should use when sending mail, either `mandatory` or `opportunistic`. To use `mandatory`
+# smtpUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`.
 smtpSecurityLevel: "mandatory"
-# smtpTlsComplianceDownstream is the compliance level the gateway should use when sending mail downstream
+# -- The compliance level the gateway should use when sending mail downstream
 smtpTlsComplianceDownstream: "MEDIUM"
-# saslDownstreamSecurityOptions is the security options the gateway should use when authenticating downstream
+# -- The security options the gateway should use when authenticating downstream
 saslDownstreamSecurityOptions: "noanonymous"
-# saslUpstreamMechanisms is the mechanisms the gateway should use when receiving email
+# -- The mechanisms the gateway should use when receiving email
 saslUpstreamMechanisms: "PLAIN"
-# smtpdUseTls is whether the gateway should use TLS when receiving mail
+# -- Controls whether the gateway should use TLS when receiving mail
 smtpdUseTls: true
-# smtpdSecurityLevel is the security level the gateway should use when receiving mail
+# -- The security level the gateway should use when receiving mail, either `mandatory` or `opportunistic`. To use
+# `mandatory` smtpdUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`.
+# `mandatory` also implies that authentication may only take place over TLS (`smtpd_tls_auth_only` = yes)
 smtpdSecurityLevel: "mandatory"
-# smtpdTlsComplianceUpstream is the compliance level the gateway should use when receiving mail upstream
+# -- The compliance level the gateway should use when receiving mail upstream
 smtpdTlsComplianceUpstream: "MEDIUM"
-# cacheSmtpConnections controls whether the gateway should cache outgoing SMTP connections. true to cache everything,
+# -- This setting controls whether the gateway should cache outgoing SMTP connections. true to cache everything,
 #   false to not cache anything, or a comma-separated list of domains to cache connections for
 cacheSmtpConnections: true
-# cacheSmtpConnectionsTimeLimit is the amount of time to cache outgoing SMTP connections for
+# -- The amount of time to cache outgoing SMTP connections for
 cacheSmtpConnectionsTimeLimit: "5s"
-# tlsPolicyMaps maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies
+# -- This setting maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies
 #   can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy
 tlsPolicyMaps: ""
 # logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode

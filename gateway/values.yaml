@@ -1,24 +1,33 @@
+# -- Number of pod replicas to deploy for high availability.
 replicaCount: 2
 
+# -- Image repository for the gateway.
 image:
   repository: containers.virtru.com/gateway
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
+  # -- Optional override for image tag; defaults to Chart.yaml's appVersion.
   tag: ""
 
+# -- Optional: Override the default name of the chart and release.
 nameOverride: ""
 fullnameOverride: ""
 
+# -- Determines if a Service Account should be created. Defaults to false.
 serviceAccount:
   create: false
+  # -- Optional: Annotations to add to the service account.
   annotations: {}
+  # -- Name of the service account to use; defaults to empty. If not set and create is true, a name is generated.
   name: ""
 
+# -- Optional additional annotations for the pod. Defaults to emptyfor flexibility.
 podAnnotations: {}
 
+# -- Security context settings for the pod. Defaults to empty for flexibility.
 podSecurityContext: {}
-  # fsGroup: 2000
+  # fsGroup: 2000  ## Optional file system group ID.
 
+# -- Security context settings for individual containers. Defaults to empty for flexibility.
 securityContext: {}
   # capabilities:
   #   drop:
@@ -27,13 +36,18 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# -- Service type to be created. Defaults to LoadBalancer.
 service:
   type: LoadBalancer
+  # -- Defaults to port 25 for SMTP traffic.
   port: 25
 
+
+# -- Enable or disable Kubernetes ingress resource. Defaults to false.
 ingress:
   enabled: false
 
+# -- Resource requests and limits for the containers. Defaults to empty for flexibility.
 resources: {}
   # limits:
   #   cpu: 500m
@@ -42,23 +56,29 @@ resources: {}
   #   cpu: 500m
   #   memory: 500Mi
 
+# -- Optional: Node selection constraints for scheduling pods.
 nodeSelector: {}
 
+# -- Optional: Tolerations for taints on nodes.
 tolerations: []
 
+# -- Optional: Affinity rules for pod scheduling.
 affinity: {}
 
+# -- Enable horizontal pod autoscaling. Defaults to false.
 autoscaling:
   enabled: false
+  # -- Minimum number of replicas if autoscaling is enabled.
   minReplicas: 1
+  # -- Maximum number of replicas if autoscaling is enabled.
   maxReplicas: 100
+  # -- Target average CPU usage across pods.
+  # -- Optional target average memory usage.
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-# Gateway Modes to enable,
-# each enabled mode will create a separate
-# deployment, service, and configmap
-
+# -- Defines which gateway mode(s) to deploy.
+# -- Each enabled mode becomes a separate deployment, service, and configmap.
 gatewayModes:
   outboundEncrypt:
     enabled: true
@@ -80,65 +100,87 @@ gatewayModes:
     enabled: false
     name: outbound-dlp
     port: 9005
+  inboundDlp:
+    enabled: false
+    name: inbound-dlp
+    port: 9006
 
-# This will create a persistent volume for each
-# enabled gateway mode. This will keep your postfix queue
-# intact when pods are destroyed and recreated. You can modify
-# the size of the volume below.
-
+# -- This will create a persistent volume for each
+# -- enabled gateway mode. This will keep your postfix queue
+# -- intact when pods are destroyed and recreated. You can modify
+# -- the size of the volume below.
 persistentVolumes:
+  # -- Name of the Kubernetes StorageClass to use.
   storageClassName: standard
+  # -- Size of the persistent volume per mode deployment. Defaults to 1Gi.
   volumeSize: 1Gi
 
-# Environment Variables:
-# For descriptions of all variables, see the README.md file
+# -- Environment Variables. For descriptions of all variables, see the README.md file
+# -- URL for Virtru Accounts API.
 gatewayAccountsUrl: https://api.virtru.com/accounts
+# -- URL for Virtru ACM API.
 gatewayAcmUrl: https://api.virtru.com/acm
+# -- URL for remote content used by the gateway.
 gatewayRemoteContentBaseUrl: https://secure.virtru.com/start
 
+# -- Customer-specific values.
+# -- Refer to https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for details on variables used.
 standardConfig:
+  # -- Hostname used by the gateway.
   gatewayHostname: example.com
+  # -- Primary mailing domain for the Gateway.
   primaryMailingDomain: example.com
-  # Next hop for Virtru gateway, typical mail flow is:
-  # mail server => Virtru gateway => back to your mail server => final delivery
+  # -- Next hop for Virtru gateway, typical mail flow is: mail server => Virtru gateway => back to your mail server => final delivery
   gatewayTransportMaps: "*=>[smtp-relay.gmail.com]:587"
-  # See README.md for Google or Microsoft relaying IPs,
-  # default is open and to lock down firewall on the VPC
+  # -- IPs allowed to relay mail into the gateway.  See README.md for Google or Microsoft relaying IPs.
+  # -- Default is open and to lock down firewall on the VPC
   inboundRelayAddresses: 0.0.0.0/0
+  # -- Optional: Enable inbound x-header-based authentication. Set to false if not using inbound header authentication.
+  # -- Secret managed in appSecrets.headers
   headers:
     xHeaderAuthEnabled: true
-    # Secret managed in appSecrets.headers
 
-# By default, you can create secrets using the keys below.
-# Important note: Creating secrets in this way is a default option.
-# While a simpler approach with fewer variables, it is recommended you use
-# a third party secret storage option.
-
+# -- Default secrets required for gateway operation.
+# -- By default, you can create secrets using the keys below.
+# -- Important note: Creating secrets in this way is a default option.
+# -- While a simpler approach with fewer variables, it is recommended you use
+# -- a third party secret storage option.
 appSecrets:
+  # -- Token used for Amplitude analytics. Provided by Virtru.
   amplitudeToken: <your-amplitude-token>
+  # -- Name of the token used to authenticate API calls. Provided by Virtru.
   gatewayApiTokenName: <your-api-token>
+  # -- Secret value of the API token. Provided by Virtru.
   gatewayApiSecret: <your-api-secret>
   saslAuth:
+     # -- Optional: SMTP credentials for downstream authentication.
     smtpDownstream:
-      #Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
-      accounts: <your auth path smtp-relay.gmail.com=>service-account@example.com=>password>
+      # -- Only configure if additionalConfig.saslAuth.smtpDownstream.enabled == true
+      accounts: <your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>
+    # -- Optional: SMTP credentials for upstream authentication.
     smtpdUpstream:
-      #Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
-      accounts: <your auth path smtp-relay.gmail.com=>service-account@example.com=>password>
+      # -- Only configure if additionalConfig.saslAuth.smtpdUpstream.enabled == true
+      accounts: <your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>
   headers:
-    #Only configure if standardConfig.headers.xHeaderAuthEnabled == true
-    xHeaderAuthSecret: "<your auth secret 123456789>"
+    # -- Only configure if standardConfig.headers.xHeaderAuthEnabled == true
+    xHeaderAuthSecret: "<your-auth-secret-123456789>"
+  # -- DKIM signing configuration. Highly recommended.
+  # -- See https://support.virtru.com/hc/en-us/articles/24643801445527-Customer-Hosted-Kubernetes-DKIM-Signing.
   dkimSigning:
+    # -- Public DKIM key used to verify signature.
+    # -- Set additionalConfig.dkimSigning.enabled to true if configuring GW for DKIM.
     publicKey: |
       <dkim-public-key>
+    # -- Private DKIM key used to sign outbound emails.
     privateKey: |
-      <dkim-private-key> 
       <dkim-private-key>
   xoauth2:
     clientSecret: <xoauth2-client-secret>
     refreshToken: <xoauth2-refresh-token>
     accessToken: <xoauth2-access-token>
 
+# -- Additional GW configs.
+# -- See https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for reference.
 additionalConfig:
   saslAuth:
     smtpDownstream:
@@ -186,13 +228,15 @@ additionalConfig:
     user: <the user that xoauth2 is configured for>
     domains: <the domains that xoauth2 is configured for>
 
+# -- Optional Istio configurations. Defaults to false.
 istioIngress:
   enabled: false
-  # Use an existing istio gateway
+  # -- Use an existing istio gateway
   existingGateway:
-  # Name of istio gateway selector
+  # -- Name of istio gateway selector
   gatewaySelectors:
     istio: ingress
+  # -- Add FQDN, as best practice.
   ingressHostnames:
-    - "*" # Add FQDN, as best practice.
+    - "*"
   name: scp
