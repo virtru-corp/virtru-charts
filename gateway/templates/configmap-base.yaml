@@ -56,6 +56,11 @@ data:
   {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
   GATEWAY_DKIM_DOMAINS: {{ .Values.additionalConfig.dkimSigning.selector }}._domainkey.{{ .Values.standardConfig.primaryMailingDomain }}
   {{- end }}
+  {{- if and .Values.redis.enabled .Values.additionalConfig.rateLimiting.enabled }}
+  REDIS_HOST: {{ .Values.additionalConfig.rateLimiting.redisHost }}
+  REDIS_PORT: {{ .Values.redis.port | quote }}
+  RATE_LIMIT_WINDOW_SIZE_SECONDS: {{ .Values.additionalConfig.rateLimiting.windowSizeSeconds | quote }}
+  {{- end }}
 
 
 
