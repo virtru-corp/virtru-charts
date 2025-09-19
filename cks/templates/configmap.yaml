@@ -23,7 +23,7 @@ data:
   KAS_ROOT_KEY: {{ .Values.appConfig.kasRootKey }}
   KAS_AUTH_ISSUER: {{ .Values.appConfig.kasAuthIssuer }}
   KAS_AUTH_AUDIENCE: {{ .Values.appConfig.kasAuthAudience }}
-  KAS_PUBLIC_HOSTNAME: {{ .Values.appConfig.publicHostName }}
+  KAS_PUBLIC_HOSTNAME: {{ .Values.appConfig.kasPublicHostName }}
   DSP_DB_DATABASE: {{ .Values.appConfig.dspDBDatabase }}
   DSP_DB_USER: {{ .Values.appConfig.dspDBUser }}
   DSP_DB_PASSWORD: {{ .Values.appConfig.dspDBPassword }}
