@@ -24,6 +24,8 @@ data:
   KAS_AUTH_ISSUER: {{ .Values.appConfig.kasAuthIssuer }}
   KAS_AUTH_AUDIENCE: {{ .Values.appConfig.kasAuthAudience }}
   KAS_PUBLIC_HOSTNAME: {{ .Values.appConfig.publicHostName }}
+  DSP_DB_DATABASE: {{ .Values.appConfig.dspDBDatabase }}
+  DSP_DB_USER: {{ .Values.appConfig.dspDBUser }}
   DSP_DB_PASSWORD: {{ .Values.appConfig.dspDBPassword }}
   ENCRYPTED_TOKEN_KEY: {{ .Values.appConfig.encryptedTokenKey }}
   TIKA_SERVER_URL: {{ .Values.appConfig.tikaServerUrl }}
