@@ -2,7 +2,7 @@ replicaCount: 2
 image:
   repository: registry.opentdf.io/platform/gateway 
   pullPolicy: IfNotPresent 
-  # Overrides the image tag whose default is the chart appVersion.
+  # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
 nameOverride: ""
@@ -38,11 +38,11 @@ service:
 
 smtp:
   tls:
-    # Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up)
+    # -- Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up)
     enabled: false
-    # Use existing secret containing TLS certificate and key
+    # -- Use existing secret containing TLS certificate and key
     existingSecret: ""
-    # Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value
+    # -- Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value
     certificate: ""
 
 # -- The client-id that gateway should use to communicate with the platform
@@ -68,7 +68,7 @@ abacCreateLegacyTdfs: true
 # -- A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy.
 abacKasAllowlist: []
 # -- This setting tells the Gateway whether or not to ignore the `kasAllowlist` when decrypting. If this is set to true, the `kasAllowlist` will be ignored and all KAS servers will be used for decryption.
-# -- Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF.
+# Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF.
 abacIgnoreKasAllowlist: false
 
 # -- The mode the gateway should run in, either encrypt or decrypt
@@ -77,9 +77,9 @@ gatewayMode: "encrypt"
 gatewayTopology: "inbound"
 # -- The hostname that the gateway should use. A self-signed certificate will be generated for this hostname
 gatewayHostname: ""
-# This setting maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net
+# -- This setting maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net
 gatewayTransportMaps: ""
-# Comma-separated list of CIDR addresses that are allowed to relay mail through the gateway
+# -- Comma-separated list of CIDR addresses that are allowed to relay mail through the gateway
 inboundRelayAddresses: "0.0.0.0/0"
 
 # -- The storage class to use for the persistent volume that we use to store the email queue
@@ -125,13 +125,13 @@ smtpdSecurityLevel: "mandatory"
 # -- The compliance level the gateway should use when receiving mail upstream
 smtpdTlsComplianceUpstream: "MEDIUM"
 # -- This setting controls whether the gateway should cache outgoing SMTP connections. true to cache everything,
-#   false to not cache anything, or a comma-separated list of domains to cache connections for
+# false to not cache anything, or a comma-separated list of domains to cache connections for
 cacheSmtpConnections: true
 # -- The amount of time to cache outgoing SMTP connections for
 cacheSmtpConnectionsTimeLimit: "5s"
 # -- This setting maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies
-#   can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy
+# can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy
 tlsPolicyMaps: ""
-# logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode
+# -- logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode
 # ciphertexts are logged
 logLevel: "info"
