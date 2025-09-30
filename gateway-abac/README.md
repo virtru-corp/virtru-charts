@@ -1,6 +1,6 @@
 # gateway-abac
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.5](https://img.shields.io/badge/AppVersion-v2.0.5-informational?style=flat-square)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.5](https://img.shields.io/badge/AppVersion-v2.0.5-informational?style=flat-square)
 
 A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data Security Platform.
 
@@ -18,7 +18,7 @@ A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data S
 | abacEncryptEmail | bool | `true` | Controls whether encryption is enabled in encrypt mode. If this is set to false, the gateway will not encrypt emails. |
 | abacEncryptEmailBody | bool | `true` | Controls whether the email body is encrypted in encrypt mode |
 | abacExtraCas | list | `[]` | A list of additional Certificate Authorities(CAs) to trust when communicating with the platform in PEM format |
-| abacIgnoreKasAllowlist | bool | `false` | Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF. |
+| abacIgnoreKasAllowlist | bool | `false` | This setting tells the Gateway whether or not to ignore the `kasAllowlist` when decrypting. If this is set to true, the `kasAllowlist` will be ignored and all KAS servers will be used for decryption. Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF. |
 | abacKasAllowlist | list | `[]` | A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy. |
 | abacOidcClientId | string | `""` | The client-id that gateway should use to communicate with the platform |
 | abacPlaintextConnection | bool | `false` | Controls whether communication with the platform is over a plaintext connection |
@@ -32,20 +32,20 @@ A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data S
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | autoscaling.targetMemoryUtilizationPercentage | int | `80` |  |
-| cacheSmtpConnections | bool | `true` | This setting controls whether the gateway should cache outgoing SMTP connections. true to cache everything,   false to not cache anything, or a comma-separated list of domains to cache connections for |
+| cacheSmtpConnections | bool | `true` | This setting controls whether the gateway should cache outgoing SMTP connections. true to cache everything, false to not cache anything, or a comma-separated list of domains to cache connections for |
 | cacheSmtpConnectionsTimeLimit | string | `"5s"` | The amount of time to cache outgoing SMTP connections for |
 | dkimSelector | string | `""` | The selector for the DKIM key to use for mail |
 | fullnameOverride | string | `""` |  |
 | gatewayHostname | string | `""` | The hostname that the gateway should use. A self-signed certificate will be generated for this hostname |
 | gatewayMode | string | `"encrypt"` | The mode the gateway should run in, either encrypt or decrypt |
 | gatewayTopology | string | `"inbound"` | The topology the gateway should run in, either inbound or outbound |
-| gatewayTransportMaps | string | `""` |  |
+| gatewayTransportMaps | string | `""` | This setting maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"registry.opentdf.io/platform/gateway"` |  |
-| image.tag | string | `""` |  |
-| inboundRelayAddresses | string | `"0.0.0.0/0"` |  |
+| image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| inboundRelayAddresses | string | `"0.0.0.0/0"` | Comma-separated list of CIDR addresses that are allowed to relay mail through the gateway |
 | ingress.enabled | bool | `false` |  |
-| logLevel | string | `"info"` |  |
+| logLevel | string | `"info"` | logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged |
 | maxBackoffTime | string | `"45s"` | The maximum amount of time the gateway will wait before retrying a message (postfix maximal_backoff_time) |
 | maxQueueLifetime | string | `"5m"` | The maximum amount of time a message can stay in the queue before being bounced (postfix maximal_queue_lifetime) |
 | minBackoffTime | string | `"30s"` | The minimum amount of time the gateway will wait before retrying a message (postfix minimal_backoff_time) |
@@ -69,13 +69,16 @@ A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data S
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount.create | bool | `false` |  |
 | serviceAccount.name | string | `"default"` |  |
+| smtp.tls.certificate | string | `""` | Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value |
+| smtp.tls.enabled | bool | `false` | Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up) |
+| smtp.tls.existingSecret | string | `""` | Use existing secret containing TLS certificate and key |
 | smtpSecurityLevel | string | `"mandatory"` | The security level the gateway should use when sending mail, either `mandatory` or `opportunistic`. To use `mandatory` smtpUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`. |
 | smtpTlsComplianceDownstream | string | `"MEDIUM"` | The compliance level the gateway should use when sending mail downstream |
 | smtpUseTls | bool | `true` | Controls whether the gateway should use TLS when sending mail |
 | smtpdSecurityLevel | string | `"mandatory"` | The security level the gateway should use when receiving mail, either `mandatory` or `opportunistic`. To use `mandatory` smtpdUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`. `mandatory` also implies that authentication may only take place over TLS (`smtpd_tls_auth_only` = yes) |
 | smtpdTlsComplianceUpstream | string | `"MEDIUM"` | The compliance level the gateway should use when receiving mail upstream |
 | smtpdUseTls | bool | `true` | Controls whether the gateway should use TLS when receiving mail |
-| tlsPolicyMaps | string | `""` | This setting maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies   can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy |
+| tlsPolicyMaps | string | `""` | This setting maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy |
 | tolerations | list | `[]` |  |
 | verboseLogging | bool | `false` | Controls whether the gateway should log verbose information |
 
