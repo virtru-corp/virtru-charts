@@ -47,11 +47,11 @@ smtp:
 
 # -- The existing secret that contains all of the secret values from secret-values.yaml
 existingSecret:
-  name: "my-existing-secret"
+  name: ""
   # -- the name of the key in the existing secret that contains the dkimPrivateKey
-  dkimPrivateKeyName: "my-dkim-private-key"
+  dkimPrivateKeyName: ""
   # -- the name of the key in the existing secret that contains the xHeaderAuthSecret
-  xHeaderAuthSecretName: "my-xheader-auth-secret"
+  xHeaderAuthSecretName: ""
   # -- the name of the key in the existing secret that contains the saslDownstreamCredentials
   saslDownstreamCredentialsName: ""
   # -- the name of the key in the existing secret that contains the saslUpstreamCredentials
@@ -60,11 +60,11 @@ existingSecret:
   abacOidcClientSecretName: ""
 
 # -- The client-id that gateway should use to communicate with the platform
-abacOidcClientId: "dsp-gateway"
+abacOidcClientId: ""
 # -- The URL where the platform is deployed. Hostname and port
-abacPlatformEndpoint: "platform.dsp-dev-green.virtru.com:443"
+abacPlatformEndpoint: ""
 # -- The URL where the taggingService is deployed. Hostname and port
-abacTaggingPdpEndpoint: "platform.dsp-dev-green.virtru.com:443"
+abacTaggingPdpEndpoint: ""
 # -- The assertion type to use, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`.
 abacTaggingPdpAssertionType: "urn:nato:stanag:5636:A:1:elements:json"
 # -- Controls whether recipients that are not entitled to receive an email are removed.
@@ -117,7 +117,7 @@ minBackoffTime: "30s"
 queueRunDelay: "30s"
 # -- The domain we use to rewrite the from address for inbound mail. This allows us to deliver email that is
 #   authenticated by DKIM. In order for this to work DKIM must be set up for this domain
-primaryMailingDomain: "example.com"
+primaryMailingDomain: ""
 # -- The selector for the DKIM key to use for mail
 dkimSelector: ""
 # -- Controls whether the gateway should replace the from address with the authenticated address
