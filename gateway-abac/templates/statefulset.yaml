@@ -51,11 +51,11 @@ spec:
           volumeMounts:
           - name: cert-dir
             mountPath: /etc/postfix/tls/{{ .Values.gatewayHostname }}
-          {{- if or .Values.dkimPublicKey .Values.dkimPrivateKey }}
+          {{- if or .Values.dkimPublicKey .Values.dkimPrivateKey (and .Values.existingSecret.name .Values.existingSecret.dkimPrivateKeyName) }}
           - name: dkim-dir
             mountPath: /etc/opendkim/keys
           {{- end }}
-          {{- if .Values.abacExtraCas }}
+          {{- if or .Values.abacExtraCas .Values.abacCaSecrets }}
           - name: abac-cas
             mountPath: /etc/virtru-gateway/abac-cas
             readOnly: true
@@ -69,32 +69,34 @@ spec:
           - configMapRef:
               name: {{ include "gateway.fullname" . }}
           env:
-          {{- if .Values.saslDownstreamCredentials }}
+          {{- if or .Values.saslDownstreamCredentials (and .Values.existingSecret.name .Values.existingSecret.saslDownstreamCredentialsName) }}
           - name: GATEWAY_SMTP_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
-                key: gateway-sasl-auth-downstream
-                name: "{{ include "gateway.fullname" . }}"
+                key: {{ include "gateway.saslDownstreamCredentialsKey" . }}
+                name: {{ include "gateway.secretName" . }}
           {{- end }}
-          {{- if .Values.saslUpstreamCredentials }}
+          {{- if or .Values.saslUpstreamCredentials (and .Values.existingSecret.name .Values.existingSecret.saslUpstreamCredentialsName) }}
           - name: GATEWAY_SMTPD_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
-                key: gateway-sasl-auth-upstream
-                name: "{{ include "gateway.fullname" . }}"
+                key: {{ include "gateway.saslUpstreamCredentialsKey" . }}
+                name: {{ include "gateway.secretName" . }}
           {{- end }}
-          {{- if .Values.xheaderAuthSecret }}
+          {{- if or .Values.xHeaderAuthSecret (and .Values.existingSecret.name .Values.existingSecret.xHeaderAuthSecretName) }}
           - name: GATEWAY_XHEADER_AUTH_SECRET
             valueFrom:
               secretKeyRef:
-                key: gateway-xheader-auth-secret
-                name: "{{ include "gateway.fullname" . }}"
+                key: {{ include "gateway.xHeaderAuthSecretKey" . }}
+                name: {{ include "gateway.secretName" . }}
           {{- end }}
+          {{- if or .Values.abacOidcClientSecret (and .Values.existingSecret.name .Values.existingSecret.abacOidcClientSecretName) }}
           - name: GATEWAY_ABAC_OIDC_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                key: gateway-abac-oidc-client-secret
-                name: "{{ include "gateway.fullname" . }}"
+                key: {{ include "gateway.abacOidcClientSecretKey" . }}
+                name: {{ include "gateway.secretName" . }}
+          {{- end }}
           readinessProbe:
             tcpSocket:
               port: 25
@@ -114,14 +116,26 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-      {{- if .Values.abacExtraCas }}
+      {{- if or .Values.abacExtraCas .Values.abacCaSecrets }}
       - name: abac-cas
-        configMap:
-          name: {{ include "gateway.fullname" . }}
-          items:
-          {{- range $index, $unused := .Values.abacExtraCas }}
-            - key: ABAC_CA_{{ $index }}
-              path: abac-ca-{{ $index }}.crt
+        projected:
+          sources:
+          {{- if .Values.abacExtraCas }}
+          - configMap:
+              name: {{ include "gateway.fullname" . }}
+              items:
+              {{- range $index, $unused := .Values.abacExtraCas }}
+              - key: ABAC_CA_{{ $index }}
+                path: abac-ca-{{ $index }}.crt
+              {{- end }}
+          {{- end }}
+          {{- range $index, $caSecret := .Values.abacCaSecrets }}
+          - secret:
+              name: {{ $caSecret.secretName }}
+              items:
+              - key: {{ $caSecret.keyName }}
+                path: {{ $caSecret.secretName }}-{{ $caSecret.keyName }}
+              optional: false
           {{- end }}
       {{- end }}
       - name: cert-dir
@@ -144,11 +158,16 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
-      {{- if or .Values.dkimPublicKey .Values.dkimPrivateKey }}
+      {{- if or .Values.dkimPublicKey .Values.dkimPrivateKey (and .Values.existingSecret.name .Values.existingSecret.dkimPrivateKeyName) }}
       - name: dkim-dir
         secret:
           defaultMode: 420
-          secretName: "{{ include "gateway.fullname" . }}-dkim"
+          secretName: {{ include "gateway.dkimSecretName" . }}
+          {{- if and .Values.existingSecret.name .Values.existingSecret.dkimPrivateKeyName }}
+          items:
+          - key: {{ include "gateway.dkimPrivateKeyKey" . }}
+            path: {{ .Values.dkimSelector }}._domainkey.{{ .Values.primaryMailingDomain }}.pem
+          {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -4,83 +4,159 @@
 
 A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data Security Platform.
 
+## Using Existing Secrets
+
+This chart supports using existing Kubernetes secrets instead of creating new ones. This is useful when you want to manage secrets externally or use secret management systems like External Secrets Operator, Vault, etc.
+
+To use existing secrets, configure the `existingSecret` section in your values:
+
+```yaml
+existingSecret:
+  name: "my-gateway-secrets"
+  dkimPrivateKeyName: "dkim-key"
+  xHeaderAuthSecretName: "xheader-secret"
+  saslDownstreamCredentialsName: "sasl-downstream"
+  saslUpstreamCredentialsName: "sasl-upstream"
+  abacOidcClientSecretName: "oidc-client-secret"
+```
+
+When `existingSecret.name` is set:
+- The chart will NOT create new secret resources
+- Only the secrets with specified key names will be used from the existing secret
+- If a key name is left empty, that environment variable will not be created (partial secret support)
+- This allows you to use an existing secret for some values while omitting others that aren't required
+
+**Example - Full existing secret:**
+```yaml
+existingSecret:
+  name: "my-gateway-secrets"
+  dkimPrivateKeyName: "dkim-key"
+  xHeaderAuthSecretName: "xheader-secret"
+  saslDownstreamCredentialsName: "sasl-downstream"
+  saslUpstreamCredentialsName: "sasl-upstream"
+  abacOidcClientSecretName: "oidc-client-secret"
+```
+
+**Example - Partial existing secret (only some secrets required):**
+```yaml
+existingSecret:
+  name: "my-partial-secrets"
+  abacOidcClientSecretName: "my-oidc-key"
+  xHeaderAuthSecretName: "my-xheader-secret"
+  # Leave others empty - no environment variables created for them
+  dkimPrivateKeyName: ""
+  saslDownstreamCredentialsName: ""
+  saslUpstreamCredentialsName: ""
+```
+
+## Using Existing CA Secrets
+
+This chart also supports referencing existing Kubernetes secrets that contain CA certificates for additional trust. These are separate from the main `existingSecret` and are used in addition to any CAs specified in the `abacExtraCas` array.
+
+To use existing CA secrets, configure the `abacCaSecrets` section in your values:
+
+```yaml
+abacCaSecrets:
+  - secretName: "my-ca-secret"
+    keyName: "ca.crt"
+  - secretName: "another-ca-secret"
+    keyName: "root-ca.pem"
+```
+
+Both `abacExtraCas` and `abacCaSecrets` are mounted together to the same directory for the gateway to use:
+- All CA certificates are mounted to `/etc/virtru-gateway/abac-cas/`
+- `abacExtraCas` values are mounted as files like `abac-ca-0.crt`, `abac-ca-1.crt`, etc.
+- `abacCaSecrets` entries are mounted as files named `{secretName}-{keyName}`
+- The gateway will trust all CA certificates found in this directory when communicating with the platform
+
+**Example CA secret structure:**
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-ca-secret
+type: Opaque
+data:
+  ca.crt: <base64-encoded-ca-certificate-in-pem-format>
+```
+
 ## Maintainers
 
-| Name | Email | Url |
-| ---- | ------ | --- |
-| Virtru |  |  |
+| Name   | Email | Url |
+| ------ | ----- | --- |
+| Virtru |       |     |
 
 ## Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| abacCreateLegacyTdfs | bool | `true` |  |
-| abacEncryptEmail | bool | `true` | Controls whether encryption is enabled in encrypt mode. If this is set to false, the gateway will not encrypt emails. |
-| abacEncryptEmailBody | bool | `true` | Controls whether the email body is encrypted in encrypt mode |
-| abacExtraCas | list | `[]` | A list of additional Certificate Authorities(CAs) to trust when communicating with the platform in PEM format |
-| abacIgnoreKasAllowlist | bool | `false` | This setting tells the Gateway whether or not to ignore the `kasAllowlist` when decrypting. If this is set to true, the `kasAllowlist` will be ignored and all KAS servers will be used for decryption. Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF. |
-| abacKasAllowlist | list | `[]` | A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy. |
-| abacOidcClientId | string | `""` | The client-id that gateway should use to communicate with the platform |
-| abacPlaintextConnection | bool | `false` | Controls whether communication with the platform is over a plaintext connection |
-| abacPlatformEndpoint | string | `""` | The URL where the platform is deployed. Hostname and port |
-| abacTaggingPdpAssertionType | string | `"urn:nato:stanag:5636:A:1:elements:json"` | The assertion type to use, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`. |
-| abacTaggingPdpEndpoint | string | `""` | The URL where the taggingService is deployed. Hostname and port |
-| abacTrimBlockedRecipients | bool | `true` | Controls whether recipients that are not entitled to receive an email are removed. |
-| affinity | object | `{}` |  |
-| autoscaling.enabled | bool | `false` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
-| autoscaling.targetMemoryUtilizationPercentage | int | `80` |  |
-| cacheSmtpConnections | bool | `true` | This setting controls whether the gateway should cache outgoing SMTP connections. true to cache everything, false to not cache anything, or a comma-separated list of domains to cache connections for |
-| cacheSmtpConnectionsTimeLimit | string | `"5s"` | The amount of time to cache outgoing SMTP connections for |
-| dkimSelector | string | `""` | The selector for the DKIM key to use for mail |
-| fullnameOverride | string | `""` |  |
-| gatewayHostname | string | `""` | The hostname that the gateway should use. A self-signed certificate will be generated for this hostname |
-| gatewayMode | string | `"encrypt"` | The mode the gateway should run in, either encrypt or decrypt |
-| gatewayTopology | string | `"inbound"` | The topology the gateway should run in, either inbound or outbound |
-| gatewayTransportMaps | string | `""` | This setting maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"registry.opentdf.io/platform/gateway"` |  |
-| image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
-| inboundRelayAddresses | string | `"0.0.0.0/0"` | Comma-separated list of CIDR addresses that are allowed to relay mail through the gateway |
-| ingress.enabled | bool | `false` |  |
-| logLevel | string | `"info"` | logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged |
-| maxBackoffTime | string | `"45s"` | The maximum amount of time the gateway will wait before retrying a message (postfix maximal_backoff_time) |
-| maxQueueLifetime | string | `"5m"` | The maximum amount of time a message can stay in the queue before being bounced (postfix maximal_queue_lifetime) |
-| minBackoffTime | string | `"30s"` | The minimum amount of time the gateway will wait before retrying a message (postfix minimal_backoff_time) |
-| nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
-| persistentVolumeSize | string | `"1Gi"` | The size of the persistent volume that we use to store the email queue |
-| persistentVolumeStorageClassName | string | `"standard"` | The storage class to use for the persistent volume that we use to store the email queue |
-| podAnnotations | object | `{}` |  |
-| podSecurityContext | object | `{}` |  |
-| primaryMailingDomain | string | `""` | The domain we use to rewrite the from address for inbound mail. This allows us to deliver email that is   authenticated by DKIM. In order for this to work DKIM must be set up for this domain |
-| proxyProtocol | bool | `false` | Controls whether the gateway should use the proxy protocol |
-| queueRunDelay | string | `"30s"` | The amount of time the gateway will wait before checking the queue for messages to send (postfix queue_run_delay) |
-| replaceFromEnabled | bool | `false` | Controls whether the gateway should replace the from address with the authenticated address |
-| replicaCount | int | `2` |  |
-| resources | object | `{}` |  |
-| saslDownstreamSecurityOptions | string | `"noanonymous"` | The security options the gateway should use when authenticating downstream |
-| saslUpstreamMechanisms | string | `"PLAIN"` | The mechanisms the gateway should use when receiving email |
-| securityContext | object | `{}` |  |
-| service.loadBalancerIP | string | `""` |  |
-| service.port | int | `25` |  |
-| service.type | string | `"LoadBalancer"` |  |
-| serviceAccount.create | bool | `false` |  |
-| serviceAccount.name | string | `"default"` |  |
-| smtp.tls.certificate | string | `""` | Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value |
-| smtp.tls.enabled | bool | `false` | Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up) |
-| smtp.tls.existingSecret | string | `""` | Use existing secret containing TLS certificate and key |
-| smtpSecurityLevel | string | `"mandatory"` | The security level the gateway should use when sending mail, either `mandatory` or `opportunistic`. To use `mandatory` smtpUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`. |
-| smtpTlsComplianceDownstream | string | `"MEDIUM"` | The compliance level the gateway should use when sending mail downstream |
-| smtpUseTls | bool | `true` | Controls whether the gateway should use TLS when sending mail |
-| smtpdSecurityLevel | string | `"mandatory"` | The security level the gateway should use when receiving mail, either `mandatory` or `opportunistic`. To use `mandatory` smtpdUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`. `mandatory` also implies that authentication may only take place over TLS (`smtpd_tls_auth_only` = yes) |
-| smtpdTlsComplianceUpstream | string | `"MEDIUM"` | The compliance level the gateway should use when receiving mail upstream |
-| smtpdUseTls | bool | `true` | Controls whether the gateway should use TLS when receiving mail |
-| tlsPolicyMaps | string | `""` | This setting maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy |
-| tolerations | list | `[]` |  |
-| verboseLogging | bool | `false` | Controls whether the gateway should log verbose information |
+| Key                                           | Type   | Default                                    | Description                                                                                                                                                                                                                                                                                                                                                                        |
+| --------------------------------------------- | ------ | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| abacCreateLegacyTdfs                          | bool   | `true`                                     |                                                                                                                                                                                                                                                                                                                                                                                    |
+| abacEncryptEmail                              | bool   | `true`                                     | Controls whether encryption is enabled in encrypt mode. If this is set to false, the gateway will not encrypt emails.                                                                                                                                                                                                                                                              |
+| abacEncryptEmailBody                          | bool   | `true`                                     | Controls whether the email body is encrypted in encrypt mode                                                                                                                                                                                                                                                                                                                       |
+| abacExtraCas                                  | list   | `[]`                                       | A list of additional Certificate Authorities(CAs) to trust when communicating with the platform in PEM format                                                                                                                                                                                                                                                                      |
+| abacIgnoreKasAllowlist                        | bool   | `false`                                    | This setting tells the Gateway whether or not to ignore the `kasAllowlist` when decrypting. If this is set to true, the `kasAllowlist` will be ignored and all KAS servers will be used for decryption. Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF. |
+| abacKasAllowlist                              | list   | `[]`                                       | A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy.                                                                                                                                                                                                                                            |
+| abacOidcClientId                              | string | `""`                                       | The client-id that gateway should use to communicate with the platform                                                                                                                                                                                                                                                                                                             |
+| abacPlaintextConnection                       | bool   | `false`                                    | Controls whether communication with the platform is over a plaintext connection                                                                                                                                                                                                                                                                                                    |
+| abacPlatformEndpoint                          | string | `""`                                       | The URL where the platform is deployed. Hostname and port                                                                                                                                                                                                                                                                                                                          |
+| abacTaggingPdpAssertionType                   | string | `"urn:nato:stanag:5636:A:1:elements:json"` | The assertion type to use, currently `urn:us:gov:ic:edh` or `urn:nato:stanag:5636:A:1:elements:json`.                                                                                                                                                                                                                                                                              |
+| abacTaggingPdpEndpoint                        | string | `""`                                       | The URL where the taggingService is deployed. Hostname and port                                                                                                                                                                                                                                                                                                                    |
+| abacTrimBlockedRecipients                     | bool   | `true`                                     | Controls whether recipients that are not entitled to receive an email are removed.                                                                                                                                                                                                                                                                                                 |
+| affinity                                      | object | `{}`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| autoscaling.enabled                           | bool   | `false`                                    |                                                                                                                                                                                                                                                                                                                                                                                    |
+| autoscaling.maxReplicas                       | int    | `100`                                      |                                                                                                                                                                                                                                                                                                                                                                                    |
+| autoscaling.minReplicas                       | int    | `1`                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
+| autoscaling.targetCPUUtilizationPercentage    | int    | `80`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| autoscaling.targetMemoryUtilizationPercentage | int    | `80`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| cacheSmtpConnections                          | bool   | `true`                                     | This setting controls whether the gateway should cache outgoing SMTP connections. true to cache everything, false to not cache anything, or a comma-separated list of domains to cache connections for                                                                                                                                                                             |
+| cacheSmtpConnectionsTimeLimit                 | string | `"5s"`                                     | The amount of time to cache outgoing SMTP connections for                                                                                                                                                                                                                                                                                                                          |
+| dkimSelector                                  | string | `""`                                       | The selector for the DKIM key to use for mail                                                                                                                                                                                                                                                                                                                                      |
+| fullnameOverride                              | string | `""`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| gatewayHostname                               | string | `""`                                       | The hostname that the gateway should use. A self-signed certificate will be generated for this hostname                                                                                                                                                                                                                                                                            |
+| gatewayMode                                   | string | `"encrypt"`                                | The mode the gateway should run in, either encrypt or decrypt                                                                                                                                                                                                                                                                                                                      |
+| gatewayTopology                               | string | `"inbound"`                                | The topology the gateway should run in, either inbound or outbound                                                                                                                                                                                                                                                                                                                 |
+| gatewayTransportMaps                          | string | `""`                                       | This setting maps domains to mail servers for the next hop. e.g. example.com=>smtp.example.com,example.net=>smtp.example.net                                                                                                                                                                                                                                                       |
+| image.pullPolicy                              | string | `"IfNotPresent"`                           |                                                                                                                                                                                                                                                                                                                                                                                    |
+| image.repository                              | string | `"registry.opentdf.io/platform/gateway"`   |                                                                                                                                                                                                                                                                                                                                                                                    |
+| image.tag                                     | string | `""`                                       | Overrides the image tag whose default is the chart appVersion.                                                                                                                                                                                                                                                                                                                     |
+| inboundRelayAddresses                         | string | `"0.0.0.0/0"`                              | Comma-separated list of CIDR addresses that are allowed to relay mail through the gateway                                                                                                                                                                                                                                                                                          |
+| ingress.enabled                               | bool   | `false`                                    |                                                                                                                                                                                                                                                                                                                                                                                    |
+| logLevel                                      | string | `"info"`                                   | logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged                                                                                                                                                                                                                      |
+| maxBackoffTime                                | string | `"45s"`                                    | The maximum amount of time the gateway will wait before retrying a message (postfix maximal_backoff_time)                                                                                                                                                                                                                                                                          |
+| maxQueueLifetime                              | string | `"5m"`                                     | The maximum amount of time a message can stay in the queue before being bounced (postfix maximal_queue_lifetime)                                                                                                                                                                                                                                                                   |
+| minBackoffTime                                | string | `"30s"`                                    | The minimum amount of time the gateway will wait before retrying a message (postfix minimal_backoff_time)                                                                                                                                                                                                                                                                          |
+| nameOverride                                  | string | `""`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| nodeSelector                                  | object | `{}`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| persistentVolumeSize                          | string | `"1Gi"`                                    | The size of the persistent volume that we use to store the email queue                                                                                                                                                                                                                                                                                                             |
+| persistentVolumeStorageClassName              | string | `"standard"`                               | The storage class to use for the persistent volume that we use to store the email queue                                                                                                                                                                                                                                                                                            |
+| podAnnotations                                | object | `{}`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| podSecurityContext                            | object | `{}`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| primaryMailingDomain                          | string | `""`                                       | The domain we use to rewrite the from address for inbound mail. This allows us to deliver email that is   authenticated by DKIM. In order for this to work DKIM must be set up for this domain                                                                                                                                                                                     |
+| proxyProtocol                                 | bool   | `false`                                    | Controls whether the gateway should use the proxy protocol                                                                                                                                                                                                                                                                                                                         |
+| queueRunDelay                                 | string | `"30s"`                                    | The amount of time the gateway will wait before checking the queue for messages to send (postfix queue_run_delay)                                                                                                                                                                                                                                                                  |
+| replaceFromEnabled                            | bool   | `false`                                    | Controls whether the gateway should replace the from address with the authenticated address                                                                                                                                                                                                                                                                                        |
+| replicaCount                                  | int    | `2`                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
+| resources                                     | object | `{}`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| saslDownstreamSecurityOptions                 | string | `"noanonymous"`                            | The security options the gateway should use when authenticating downstream                                                                                                                                                                                                                                                                                                         |
+| saslUpstreamMechanisms                        | string | `"PLAIN"`                                  | The mechanisms the gateway should use when receiving email                                                                                                                                                                                                                                                                                                                         |
+| securityContext                               | object | `{}`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| service.loadBalancerIP                        | string | `""`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| service.port                                  | int    | `25`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| service.type                                  | string | `"LoadBalancer"`                           |                                                                                                                                                                                                                                                                                                                                                                                    |
+| serviceAccount.create                         | bool   | `false`                                    |                                                                                                                                                                                                                                                                                                                                                                                    |
+| serviceAccount.name                           | string | `"default"`                                |                                                                                                                                                                                                                                                                                                                                                                                    |
+| smtp.tls.certificate                          | string | `""`                                       | Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value                                                                                                                                                                                                                                                       |
+| smtp.tls.enabled                              | bool   | `false`                                    | Enable custom TLS certificates for SMTP (default: false uses self-signed generated automatically on start up)                                                                                                                                                                                                                                                                      |
+| smtp.tls.existingSecret                       | string | `""`                                       | Use existing secret containing TLS certificate and key                                                                                                                                                                                                                                                                                                                             |
+| smtpSecurityLevel                             | string | `"mandatory"`                              | The security level the gateway should use when sending mail, either `mandatory` or `opportunistic`. To use `mandatory` smtpUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`.                                                                                                             |
+| smtpTlsComplianceDownstream                   | string | `"MEDIUM"`                                 | The compliance level the gateway should use when sending mail downstream                                                                                                                                                                                                                                                                                                           |
+| smtpUseTls                                    | bool   | `true`                                     | Controls whether the gateway should use TLS when sending mail                                                                                                                                                                                                                                                                                                                      |
+| smtpdSecurityLevel                            | string | `"mandatory"`                              | The security level the gateway should use when receiving mail, either `mandatory` or `opportunistic`. To use `mandatory` smtpdUseTls must be true. `mandatory` corresponds to a postfix level of `encrypt` while `opportunistic` corresponds to a postfix level of `may`. `mandatory` also implies that authentication may only take place over TLS (`smtpd_tls_auth_only` = yes)  |
+| smtpdTlsComplianceUpstream                    | string | `"MEDIUM"`                                 | The compliance level the gateway should use when receiving mail upstream                                                                                                                                                                                                                                                                                                           |
+| smtpdUseTls                                   | bool   | `true`                                     | Controls whether the gateway should use TLS when receiving mail                                                                                                                                                                                                                                                                                                                    |
+| tlsPolicyMaps                                 | string | `""`                                       | This setting maps domains to TLS policies. e.g. example.com=>may,example.net=>encrypt. Valid policies can be found here: https://www.postfix.org/TLS_README.html#client_tls_policy                                                                                                                                                                                                 |
+| tolerations                                   | list   | `[]`                                       |                                                                                                                                                                                                                                                                                                                                                                                    |
+| verboseLogging                                | bool   | `false`                                    | Controls whether the gateway should log verbose information                                                                                                                                                                                                                                                                                                                        |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

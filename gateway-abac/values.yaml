@@ -1,7 +1,7 @@
 replicaCount: 2
 image:
-  repository: registry.opentdf.io/platform/gateway 
-  pullPolicy: IfNotPresent 
+  repository: registry.opentdf.io/platform/gateway
+  pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
@@ -33,7 +33,7 @@ autoscaling:
   targetMemoryUtilizationPercentage: 80
 service:
   type: LoadBalancer
-  loadBalancerIP: ''
+  loadBalancerIP: ""
   port: 25
 
 smtp:
@@ -44,6 +44,20 @@ smtp:
     existingSecret: ""
     # -- Cert data in PEM format (alternative to existingSecret). Private Key Data in PEM format should be configured as secret value
     certificate: ""
+
+# -- The existing secret that contains all of the secret values from secret-values.yaml
+existingSecret:
+  name: ""
+  # -- the name of the key in the existing secret that contains the dkimPrivateKey
+  dkimPrivateKeyName: ""
+  # -- the name of the key in the existing secret that contains the xHeaderAuthSecret
+  xHeaderAuthSecretName: ""
+  # -- the name of the key in the existing secret that contains the saslDownstreamCredentials
+  saslDownstreamCredentialsName: ""
+  # -- the name of the key in the existing secret that contains the saslUpstreamCredentials
+  saslUpstreamCredentialsName: ""
+  # -- the name of the key in the existing secret that contains the client secret that gateway should use to communicate with the platform
+  abacOidcClientSecretName: ""
 
 # -- The client-id that gateway should use to communicate with the platform
 abacOidcClientId: ""
@@ -63,6 +77,13 @@ abacEncryptEmail: true
 abacEncryptEmailBody: true
 # -- A list of additional Certificate Authorities(CAs) to trust when communicating with the platform in PEM format
 abacExtraCas: []
+# -- A list of existing secrets containing CA certificates to trust (separate from existingSecret)
+abacCaSecrets: []
+  # Example:
+  # - secretName: "my-ca-secret"
+  #   keyName: "ca.crt"
+  # - secretName: "another-ca-secret"
+  #   keyName: "root-ca.pem"
 # Controls whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by DSP versions 2.0.2 and earlier
 abacCreateLegacyTdfs: true
 # -- A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy.
