@@ -21,10 +21,10 @@ existingSecret:
 ```
 
 When `existingSecret.name` is set:
-- The chart will NOT create new secret resources
 - Only the secrets with specified key names will be used from the existing secret
 - If a key name is left empty, that environment variable will not be created (partial secret support)
 - This allows you to use an existing secret for some values while omitting others that aren't required
+- If a secret value is set (see example #3) and is NOT part of the existing secret, a secret will be created and have that value stored in it
 
 **Example - Full existing secret:**
 ```yaml
@@ -48,6 +48,25 @@ existingSecret:
   saslDownstreamCredentialsName: ""
   saslUpstreamCredentialsName: ""
 ```
+
+**Example - Mixed approach (some secrets from values, some from existing secret):**
+```yaml
+# Secrets defined directly in values (will be stored in generated secret)
+xHeaderAuthSecret: "my-inline-secret"
+saslDownstreamCredentials: "user1=>pass1,user2=>pass2"
+
+existingSecret:
+  name: "my-external-secret" 
+  # These will come from the external secret
+  abacOidcClientSecretName: "oidc-client-secret"
+  dkimPrivateKeyName: "dkim-private-key"
+  # Leave these empty to use values above instead
+  xHeaderAuthSecretName: ""
+  saslDownstreamCredentialsName: ""
+  saslUpstreamCredentialsName: ""
+```
+
+This mixed approach allows maximum flexibility - you can store some secrets externally while keeping others in the values for easier management.
 
 ## Using Existing CA Secrets
 

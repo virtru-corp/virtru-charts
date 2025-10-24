@@ -74,28 +74,28 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: {{ include "gateway.saslDownstreamCredentialsKey" . }}
-                name: {{ include "gateway.secretName" . }}
+                name: {{ include "gateway.saslDownstreamCredentialsSecretName" . }}
           {{- end }}
           {{- if or .Values.saslUpstreamCredentials (and .Values.existingSecret.name .Values.existingSecret.saslUpstreamCredentialsName) }}
           - name: GATEWAY_SMTPD_SASL_ACCOUNTS
             valueFrom:
               secretKeyRef:
                 key: {{ include "gateway.saslUpstreamCredentialsKey" . }}
-                name: {{ include "gateway.secretName" . }}
+                name: {{ include "gateway.saslUpstreamCredentialsSecretName" . }}
           {{- end }}
           {{- if or .Values.xHeaderAuthSecret (and .Values.existingSecret.name .Values.existingSecret.xHeaderAuthSecretName) }}
           - name: GATEWAY_XHEADER_AUTH_SECRET
             valueFrom:
               secretKeyRef:
                 key: {{ include "gateway.xHeaderAuthSecretKey" . }}
-                name: {{ include "gateway.secretName" . }}
+                name: {{ include "gateway.xHeaderAuthSecretName" . }}
           {{- end }}
           {{- if or .Values.abacOidcClientSecret (and .Values.existingSecret.name .Values.existingSecret.abacOidcClientSecretName) }}
           - name: GATEWAY_ABAC_OIDC_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
                 key: {{ include "gateway.abacOidcClientSecretKey" . }}
-                name: {{ include "gateway.secretName" . }}
+                name: {{ include "gateway.abacOidcClientSecretName" . }}
           {{- end }}
           readinessProbe:
             tcpSocket:

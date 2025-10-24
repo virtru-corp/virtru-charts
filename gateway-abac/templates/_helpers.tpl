@@ -64,7 +64,49 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Get the secret name for gateway secrets
+Get the secret name for a specific gateway secret
+Usage: {{ include "gateway.secretNameFor" (dict "Values" .Values "secretType" "xHeaderAuth") }}
+*/}}
+{{- define "gateway.secretNameFor" -}}
+{{- $secretType := .secretType -}}
+{{- $Values := .Values -}}
+{{- if eq $secretType "xHeaderAuth" -}}
+{{- if and $Values.existingSecret.name $Values.existingSecret.xHeaderAuthSecretName -}}
+{{- $Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" .root -}}
+{{- end -}}
+{{- else if eq $secretType "saslDownstream" -}}
+{{- if and $Values.existingSecret.name $Values.existingSecret.saslDownstreamCredentialsName -}}
+{{- $Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" .root -}}
+{{- end -}}
+{{- else if eq $secretType "saslUpstream" -}}
+{{- if and $Values.existingSecret.name $Values.existingSecret.saslUpstreamCredentialsName -}}
+{{- $Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" .root -}}
+{{- end -}}
+{{- else if eq $secretType "abacOidcClient" -}}
+{{- if and $Values.existingSecret.name $Values.existingSecret.abacOidcClientSecretName -}}
+{{- $Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" .root -}}
+{{- end -}}
+{{- else if eq $secretType "dkim" -}}
+{{- if and $Values.existingSecret.name $Values.existingSecret.dkimPrivateKeyName -}}
+{{- $Values.existingSecret.name -}}
+{{- else -}}
+{{- printf "%s-dkim" (include "gateway.fullname" .root) -}}
+{{- end -}}
+{{- else -}}
+{{- include "gateway.fullname" .root -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the secret name for gateway secrets (legacy - keep for backward compatibility)
 */}}
 {{- define "gateway.secretName" -}}
 {{- if .Values.existingSecret.name }}
@@ -78,64 +120,108 @@ Get the secret name for gateway secrets
 Get the secret name for DKIM
 */}}
 {{- define "gateway.dkimSecretName" -}}
-{{- if .Values.existingSecret.name }}
-{{- .Values.existingSecret.name }}
-{{- else }}
-{{- printf "%s-dkim" (include "gateway.fullname" .) }}
+{{- if and .Values.existingSecret.name .Values.existingSecret.dkimPrivateKeyName -}}
+{{- .Values.existingSecret.name -}}
+{{- else -}}
+{{- printf "%s-dkim" (include "gateway.fullname" .) -}}
+{{- end -}}
 {{- end }}
+
+{{/*
+Get the secret name for xHeader Auth Secret
+*/}}
+{{- define "gateway.xHeaderAuthSecretName" -}}
+{{- if and .Values.existingSecret.name .Values.existingSecret.xHeaderAuthSecretName -}}
+{{- .Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" . -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the secret name for SASL Downstream Credentials
+*/}}
+{{- define "gateway.saslDownstreamCredentialsSecretName" -}}
+{{- if and .Values.existingSecret.name .Values.existingSecret.saslDownstreamCredentialsName -}}
+{{- .Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" . -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the secret name for SASL Upstream Credentials
+*/}}
+{{- define "gateway.saslUpstreamCredentialsSecretName" -}}
+{{- if and .Values.existingSecret.name .Values.existingSecret.saslUpstreamCredentialsName -}}
+{{- .Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" . -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the secret name for ABAC OIDC Client Secret
+*/}}
+{{- define "gateway.abacOidcClientSecretName" -}}
+{{- if and .Values.existingSecret.name .Values.existingSecret.abacOidcClientSecretName -}}
+{{- .Values.existingSecret.name -}}
+{{- else -}}
+{{- include "gateway.fullname" . -}}
+{{- end -}}
 {{- end }}
 
 {{/*
 Get the key name for xHeader Auth Secret
 */}}
 {{- define "gateway.xHeaderAuthSecretKey" -}}
-{{- if .Values.existingSecret.name }}
-{{- .Values.existingSecret.xHeaderAuthSecretName | default "gateway-xheader-auth-secret" }}
-{{- else }}
+{{- if and .Values.existingSecret.name .Values.existingSecret.xHeaderAuthSecretName -}}
+{{- .Values.existingSecret.xHeaderAuthSecretName -}}
+{{- else -}}
 gateway-xheader-auth-secret
-{{- end }}
+{{- end -}}
 {{- end }}
 
 {{/*
 Get the key name for SASL Downstream Credentials
 */}}
 {{- define "gateway.saslDownstreamCredentialsKey" -}}
-{{- if .Values.existingSecret.name }}
-{{- .Values.existingSecret.saslDownstreamCredentialsName | default "gateway-sasl-auth-downstream" }}
-{{- else }}
+{{- if and .Values.existingSecret.name .Values.existingSecret.saslDownstreamCredentialsName -}}
+{{- .Values.existingSecret.saslDownstreamCredentialsName -}}
+{{- else -}}
 gateway-sasl-auth-downstream
-{{- end }}
+{{- end -}}
 {{- end }}
 
 {{/*
 Get the key name for SASL Upstream Credentials
 */}}
 {{- define "gateway.saslUpstreamCredentialsKey" -}}
-{{- if .Values.existingSecret.name }}
-{{- .Values.existingSecret.saslUpstreamCredentialsName | default "gateway-sasl-auth-upstream" }}
-{{- else }}
+{{- if and .Values.existingSecret.name .Values.existingSecret.saslUpstreamCredentialsName -}}
+{{- .Values.existingSecret.saslUpstreamCredentialsName -}}
+{{- else -}}
 gateway-sasl-auth-upstream
-{{- end }}
+{{- end -}}
 {{- end }}
 
 {{/*
 Get the key name for ABAC OIDC Client Secret
 */}}
 {{- define "gateway.abacOidcClientSecretKey" -}}
-{{- if .Values.existingSecret.name }}
-{{- .Values.existingSecret.abacOidcClientSecretName | default "gateway-abac-oidc-client-secret" }}
-{{- else }}
+{{- if and .Values.existingSecret.name .Values.existingSecret.abacOidcClientSecretName -}}
+{{- .Values.existingSecret.abacOidcClientSecretName -}}
+{{- else -}}
 gateway-abac-oidc-client-secret
-{{- end }}
+{{- end -}}
 {{- end }}
 
 {{/*
 Get the key name for DKIM Private Key
 */}}
 {{- define "gateway.dkimPrivateKeyKey" -}}
-{{- if .Values.existingSecret.name }}
-{{- .Values.existingSecret.dkimPrivateKeyName | default (printf "%s._domainkey.%s.pem" .Values.dkimSelector .Values.primaryMailingDomain) }}
-{{- else }}
-{{- printf "%s._domainkey.%s.pem" .Values.dkimSelector .Values.primaryMailingDomain }}
-{{- end }}
+{{- if and .Values.existingSecret.name .Values.existingSecret.dkimPrivateKeyName -}}
+{{- .Values.existingSecret.dkimPrivateKeyName -}}
+{{- else -}}
+{{- printf "%s._domainkey.%s.pem" .Values.dkimSelector .Values.primaryMailingDomain -}}
+{{- end -}}
 {{- end }}
