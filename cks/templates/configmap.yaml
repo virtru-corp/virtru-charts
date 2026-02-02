@@ -64,10 +64,6 @@ data:
   TRUCTL_HOST: {{ default .Values.appConfig.platformEndpoint .Values.appConfig.tructl_host }}
   AUDIENCE: {{ .Values.appConfig.audience }}
 
-  # OAuth Credentials
-  CLIENT_ID: {{ .Values.appConfig.clientId }}
-  CLIENT_SECRET: {{ .Values.appConfig.clientSecret }}
-
   # Organization Configuration
   ORG_ID: {{ .Values.appConfig.virtruOrgId }}
 
