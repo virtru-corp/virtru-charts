@@ -37,7 +37,7 @@ spec:
               name: {{ include "cks.fullname" . }}
           {{- if not .Values.externalAppSecrets }}
           - secretRef:
-              name: {{ .Values.appSecrets.virtruAuth.name }}
+              name: {{ .secretsPath }}
           {{- end }}
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
