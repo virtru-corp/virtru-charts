@@ -47,16 +47,6 @@ spec:
               secretKeyRef:
                 key: hmac-auth-token-json
                 name: {{ .secretsPath }}
-          - name: CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                key: clientId
-                name: {{ .Values.externalAppSecrets }}
-          - name: CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                key: clientSecret
-                name: saas-dsp-db-pass
           {{- end }}
           {{- end }}
           securityContext:
