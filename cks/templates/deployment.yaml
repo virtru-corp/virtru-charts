@@ -40,8 +40,10 @@ spec:
               name: {{ .Values.appSecrets.virtruAuth.name }}
           {{- end }}
           {{- if .Values.externalAppSecrets }}
+          {{ range .Values.externalAppSecrets }}
           - secretRef:
-              name: {{ .Values.externalAppSecrets.secretsPath }}
+              name: {{ .secretsPath }}
+          {{- end }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
