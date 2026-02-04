@@ -40,14 +40,8 @@ spec:
               name: {{ .Values.appSecrets.virtruAuth.name }}
           {{- end }}
           {{- if .Values.externalAppSecrets }}
-          {{- with index .Values.externalAppSecrets 0 }}
-          env:
-          - name: AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
-            valueFrom:
-              secretKeyRef:
-                key: hmac-auth-token-json
-                name: {{ .secretsPath }}
-          {{- end }}
+          - secretRef:
+              name: {{ .Values.externalAppSecrets.secretsPath }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
