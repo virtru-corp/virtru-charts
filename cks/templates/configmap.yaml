@@ -33,7 +33,6 @@ data:
   JWT_AUTH_AUDIENCE: {{ .Values.appConfig.virtruOrgId }}
 
   # KAS Configuration
-  KAS_ROOT_KEY: {{ .Values.appConfig.kasRootKey }}
   KAS_AUTH_ISSUER: {{ .Values.appConfig.kasAuthIssuer }}
   KAS_AUTH_AUDIENCE: {{ .Values.appConfig.kasAuthAudience }}
   KAS_PUBLIC_HOSTNAME: {{ .Values.appConfig.kasPublicHostName }}
@@ -41,27 +40,15 @@ data:
   # Database
   DSP_DB_DATABASE: {{ .Values.appConfig.dspDBDatabase }}
   DSP_DB_USER: {{ .Values.appConfig.dspDBUser }}
-  DSP_DB_PASSWORD: {{ .Values.appConfig.dspDBPassword }}
-
-  # Security / Other
-  ENCRYPTED_TOKEN_KEY: {{ .Values.appConfig.encryptedTokenKey }}
-  TIKA_SERVER_URL: {{ .Values.appConfig.tikaServerUrl }}
 
   # KAS Logging Configuration
   KAS_LOG_LEVEL: {{ default "info" .Values.appConfig.kasLogLevel }}
   KAS_LOG_TYPE: {{ default "json" .Values.appConfig.kasLogType }}
   KAS_LOG_OUTPUT: {{ default "stdout" .Values.appConfig.kasLogOutput }}
 
-  # KAS Service Configuration
-  KAS_REGISTERED_URI: {{ .Values.appConfig.kasRegisteredUri }}
-  KAS_PRIVATE_KEY_PATH: {{ default "/run/secrets/kas-private.pem" .Values.appConfig.kasPrivateKeyPath }}
-  KAS_CERT_PATH: {{ default "/run/secrets/kas-cert.pem" .Values.appConfig.kasCertPath }}
-
   # Platform Endpoints
   ACM_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
   PLATFORM_ENDPOINT: {{ .Values.appConfig.platformEndpoint }}
-  OKTA_ISSUER: {{ .Values.appConfig.oktaIssuer }}
-  TRUCTL_HOST: {{ default .Values.appConfig.platformEndpoint .Values.appConfig.tructl_host }}
   AUDIENCE: {{ .Values.appConfig.audience }}
 
   # Organization Configuration
@@ -76,11 +63,10 @@ data:
 
   # Key Management Configuration
   KEY_ID: {{ default "rsa1" .Values.appConfig.keyId }}
-  KEY_FILE: {{ default "/app/dsp-keys/kas-cert.pem" .Values.appConfig.keyFile }}
-  KEY_PRIVATE_FILE: {{ default "/app/dsp-keys/kas-private.pem" .Values.appConfig.keyPrivateFile }}
+  KAS_PUBLIC_KEY_FILE: {{ default "/app/dsp-keys/kas-cert.pem" .Values.appConfig.kasPublicKeyFile }}
+  KAS_PRIVATE_KEY_FILE: {{ default "/app/dsp-keys/kas-private.pem" .Values.appConfig.kasPrivateKeyFile }}
   KEY_ALGORITHM: {{ default "rsa:2048" .Values.appConfig.keyAlgorithm }}
   WRAPPING_KEY_ID: {{ default "kas-root-key" .Values.appConfig.wrappingKeyId }}
-  WRAPPING_KEY: {{ .Values.appConfig.kasRootKey }}
 
   # Provisioning Retry Configuration
   KAS_PROVISIONING_DELAY: {{ default "10" .Values.appConfig.kasProvisioningDelay | quote }}
