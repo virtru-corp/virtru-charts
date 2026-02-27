@@ -58,9 +58,6 @@ data:
   KAS_NAME: {{ default "local-kas" .Values.appConfig.kasName }}
   KAS_URI: {{ .Values.appConfig.kasUri }}
 
-  # Attribute Configuration
-  ATTR_NAME: {{ default "cks-acm-adhoc" .Values.appConfig.attrName }}
-
   # Key Management Configuration
   KEY_ID: {{ default "rsa1" .Values.appConfig.keyId }}
   KAS_PUBLIC_KEY_FILE: {{ default "/app/dsp-keys/kas-cert.pem" .Values.appConfig.kasPublicKeyFile }}
