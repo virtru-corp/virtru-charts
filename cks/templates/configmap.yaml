@@ -5,18 +5,72 @@ metadata:
   labels:
     {{- include "cks.labels" . | nindent 4 }}
 data:
+  # Auth Token Storage
   AUTH_TOKEN_STORAGE_TYPE: {{ default "in-memory" .Values.appConfig.authTokenStoreageType }}
   AUTH_TOKEN_STORAGE_IN_MEMORY_ENCODING: {{ default "base64" .Values.appConfig.authTokenStoreageMemoryEncoding }}
+
+  # Logging
   LOG_RSYSLOG_ENABLED: "{{ default false .Values.appConfig.logRsyslogEnabled }}"
   LOG_CONSOLE_ENABLED: "{{ default true .Values.appConfig.logConsoleEnabled }}"
+
+  # Server
   PORT: "{{ .Values.deployment.port }}"
+
+  # Boot Checker / Key Import
   BOOT_CHECKER_NOKEYS_RULE: {{ default "importPEM" .Values.appConfig.noKeysRule }}
   BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: {{ default "/run/secrets/rsa001.pub" .Values.appConfig.publicKeyPath }}
   BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: {{ default "/run/secrets/rsa001.pem" .Values.appConfig.privateKeyPath }}
+
+  # Key Provider
   KEY_PROVIDER_PATH: {{ default "/app/keys" .Values.appSecrets.virtruKeys.mountPath }}
   KEY_PROVIDER_TYPE: {{ default "file" .Values.appConfig.keyProviderType }}
+
+  # Authentication
   HMAC_AUTH_ENABLED: "{{ default true .Values.appConfig.hmacAuthEnabled }}"
   JWT_AUTH_ENABLED: "{{ default true .Values.appConfig.jwtAuthEnabled }}"
   JWT_AUTH_ISSUER: {{ default "https://api.virtru.com" .Values.appConfig.jwtAuthIssuer }}
   JWT_AUTH_JWKS_PATH: {{ default "/acm/api/jwks" .Values.appConfig.jwtAuthJwksPath }}
   JWT_AUTH_AUDIENCE: {{ .Values.appConfig.virtruOrgId }}
+
+  # KAS Configuration
+  KAS_AUTH_ISSUER: {{ .Values.appConfig.kasAuthIssuer }}
+  KAS_AUTH_AUDIENCE: {{ .Values.appConfig.kasAuthAudience }}
+  KAS_PUBLIC_HOSTNAME: {{ .Values.appConfig.kasPublicHostName }}
+
+  # Database
+  DSP_DB_DATABASE: {{ .Values.appConfig.dspDBDatabase }}
+  DSP_DB_USER: {{ .Values.appConfig.dspDBUser }}
+
+  # KAS Logging Configuration
+  KAS_LOG_LEVEL: {{ default "info" .Values.appConfig.kasLogLevel }}
+  KAS_LOG_TYPE: {{ default "json" .Values.appConfig.kasLogType }}
+  KAS_LOG_OUTPUT: {{ default "stdout" .Values.appConfig.kasLogOutput }}
+
+  # Platform Endpoints
+  ACM_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
+  PLATFORM_ENDPOINT: {{ .Values.appConfig.platformEndpoint }}
+  AUDIENCE: {{ .Values.appConfig.audience }}
+
+  # Organization Configuration
+  ORG_ID: {{ .Values.appConfig.virtruOrgId }}
+
+  # KAS Identity
+  KAS_NAME: {{ default "local-kas" .Values.appConfig.kasName }}
+  KAS_URI: {{ .Values.appConfig.kasUri }}
+
+  # Key Management Configuration
+  KEY_ID: {{ default "rsa1" .Values.appConfig.keyId }}
+  KAS_PUBLIC_KEY_FILE: {{ default "/app/dsp-keys/kas-cert.pem" .Values.appConfig.kasPublicKeyFile }}
+  KAS_PRIVATE_KEY_FILE: {{ default "/app/dsp-keys/kas-private.pem" .Values.appConfig.kasPrivateKeyFile }}
+  KEY_ALGORITHM: {{ default "rsa:2048" .Values.appConfig.keyAlgorithm }}
+  WRAPPING_KEY_ID: {{ default "kas-root-key" .Values.appConfig.wrappingKeyId }}
+
+  # Provisioning Retry Configuration
+  KAS_PROVISIONING_DELAY: {{ default "10" .Values.appConfig.kasProvisioningDelay | quote }}
+  KAS_RETRY_ATTEMPTS: {{ default "8" .Values.appConfig.kasRetryAttempts | quote }}
+  KAS_RETRY_BACKOFF: {{ default "2" .Values.appConfig.kasRetryBackoff | quote }}
+  KAS_RETRY_BACKOFF_MAX: {{ default "30" .Values.appConfig.kasRetryBackoffMax | quote }}
+
+  # Optional/Utility
+  KAS_TRUCTL_BIN: {{ default "/usr/local/bin/kas" .Values.appConfig.kasTructlBin | quote }}
+  DEBUG: {{ default "false" .Values.appConfig.debug | quote }}
