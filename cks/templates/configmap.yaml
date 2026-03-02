@@ -48,6 +48,7 @@ data:
 
   # Platform Endpoints
   ACM_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
+  SECURE_ENCLAVE_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/secure-enclave/api" .Values.appConfig.secureEnclaveEndpoint }}
   PLATFORM_ENDPOINT: {{ .Values.appConfig.platformEndpoint }}
   AUDIENCE: {{ .Values.appConfig.audience }}
 
