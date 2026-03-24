@@ -49,15 +49,15 @@ data:
   # Platform Endpoints
   ACM_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
   SECURE_ENCLAVE_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/secure-enclave/api" .Values.appConfig.secureEnclaveEndpoint }}
-  PLATFORM_ENDPOINT: {{ .Values.appConfig.platformEndpoint }}
-  AUDIENCE: {{ .Values.appConfig.audience }}
 
   # Organization Configuration
   ORG_ID: {{ .Values.appConfig.virtruOrgId }}
 
   # KAS Identity
-  KAS_NAME: {{ default "local-kas" .Values.appConfig.kasName }}
   KAS_URI: {{ .Values.appConfig.kasUri }}
+
+  # Metadata directory (writable emptyDir in k8s, falls back to key dir for on-prem Docker)
+  KAS_METADATA_DIR: {{ default "/app/data" .Values.appConfig.kasMetadataDir }}
 
   # Key Management Configuration
   KEY_ID: {{ default "rsa1" .Values.appConfig.keyId }}
@@ -66,12 +66,5 @@ data:
   KEY_ALGORITHM: {{ default "rsa:2048" .Values.appConfig.keyAlgorithm }}
   WRAPPING_KEY_ID: {{ default "kas-root-key" .Values.appConfig.wrappingKeyId }}
 
-  # Provisioning Retry Configuration
-  KAS_PROVISIONING_DELAY: {{ default "10" .Values.appConfig.kasProvisioningDelay | quote }}
-  KAS_RETRY_ATTEMPTS: {{ default "8" .Values.appConfig.kasRetryAttempts | quote }}
-  KAS_RETRY_BACKOFF: {{ default "2" .Values.appConfig.kasRetryBackoff | quote }}
-  KAS_RETRY_BACKOFF_MAX: {{ default "30" .Values.appConfig.kasRetryBackoffMax | quote }}
-
   # Optional/Utility
-  KAS_TRUCTL_BIN: {{ default "/usr/local/bin/kas" .Values.appConfig.kasTructlBin | quote }}
   DEBUG: {{ default "false" .Values.appConfig.debug | quote }}
