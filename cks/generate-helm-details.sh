@@ -17,9 +17,10 @@ LOG_CONSOLE_ENABLED=true
 AUTH_TOKEN_STORAGE_TYPE="in-memory"
 KEY_PROVIDER_TYPE="file"
 KEY_PROVIDER_PATH="/app/keys"
-HMAC_AUTH_ENABLED=false
+HMAC_AUTH_ENABLED=true
 JWT_AUTH_ENABLED=true
 JWT_AUTH_AUDIENCE=""
+WORKING_DIR="${WORKING_DIR:-$SCRIPT_DIR/cks-setup-helm-details}"
 
 # Yes or No Prompt
 prompt () {
@@ -63,7 +64,7 @@ mkdirCheck () {
  fi
 }
 
-printf "${CLEAR}${GREEN}****************************************\n            CKS SETUP WIZARD\n****************************************\n${RESET}\n"
+printf "${CLEAR}${GREEN}****************************************\n            CKS SETUP HELM CHART DETAILS\n****************************************\n${RESET}\n"
 
 # Verify that openssl is available in the path and executable
 if ! command -v openssl &> /dev/null
@@ -79,11 +80,15 @@ then
     exit
 fi
 
-read -p "Enter Working Directory: " WORKING_DIR
+# Ensure WORKING_DIR is set
+if [ -z "$WORKING_DIR" ]; then
+  echo "WORKING_DIR is not set. Please export WORKING_DIR before running this script."
+  exit 1
+fi
 
 # Create Directories
 mkdirCheck $WORKING_DIR
-mkdir -p $WORKING_DIR/{ssl,keys,env,token-store}
+mkdir -p $WORKING_DIR/{ssl,keys,token-store}
 
 read -p "Define CKS URL (FQDN):
   Enter the URL the CKS will listen on.
@@ -112,9 +117,13 @@ done
 printf "\nRequests from Virtru to your CKS are authenticated with JWTs.\n"
 printf "Authentication via HMACs may be enabled to support requests from CSE to CKS.\n\n"
 
-if prompt "Do you want to enable auth via HMAC [yes/no]?"; then
-  HMAC_AUTH_ENABLED=true
-fi
+# Prompt to enable HMAC Auth
+# If enabled, the script will generate a token for the Virtru ACM to authenticate with the CKS and include it in the send_to_virtru.tar.gz file along with instructions on how to use it.
+# If not enabled, the script will skip token generation and the send_to_virtru.tar.gz file will only include the public key and instructions to use JWTs for authentication.
+# This is commented because HMAC auth is set to true, it'll all be needed for the current CKS Helm Chart setup, but this allows for flexibility if someone wanted to use this script for a different setup or if we want to make HMAC auth optional in the future.
+#if prompt "Do you want to enable auth via HMAC [yes/no]?"; then
+  #HMAC_AUTH_ENABLED=true
+#fi
 
 # Change to the Working Directory specified by the User
 cd $WORKING_DIR
@@ -181,36 +190,11 @@ if [ "$HMAC_AUTH_ENABLED" = true ]; then
   TOKEN_ID=$(printf "virtru-%s@token.virtru.com" $DATE_STR)
 
   # Create the Tokens File
-  TOKEN_JSON=$(printf '[{"displayName": "Token For the Virtru ACM to access this CKS", "tokenId": "%s", "lastModified": "2016-01-01T23:48:18.064Z", "created": "2016-01-01T23:48:18.064Z", "state": "active", "version": "1.0.0", "attributes": [{"value": "virtru", "key": "virtru:data:creator"}, {"value": "admin@virtru.com", "key": "virtru:data:owner"}, {"value": "service", "key": "virtru:service:type"}], "encryptedToken": {"secret": "%s"}}]' "$TOKEN_ID" "$SECRET_B64_FINAL")
+  TOKEN_JSON=$(printf '[{"displayName": "Token For the Virtru ACM to access this CKS", "tokenId": "%s", "lastModified": "2026-01-01T23:48:18.064Z", "created": "2026-01-01T23:48:18.064Z", "state": "active", "version": "1.0.0", "attributes": [{"value": "virtru", "key": "virtru:data:creator"}, {"value": "admin@virtru.com", "key": "virtru:data:owner"}, {"value": "service", "key": "virtru:service:type"}], "encryptedToken": {"secret": "%s"}}]' "$TOKEN_ID" "$SECRET_B64_FINAL")
 
   touch ./token-store/tokens.json
   echo "$TOKEN_JSON" >> ./token-store/tokens.json
 fi
-
-# Create the Environment File
-# This is not needed for the helm deployment
-#touch ./env/cks.env
-
-# Write the Environment File
-# This is not needed for the helm deployment
-#printf "PORT=%s\n" $PORT >> ./env/cks.env
-#printf "LOG_RSYSLOG_ENABLED=%s\n" $LOG_RSYS_ENABLED >> ./env/cks.env
-#printf "LOG_CONSOLE_ENABLED=%s\n" $LOG_CONSOLE_ENABLED >> ./env/cks.env
-#printf "KEY_PROVIDER_TYPE=%s\n" $KEY_PROVIDER_TYPE >> ./env/cks.env
-#printf "KEY_PROVIDER_PATH=%s\n" $KEY_PROVIDER_PATH >> ./env/cks.env
-#printf "HTTPS_KEY_PATH=%s\n" /app/ssl/$CKS_FQDN.key >> ./env/cks.env
-#printf "HTTPS_CERT_PATH=%s\n" /app/ssl/$CKS_FQDN.crt >> ./env/cks.env
-#printf "HMAC_AUTH_ENABLED=%s\n" $HMAC_AUTH_ENABLED >> ./env/cks.env
-#printf "JWT_AUTH_ENABLED=%s\n" $JWT_AUTH_ENABLED >> ./env/cks.env
-
-#if [ "$HMAC_AUTH_ENABLED" = true ]; then
-#  printf "AUTH_TOKEN_STORAGE_TYPE=%s\n" $AUTH_TOKEN_STORAGE_TYPE >> ./env/cks.env
-#  printf "AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON=%s\n" "$TOKEN_JSON" >> ./env/cks.env
-#fi
-
-#if [ "$JWT_AUTH_ENABLED" = true ]; then
-#  printf "JWT_AUTH_AUDIENCE=%s\n" $JWT_AUTH_AUDIENCE >> ./env/cks.env
-#fi
 
 # Print Summary
 printf "Summary:\n\n"
@@ -250,8 +234,3 @@ fi
 tar -zcvf send_to_virtru.tar.gz ./cks_info
 
 rm -rf ./cks_info
-
-# Create the Run File
-#touch ./run.sh
-
-#echo "docker run --name Virtru_CKS --interactive --tty --detach --restart unless-stopped --env-file "$WORKING_DIR"/env/cks.env -p 443:$PORT --mount type=bind,source="$WORKING_DIR"/keys,target="$KEY_PROVIDER_PATH" --mount type=bind,source="$WORKING_DIR"/ssl,target=/app/ssl containers.virtru.com/cks:v"$CKS_VERSION" serve" > ./run.sh
