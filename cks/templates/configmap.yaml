@@ -48,7 +48,7 @@ data:
 
   # Platform Endpoints
   ACM_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
-  SECURE_DATAHARBOR_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/data-harbor/api" .Values.appConfig.secureDataHarborEndpoint }}
+  DATA_HARBOR_ENDPOINT: {{ default "https://api-develop01.develop.virtru.com/data-harbor/api" .Values.appConfig.secureDataHarborEndpoint }}
 
   # Organization Configuration
   ORG_ID: {{ .Values.appConfig.virtruOrgId }}
