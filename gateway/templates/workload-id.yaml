@@ -108,6 +108,22 @@ spec:
                 key: gateway-xheader-auth-secret
                 name: {{ .Release.Name }}-secrets
           {{- end }}
+          {{- if .Values.proxyConfig.httpProxyHost }}
+          - name: GATEWAY_HTTP_PROXY_HOST
+            value: {{ .Values.proxyConfig.httpProxyHost | quote }}
+          {{- end }}
+          {{- if .Values.proxyConfig.httpProxyPort }}
+          - name: GATEWAY_HTTP_PROXY_PORT
+            value: {{ .Values.proxyConfig.httpProxyPort | quote }}
+          {{- end }}
+          {{- if .Values.proxyConfig.httpsProxyHost }}
+          - name: GATEWAY_HTTPS_PROXY_HOST
+            value: {{ .Values.proxyConfig.httpsProxyHost | quote }}
+          {{- end }}
+          {{- if .Values.proxyConfig.httpsProxyPort }}
+          - name: GATEWAY_HTTPS_PROXY_PORT
+            value: {{ .Values.proxyConfig.httpsProxyPort | quote }}
+          {{- end }}
           readinessProbe:
             tcpSocket:
               port: 25

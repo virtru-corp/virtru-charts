@@ -218,6 +218,18 @@ additionalConfig:
     enabled: false  
     selector: gw 
 
+# -- Optional proxy configuration for routing traffic through a proxy server.
+# -- Only configure these values if your Gateway needs to route traffic through a proxy.
+proxyConfig:
+  # -- Hostname or IP address of HTTP proxy server (optional)
+  httpProxyHost: ""
+  # -- Port for HTTP proxy (optional, defaults to 80 if host is specified)
+  httpProxyPort: ""
+  # -- Hostname or IP address of HTTPS proxy server (optional)
+  httpsProxyHost: ""
+  # -- Port for HTTPS proxy (optional, defaults to 443 if host is specified)
+  httpsProxyPort: ""
+
 # -- Optional Istio configurations. Defaults to false.
 istioIngress:
   enabled: false

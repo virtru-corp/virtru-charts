@@ -86,6 +86,16 @@ You may, depending on your email needs, wish to update a few values in this sect
 * `decryptThenEncrypt` - If you are using a multi gateway approach (ex: decrypt email => Scan content => re-encrypt email), this should be set to 1 (true)
 * `dkimSigning` - If you wish to have the gateway DKIM sign your emails, set enabled to `true`. You must have a public DKIM record for the selector you choose with a public key that matches the keys inputted into `appSecrets.dkimSigning`
 
+#### `proxyConfig` (Optional)
+
+Configure these values if your Gateway needs to route traffic through a proxy server:
+* `httpProxyHost` - Hostname or IP address of HTTP proxy server (optional)
+* `httpProxyPort` - Port for HTTP proxy (optional, defaults to 80 if host is specified)
+* `httpsProxyHost` - Hostname or IP address of HTTPS proxy server (optional)
+* `httpsProxyPort` - Port for HTTPS proxy (optional, defaults to 443 if host is specified)
+
+Note: These settings are only required if your network requires proxy access for external connections. Leave blank if not using a proxy.
+
 ### Installing the gateway
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your gateway(s). An example command is listed below:
@@ -147,6 +157,10 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
 | `dkimSigning.selector` | Generates the subdomain for `GATEWAY_DKIM_DOMAINS` (`<dkimSigning.selector>._domainkey.primaryMailingDomain`)
+| `proxyConfig.httpProxyHost` | `GATEWAY_HTTP_PROXY_HOST` |
+| `proxyConfig.httpProxyPort` | `GATEWAY_HTTP_PROXY_PORT` |
+| `proxyConfig.httpsProxyHost` | `GATEWAY_HTTPS_PROXY_HOST` |
+| `proxyConfig.httpsProxyPort` | `GATEWAY_HTTPS_PROXY_PORT` |
 
 ### `inboundRelayAddresses` values for Gmail and Office 365
 
