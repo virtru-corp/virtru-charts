@@ -40,6 +40,12 @@ spec:
               name: {{ .Values.appSecrets.virtruAuth.name }}
           {{- end }}
           {{- if .Values.externalAppSecrets }}
+          {{ range .Values.externalAppSecrets }}
+          - secretRef:
+              name: {{ .secretsPath }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
           env:
           - name: AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
@@ -47,6 +53,7 @@ spec:
               secretKeyRef:
                 key: hmac-auth-token-json
                 name: {{ .secretsPath }}
+                optional: true
           {{- end }}
           {{- end }}
           securityContext:
@@ -72,6 +79,8 @@ spec:
           - mountPath: "/app/keys"
             name: {{ .Values.appSecrets.virtruKeys.name }}
             readOnly: true
+          - mountPath: "/app/data"
+            name: app-data
           {{- end }}
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
@@ -79,6 +88,8 @@ spec:
           - mountPath: "/app/keys"
             name: {{ .name }}
             readOnly: true
+          - mountPath: "/app/data"
+            name: app-data
           {{- end }}
           {{- end }}
       {{- if not .Values.externalAppSecrets }}
@@ -87,6 +98,8 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ .Values.appSecrets.virtruKeys.name }}
+      - name: app-data
+        emptyDir: {}
       {{- end }}
       {{- if .Values.externalAppSecrets }}
       {{- with index .Values.externalAppSecrets 0 }}
@@ -95,6 +108,8 @@ spec:
         secret:
           defaultMode: 420
           secretName: {{ .secretsPath }}
+      - name: app-data
+        emptyDir: {}
       {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}

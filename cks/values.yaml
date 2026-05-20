@@ -138,6 +138,44 @@ appConfig:
   jwtAuthIssuer: https://api.virtru.com
   jwtAuthJwksPath: /acm/api/jwks
 
+  # -- KAS Configuration
+  # -- OAuth2 issuer that mints the access tokens KAS verifies on rewrap.
+  kasAuthIssuer: https://login.virtru.com/oauth2/default
+  # -- Expected `aud` claim on access tokens KAS verifies.
+  kasAuthAudience: https://api.virtru.com
+  # -- Public hostname KAS advertises to clients (must match your CKS ingress FQDN).
+  kasPublicHostName: ""
+  # -- Public URI KAS uses as its identity (typically `https://<kasPublicHostName>`).
+  kasUri: ""
+
+  # -- KAS Logging Configuration
+  kasLogLevel: info
+  kasLogType: json
+  kasLogOutput: stdout
+
+  # -- DSP/KAS local database. The CKS image runs an embedded postgres for KAS metadata.
+  dspDBDatabase: opentdf
+  dspDBUser: postgres
+
+  # -- Platform Endpoints. Defaults point at Virtru production.
+  acmEndpoint: https://api.virtru.com/acm/api
+  secureDataHarborEndpoint: https://api.virtru.com/data-harbor/api
+
+  # -- Writable directory KAS uses for runtime metadata. In Kubernetes this is mounted from an emptyDir.
+  kasMetadataDir: /app/data
+
+  # -- Key Management Configuration
+  # -- Unique identifier for the active key pair. Must match the key_id registered with Virtru.
+  keyId: ""
+  kasPublicKeyFile: /app/keys/rsa001.pub
+  kasPrivateKeyFile: /app/keys/rsa001.pem
+  keyAlgorithm: rsa:2048
+  # -- Identifier of the wrapping key used to encrypt private keys at rest. Leave as default unless instructed.
+  wrappingKeyId: kas-root-key
+
+  # -- Optional/Utility
+  debug: "false"
+
 # By default, you can create secrets using the keys below.
 # Important note: Creating secrets in this way is a default option.
 # While a simpler approach with fewer variables, it is recommended you use
