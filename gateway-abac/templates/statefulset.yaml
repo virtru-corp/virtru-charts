@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
     {{- include "gateway.labels" . | nindent 6 }}
-  serviceName:
+  serviceName: {{ include "gateway.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   volumeClaimTemplates:
     - metadata:
