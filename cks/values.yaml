@@ -66,6 +66,55 @@ deployment:
   # -- The CKS will use the default internal port 9000.
   port: 9000
 
+# -- DSP configuration rendered as a non-secret ConfigMap and mounted into the CKS pod when enabled.
+dsp:
+  enabled: false
+  config:
+    fileName: dsp.yaml
+    mountPath: /app/dsp
+    data: |
+      mode: kas
+      sdk_config:
+        core:
+          # Platform/DSP core endpoint used by the SDK.
+          endpoint: https://secure.virtru.com/dsp
+          plaintext: false
+        # CLIENT_ID is provided through the CLIENT_ID environment variable.
+        client_id:
+        # CLIENT_SECRET is provided through the CLIENT_SECRET environment variable.
+        client_secret:
+      logger:
+        level: info
+        type: text
+        output: stdout
+      key_management:
+        enabled: true
+        filesystem:
+          enabled: true
+          # Filesystem key definitions for the DSP key manager.
+          # Each alias must match the KAS key ID registered in DSP.
+          keys:
+            - alias: "<key id registered with Virtru>"
+              private_key_path: /app/keys/rsa001.pem
+      services:
+        kas:
+          # KAS root key can be supplied by an environment override.
+          root_key:
+          # Public KAS URI registered with DSP clients.
+          registered_kas_uri: https://cks.yourdomain.com
+          preview:
+            ec_tdf_enabled: true
+            key_management: true
+      server:
+        tls:
+          enabled: false
+        auth:
+          enabled: true
+          # Expected token audience for KAS requests.
+          audience: https://api.virtru.com
+          # Token issuer used for KAS request authentication.
+          issuer: https://login.virtru.com/oauth2/default
+
 # -- Ingress Configuration. To serve traffic appropriately, you must have an ingress controller for your CKS service
 # -- This is enabled by default.
 ingress:
@@ -138,7 +187,7 @@ appConfig:
   jwtAuthIssuer: https://api.virtru.com
   jwtAuthJwksPath: /acm/api/jwks
 
-  # -- KAS Configuration
+  # -- Legacy KAS Configuration. Used by the legacy env-driven KAS startup path when dsp.enabled=false.
   # -- OAuth2 issuer that mints the access tokens KAS verifies on rewrap.
   kasAuthIssuer: https://login.virtru.com/oauth2/default
   # -- Expected `aud` claim on access tokens KAS verifies.
@@ -148,12 +197,12 @@ appConfig:
   # -- Public URI KAS uses as its identity (typically `https://<kasPublicHostName>`).
   kasUri: ""
 
-  # -- KAS Logging Configuration
+  # -- Legacy KAS Logging Configuration. DSP mode uses dsp.config.data.logger instead.
   kasLogLevel: info
   kasLogType: json
   kasLogOutput: stdout
 
-  # -- DSP/KAS local database. The CKS image runs an embedded postgres for KAS metadata.
+  # -- Legacy DSP/KAS local database. Ignored when dsp.enabled=true.
   dspDBDatabase: opentdf
   dspDBUser: postgres
 
@@ -161,10 +210,10 @@ appConfig:
   acmEndpoint: https://api.virtru.com/acm/api
   secureDataHarborEndpoint: https://api.virtru.com/data-harbor/api
 
-  # -- Writable directory KAS uses for runtime metadata. In Kubernetes this is mounted from an emptyDir.
+  # -- Legacy writable directory KAS uses for runtime metadata. DSP mode uses the mounted dsp.yaml configuration.
   kasMetadataDir: /app/data
 
-  # -- Key Management Configuration
+  # -- Legacy Key Management Configuration. DSP mode uses dsp.config.data.key_management.filesystem.keys.
   # -- Unique identifier for the active key pair. Must match the key_id registered with Virtru.
   keyId: ""
   kasPublicKeyFile: /app/keys/rsa001.pub
@@ -198,6 +247,14 @@ appSecrets:
         <rsa001 public key>
       rsa001.pem: |
         <rsa001 private key>
+
+  dspAuth:
+    name: dsp-auth
+    data:
+      # -- OAuth client id used by DSP/KAS. This is rendered into a Kubernetes Secret when dsp.enabled=true and externalAppSecrets is not set.
+      clientId: <dsp client id>
+      # -- OAuth client secret used by DSP/KAS. This is rendered into a Kubernetes Secret when dsp.enabled=true and externalAppSecrets is not set.
+      clientSecret: <dsp client secret>
 
 # -- Configuration for integrating with external secret management solutions.
 #https://external-secrets.io/v0.8.2/introduction/overview/

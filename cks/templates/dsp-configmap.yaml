@@ -1,0 +1,11 @@
+{{- if .Values.dsp.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cks.fullname" . }}-dsp-config
+  labels:
+    {{- include "cks.labels" . | nindent 4 }}
+data:
+  {{ default "dsp.yaml" .Values.dsp.config.fileName | quote }}: |
+{{- .Values.dsp.config.data | nindent 4 }}
+{{- end }}
