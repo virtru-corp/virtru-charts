@@ -48,16 +48,17 @@ data:
   KAS_LOG_OUTPUT: {{ default "stdout" .Values.appConfig.kasLogOutput }}
 {{ end }}
 
-  # Platform Endpoints
-  ACM_ENDPOINT: {{ default "https://api.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
-  DATA_HARBOR_ENDPOINT: {{ default "https://api.virtru.com/data-harbor/api" .Values.appConfig.secureDataHarborEndpoint }}
-
   # Organization Configuration
   ORG_ID: {{ .Values.appConfig.virtruOrgId }}
 
 {{ if not .Values.dsp.enabled }}
   # Legacy KAS Identity
   KAS_URI: {{ .Values.appConfig.kasUri }}
+
+
+  # Platform Endpoints
+  ACM_ENDPOINT: {{ default "https://api.virtru.com/acm/api" .Values.appConfig.acmEndpoint }}
+  DATA_HARBOR_ENDPOINT: {{ default "https://api.virtru.com/data-harbor/api" .Values.appConfig.secureDataHarborEndpoint }}
 
   # Legacy metadata directory (writable emptyDir in k8s, falls back to key dir for on-prem Docker)
   KAS_METADATA_DIR: {{ default "/app/data" .Values.appConfig.kasMetadataDir }}
