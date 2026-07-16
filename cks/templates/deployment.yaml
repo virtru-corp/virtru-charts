@@ -54,12 +54,12 @@ spec:
           {{- if .Values.dsp.enabled }}
           - name: DSP_CONFIG
             value: {{ printf "%s/%s" (.Values.dsp.config.mountPath | default "/app/dsp" | trimSuffix "/") (.Values.dsp.config.fileName | default "dsp.yaml") | quote }}
-          - name: CLIENT_ID
+          - name: DSP_SDK_CONFIG_CLIENT_ID
             valueFrom:
               secretKeyRef:
                 key: CLIENT_ID
                 name: {{ $dspAuthSecretName }}
-          - name: CLIENT_SECRET
+          - name: DSP_SDK_CONFIG_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
                 key: CLIENT_SECRET
