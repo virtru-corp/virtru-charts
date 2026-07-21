@@ -70,8 +70,6 @@ deployment:
 dsp:
   enabled: false
   config:
-    fileName: dsp.yaml
-    mountPath: /app/dsp
     data: |
       mode: kas
       sdk_config:

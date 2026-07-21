@@ -72,7 +72,7 @@ You can have multiple RSA keypairs on your CKS as long as they follow the naming
 
 #### `dsp`
 
-Set `dsp.enabled=true` to run KAS through DSP using a mounted `dsp.yaml` file. The chart renders `dsp.config.data` into a non-secret ConfigMap, mounts it at `dsp.config.mountPath`, and sets `DSP_CONFIG` to the mounted file path.
+Set `dsp.enabled=true` to run KAS through DSP using a mounted `dsp.yaml` file. The chart renders `dsp.config.data` into a non-secret ConfigMap, mounts the ConfigMap volume at `/app/dsp/config`, and sets `DSP_CONFIG` to `/app/dsp/config/dsp.yaml`.
 
 `CLIENT_ID` and `CLIENT_SECRET` are not stored in `dsp.config.data`. They must be available as Kubernetes Secret keys named exactly `CLIENT_ID` and `CLIENT_SECRET`.
 
@@ -84,8 +84,6 @@ Example:
 dsp:
   enabled: true
   config:
-    fileName: dsp.yaml
-    mountPath: /app/dsp
     data: |
       mode: kas
       sdk_config:
@@ -146,9 +144,7 @@ helm install -n virtru -f ./values.yaml cks ./ --create-namespace
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU threshold for scaling. Default is 80% |
 | deployment | object | `{"port":9000}` | Internal application port used for the deployment. |
 | deployment.port | int | `9000` | The CKS will use the default internal port 9000. |
-| dsp | object | `{"enabled":false,"config":{"fileName":"dsp.yaml","mountPath":"/app/dsp","data":"mode: kas\n..."}}` | DSP configuration rendered as a non-secret ConfigMap and mounted into the CKS pod when enabled. |
-| dsp.config.fileName | string | `"dsp.yaml"` | File name used inside the DSP configuration ConfigMap and mounted directory. |
-| dsp.config.mountPath | string | `"/app/dsp"` | Directory where the DSP configuration ConfigMap is mounted. |
+| dsp | object | `{"enabled":false,"config":{"data":"mode: kas\n..."}}` | DSP configuration rendered as a non-secret ConfigMap and mounted into the CKS pod when enabled. |
 | dsp.enabled | bool | `false` | Enables DSP-managed KAS startup using the mounted DSP configuration file. |
 | fullnameOverride | string | `""` | Optional override for the full resource name. |
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"containers.virtru.com/cks","tag":""}` | For version, see https://support.virtru.com/hc/en-us/articles/360034039233-Release-Notes-Virtru-Private-Keystore-for-Virtru-Solutions-Formerly-Virtru-Customer-Key-Server-CKS. |

@@ -6,6 +6,6 @@ metadata:
   labels:
     {{- include "cks.labels" . | nindent 4 }}
 data:
-  {{ default "dsp.yaml" .Values.dsp.config.fileName | quote }}: |
+  dsp.yaml: |
 {{- .Values.dsp.config.data | nindent 4 }}
 {{- end }}
