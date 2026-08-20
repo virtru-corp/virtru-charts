@@ -6,29 +6,31 @@
 | ------------------ | ----------------- | ------------------------------- |
 | `image.repository` | Image repository  | `ghcr.io/virtru-corp/audit-api` |
 | `image.pullPolicy` | Image Pull Policy | `Always`                        |
-| `image.tag`        | Image tag         | `0.22.0-8057e1b`                |
+| `image.tag`        | Image tag         | `0.32.0`                        |
 
 ### imagePullSecrets Image Pull Secrets - Overrides Global
 
-| Name                       | Description            | Value                  |
-| -------------------------- | ---------------------- | ---------------------- |
-| `imagePullSecrets[0].name` | Image Pull Secret Name | `platform-pull-secret` |
+| Name                       | Description            | Value                   |
+| -------------------------- | ---------------------- | ----------------------- |
+| `imagePullSecrets[0].name` | Image Pull Secret Name | `audit-api-pull-secret` |
 
 ### Deployment Parameters
 
-| Name                         | Description                                                                                                            | Value            |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| `nameOverride`               | Override name of the chart                                                                                             | `""`             |
-| `fullnameOverride`           | Override the full name of the chart                                                                                    | `""`             |
-| `config.db.host`             | Postgresql DB Host                                                                                                     | `postgresql`     |
-| `config.db.user`             | Postgresql DB Username                                                                                                 | `audit_manager`  |
-| `config.db.port`             | Postgresql DB Port                                                                                                     | `5432`           |
-| `config.db.dbName`           | Postgresql DB Name                                                                                                     | `audit_database` |
-| `config.db.sslMode`          | Postgresql SSL Mode                                                                                                    | `disable`        |
-| `config.secrets.dbPassword`  | Postgresql Database password - used if `config.existingSecret` is blank                                                | `nil`            |
-| `serviceAccount.create`      | Specifies whether a service account should be created                                                                  | `true`           |
-| `serviceAccount.annotations` | Annotations to add to the service account                                                                              | `{}`             |
-| `serviceAccount.name`        | The name of the service account to use. If not set and create is true, a name is generated using the fullname template | `""`             |
+| Name                                  | Description                                                                                                            | Value            |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| `nameOverride`                        | Override name of the chart                                                                                             | `""`             |
+| `fullnameOverride`                    | Override the full name of the chart                                                                                    | `""`             |
+| `config.db.host`                      | Postgresql DB Host                                                                                                     | `postgresql`     |
+| `config.db.user`                      | Postgresql DB Username                                                                                                 | `audit_manager`  |
+| `config.db.port`                      | Postgresql DB Port                                                                                                     | `5432`           |
+| `config.db.dbName`                    | Postgresql DB Name                                                                                                     | `audit_database` |
+| `config.db.sslMode`                   | Postgresql SSL Mode                                                                                                    | `disable`        |
+| `config.platform.disableInternalAuth` | disable internal service auth                                                                                          | `true`           |
+| `config.platform.defaultOrgId`        | orgId used for queries                                                                                                 | `nil`            |
+| `config.secrets.dbPassword`           | Postgresql Database password - used if `config.existingSecret` is blank                                                | `nil`            |
+| `serviceAccount.create`               | Specifies whether a service account should be created                                                                  | `true`           |
+| `serviceAccount.annotations`          | Annotations to add to the service account                                                                              | `{}`             |
+| `serviceAccount.name`                 | The name of the service account to use. If not set and create is true, a name is generated using the fullname template | `""`             |
 
 ### podAnnotations Pod K8S Annotations
 
@@ -44,6 +46,17 @@
 | -------------- | ------------------------- | ----------- |
 | `service.type` | type of service to create | `ClusterIP` |
 | `service.port` | port to expose            | `8080`      |
+
+### Secret Generation Parameters
+
+| Name                                            | Description                                                               | Value          |
+| ----------------------------------------------- | ------------------------------------------------------------------------- | -------------- |
+| `secrets.imageCredentials`                      | Map of key (pull name) to auth information.  Each key creates a pull cred |                |
+| `secrets.imageCredentials.pull-secret`          | Container registry auth for "install name"-pull-secret                    |                |
+| `secrets.imageCredentials.pull-secret.registry` | Registry repo                                                             | `ghcr.io`      |
+| `secrets.imageCredentials.pull-secret.username` | Registry Auth username                                                    | `username`     |
+| `secrets.imageCredentials.pull-secret.password` | Registry Auth password                                                    | `password`     |
+| `secrets.imageCredentials.pull-secret.email`    | Registry Auth email                                                       | `nope@nah.com` |
 
 ### Ingress Configuration
 
@@ -72,3 +85,19 @@
 | Name              | Description                                   | Value  |
 | ----------------- | --------------------------------------------- | ------ |
 | `tags.fluent-bit` | Tag for fluent-bit dependency default is true | `true` |
+
+### Fluent Bit Configuration (optional)
+if you would like to enable fluentbit to send audit events to splunk, you can adjust the fluentbit config in the values.yaml file. You'll want to add an additional output plugin to the fluentbit config. The following is an example of how to add a splunk output plugin to the fluentbit config:
+
+```yaml
+[OUTPUT]
+          Name        splunk
+          Match       audit
+          Port        8088
+          Host        <splunk-host>
+          TLS         On
+          TLS.Verify  Off
+          Splunk_Token <splunk-token>
+          splunk_send_raw On
+```
+For more information on how to configure fluentbit and splunk, please refer to the [fluentbit documentation](https://docs.fluentbit.io/manual/pipeline/outputs/splunk#configuration-parameters)
