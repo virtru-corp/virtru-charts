@@ -30,6 +30,41 @@ spec:
       serviceAccountName: {{ include "cks.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # -- HSM Init Container: runs configure-pkcs11 before CKS starts
+      # Copies the mounted cloudhsm-pkcs11.cfg into a writable emptyDir,
+      # then runs configure-pkcs11 to initialize the PKCS#11 slot.
+      initContainers:
+        - name: configure-pkcs11
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "Copying cloudhsm-pkcs11.cfg to writable location..."
+              cp /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/cloudhsm-pkcs11.cfg /opt/cloudhsm/etc/cloudhsm-pkcs11.cfg
+              echo "Running configure-pkcs11..."
+              /opt/cloudhsm/bin/configure-pkcs11 \
+                -a {{ .Values.appConfig.hsmIp }} {{ .Values.appConfig.hsmIp2 }} \
+                --hsm-ca-cert /opt/cloudhsm/etc/customerCA.crt \
+                --log-type term \
+                --log-level info
+              echo "configure-pkcs11 complete."
+          volumeMounts:
+            # Writable emptyDir where the final config lives
+            - mountPath: /opt/cloudhsm/etc
+              name: cloudhsm-etc
+            # Read-only source config mounted at a different path
+            - mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/cloudhsm-pkcs11.cfg
+              name: cloudhsm-pkcs11-cfg
+              subPath: cloudhsm-pkcs11.cfg
+              readOnly: true
+            # CA cert needed by configure-pkcs11
+            - mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/customerCA.crt
+              name: hsm-ca-cert
+              subPath: customerCA.crt
+              readOnly: true
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
@@ -45,6 +80,15 @@ spec:
               name: {{ .secretsPath }}
           {{- end }}
           {{- end }}
+          {{- if not .Values.externalAppSecrets }}
+          env:
+          # -- HSM: Inject PKCS11_PIN from hsm-pin secret
+          - name: PKCS11_PIN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.appSecrets.hsmPin.name }}
+                key: pkcs11Pin
+          {{- end }}
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
           env:
@@ -54,6 +98,11 @@ spec:
                 key: hmac-auth-token-json
                 name: {{ .secretsPath }}
                 optional: true
+          - name: PKCS11_PIN
+            valueFrom:
+              secretKeyRef:
+                name: {{ $.Values.appSecrets.hsmPin.name }}
+                key: pkcs11Pin
           {{- end }}
           {{- end }}
           securityContext:
@@ -81,6 +130,23 @@ spec:
             readOnly: true
           - mountPath: "/app/data"
             name: app-data
+          # -- HSM: Writable etc dir initialized by init container
+          - mountPath: /opt/cloudhsm/etc
+            name: cloudhsm-etc
+          # -- HSM: Mount customerCA.crt into the writable etc dir
+          - mountPath: /opt/cloudhsm/etc/customerCA.crt
+            name: hsm-ca-cert
+            subPath: customerCA.crt
+            readOnly: true
+          # -- HSM: Mount client TLS cert and key
+          - mountPath: /opt/cloudhsm/etc/client.crt
+            name: cloudhsm-client-tls
+            subPath: client.crt
+            readOnly: true
+          - mountPath: /opt/cloudhsm/etc/client.key
+            name: cloudhsm-client-key
+            subPath: client.key
+            readOnly: true
           {{- end }}
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
@@ -90,6 +156,23 @@ spec:
             readOnly: true
           - mountPath: "/app/data"
             name: app-data
+          # -- HSM: Writable etc dir initialized by init container
+          - mountPath: /opt/cloudhsm/etc
+            name: cloudhsm-etc
+          # -- HSM: Mount customerCA.crt into the writable etc dir
+          - mountPath: /opt/cloudhsm/etc/customerCA.crt
+            name: hsm-ca-cert
+            subPath: customerCA.crt
+            readOnly: true
+          # -- HSM: Mount client TLS cert and key
+          - mountPath: /opt/cloudhsm/etc/client.crt
+            name: cloudhsm-client-tls
+            subPath: client.crt
+            readOnly: true
+          - mountPath: /opt/cloudhsm/etc/client.key
+            name: cloudhsm-client-key
+            subPath: client.key
+            readOnly: true
           {{- end }}
           {{- end }}
       {{- if not .Values.externalAppSecrets }}
@@ -100,6 +183,37 @@ spec:
           secretName: {{ .Values.appSecrets.virtruKeys.name }}
       - name: app-data
         emptyDir: {}
+      # -- HSM: Writable emptyDir for /opt/cloudhsm/etc — populated by init container
+      - name: cloudhsm-etc
+        emptyDir: {}
+      # -- HSM: CA Certificate secret
+      - name: hsm-ca-cert
+        secret:
+          secretName: hsm-ca-cert
+          items:
+            - key: customerCA.crt
+              path: customerCA.crt
+      # -- HSM: PKCS11 config — read-only source, copied by init container
+      - name: cloudhsm-pkcs11-cfg
+        configMap:
+          name: cloudhsm-pkcs11-cfg
+          items:
+            - key: cloudhsm-pkcs11.cfg
+              path: cloudhsm-pkcs11.cfg
+      # -- HSM: Client TLS cert
+      - name: cloudhsm-client-tls
+        secret:
+          secretName: cloudhsm-client-tls
+          items:
+            - key: client.crt
+              path: client.crt
+      # -- HSM: Client TLS key
+      - name: cloudhsm-client-key
+        secret:
+          secretName: cloudhsm-client-tls
+          items:
+            - key: client.key
+              path: client.key
       {{- end }}
       {{- if .Values.externalAppSecrets }}
       {{- with index .Values.externalAppSecrets 0 }}
@@ -110,6 +224,37 @@ spec:
           secretName: {{ .secretsPath }}
       - name: app-data
         emptyDir: {}
+      # -- HSM: Writable emptyDir for /opt/cloudhsm/etc — populated by init container
+      - name: cloudhsm-etc
+        emptyDir: {}
+      # -- HSM: CA Certificate secret
+      - name: hsm-ca-cert
+        secret:
+          secretName: hsm-ca-cert
+          items:
+            - key: customerCA.crt
+              path: customerCA.crt
+      # -- HSM: PKCS11 config — read-only source, copied by init container
+      - name: cloudhsm-pkcs11-cfg
+        configMap:
+          name: cloudhsm-pkcs11-cfg
+          items:
+            - key: cloudhsm-pkcs11.cfg
+              path: cloudhsm-pkcs11.cfg
+      # -- HSM: Client TLS cert
+      - name: cloudhsm-client-tls
+        secret:
+          secretName: cloudhsm-client-tls
+          items:
+            - key: client.crt
+              path: client.crt
+      # -- HSM: Client TLS key
+      - name: cloudhsm-client-key
+        secret:
+          secretName: cloudhsm-client-tls
+          items:
+            - key: client.key
+              path: client.key
       {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}

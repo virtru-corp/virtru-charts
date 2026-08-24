@@ -17,9 +17,16 @@ data:
   PORT: "{{ .Values.deployment.port }}"
 
   # Boot Checker / Key Import
+  # NOTE: For HSM mode, noKeysRule is set to "hsm" and privateKeyPath is intentionally empty.
+  {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+  BOOT_CHECKER_NOKEYS_RULE: {{ default "hsm" .Values.appConfig.noKeysRule }}
+  BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: {{ default "/app/keys/rsa001.pub" .Values.appConfig.publicKeyPath }}
+  BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: ""
+  {{- else }}
   BOOT_CHECKER_NOKEYS_RULE: {{ default "importPEM" .Values.appConfig.noKeysRule }}
   BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: {{ default "/run/secrets/rsa001.pub" .Values.appConfig.publicKeyPath }}
   BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: {{ default "/run/secrets/rsa001.pem" .Values.appConfig.privateKeyPath }}
+  {{- end }}
 
   # Key Provider
   KEY_PROVIDER_PATH: {{ default "/app/keys" .Values.appSecrets.virtruKeys.mountPath }}
@@ -68,3 +75,18 @@ data:
 
   # Optional/Utility
   DEBUG: {{ default "false" .Values.appConfig.debug | quote }}
+
+  # ============================================================
+  # HSM / PKCS11 Configuration
+  # Only rendered when keyProviderType is "hsm".
+  # ============================================================
+  {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+  CRYPTO_OPERATIONS_TYPE: {{ default "hsm" .Values.appConfig.cryptoOperationsType }}
+  HSM_IP: {{ .Values.appConfig.hsmIp | quote }}
+  HSM_IP2: {{ .Values.appConfig.hsmIp2 | quote }}
+  PKCS11_VENDOR: {{ default "CloudHSM" .Values.appConfig.pkcs11Vendor }}
+  PKCS11_LIB_NAME: {{ default "CloudHSM" .Values.appConfig.pkcs11LibName }}
+  PKCS11_LIB_PATH: {{ default "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so" .Values.appConfig.pkcs11LibPath }}
+  PKCS11_SLOT_LBL: {{ .Values.appConfig.pkcs11SlotLbl | quote }}
+  PKCS11_KEY_LBL: {{ .Values.appConfig.pkcs11KeyLbl | quote }}
+  {{- end }}

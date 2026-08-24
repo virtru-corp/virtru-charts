@@ -1,80 +1,122 @@
-# Default values for the Virtru Private Keystore (CKS).
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# ==============================================================================
+# Virtru Private Keystore (CKS) — Helm Chart Values
+# ==============================================================================
+# This file configures the CKS deployment on Kubernetes.
+#
+# DEFAULT MODE: File-based key provider (standard setup)
+# HSM MODE:     AWS CloudHSM via PKCS#11 (uncomment HSM sections below)
+#
+# Before deploying in HSM mode, you must:
+#   1. Stand up a Linux server and configure CKS + CloudHSM there first
+#   2. Validate the integration on Linux (list-keys must succeed)
+#   3. Collect all required files (customerCA.crt, client.crt, client.key, rsa001.pub)
+#   4. Create all Kubernetes secrets (see deployment guide)
+#   Only then migrate the config values into this file.
+#
+# Full deployment guide: https://support.virtru.com/hc/en-us/sections/32306999800855-AWS-CloudHSM-Integration
+# ==============================================================================
 
-# --  Number of instances (pods) to run for the application. Default is 3 but can be customized to fit your org's needs.
+# -- Number of CKS pod replicas to run.
+#    Default is 3 for high availability. Adjust to fit your org's capacity.
 replicaCount: 3
 
-# -- Number of old deployments retained for rollback purposes. Default is 10.
+# -- Number of old ReplicaSets to retain for rollback purposes.
 revisionHistoryLimit: 10
 
-# -- Location of container image. 
-# -- For the latest version, see https://support.virtru.com/hc/en-us/articles/360034039233-Release-Notes-Virtru-Private-Keystore-for-Virtru-Solutions-Formerly-Virtru-Customer-Key-Server-CKS.
+# -- Container image configuration.
+#    For the latest CKS version, see:
+#    https://support.virtru.com/hc/en-us/articles/360034039233
 image:
   repository: containers.virtru.com/cks
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the Chart.yaml's appVersion.
+  # -- Overrides the image tag. Defaults to the Chart.yaml appVersion.
+  # IMPORTANT (HSM): Pin to a specific version in HSM mode to avoid
+  # unexpected PKCS#11 library incompatibilities across CKS versions.
   tag: ""
 
-# -- Optional name override for the CKS release.
+# -- Optional Helm release name override.
 nameOverride: ""
-# -- Optional override for the full resource name.
+# -- Optional full resource name override.
 fullnameOverride: ""
 
 serviceAccount:
-  # -- Specifies whether a service account should be created. A service account is created by default.
+  # -- Whether to create a Kubernetes service account for CKS.
+  #    A service account is created by default.
   create: true
-  # -- Metadata annotations to add to the service account. Defaults to empty.
+  # -- Annotations to add to the service account (e.g., for IAM role binding).
   annotations: {}
-  # -- The name of the service account to use. If not set and create is set to true, a name is generated using the fullname template.
+  # -- Service account name. Auto-generated if not set and create is true.
   name: ""
 
-# -- Optional annotations for pods, useful for monitoring or automation.
+# -- Annotations applied to CKS pods (e.g., for Datadog, Prometheus scraping).
 podAnnotations: {}
 
-# -- Test pod is created by default.
+# -- Test pod configuration. Created by default to validate the deployment.
 testerPod:
   enabled: true
   annotations:
     helm.sh/hook: test
 
-# -- Defines security settings at the pod level (e.g., group permissions). Defaults to empty, can be customized to better fit your organization's needs.
+# -- Pod-level security context (e.g., fsGroup for volume permissions).
+#    Defaults to empty for flexibility.
+#    NOTE (HSM): HSM requires privileged host access for PKCS#11 library mounting.
+#    Adjust fsGroup/runAsUser to match CloudHSM client library requirements if needed.
 podSecurityContext:
   {}
   # fsGroup: 2000
 
-# -- Defines security settings at the container level, such as running as a non-root user. Defaults to empty for flexibility.
+# -- Container-level security context (e.g., running as non-root).
+#    Defaults to empty for flexibility.
+#    WARNING (HSM): Do NOT set readOnlyRootFilesystem: true in HSM mode.
+#    The CloudHSM client writes to /opt/cloudhsm at runtime.
 securityContext:
   {}
   # capabilities:
   #   drop:
   #   - ALL
-  # readOnlyRootFilesystem: true
+  # readOnlyRootFilesystem: true  # <-- HSM: Leave commented out
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# -- Service Configuration
+# ==============================================================================
+# Service Configuration
+# ==============================================================================
+# DEFAULT: ClusterIP — suitable for most deployments behind an existing ingress.
+# HSM/AWS: Uncomment the LoadBalancer + ACM annotations for AWS NLB with TLS.
+# ==============================================================================
 service:
+  # -- DEFAULT: No annotations needed for ClusterIP.
+  # -- HSM/AWS: Uncomment and fill in the ACM certificate ARN below.
   annotations: {}
-  # -- Service type is ClusterIP by default.
+  #  service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+  #  service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:<region>:<account>:certificate/<cert-id>
+  #  service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+  #  service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+
+  # -- DEFAULT: ClusterIP. Change to LoadBalancer for AWS NLB (HSM/public deployments).
   type: ClusterIP
+  # -- External port exposed by the service (443 for HTTPS).
   port: 443
   protocol: TCP
 
-# -- Internal application port used for the deployment.
+# -- Internal application port CKS listens on inside the container.
 deployment:
-  # -- The CKS will use the default internal port 9000.
+  # -- Default internal port is 9000. Do not change unless instructed.
   port: 9000
 
-# -- Ingress Configuration. To serve traffic appropriately, you must have an ingress controller for your CKS service
-# -- This is enabled by default.
+# ==============================================================================
+# Ingress Configuration
+# ==============================================================================
+# Requires an ingress controller (e.g., nginx, AWS ALB) to be installed.
+# Change fqdn.yourdomain.com to your CKS FQDN.
+# ==============================================================================
 ingress:
   enabled: true
-  annotations:
+  annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-      # -- Change fqdn.yourdomain.com to match the FQDN of your CKS.
+    # -- Replace with the fully qualified domain name of your CKS instance.
     - host: fqdn.yourdomain.com
       paths:
         - path: /*
@@ -82,129 +124,371 @@ ingress:
           backend:
             serviceName: cks
             servicePort: 443
+  # -- TLS configuration. Uncomment and configure for HTTPS.
   tls: []
-  #  - secretName: chart-example-tls
+  #  - secretName: cks-tls-secret
   #    hosts:
-  #      - chart-example.local
+  #      - fqdn.yourdomain.com
 
-# -- Allows defining CPU/memory limits and requests for the application. Defaults to empty for flexibility.
+# -- CPU and memory resource limits/requests for CKS pods.
+#    Defaults to empty. HSM workloads benefit from defined limits.
 resources:
   {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
+    # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the customer. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: 500m
+  #   memory: 512Mi
   # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: 250m
+  #   memory: 256Mi
 
-# -- Autoscaling is disabled by default.
+# -- Horizontal pod autoscaling. Disabled by default.
 autoscaling:
   enabled: false
-  # -- Minimum number of pods
   minReplicas: 1
-  # -- Maximum number of pods
   maxReplicas: 100
-  # -- CPU threshold for scaling. Default is 80%
+  # -- CPU utilization threshold (%) that triggers scaling.
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
-# -- Optional: Specifies node labels for pod placement.
+# -- Optional: Node selector for pod placement.
+#    HSM: Pin pods to nodes with CloudHSM client installed and HSM network access.
 nodeSelector: {}
+  # hsm-enabled: "true"   # HSM: Uncomment to pin to HSM-ready nodes
 
-# -- Optional: Defines tolerations to allow pods to be scheduled on tainted nodes.
+# -- Optional: Tolerations for scheduling on tainted nodes.
 tolerations: []
 
-# -- Optional: Controls scheduling rules to optimize workload distribution.
+# -- Optional: Affinity rules for workload distribution across nodes/zones.
 affinity: {}
 
-# -- Application Configuration
+# ==============================================================================
+# Application Configuration
+# ==============================================================================
 appConfig:
-  # -- The orgId will be provided to you by your Virtru representative.
-  virtruOrgId: "<your org id>"
+  # -- Your Virtru organization ID. Provided by your Virtru representative.
+  virtruOrgId: "<your_org_id>"
+
+  # -- How authentication tokens are stored in memory.
+  #    Default: in-memory with base64 encoding.
   authTokenStoreageType: in-memory
   authTokenStoreageMemoryEncoding: base64
+
+  # -- Logging configuration.
   logRsyslogEnabled: false
   logStdoutEnabled: true
+
+  # --------------------------------------------------------------------------
+  # Key Provider — DEFAULT: file
+  # For HSM mode, see the HSM Configuration section below.
+  # --------------------------------------------------------------------------
+
+  # -- How CKS locates keys at boot.
+  #    DEFAULT: importPEM — imports keys from mounted PEM files.
+  #    HSM:     hsm       — keys live in the HSM, never leave it.
   noKeysRule: importPEM
+
+  # -- Path to the RSA public key file used for wrapping operations.
+  #    DEFAULT: /run/secrets/rsa001.pub (mounted from cks-keys secret)
+  #    HSM:     /app/keys/rsa001.pub   (public key exported from HSM)
   publicKeyPath: /run/secrets/rsa001.pub
+
+  # -- Path to the RSA private key file.
+  #    DEFAULT: /run/secrets/rsa001.pem (mounted from cks-keys secret)
+  #    HSM:     ""  (intentionally blank — private key lives in the HSM)
   privateKeyPath: /run/secrets/rsa001.pem
+
+  # -- Key provider type.
+  #    DEFAULT: file — reads keys from mounted PEM files.
+  #    HSM:     hsm  — delegates all crypto operations to CloudHSM via PKCS#11.
   keyProviderType: file
+
+  # -- HSM: Uncomment to delegate ALL crypto operations to the HSM.
+  # cryptoOperationsType: hsm
+
+  # --------------------------------------------------------------------------
+  # Authentication
+  # --------------------------------------------------------------------------
+
+  # -- Whether HMAC API token authentication is enabled.
+  #    Required for the Virtru platform to authenticate rewrap requests.
   hmacAuthEnabled: true
+
+  # -- Whether JWT Bearer token authentication is enabled.
   jwtAuthEnabled: true
+
+  # -- JWT issuer URL. Must match the iss claim in tokens sent by the platform.
+  #    DEFAULT (prod):    https://api.virtru.com
   jwtAuthIssuer: https://api.virtru.com
+
+  # -- JWKS path used to fetch public keys for JWT verification.
   jwtAuthJwksPath: /acm/api/jwks
 
-  # -- KAS Configuration
-  # -- OAuth2 issuer that mints the access tokens KAS verifies on rewrap.
+  # --------------------------------------------------------------------------
+  # KAS Configuration (Key Access Server)
+  # --------------------------------------------------------------------------
+
+  # -- OAuth2 issuer that mints access tokens KAS verifies on rewrap.
   kasAuthIssuer: https://login.virtru.com/oauth2/default
-  # -- Expected `aud` claim on access tokens KAS verifies.
+
+  # -- Expected aud claim on access tokens KAS verifies.
   kasAuthAudience: https://api.virtru.com
-  # -- Public hostname KAS advertises to clients (must match your CKS ingress FQDN).
+
+  # -- Public hostname KAS advertises to clients.
+  #    Must match your CKS ingress FQDN (e.g., cks.yourdomain.com).
   kasPublicHostName: ""
-  # -- Public URI KAS uses as its identity (typically `https://<kasPublicHostName>`).
+
+  # -- Public URI KAS uses as its identity (typically https://<kasPublicHostName>).
   kasUri: ""
 
-  # -- KAS Logging Configuration
+  # -- KAS logging settings.
   kasLogLevel: info
   kasLogType: json
   kasLogOutput: stdout
 
-  # -- DSP/KAS local database. The CKS image runs an embedded postgres for KAS metadata.
+  # -- Embedded PostgreSQL database used by KAS for metadata.
   dspDBDatabase: opentdf
   dspDBUser: postgres
 
-  # -- Platform Endpoints. Defaults point at Virtru production.
+  # -- Virtru platform API endpoints.
+  #    Defaults point to Virtru production. Change for staging/develop testing.
   acmEndpoint: https://api.virtru.com/acm/api
   secureDataHarborEndpoint: https://api.virtru.com/data-harbor/api
 
-  # -- Writable directory KAS uses for runtime metadata. In Kubernetes this is mounted from an emptyDir.
+  # -- Writable directory KAS uses for runtime metadata.
+  #    Mounted from an emptyDir in Kubernetes.
   kasMetadataDir: /app/data
 
-  # -- Key Management Configuration
-  # -- The KAS Key ID provisioned by Virtru during DSP org provisioning (a UUID). Use the Virtru-provided value exactly; it cannot be chosen or supplied.
+  # -- Key Management
+  # -- Unique identifier for the active key pair.
+  #    Must match the key_id registered with Virtru.
   keyId: ""
   kasPublicKeyFile: /app/keys/rsa001.pub
   kasPrivateKeyFile: /app/keys/rsa001.pem
   keyAlgorithm: rsa:2048
-  # -- Identifier of the wrapping key used to encrypt private keys at rest. Leave as default unless instructed.
+
+  # -- Wrapping key identifier used to encrypt private keys at rest.
+  #    Leave as default unless instructed by Virtru.
   wrappingKeyId: kas-root-key
 
-  # -- Optional/Utility
+  # -- Enable debug logging. Set to "true" only for troubleshooting.
   debug: "false"
 
-# By default, you can create secrets using the keys below.
-# Important note: Creating secrets in this way is a default option.
-# While a simpler approach with fewer variables, it is recommended you use
-# a third party secret storage option.
+  # ==========================================================================
+  # HSM / PKCS#11 Configuration (COMMENTED OUT BY DEFAULT)
+  # ==========================================================================
+  # Uncomment ALL fields in this section when deploying in HSM mode.
+  # Prerequisites:
+  #   - Linux server CKS + CloudHSM integration validated first
+  #   - All HSM secrets created in Kubernetes (see Secrets section below)
+  #   - Security group: EKS cluster SG → CloudHSM SG inbound port 2223
+  # ==========================================================================
 
-# -- Secrets Management 
+  # -- Primary HSM ENI IP address (from AWS CloudHSM console).
+  # hsmIp: "10.0.x.x"
+
+  # -- Secondary HSM ENI IP address.
+  #    REQUIRED: CloudHSM enforces a 2-HSM quorum before keys can be used.
+  # hsmIp2: "10.0.x.x"
+
+  # -- PKCS#11 vendor identifier. Use "custom" for AWS CloudHSM SDK v5.
+  # pkcs11Vendor: "custom"
+
+  # -- PKCS#11 library name for identification/logging.
+  # pkcs11LibName: "CloudHSM"
+
+  # -- Full path to the PKCS#11 shared library inside the CKS container.
+  #    This path is baked into the CKS image for AWS CloudHSM SDK v5.
+  # pkcs11LibPath: "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so"
+
+  # -- PKCS#11 slot label. For AWS CloudHSM SDK v5 this is always "hsm1".
+  #    WARNING: The env var in configmap.yaml must be PKCS11_SLOT_LBL (not PKCS11_SLOT_LABEL).
+  #    Using the wrong name causes a silent fallback to "HSMV4" and slot not found.
+  # pkcs11SlotLbl: "hsm1"
+
+  # -- Label of the RSA key pair stored in the HSM.
+  #    Must match the label used when the key was created in CloudHSM.
+  #    WARNING: The env var in configmap.yaml must be PKCS11_KEY_LBL (not PKCS11_KEY_LABEL).
+  # pkcs11KeyLbl: "rsa001"
+
+  # -- Path where the HSM public key is mounted inside the container.
+  #    The public key must be exported from the HSM using the key reference
+  #    (not label) to ensure it matches the actual HSM private key.
+  # publicKeyPath: /app/keys/rsa001.pub
+
+# ==============================================================================
+# Secrets Management
+# ==============================================================================
+# WARNING: Storing secrets directly in values.yaml is a simplified default
+# suitable for initial testing only. For production deployments, use an
+# external secrets manager (AWS Secrets Manager, HashiCorp Vault, ESO).
+#
+# HSM MODE: Create all secrets with kubectl BEFORE running helm install.
+# The chart will fail to start if any referenced secret is missing.
+# ==============================================================================
 appSecrets:
+  # -- HMAC authentication token.
+  #    Required for the Virtru platform to authenticate rewrap requests.
+  #    Generate by following: https://support.virtru.com/hc/en-us/articles/17797745877655
   virtruAuth:
     name: hmac-auth
     data:
-     # -- This base64-encoded value for authTokenJson can be generated by running these steps here: https://support.virtru.com/hc/en-us/articles/17797745877655-Virtru-Private-Keystore-for-Virtru-Solutions-Install-First-Instance-Linux-Server
+      # -- Base64-encoded JSON token generated during CKS setup.
       authTokenJson: <base64-encoded-JSON-from-your-CKS>
 
+  # -- RSA key pair secret.
+  #    DEFAULT: Contains both rsa001.pub and rsa001.pem (file-based mode).
+  #    HSM:     Contains rsa001.pub only — private key lives in the HSM.
+  #             The public key MUST be exported from the HSM by key reference,
+  #             not generated separately, to ensure it matches the HSM private key.
   virtruKeys:
     name: cks-keys
     mountPath: /app/keys
     data:
-      # -- The values for rsa001.pub and rsa001.pem can be generated by running these steps here: https://support.virtru.com/hc/en-us/articles/17797745877655-Virtru-Private-Keystore-for-Virtru-Solutions-Install-First-Instance-Linux-Server
+      # -- RSA public key. Generate by following the CKS setup guide.
+      #    HSM: Export from HSM using:
+      #         cloudhsm-cli key generate-file --filter key-reference=<0xREF> --encoding pem --path rsa001.pub
       rsa001.pub: |
         <rsa001 public key>
+      # -- RSA private key. Required in DEFAULT (file) mode.
+      #    HSM: Remove or leave blank — private key is stored in the HSM.
       rsa001.pem: |
         <rsa001 private key>
 
-# -- Configuration for integrating with external secret management solutions.
-#https://external-secrets.io/v0.8.2/introduction/overview/
-#externalAppSecrets:
-#- name: <external secret object name> #secret object will be named the same.
-#  secretsPath: <path of secret in secret store>
-#  secretStoreRef:
-#    kind: <SecretStore or ClusterSecretStore>
-#    name: <name of secret store>
-#  refreshInterval: <how often to reconcile with secret store>
+  # ==========================================================================
+  # HSM Secrets (COMMENTED OUT BY DEFAULT)
+  # ==========================================================================
+  # Uncomment and create these secrets when deploying in HSM mode.
+  # Create each with kubectl before running helm install.
+  # ==========================================================================
+
+  # -- HSM PKCS#11 PIN Secret.
+  #    Format: "<crypto_user>:<password>" (plaintext — stored as Kubernetes secret).
+  #    Create with:
+  #      kubectl create secret generic hsm-pin \
+  #        --from-literal=pkcs11Pin='<crypto_user>:<password>' -n <namespace>
+  # hsmPin:
+  #   name: hsm-pin
+  #   data:
+  #     pkcs11Pin: <base64-encoded CU_user:password>
+
+# ==============================================================================
+# HSM Volume Configuration (COMMENTED OUT BY DEFAULT)
+# ==============================================================================
+# Uncomment this entire section when deploying in HSM mode.
+# All referenced secrets and configmaps must be created first.
+#
+# Create secrets with kubectl:
+#   kubectl create secret generic hsm-ca-cert \
+#     --from-file=customerCA.crt=customerCA.crt -n <namespace>
+#
+#   kubectl create secret generic cloudhsm-client-tls \
+#     --from-file=client.crt=client.crt \
+#     --from-file=client.key=client.key -n <namespace>
+#
+#   kubectl create configmap cloudhsm-pkcs11-cfg \
+#     --from-file=cloudhsm-pkcs11.cfg=cloudhsm-pkcs11.cfg -n <namespace>
+#
+#   kubectl create configmap cloudhsm-client-cfg \
+#     --from-file=cloudhsm_client.cfg=cloudhsm_client.cfg -n <namespace>
+#
+# NOTE: The deployment.yaml template applies these volumes directly.
+#       This section documents what is mounted and why.
+# ==============================================================================
+
+# volumes:
+#   # -- RSA public key. Private key lives in the HSM.
+#   - name: cks-keys
+#     volume:
+#       secret:
+#         secretName: cks-keys
+#         items:
+#           - key: rsa001.pub
+#             path: rsa001.pub
+#     volumeMount:
+#       mountPath: /app/keys
+#       readOnly: true
+
+#   # -- CloudHSM CA certificate for TLS verification.
+#   #    Mounts as a single file using subPath to avoid overwriting the directory.
+#   - name: hsm-ca-cert
+#     volume:
+#       secret:
+#         secretName: hsm-ca-cert
+#         items:
+#           - key: customerCA.crt
+#             path: customerCA.crt
+#     volumeMount:
+#       mountPath: /opt/cloudhsm/etc/customerCA.crt
+#       subPath: customerCA.crt
+#       readOnly: true
+
+#   # -- CloudHSM PKCS#11 config file.
+#   #    readOnly: false — the init container must write the HSM IP into this file at startup.
+#   #    The init container copies this from a read-only ConfigMap into a writable emptyDir.
+#   - name: cloudhsm-pkcs11-cfg
+#     volume:
+#       configMap:
+#         name: cloudhsm-pkcs11-cfg
+#         items:
+#           - key: cloudhsm-pkcs11.cfg
+#             path: cloudhsm-pkcs11.cfg
+#     volumeMount:
+#       mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11.cfg
+#       subPath: cloudhsm-pkcs11.cfg
+#       readOnly: false
+
+#   # -- CloudHSM client config for locating and connecting to the HSM.
+#   - name: cloudhsm-client-cfg
+#     volume:
+#       configMap:
+#         name: cloudhsm-client-cfg
+#         items:
+#           - key: cloudhsm_client.cfg
+#             path: cloudhsm_client.cfg
+#     volumeMount:
+#       mountPath: /opt/cloudhsm/etc/cloudhsm_client.cfg
+#       subPath: cloudhsm_client.cfg
+#       readOnly: true
+
+#   # -- Client TLS certificate for mutual TLS authentication to the HSM.
+#   - name: cloudhsm-client-tls
+#     volume:
+#       secret:
+#         secretName: cloudhsm-client-tls
+#         items:
+#           - key: client.crt
+#             path: client.crt
+#     volumeMount:
+#       mountPath: /opt/cloudhsm/etc/client.crt
+#       subPath: client.crt
+#       readOnly: true
+
+#   # -- Client TLS private key for mutual TLS authentication to the HSM.
+#   - name: cloudhsm-client-key
+#     volume:
+#       secret:
+#         secretName: cloudhsm-client-tls
+#         items:
+#           - key: client.key
+#             path: client.key
+#     volumeMount:
+#       mountPath: /opt/cloudhsm/etc/client.key
+#       subPath: client.key
+#       readOnly: true
+
+# ==============================================================================
+# External Secret Management (Optional)
+# ==============================================================================
+# Uncomment to use external secret providers (AWS Secrets Manager, Vault, etc.)
+# https://external-secrets.io/v0.8.2/introduction/overview/
+# ==============================================================================
+# externalAppSecrets:
+# - name: <external secret object name>
+#   secretsPath: <path of secret in secret store>
+#   secretStoreRef:
+#     kind: <SecretStore or ClusterSecretStore>
+#     name: <name of secret store>
+#   refreshInterval: <how often to reconcile with secret store>
