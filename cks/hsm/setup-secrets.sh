@@ -54,7 +54,7 @@ for FILE in "${REQUIRED_FILES[@]}"; do
   fi
 
   # Reject files that still contain placeholder tokens
-  if grep -q '<YOUR_' "$FILEPATH" 2>/dev/null; then
+  if grep -qE '<YOUR_|<HSM_ENI_IP' "$FILEPATH" 2>/dev/null; then
     echo "ERROR: $FILE still contains placeholder text (<YOUR_...)."
     echo "       Replace all placeholder values before running this script."
     exit 1

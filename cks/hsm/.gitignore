@@ -1,4 +1,5 @@
 *.crt
 *.key
 *.pub
+*.cfg
 !*.example
