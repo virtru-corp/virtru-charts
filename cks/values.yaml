@@ -241,7 +241,8 @@ appConfig:
   kasMetadataDir: /app/data
 
   # -- Key Management Configuration
-  # -- The KAS Key ID provisioned by Virtru during DSP org provisioning (a UUID). Use the Virtru-provided value exactly; it cannot be chosen or supplied.
+  # -- The KAS Key ID provisioned by Virtru during DSP org provisioning (a UUID).
+  # -- Use the Virtru-provided value exactly; it cannot be chosen or supplied.
   keyId: ""
   kasPublicKeyFile: /app/keys/rsa001.pub
   kasPrivateKeyFile: /app/keys/rsa001.pem
