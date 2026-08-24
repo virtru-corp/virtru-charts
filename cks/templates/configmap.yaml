@@ -16,10 +16,19 @@ data:
   # Server
   PORT: "{{ .Values.deployment.port }}"
 
+  # ---------------------------------------------------------------------------
   # Boot Checker / Key Import
-  # NOTE: For HSM mode, noKeysRule is set to "hsm" and privateKeyPath is intentionally empty.
+  #
+  # HSM mode:     noKeysRule=hsm tells CKS keys live in the HSM at startup.
+  #               Private key path is intentionally empty — the private key
+  #               never leaves the hardware. Public key path points to the
+  #               mounted rsa001.pub exported from the HSM (cks-keys secret).
+  #
+  # Default mode: noKeysRule=importPEM imports the keypair from mounted PEM files.
+  #               Both paths resolve to Kubernetes secret mount locations.
+  # ---------------------------------------------------------------------------
   {{- if eq .Values.appConfig.keyProviderType "hsm" }}
-  BOOT_CHECKER_NOKEYS_RULE: {{ default "hsm" .Values.appConfig.noKeysRule }}
+  BOOT_CHECKER_NOKEYS_RULE: hsm
   BOOT_CHECKER_IMPORT_PUBLIC_KEY_PATH: {{ default "/app/keys/rsa001.pub" .Values.appConfig.publicKeyPath }}
   BOOT_CHECKER_IMPORT_PRIVATE_KEY_PATH: ""
   {{- else }}
@@ -76,15 +85,30 @@ data:
   # Optional/Utility
   DEBUG: {{ default "false" .Values.appConfig.debug | quote }}
 
-  # ============================================================
-  # HSM / PKCS11 Configuration
-  # Only rendered when keyProviderType is "hsm".
-  # ============================================================
+  # ---------------------------------------------------------------------------
+  # HSM / PKCS#11 Configuration (AWS CloudHSM SDK v5)
+  #
+  # Only rendered when appConfig.keyProviderType is "hsm". No HSM vars are
+  # injected into non-HSM deployments — the else branch above is byte-identical
+  # to the original file, so existing installs are unaffected.
+  #
+  # PKCS11_VENDOR must be "custom" for CloudHSM SDK v5. The value "CloudHSM"
+  # is the SDK v3 / legacy vendor string — using it on an SDK v5 cluster causes
+  # C_Initialize to fail or silently fall back to the wrong slot.
+  #
+  # PKCS11_LIB_NAME is separate from PKCS11_VENDOR. The library name stays
+  # "CloudHSM" regardless of SDK version — this is the name the PKCS#11
+  # interface registers itself under, not the vendor selector.
+  #
+  # PKCS11_SLOT_LBL / PKCS11_KEY_LBL use the abbreviated _LBL suffix.
+  # The longer forms _SLOT_LABEL / _KEY_LABEL are not recognized and cause
+  # a silent fallback to the default slot label "HSMV4".
+  # ---------------------------------------------------------------------------
   {{- if eq .Values.appConfig.keyProviderType "hsm" }}
   CRYPTO_OPERATIONS_TYPE: {{ default "hsm" .Values.appConfig.cryptoOperationsType }}
   HSM_IP: {{ .Values.appConfig.hsmIp | quote }}
   HSM_IP2: {{ .Values.appConfig.hsmIp2 | quote }}
-  PKCS11_VENDOR: {{ default "CloudHSM" .Values.appConfig.pkcs11Vendor }}
+  PKCS11_VENDOR: {{ default "custom" .Values.appConfig.pkcs11Vendor }}
   PKCS11_LIB_NAME: {{ default "CloudHSM" .Values.appConfig.pkcs11LibName }}
   PKCS11_LIB_PATH: {{ default "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so" .Values.appConfig.pkcs11LibPath }}
   PKCS11_SLOT_LBL: {{ .Values.appConfig.pkcs11SlotLbl | quote }}

@@ -36,18 +36,20 @@ This upgrade is in line with external-secrets operator no longer serving v1beta1
 ```
 cks/
 ├── Chart.yaml
-├── values.yaml          # Helm chart values (default + HSM commented out)
-├── templates/           # Helm templates
+├── values.yaml             # Helm chart values (default + HSM commented out)
+├── templates/              # Helm templates
 ├── README.md
-└── hsm/                 # HSM-specific configuration files
-    ├── setup-secrets.sh     # Run this first to create all Kubernetes secrets
-    ├── cloudhsm-pkcs11.cfg  # PKCS#11 config — update with your HSM ENI IPs
-    ├── cloudhsm_client.cfg  # CloudHSM client config — update with your HSM ENI IPs
-    ├── customerCA.crt       # CloudHSM cluster CA certificate (from AWS console)
-    ├── client.crt           # Client certificate for mTLS to HSM
-    ├── client.key           # Client private key for mTLS to HSM
-    └── rsa001.pub           # RSA public key exported from HSM by key reference
+└── hsm/                    # HSM operator inputs — excluded from helm package via .helmignore
+    ├── setup-secrets.sh        # Run this first to create all Kubernetes secrets
+    ├── cloudhsm-pkcs11.cfg     # PKCS#11 config — update with your HSM ENI IPs
+    ├── cloudhsm_client.cfg     # CloudHSM client config — update with your HSM ENI IPs
+    ├── customerCA.crt.example  # Rename to .crt and replace with your CloudHSM CA cert
+    ├── client.crt.example      # Rename to .crt and replace with your client cert
+    ├── client.key.example      # Rename to .key and replace with your client private key
+    └── rsa001.pub.example      # Rename to .pub and replace with your HSM-exported public key
 ```
+
+> **Note:** The `hsm/` directory is excluded from Helm package artifacts via `.helmignore`. The `.example` files are safe instructional placeholders. Never commit real certs, keys, or public key files to source control — the `.gitignore` in this directory excludes `*.crt`, `*.key`, and `*.pub` for this reason.
 
 ---
 
@@ -69,9 +71,10 @@ cks/
 
 > **Critical:** You cannot configure CKS + CloudHSM directly from a Helm chart without first validating the integration on a Linux server. The Linux setup must succeed before proceeding to Kubernetes.
 
+* **Minimum CKS image version:** The container image must include the CloudHSM SDK v5 tooling (specifically `/opt/cloudhsm/bin/configure-pkcs11`). Confirm with your Virtru representative which image tag supports HSM mode before deploying.
 * AWS CloudHSM cluster provisioned with **at least 2 active HSM nodes** (required for key availability quorum)
 * Linux server with CKS + CloudHSM fully configured and validated (`list-keys` must succeed)
-* The following files collected and placed in the `hsm/` directory:
+* The following files collected and placed in the `hsm/` directory (rename `.example` files after populating):
 
 | File | Source |
 |---|---|
@@ -132,11 +135,9 @@ helm install -n virtru -f ./values.yaml cks ./ --create-namespace
 
 ## Installation — HSM Mode (AWS CloudHSM)
 
-For the full step-by-step HSM setup guide see the **[CKS + CloudHSM on Kubernetes — Setup Instructions](https://docs.google.com/document/d/1X6qmJrAHz5iyHMDf9nRY9lCcp0w0zAlnY_cAricOYU4/edit?usp=drivesdk)**.
-
 ### Step 1 — Validate Linux Server First
 
-Before deploying to Kubernetes, confirm your Linux CKS + CloudHSM integration is working. The `list-keys` output must show your RSA key pair before continuing.
+Before deploying to Kubernetes, confirm your Linux CKS + CloudHSM integration is working. The `list-keys` output must show your RSA key pair before continuing. The minimum CKS image version that supports HSM mode must also be confirmed before proceeding (see Prerequisites).
 
 ### Step 2 — Export the Correct Public Key from the HSM
 
@@ -155,24 +156,32 @@ CLOUDHSM_PIN=<cu_user>:<password> CLOUDHSM_ROLE=crypto-user \
   --path hsm/rsa001.pub
 
 # Verify fingerprint — must match what is registered in the Virtru admin console
+
+# Linux (GNU coreutils 8.31+):
 openssl rsa -pubin -in hsm/rsa001.pub -outform DER | \
   openssl dgst -sha256 -binary | basenc --base64url | tr -d '='
+
+# macOS (no basenc — use openssl instead):
+openssl rsa -pubin -in hsm/rsa001.pub -outform DER | \
+  openssl dgst -sha256 -binary | openssl base64 | tr '+/' '-_' | tr -d '='
 ```
 
 ### Step 3 — Populate the `hsm/` Directory
 
-Ensure all required files are present and config files are updated with your HSM ENI IPs:
+Rename each `.example` file and replace its contents with the real value. Update the config files with your HSM ENI IPs:
 
 ```
 cks/hsm/
-├── setup-secrets.sh     ✓ included
-├── cloudhsm-pkcs11.cfg  → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
-├── cloudhsm_client.cfg  → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
-├── customerCA.crt       → copy from AWS CloudHSM console
-├── client.crt           → copy from Linux server /opt/cloudhsm/etc/client.crt
-├── client.key           → copy from Linux server /opt/cloudhsm/etc/client.key
-└── rsa001.pub           → exported from HSM in Step 2
+├── setup-secrets.sh          ✓ included
+├── cloudhsm-pkcs11.cfg       → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
+├── cloudhsm_client.cfg       → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
+├── customerCA.crt            → renamed from .example — paste CloudHSM CA cert
+├── client.crt                → renamed from .example — paste client cert
+├── client.key                → renamed from .example — paste client private key
+└── rsa001.pub                → renamed from .example — exported from HSM in Step 2
 ```
+
+> **Warning:** Never commit real cert, key, or public key files to source control. The `.gitignore` in the `hsm/` directory excludes `*.crt`, `*.key`, and `*.pub`.
 
 ### Step 4 — Create Kubernetes Secrets
 
@@ -180,11 +189,12 @@ Run the provided setup script from the `hsm/` directory. The script validates al
 
 ```bash
 cd cks/hsm
-chmod +x setup-secrets.sh
 ./setup-secrets.sh
 # or with a custom namespace:
 ./setup-secrets.sh my-namespace
 ```
+
+> **Important:** In HSM mode, `setup-secrets.sh` owns the `cks-keys` secret. The Helm chart's `templates/cks-keys-secret.yaml` is gated off when `appConfig.keyProviderType: hsm` is set — if you run `helm upgrade --install` before setting that value, the chart will overwrite `cks-keys` with the placeholder from `values.yaml`. Always ensure HSM mode is set in `values.yaml` before installing or upgrading.
 
 The script creates the following resources:
 
@@ -224,7 +234,7 @@ appConfig:
   publicKeyPath: /app/keys/rsa001.pub
 ```
 
-Also uncomment the `volumes` section and `appSecrets.hsmPin` section.
+Also uncomment the `appSecrets.hsmPin` section.
 
 ### Step 6 — Install
 
@@ -245,9 +255,9 @@ kubectl get pods -n virtru -w
 # Check init container logs
 kubectl logs <pod-name> -n virtru -c configure-pkcs11
 
-# Validate CKS status
+# Validate CKS status (version reflects your deployed image tag)
 curl https://<your-cks-domain>/status
-# Expected: {"version":"2.5.0","hsmStatus":"ok"}
+# Expected: {"version":"<cks-version>","hsmStatus":"ok"}
 
 # Verify public key fingerprint matches Virtru admin console
 kubectl exec -it -n virtru deployment/cks -- node -e "
@@ -258,9 +268,6 @@ const der = crypto.createPublicKey(pub).export({type:'spki',format:'der'});
 const fp = crypto.createHash('sha256').update(der).digest('base64url');
 console.log('Fingerprint:', fp);
 "
-
-# Verify HSM connectivity from pod
-kubectl exec -it -n virtru deployment/cks -- nc -zv <HSM_ENI_IP> 2223
 ```
 
 ---
@@ -294,8 +301,12 @@ CLOUDHSM_PIN=<cu_user>:<password> CLOUDHSM_ROLE=crypto-user \
   --path hsm/rsa002.pub
 
 # Verify the fingerprint before registering it anywhere
+# Linux:
 openssl rsa -pubin -in hsm/rsa002.pub -outform DER | \
   openssl dgst -sha256 -binary | basenc --base64url | tr -d '='
+# macOS:
+openssl rsa -pubin -in hsm/rsa002.pub -outform DER | \
+  openssl dgst -sha256 -binary | openssl base64 | tr '+/' '-_' | tr -d '='
 ```
 
 **4. Register the new fingerprint in the Virtru admin console**
@@ -380,7 +391,7 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 | appSecrets.virtruAuth.data.authTokenJson | string | `"<base64-encoded-JSON-from-your-CKS>"` | Base64-encoded HMAC auth token. See [setup guide](https://support.virtru.com/hc/en-us/articles/17797745877655). |
 | appSecrets.virtruKeys.data."rsa001.pub" | string | `"<rsa001 public key>"` | RSA public key. HSM: export from HSM by key reference. See [setup guide](https://support.virtru.com/hc/en-us/articles/17797745877655). |
 | appSecrets.virtruKeys.data."rsa001.pem" | string | `"<rsa001 private key>"` | RSA private key. Default mode only — leave blank in HSM mode. |
-| appSecrets.hsmPin | object | `{}` | HSM only: PKCS#11 PIN secret (`<crypto_user>:<password>`). |
+| appSecrets.hsmPin | object | `{}` | HSM only: Reference to the `hsm-pin` secret created by `setup-secrets.sh`. |
 | autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | Autoscaling is disabled by default. |
 | autoscaling.maxReplicas | int | `100` | Maximum number of pods. |
 | autoscaling.minReplicas | int | `1` | Minimum number of pods. |
@@ -388,13 +399,13 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 | deployment | object | `{"port":9000}` | Internal application port used for the deployment. |
 | deployment.port | int | `9000` | The CKS will use the default internal port 9000. |
 | fullnameOverride | string | `""` | Optional override for the full resource name. |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"containers.virtru.com/cks","tag":""}` | Container image config. For versions see [release notes](https://support.virtru.com/hc/en-us/articles/360034039233). HSM: pin to a specific version. |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"containers.virtru.com/cks","tag":""}` | Container image config. For versions see [release notes](https://support.virtru.com/hc/en-us/articles/360034039233). HSM: confirm image tag supports CloudHSM SDK v5. |
 | ingress | object | See `values.yaml` | Ingress Configuration. Enabled by default. |
 | ingress.hosts[0].host | string | `"fqdn.yourdomain.com"` | Change to match the FQDN of your CKS. |
 | nameOverride | string | `""` | Optional name override for the CKS release. |
 | nodeSelector | object | `{}` | Optional: Specifies node labels for pod placement. HSM: pin to HSM-ready nodes. |
 | podAnnotations | object | `{}` | Optional annotations for pods, useful for monitoring or automation. |
-| podSecurityContext | object | `{}` | Pod-level security context. HSM: adjust for CloudHSM client library requirements. |
+| podSecurityContext | object | `{}` | Pod-level security context. HSM: do not set `readOnlyRootFilesystem: true`. |
 | replicaCount | int | `3` | Number of CKS pod replicas. Default is 3 for HA. |
 | resources | object | `{}` | CPU/memory limits and requests. HSM workloads benefit from defined limits. |
 | revisionHistoryLimit | int | `10` | Number of old deployments retained for rollback purposes. |
@@ -406,4 +417,3 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 | serviceAccount.name | string | `""` | Service account name. Auto-generated if not set and create is true. |
 | testerPod | object | `{"annotations":{"helm.sh/hook":"test"},"enabled":true}` | Test pod is created by default. |
 | tolerations | list | `[]` | Optional: Defines tolerations to allow pods to be scheduled on tainted nodes. |
-| volumes | list | `[]` | HSM only: Volume mounts for HSM config files and secrets. See `values.yaml`. |

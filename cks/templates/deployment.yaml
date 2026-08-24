@@ -30,9 +30,21 @@ spec:
       serviceAccountName: {{ include "cks.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      # -- HSM Init Container: runs configure-pkcs11 before CKS starts
-      # Copies the mounted cloudhsm-pkcs11.cfg into a writable emptyDir,
-      # then runs configure-pkcs11 to initialize the PKCS#11 slot.
+      # ---------------------------------------------------------------------------
+      # HSM ONLY: Init container runs configure-pkcs11 before CKS starts.
+      # Copies the mounted cloudhsm-pkcs11.cfg into a writable emptyDir then
+      # runs configure-pkcs11 to initialise the PKCS#11 slot configuration.
+      #
+      # CA cert path: the secret is subPath-mounted at the -ro path inside the
+      # emptyDir. The emptyDir at /opt/cloudhsm/etc is empty at init time, so
+      # --hsm-ca-cert must point at the -ro subPath mount, not the emptyDir root.
+      #
+      # -a flag: hsmIp2 is conditionally appended — an empty value would leave
+      # a dangling positional argument that causes configure-pkcs11 to fail.
+      #
+      # Not rendered at all when keyProviderType != "hsm".
+      # ---------------------------------------------------------------------------
+      {{- if eq .Values.appConfig.keyProviderType "hsm" }}
       initContainers:
         - name: configure-pkcs11
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,62 +58,67 @@ spec:
               cp /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/cloudhsm-pkcs11.cfg /opt/cloudhsm/etc/cloudhsm-pkcs11.cfg
               echo "Running configure-pkcs11..."
               /opt/cloudhsm/bin/configure-pkcs11 \
-                -a {{ .Values.appConfig.hsmIp }} {{ .Values.appConfig.hsmIp2 }} \
-                --hsm-ca-cert /opt/cloudhsm/etc/customerCA.crt \
+                -a "{{ .Values.appConfig.hsmIp }}"{{ if .Values.appConfig.hsmIp2 }} "{{ .Values.appConfig.hsmIp2 }}"{{ end }} \
+                --hsm-ca-cert /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/customerCA.crt \
                 --log-type term \
                 --log-level info
               echo "configure-pkcs11 complete."
           volumeMounts:
-            # Writable emptyDir where the final config lives
+            # Writable emptyDir — configure-pkcs11 writes the final config here
             - mountPath: /opt/cloudhsm/etc
               name: cloudhsm-etc
-            # Read-only source config mounted at a different path
+            # Read-only source config — subPath bind-mounted inside the emptyDir.
+            # The cp command above stages this into the emptyDir before configure-pkcs11 runs.
             - mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/cloudhsm-pkcs11.cfg
               name: cloudhsm-pkcs11-cfg
               subPath: cloudhsm-pkcs11.cfg
               readOnly: true
-            # CA cert needed by configure-pkcs11
+            # CA cert — subPath bind-mounted at the -ro path so --hsm-ca-cert resolves
+            # before configure-pkcs11 has written anything to the emptyDir
             - mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/customerCA.crt
               name: hsm-ca-cert
               subPath: customerCA.crt
               readOnly: true
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
-          {{- if not .Values.externalAppSecrets }}
-          - secretRef:
-              name: {{ .Values.appSecrets.virtruAuth.name }}
-          {{- end }}
           {{- if .Values.externalAppSecrets }}
-          {{ range .Values.externalAppSecrets }}
+          {{- range .Values.externalAppSecrets }}
           - secretRef:
               name: {{ .secretsPath }}
           {{- end }}
+          {{- else }}
+          - secretRef:
+              name: {{ .Values.appSecrets.virtruAuth.name }}
           {{- end }}
-          {{- if not .Values.externalAppSecrets }}
+          # -----------------------------------------------------------------------
+          # env block: rendered when externalAppSecrets is set (AUTH_TOKEN mapping)
+          # OR when HSM mode is active (PKCS11_PIN injection).
+          # Omitted entirely in default file mode without externalAppSecrets —
+          # an empty env: list is invalid in the Kubernetes spec.
+          # -----------------------------------------------------------------------
+          {{- if or .Values.externalAppSecrets (eq .Values.appConfig.keyProviderType "hsm") }}
           env:
-          # -- HSM: Inject PKCS11_PIN from hsm-pin secret
-          - name: PKCS11_PIN
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.appSecrets.hsmPin.name }}
-                key: pkcs11Pin
-          {{- end }}
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
-          env:
           - name: AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
             valueFrom:
               secretKeyRef:
                 key: hmac-auth-token-json
                 name: {{ .secretsPath }}
                 optional: true
+          {{- end }}
+          {{- end }}
+          {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+          # HSM ONLY: inject PKCS11_PIN from the hsm-pin secret created by setup-secrets.sh.
+          # The key must be pkcs11Pin — matches --from-file=pkcs11Pin in the setup script.
           - name: PKCS11_PIN
             valueFrom:
               secretKeyRef:
-                name: {{ $.Values.appSecrets.hsmPin.name }}
+                name: {{ .Values.appSecrets.hsmPin.name }}
                 key: pkcs11Pin
           {{- end }}
           {{- end }}
@@ -123,48 +140,37 @@ spec:
             timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if not .Values.externalAppSecrets }}
           volumeMounts:
-          - mountPath: "/app/keys"
-            name: {{ .Values.appSecrets.virtruKeys.name }}
-            readOnly: true
-          - mountPath: "/app/data"
-            name: app-data
-          # -- HSM: Writable etc dir initialized by init container
-          - mountPath: /opt/cloudhsm/etc
-            name: cloudhsm-etc
-          # -- HSM: Mount customerCA.crt into the writable etc dir
-          - mountPath: /opt/cloudhsm/etc/customerCA.crt
-            name: hsm-ca-cert
-            subPath: customerCA.crt
-            readOnly: true
-          # -- HSM: Mount client TLS cert and key
-          - mountPath: /opt/cloudhsm/etc/client.crt
-            name: cloudhsm-client-tls
-            subPath: client.crt
-            readOnly: true
-          - mountPath: /opt/cloudhsm/etc/client.key
-            name: cloudhsm-client-key
-            subPath: client.key
-            readOnly: true
-          {{- end }}
+          # /app/keys — RSA public key mount.
+          # Default mode: Helm owns cks-keys-secret.yaml and mounts the full keypair.
+          # HSM mode:     setup-secrets.sh owns cks-keys (rsa001.pub only);
+          #               cks-keys-secret.yaml is gated off to prevent ownership collision.
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
-          volumeMounts:
           - mountPath: "/app/keys"
             name: {{ .name }}
             readOnly: true
+          {{- end }}
+          {{- else }}
+          - mountPath: "/app/keys"
+            name: {{ .Values.appSecrets.virtruKeys.name }}
+            readOnly: true
+          {{- end }}
           - mountPath: "/app/data"
             name: app-data
-          # -- HSM: Writable etc dir initialized by init container
+          {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+          # HSM ONLY volume mounts ——————————————————————————————————————————————
+          # emptyDir populated by the init container; main container reads the
+          # generated cloudhsm-pkcs11.cfg from /opt/cloudhsm/etc at runtime.
           - mountPath: /opt/cloudhsm/etc
             name: cloudhsm-etc
-          # -- HSM: Mount customerCA.crt into the writable etc dir
+          # CA cert, client cert, and client key are overlaid into the emptyDir
+          # via subPath mounts so the CloudHSM client library finds them at their
+          # expected absolute paths within /opt/cloudhsm/etc.
           - mountPath: /opt/cloudhsm/etc/customerCA.crt
             name: hsm-ca-cert
             subPath: customerCA.crt
             readOnly: true
-          # -- HSM: Mount client TLS cert and key
           - mountPath: /opt/cloudhsm/etc/client.crt
             name: cloudhsm-client-tls
             subPath: client.crt
@@ -174,88 +180,62 @@ spec:
             subPath: client.key
             readOnly: true
           {{- end }}
-          {{- end }}
-      {{- if not .Values.externalAppSecrets }}
       volumes:
-      - name: {{ .Values.appSecrets.virtruKeys.name }}
-        secret:
-          defaultMode: 420
-          secretName: {{ .Values.appSecrets.virtruKeys.name }}
-      - name: app-data
-        emptyDir: {}
-      # -- HSM: Writable emptyDir for /opt/cloudhsm/etc — populated by init container
-      - name: cloudhsm-etc
-        emptyDir: {}
-      # -- HSM: CA Certificate secret
-      - name: hsm-ca-cert
-        secret:
-          secretName: hsm-ca-cert
-          items:
-            - key: customerCA.crt
-              path: customerCA.crt
-      # -- HSM: PKCS11 config — read-only source, copied by init container
-      - name: cloudhsm-pkcs11-cfg
-        configMap:
-          name: cloudhsm-pkcs11-cfg
-          items:
-            - key: cloudhsm-pkcs11.cfg
-              path: cloudhsm-pkcs11.cfg
-      # -- HSM: Client TLS cert
-      - name: cloudhsm-client-tls
-        secret:
-          secretName: cloudhsm-client-tls
-          items:
-            - key: client.crt
-              path: client.crt
-      # -- HSM: Client TLS key
-      - name: cloudhsm-client-key
-        secret:
-          secretName: cloudhsm-client-tls
-          items:
-            - key: client.key
-              path: client.key
-      {{- end }}
+      # /app/keys volume — source depends on whether externalAppSecrets is in use.
       {{- if .Values.externalAppSecrets }}
       {{- with index .Values.externalAppSecrets 0 }}
-      volumes:
       - name: {{ .name }}
         secret:
           defaultMode: 420
           secretName: {{ .secretsPath }}
+      {{- end }}
+      {{- else }}
+      - name: {{ .Values.appSecrets.virtruKeys.name }}
+        secret:
+          defaultMode: 420
+          secretName: {{ .Values.appSecrets.virtruKeys.name }}
+      {{- end }}
       - name: app-data
         emptyDir: {}
-      # -- HSM: Writable emptyDir for /opt/cloudhsm/etc — populated by init container
+      {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+      # HSM ONLY volumes ————————————————————————————————————————————————————————
+      # Writable emptyDir shared between init container and main container.
+      # Init container writes the PKCS#11 config; main container reads it.
       - name: cloudhsm-etc
         emptyDir: {}
-      # -- HSM: CA Certificate secret
+      # CA cert used by the CloudHSM PKCS#11 library for server verification.
       - name: hsm-ca-cert
         secret:
           secretName: hsm-ca-cert
+          defaultMode: 0400
           items:
             - key: customerCA.crt
               path: customerCA.crt
-      # -- HSM: PKCS11 config — read-only source, copied by init container
+      # Read-only source config staged by the init container cp step.
       - name: cloudhsm-pkcs11-cfg
         configMap:
           name: cloudhsm-pkcs11-cfg
           items:
             - key: cloudhsm-pkcs11.cfg
               path: cloudhsm-pkcs11.cfg
-      # -- HSM: Client TLS cert
+      # mTLS client cert for the CloudHSM cluster.
       - name: cloudhsm-client-tls
         secret:
           secretName: cloudhsm-client-tls
+          defaultMode: 0400
           items:
             - key: client.crt
               path: client.crt
-      # -- HSM: Client TLS key
+      # mTLS client key for the CloudHSM cluster.
+      # Same underlying secret as cloudhsm-client-tls — separate volume definition
+      # so each subPath mount can address client.crt and client.key individually.
       - name: cloudhsm-client-key
         secret:
           secretName: cloudhsm-client-tls
+          defaultMode: 0400
           items:
             - key: client.key
               path: client.key
-      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
