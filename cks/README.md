@@ -22,6 +22,15 @@ Upgrading from `< v1.2.0` to `>= v1.2.0` chart version while using the `.Values.
 
 This upgrade is in line with external-secrets operator no longer serving v1beta1 APIs in v0.17.0+. v1 APIs were promoted in v0.16.0, and will be the default in Virtru provided charts moving forward.
 
+### v2.0.0 Upgrade Notes
+
+**Relevant to users who explicitly set `logStdoutEnabled` in `appConfig`**
+
+The `logStdoutEnabled` key has been renamed to `logConsoleEnabled` to match
+the `LOG_CONSOLE_ENABLED` environment variable it controls. If you previously
+set `logStdoutEnabled: false`, update your values to `logConsoleEnabled: false`
+or console logging will silently revert to enabled.
+
 ---
 
 ### Assumptions
@@ -41,14 +50,14 @@ cks/
 ├── README.md
 └── hsm/                    # HSM operator inputs — excluded from helm package via .helmignore
     ├── setup-secrets.sh        # Run this first to create all Kubernetes secrets
-    ├── cloudhsm-pkcs11.cfg     # PKCS#11 config — update with your HSM ENI IPs
+    ├── cloudhsm-pkcs11.cfg     # PKCS#11 config — renamed from .example — update with your HSM ENI IPs
     ├── customerCA.crt.example  # Rename to .crt and replace with your CloudHSM CA cert
     ├── client.crt.example      # Rename to .crt and replace with your client cert
     ├── client.key.example      # Rename to .key and replace with your client private key
     └── rsa001.pub.example      # Rename to .pub and replace with your HSM-exported public key
 ```
 
-> **Note:** The `hsm/` directory is excluded from Helm package artifacts via `.helmignore`. The `.example` files are safe instructional placeholders. Never commit real certs, keys, or public key files to source control — the `.gitignore` in this directory excludes `*.crt`, `*.key`, and `*.pub` for this reason.
+> **Note:** The `hsm/` directory is excluded from Helm package artifacts via `.helmignore`. The `.example` files are safe instructional placeholders. Never commit real certs, keys, or public key files to source control — the `.gitignore` in this directory excludes `*.crt`, `*.key`, `*.pub` and `*.cfg` for this reason.
 
 ---
 
@@ -178,7 +187,7 @@ cks/hsm/
 └── rsa001.pub                → renamed from .example — exported from HSM in Step 2
 ```
 
-> **Warning:** Never commit real cert, key, or public key files to source control. The `.gitignore` in the `hsm/` directory excludes `*.crt`, `*.key`, and `*.pub`.
+> **Warning:** Never commit real cert, key, or public key files to source control. The `.gitignore` in the `hsm/` directory excludes `*.crt`, `*.key`, `*.pub` and `*.cfg`.
 
 ### Step 4 — Create Kubernetes Secrets
 
@@ -186,6 +195,7 @@ Run the provided setup script from the `hsm/` directory. The script validates al
 
 ```bash
 cd cks/hsm
+chmod +x setup-secrets.sh
 ./setup-secrets.sh
 # or with a custom namespace:
 ./setup-secrets.sh my-namespace
@@ -219,7 +229,6 @@ appConfig:
   keyProviderType: hsm
   cryptoOperationsType: hsm
   noKeysRule: hsm
-  privateKeyPath: ""
   hsmIp: "<HSM_ENI_IP_1>"
   hsmIp2: "<HSM_ENI_IP_2>"
   pkcs11Vendor: "custom"
@@ -340,14 +349,6 @@ const fp = crypto.createHash('sha256').update(der).digest('base64url');
 console.log('Fingerprint:', fp);
 "
 ```
-### v2.0.0 Upgrade Notes
-
-**Relevant to users who explicitly set `logStdoutEnabled` in `appConfig`**
-
-The `logStdoutEnabled` key has been renamed to `logConsoleEnabled` to match
-the `LOG_CONSOLE_ENABLED` environment variable it controls. If you previously
-set `logStdoutEnabled: false`, update your values to `logConsoleEnabled: false`
-or console logging will silently revert to enabled.
 
 Confirm the printed fingerprint matches what was registered in the Virtru admin console.
 
