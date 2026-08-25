@@ -377,17 +377,17 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 | appConfig | object | See `values.yaml` | Application Configuration |
 | appConfig.virtruOrgId | string | `"<your org id>"` | The orgId will be provided to you by your Virtru representative. |
 | appConfig.keyProviderType | string | `"file"` | Key provider. `file` = PEM files (default). `hsm` = AWS CloudHSM via PKCS#11. |
-| appConfig.cryptoOperationsType | string | `""` | HSM only: Set to `hsm` to delegate all crypto to CloudHSM. |
+| appConfig.cryptoOperationsType | string | `not set` | HSM only: Set to `hsm` to delegate all crypto to CloudHSM. |
 | appConfig.noKeysRule | string | `"importPEM"` | Boot behavior. `importPEM` = import from files. `hsm` = keys live in HSM. |
 | appConfig.privateKeyPath | string | `"/run/secrets/rsa001.pem"` | Path to RSA private key. Set to `""` in HSM mode. |
 | appConfig.publicKeyPath | string | `"/run/secrets/rsa001.pub"` | Path to RSA public key. |
-| appConfig.hsmIp | string | `""` | HSM only: Primary CloudHSM ENI IP address. |
-| appConfig.hsmIp2 | string | `""` | HSM only: Secondary CloudHSM ENI IP (required for 2-node quorum). |
-| appConfig.pkcs11Vendor | string | `""` | HSM only: PKCS#11 vendor. Use `custom` for AWS CloudHSM SDK v5. |
-| appConfig.pkcs11LibName | string | `""` | HSM only: PKCS#11 library name. Use `CloudHSM`. |
-| appConfig.pkcs11LibPath | string | `""` | HSM only: Full path to PKCS#11 `.so` library inside the container. |
-| appConfig.pkcs11SlotLbl | string | `""` | HSM only: PKCS#11 slot label. Always `hsm1` for AWS CloudHSM SDK v5. |
-| appConfig.pkcs11KeyLbl | string | `""` | HSM only: RSA key label in the HSM. Must match the label used at key creation. |
+| appConfig.hsmIp | string | `not set` | HSM only: Primary CloudHSM ENI IP address. |
+| appConfig.hsmIp2 | string | `not set` | HSM only: Secondary CloudHSM ENI IP (required for 2-node quorum). |
+| appConfig.pkcs11Vendor | string | `not set` | HSM only: PKCS#11 vendor. Use `custom` for AWS CloudHSM SDK v5. |
+| appConfig.pkcs11LibName | string | `not set` | HSM only: PKCS#11 library name. Use `CloudHSM`. |
+| appConfig.pkcs11LibPath | string | `not set` | HSM only: Full path to PKCS#11 `.so` library inside the container. |
+| appConfig.pkcs11SlotLbl | string | `not set` | HSM only: PKCS#11 slot label. Always `hsm1` for AWS CloudHSM SDK v5. |
+| appConfig.pkcs11KeyLbl | string | `not set` | HSM only: RSA key label in the HSM. Must match the label used at key creation. |
 | appConfig.hmacAuthEnabled | bool | `true` | Whether HMAC API token authentication is enabled. |
 | appConfig.jwtAuthEnabled | bool | `true` | Whether JWT Bearer token authentication is enabled. |
 | appConfig.jwtAuthIssuer | string | `"https://api.virtru.com"` | JWT issuer URL. Must match the `iss` claim in platform tokens. |
