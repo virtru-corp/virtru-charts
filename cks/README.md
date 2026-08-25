@@ -42,7 +42,6 @@ cks/
 └── hsm/                    # HSM operator inputs — excluded from helm package via .helmignore
     ├── setup-secrets.sh        # Run this first to create all Kubernetes secrets
     ├── cloudhsm-pkcs11.cfg     # PKCS#11 config — update with your HSM ENI IPs
-    ├── cloudhsm_client.cfg     # CloudHSM client config — update with your HSM ENI IPs
     ├── customerCA.crt.example  # Rename to .crt and replace with your CloudHSM CA cert
     ├── client.crt.example      # Rename to .crt and replace with your client cert
     ├── client.key.example      # Rename to .key and replace with your client private key
@@ -83,7 +82,6 @@ cks/
 | `client.key` | Generated during CloudHSM cluster initialization |
 | `rsa001.pub` | Exported from HSM by key reference (see HSM Installation section) |
 | `cloudhsm-pkcs11.cfg` | Template provided — update with your HSM ENI IPs |
-| `cloudhsm_client.cfg` | Template provided — update with your HSM ENI IPs |
 
 * Security group rule: EKS cluster SG → CloudHSM cluster SG inbound **port 2223 TCP**
 
@@ -174,7 +172,6 @@ Rename each `.example` file and replace its contents with the real value. Update
 cks/hsm/
 ├── setup-secrets.sh          ✓ included
 ├── cloudhsm-pkcs11.cfg       → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
-├── cloudhsm_client.cfg       → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
 ├── customerCA.crt            → renamed from .example — paste CloudHSM CA cert
 ├── client.crt                → renamed from .example — paste client cert
 ├── client.key                → renamed from .example — paste client private key
@@ -205,7 +202,6 @@ The script creates the following resources:
 | `cks-keys` | Secret | `rsa001.pub` |
 | `hsm-pin` | Secret | `pkcs11Pin` (prompted securely) |
 | `cloudhsm-pkcs11-cfg` | ConfigMap | `cloudhsm-pkcs11.cfg` |
-| `cloudhsm-client-cfg` | ConfigMap | `cloudhsm_client.cfg` |
 
 Verify all resources were created:
 
