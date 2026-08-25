@@ -104,10 +104,11 @@ spec:
           {{- if eq .Values.appConfig.keyProviderType "hsm" }}
           # HSM ONLY: inject PKCS11_PIN from the hsm-pin secret created by setup-secrets.sh.
           # required: fails fast at helm template time if hsmPin is not uncommented in values.yaml.
+          {{- $hsmPin := required "appSecrets.hsmPin is required in HSM mode — uncomment hsmPin in values.yaml" .Values.appSecrets.hsmPin }}
           - name: PKCS11_PIN
             valueFrom:
               secretKeyRef:
-                name: {{ required "appSecrets.hsmPin.name is required in HSM mode — uncomment hsmPin in values.yaml" .Values.appSecrets.hsmPin.name }}
+                name: {{ $hsmPin.name }}
                 key: pkcs11Pin
           {{- end }}
           {{- end }}
@@ -191,6 +192,7 @@ spec:
       - name: cloudhsm-pkcs11-cfg
         configMap:
           name: cloudhsm-pkcs11-cfg
+          defaultMode: 0644
           items:
             - key: cloudhsm-pkcs11.cfg
               path: cloudhsm-pkcs11.cfg

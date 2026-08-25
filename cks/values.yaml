@@ -61,6 +61,9 @@ testerPod:
 podSecurityContext:
   {}
   # fsGroup: 2000
+  # HSM: set fsGroup to match the GID of the CloudHSM client library user
+  # so that secret volumes mounted with defaultMode: 0440 are group-readable.
+  # Example: fsGroup: 1000
 
 # -- Container-level security context.
 #    Defaults to empty for flexibility.
