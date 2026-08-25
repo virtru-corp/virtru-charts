@@ -344,6 +344,14 @@ const fp = crypto.createHash('sha256').update(der).digest('base64url');
 console.log('Fingerprint:', fp);
 "
 ```
+### v2.0.0 Upgrade Notes
+
+**Relevant to users who explicitly set `logStdoutEnabled` in `appConfig`**
+
+The `logStdoutEnabled` key has been renamed to `logConsoleEnabled` to match
+the `LOG_CONSOLE_ENABLED` environment variable it controls. If you previously
+set `logStdoutEnabled: false`, update your values to `logConsoleEnabled: false`
+or console logging will silently revert to enabled.
 
 Confirm the printed fingerprint matches what was registered in the Virtru admin console.
 
