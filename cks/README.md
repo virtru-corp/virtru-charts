@@ -375,11 +375,11 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Optional: Controls scheduling rules to optimize workload distribution. |
 | appConfig | object | See `values.yaml` | Application Configuration |
-| appConfig.virtruOrgId | string | `"<your org id>"` | The orgId will be provided to you by your Virtru representative. |
+| appConfig.virtruOrgId | string | `"<your_org_id>"` | The orgId will be provided to you by your Virtru representative. |
 | appConfig.keyProviderType | string | `"file"` | Key provider. `file` = PEM files (default). `hsm` = AWS CloudHSM via PKCS#11. |
 | appConfig.cryptoOperationsType | string | `not set` | HSM only: Set to `hsm` to delegate all crypto to CloudHSM. |
 | appConfig.noKeysRule | string | `"importPEM"` | Boot behavior. `importPEM` = import from files. `hsm` = keys live in HSM. |
-| appConfig.privateKeyPath | string | `"/run/secrets/rsa001.pem"` | Path to RSA private key. Set to `""` in HSM mode. |
+| appConfig.privateKeyPath | string | `"/run/secrets/rsa001.pem"` | Path to RSA private key. Not used in HSM mode — private key never leaves the HSM. |
 | appConfig.publicKeyPath | string | `"/run/secrets/rsa001.pub"` | Path to RSA public key. |
 | appConfig.hsmIp | string | `not set` | HSM only: Primary CloudHSM ENI IP address. |
 | appConfig.hsmIp2 | string | `not set` | HSM only: Secondary CloudHSM ENI IP (required for 2-node quorum). |
@@ -396,7 +396,7 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 | appSecrets.virtruAuth.data.authTokenJson | string | `"<base64-encoded-JSON-from-your-CKS>"` | Base64-encoded HMAC auth token. See [setup guide](https://support.virtru.com/hc/en-us/articles/17797745877655). |
 | appSecrets.virtruKeys.data."rsa001.pub" | string | `"<rsa001 public key>"` | RSA public key. HSM: export from HSM by key reference. See [setup guide](https://support.virtru.com/hc/en-us/articles/17797745877655). |
 | appSecrets.virtruKeys.data."rsa001.pem" | string | `"<rsa001 private key>"` | RSA private key. Default mode only — leave blank in HSM mode. |
-| appSecrets.hsmPin | object | `{}` | HSM only: Reference to the `hsm-pin` secret created by `setup-secrets.sh`. |
+| appSecrets.hsmPin | object | `not set` | HSM only: Reference to the `hsm-pin` secret created by `setup-secrets.sh`. |
 | autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | Autoscaling is disabled by default. |
 | autoscaling.maxReplicas | int | `100` | Maximum number of pods. |
 | autoscaling.minReplicas | int | `1` | Minimum number of pods. |
