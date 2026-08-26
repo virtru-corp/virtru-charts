@@ -76,7 +76,13 @@ data:
   KAS_METADATA_DIR: {{ default "/app/data" .Values.appConfig.kasMetadataDir }}
 
   # Key Management Configuration
-  KEY_ID: {{ default "rsa1" .Values.appConfig.keyId }}
+  # ---------------------------------------------------------------------------
+  # KEY_ID is a Virtru-provisioned UUID assigned during DSP org provisioning.
+  # It cannot be chosen or supplied by the user. required: fails fast at
+  # helm template time if keyId is not set — there is no safe default.
+  # Contact Virtru support to obtain your provisioned UUID.
+  # ---------------------------------------------------------------------------
+  KEY_ID: {{ required "appConfig.keyId is required — set it to the Virtru-provisioned UUID for your org. Contact Virtru support if you do not have it." .Values.appConfig.keyId | quote }}
   KAS_PUBLIC_KEY_FILE: {{ default "/app/dsp-keys/kas-cert.pem" .Values.appConfig.kasPublicKeyFile }}
   KAS_PRIVATE_KEY_FILE: {{ default "/app/dsp-keys/kas-private.pem" .Values.appConfig.kasPrivateKeyFile }}
   KEY_ALGORITHM: {{ default "rsa:2048" .Values.appConfig.keyAlgorithm }}

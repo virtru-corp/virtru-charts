@@ -243,9 +243,9 @@ appConfig:
   # -- Writable directory KAS uses for runtime metadata (emptyDir in Kubernetes).
   kasMetadataDir: /app/data
 
-  # -- Key Management Configuration
-  # -- The KAS Key ID provisioned by Virtru during DSP org provisioning (a UUID).
-  # -- Use the Virtru-provided value exactly; it cannot be chosen or supplied.
+  # -- Key ID provisioned by Virtru during DSP org provisioning (a UUID).
+  # -- REQUIRED: this value is enforced at render time. Contact Virtru support
+  # -- for your provisioned UUID — it cannot be chosen or supplied by the user.
   keyId: ""
   kasPublicKeyFile: /app/keys/rsa001.pub
   kasPrivateKeyFile: /app/keys/rsa001.pem
@@ -286,6 +286,24 @@ appSecrets:
       # -- HSM mode: remove or leave blank — private key is stored in the HSM.
       rsa001.pem: |
         <rsa001 private key>
+
+  # --------------------------------------------------------------------------
+  # HSM Secret and ConfigMap Name Overrides (COMMENTED OUT BY DEFAULT)
+  #
+  # Uncomment when deploying in HSM mode. Defaults match the resource names
+  # created by hsm/setup-secrets.sh. Override only when running multiple CKS
+  # releases in the same namespace to avoid resource name collisions.
+  #
+  # NOTE: These are subPath-mounted and will NOT hot-reload on rotation.
+  # A pod restart is required after renewing customerCA.crt, client.crt,
+  # or client.key (CloudHSM client certs expire annually by default).
+  # --------------------------------------------------------------------------
+  # hsmCaCert:
+  #   name: hsm-ca-cert
+  # hsmClientTls:
+  #   name: cloudhsm-client-tls
+  # hsmPkcs11Cfg:
+  #   name: cloudhsm-pkcs11-cfg
 
   # --------------------------------------------------------------------------
   # HSM PIN Secret Reference (COMMENTED OUT BY DEFAULT)
