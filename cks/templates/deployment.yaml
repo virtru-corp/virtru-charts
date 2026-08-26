@@ -43,9 +43,14 @@ spec:
       # appended with its own -a — an empty value would leave a dangling positional
       # argument that causes configure-pkcs11 to fail.
       #
-      # Resource names: hsmCaCert.name, hsmClientTls.name, and hsmPkcs11Cfg.name
-      # are configurable so multiple CKS releases can coexist in one namespace
-      # without secret/configmap collisions. Defaults match setup-secrets.sh output.
+      # Resource names: hsmCaCert.name, hsmClientTls.name, hsmPkcs11Cfg.name,
+      # and hsmClientCfg.name are configurable so multiple CKS releases can
+      # coexist in one namespace without secret/configmap collisions. Defaults
+      # match setup-secrets.sh output.
+      #
+      # cloudhsm_client.cfg: only mounted when appSecrets.hsmClientCfg.enabled
+      # is true. SDK v5 does not require the client daemon config in most
+      # deployments — enable only if your cluster requires it.
       #
       # Not rendered at all when keyProviderType != "hsm".
       # ---------------------------------------------------------------------------
@@ -79,6 +84,12 @@ spec:
               name: hsm-ca-cert
               subPath: customerCA.crt
               readOnly: true
+            {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
+            - mountPath: /opt/cloudhsm/etc/cloudhsm_client.cfg
+              name: cloudhsm-client-cfg
+              subPath: cloudhsm_client.cfg
+              readOnly: true
+            {{- end }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -164,6 +175,12 @@ spec:
             name: cloudhsm-client-key
             subPath: client.key
             readOnly: true
+          {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
+          - mountPath: /opt/cloudhsm/etc/cloudhsm_client.cfg
+            name: cloudhsm-client-cfg
+            subPath: cloudhsm_client.cfg
+            readOnly: true
+          {{- end }}
           {{- end }}
       volumes:
       {{- if .Values.externalAppSecrets }}
@@ -189,21 +206,21 @@ spec:
       # Set podSecurityContext.fsGroup to match the GID of the CloudHSM client library user.
       - name: hsm-ca-cert
         secret:
-          secretName: {{ .Values.appSecrets.hsmCaCert.name }}
+          secretName: {{ dig "hsmCaCert" "name" "hsm-ca-cert" .Values.appSecrets }}
           defaultMode: 0440
           items:
             - key: customerCA.crt
               path: customerCA.crt
       - name: cloudhsm-pkcs11-cfg
         configMap:
-          name: {{ .Values.appSecrets.hsmPkcs11Cfg.name }}
+          name: {{ dig "hsmPkcs11Cfg" "name" "cloudhsm-pkcs11-cfg" .Values.appSecrets }}
           defaultMode: 0644
           items:
             - key: cloudhsm-pkcs11.cfg
               path: cloudhsm-pkcs11.cfg
       - name: cloudhsm-client-tls
         secret:
-          secretName: {{ .Values.appSecrets.hsmClientTls.name }}
+          secretName: {{ dig "hsmClientTls" "name" "cloudhsm-client-tls" .Values.appSecrets }}
           defaultMode: 0440
           items:
             - key: client.crt
@@ -212,11 +229,27 @@ spec:
       # client.crt and client.key individually.
       - name: cloudhsm-client-key
         secret:
-          secretName: {{ .Values.appSecrets.hsmClientTls.name }}
+          secretName: {{ dig "hsmClientTls" "name" "cloudhsm-client-tls" .Values.appSecrets }}
           defaultMode: 0440
           items:
             - key: client.key
               path: client.key
+      {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
+      # ---------------------------------------------------------------------------
+      # cloudhsm_client.cfg — optional, SDK v5 only.
+      # Tells the CloudHSM client daemon how to connect to the cluster.
+      # Only required for deployments that use the client daemon alongside
+      # the PKCS#11 library. Enable via appSecrets.hsmClientCfg.enabled: true.
+      # Created by hsm/setup-secrets.sh when present.
+      # ---------------------------------------------------------------------------
+      - name: cloudhsm-client-cfg
+        configMap:
+          name: {{ dig "hsmClientCfg" "name" "cloudhsm-client-cfg" .Values.appSecrets }}
+          defaultMode: 0644
+          items:
+            - key: cloudhsm_client.cfg
+              path: cloudhsm_client.cfg
+      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

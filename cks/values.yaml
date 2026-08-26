@@ -303,13 +303,16 @@ appSecrets:
   # A pod restart is required after renewing customerCA.crt, client.crt,
   # or client.key (CloudHSM client certs expire annually by default).
   # --------------------------------------------------------------------------
-  # hsmCaCert:
+ # hsmCaCert:
   #   name: hsm-ca-cert
   # hsmClientTls:
   #   name: cloudhsm-client-tls
   # hsmPkcs11Cfg:
   #   name: cloudhsm-pkcs11-cfg
-
+  # hsmClientCfg:                  
+  #   name: cloudhsm-client-cfg
+  #   enabled: false   
+  
   # --------------------------------------------------------------------------
   # HSM PIN Secret Reference (COMMENTED OUT BY DEFAULT)
   #
