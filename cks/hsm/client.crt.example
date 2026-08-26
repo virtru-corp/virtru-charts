@@ -1,0 +1,13 @@
+-----BEGIN CERTIFICATE-----
+<YOUR_CLIENT_CERTIFICATE>
+
+This certificate is generated during the CloudHSM cluster initialization process.
+
+To obtain this file:
+  1. Initialize your CloudHSM cluster
+  2. Create and sign a cluster CSR using your CA
+  3. The resulting signed certificate is your client.crt
+
+File location on Linux server after setup:
+  /opt/cloudhsm/etc/client.crt
+-----END CERTIFICATE-----

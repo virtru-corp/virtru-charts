@@ -30,30 +30,110 @@ spec:
       serviceAccountName: {{ include "cks.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # ---------------------------------------------------------------------------
+      # HSM ONLY: Init container runs configure-pkcs11 before CKS starts.
+      # Copies the mounted cloudhsm-pkcs11.cfg into a writable emptyDir then
+      # runs configure-pkcs11 to initialise the PKCS#11 slot configuration.
+      #
+      # CA cert path: the secret is subPath-mounted at the -ro path inside the
+      # emptyDir. The emptyDir at /opt/cloudhsm/etc is empty at init time, so
+      # --hsm-ca-cert must point at the -ro subPath mount, not the emptyDir root.
+      #
+      # -a flag: SDK v5 requires one -a flag per HSM IP. hsmIp2 is conditionally
+      # appended with its own -a — an empty value would leave a dangling positional
+      # argument that causes configure-pkcs11 to fail.
+      #
+      # Resource names: hsmCaCert.name, hsmClientTls.name, hsmPkcs11Cfg.name,
+      # and hsmClientCfg.name are configurable so multiple CKS releases can
+      # coexist in one namespace without secret/configmap collisions. Defaults
+      # match setup-secrets.sh output.
+      #
+      # cloudhsm_client.cfg: only mounted when appSecrets.hsmClientCfg.enabled
+      # is true. SDK v5 does not require the client daemon config in most
+      # deployments — enable only if your cluster requires it.
+      #
+      # Not rendered at all when keyProviderType != "hsm".
+      # ---------------------------------------------------------------------------
+      {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+      initContainers:
+        - name: configure-pkcs11
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "Copying cloudhsm-pkcs11.cfg to writable location..."
+              cp /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/cloudhsm-pkcs11.cfg /opt/cloudhsm/etc/cloudhsm-pkcs11.cfg
+              echo "Running configure-pkcs11..."
+              /opt/cloudhsm/bin/configure-pkcs11 \
+                -a "{{ required "appConfig.hsmIp is required in HSM mode — set hsmIp in values.yaml" .Values.appConfig.hsmIp }}"{{ if .Values.appConfig.hsmIp2 }} -a "{{ .Values.appConfig.hsmIp2 }}"{{ end }} \
+                --hsm-ca-cert /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/customerCA.crt \
+                --log-type term \
+                --log-level info
+              echo "configure-pkcs11 complete."
+          volumeMounts:
+            - mountPath: /opt/cloudhsm/etc
+              name: cloudhsm-etc
+            - mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/cloudhsm-pkcs11.cfg
+              name: cloudhsm-pkcs11-cfg
+              subPath: cloudhsm-pkcs11.cfg
+              readOnly: true
+            - mountPath: /opt/cloudhsm/etc/cloudhsm-pkcs11-ro/customerCA.crt
+              name: hsm-ca-cert
+              subPath: customerCA.crt
+              readOnly: true
+            - mountPath: /opt/cloudhsm/etc/client.crt
+              name: cloudhsm-client-tls
+              subPath: client.crt
+              readOnly: true
+            - mountPath: /opt/cloudhsm/etc/client.key
+              name: cloudhsm-client-key
+              subPath: client.key
+              readOnly: true
+            {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
+            - mountPath: /opt/cloudhsm/etc/cloudhsm_client.cfg
+              name: cloudhsm-client-cfg
+              subPath: cloudhsm_client.cfg
+              readOnly: true
+            {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
           - configMapRef:
               name: {{ include "cks.fullname" . }}
-          {{- if not .Values.externalAppSecrets }}
-          - secretRef:
-              name: {{ .Values.appSecrets.virtruAuth.name }}
-          {{- end }}
           {{- if .Values.externalAppSecrets }}
-          {{ range .Values.externalAppSecrets }}
+          {{- range .Values.externalAppSecrets }}
           - secretRef:
               name: {{ .secretsPath }}
           {{- end }}
+          {{- else }}
+          - secretRef:
+              name: {{ .Values.appSecrets.virtruAuth.name }}
           {{- end }}
+          {{- if or .Values.externalAppSecrets (eq .Values.appConfig.keyProviderType "hsm") }}
+          env:
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
-          env:
           - name: AUTH_TOKEN_STORAGE_IN_MEMORY_TOKEN_JSON
             valueFrom:
               secretKeyRef:
                 key: hmac-auth-token-json
                 name: {{ .secretsPath }}
                 optional: true
+          {{- end }}
+          {{- end }}
+          {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+          # HSM ONLY: inject PKCS11_PIN from the hsm-pin secret created by setup-secrets.sh.
+          # required: fails fast at helm template time if hsmPin is not uncommented in values.yaml.
+          {{- $hsmPin := required "appSecrets.hsmPin is required in HSM mode — uncomment hsmPin in values.yaml" .Values.appSecrets.hsmPin }}
+          - name: PKCS11_PIN
+            valueFrom:
+              secretKeyRef:
+                name: {{ $hsmPin.name }}
+                key: pkcs11Pin
           {{- end }}
           {{- end }}
           securityContext:
@@ -74,42 +154,109 @@ spec:
             timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if not .Values.externalAppSecrets }}
           volumeMounts:
-          - mountPath: "/app/keys"
-            name: {{ .Values.appSecrets.virtruKeys.name }}
-            readOnly: true
-          - mountPath: "/app/data"
-            name: app-data
-          {{- end }}
           {{- if .Values.externalAppSecrets }}
           {{- with index .Values.externalAppSecrets 0 }}
-          volumeMounts:
           - mountPath: "/app/keys"
             name: {{ .name }}
             readOnly: true
+          {{- end }}
+          {{- else }}
+          - mountPath: "/app/keys"
+            name: {{ .Values.appSecrets.virtruKeys.name }}
+            readOnly: true
+          {{- end }}
           - mountPath: "/app/data"
             name: app-data
+          {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+          - mountPath: /opt/cloudhsm/etc
+            name: cloudhsm-etc
+          - mountPath: /opt/cloudhsm/etc/customerCA.crt
+            name: hsm-ca-cert
+            subPath: customerCA.crt
+            readOnly: true
+          - mountPath: /opt/cloudhsm/etc/client.crt
+            name: cloudhsm-client-tls
+            subPath: client.crt
+            readOnly: true
+          - mountPath: /opt/cloudhsm/etc/client.key
+            name: cloudhsm-client-key
+            subPath: client.key
+            readOnly: true
+          {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
+          - mountPath: /opt/cloudhsm/etc/cloudhsm_client.cfg
+            name: cloudhsm-client-cfg
+            subPath: cloudhsm_client.cfg
+            readOnly: true
           {{- end }}
           {{- end }}
-      {{- if not .Values.externalAppSecrets }}
       volumes:
-      - name: {{ .Values.appSecrets.virtruKeys.name }}
-        secret:
-          defaultMode: 420
-          secretName: {{ .Values.appSecrets.virtruKeys.name }}
-      - name: app-data
-        emptyDir: {}
-      {{- end }}
       {{- if .Values.externalAppSecrets }}
       {{- with index .Values.externalAppSecrets 0 }}
-      volumes:
       - name: {{ .name }}
         secret:
-          defaultMode: 420
+          defaultMode: 0644
           secretName: {{ .secretsPath }}
+      {{- end }}
+      {{- else }}
+      - name: {{ .Values.appSecrets.virtruKeys.name }}
+        secret:
+          defaultMode: 0644
+          secretName: {{ .Values.appSecrets.virtruKeys.name }}
+      {{- end }}
       - name: app-data
         emptyDir: {}
+      {{- if eq .Values.appConfig.keyProviderType "hsm" }}
+      # HSM ONLY volumes
+      - name: cloudhsm-etc
+        emptyDir: {}
+      # defaultMode: 0440 — readable by owner and group.
+      # Set podSecurityContext.fsGroup to match the GID of the CloudHSM client library user.
+      - name: hsm-ca-cert
+        secret:
+          secretName: {{ dig "hsmCaCert" "name" "hsm-ca-cert" .Values.appSecrets }}
+          defaultMode: 0440
+          items:
+            - key: customerCA.crt
+              path: customerCA.crt
+      - name: cloudhsm-pkcs11-cfg
+        configMap:
+          name: {{ dig "hsmPkcs11Cfg" "name" "cloudhsm-pkcs11-cfg" .Values.appSecrets }}
+          defaultMode: 0644
+          items:
+            - key: cloudhsm-pkcs11.cfg
+              path: cloudhsm-pkcs11.cfg
+      - name: cloudhsm-client-tls
+        secret:
+          secretName: {{ dig "hsmClientTls" "name" "cloudhsm-client-tls" .Values.appSecrets }}
+          defaultMode: 0440
+          items:
+            - key: client.crt
+              path: client.crt
+      # Same underlying secret — separate volume so subPath mounts can address
+      # client.crt and client.key individually.
+      - name: cloudhsm-client-key
+        secret:
+          secretName: {{ dig "hsmClientTls" "name" "cloudhsm-client-tls" .Values.appSecrets }}
+          defaultMode: 0440
+          items:
+            - key: client.key
+              path: client.key
+      {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
+      # ---------------------------------------------------------------------------
+      # cloudhsm_client.cfg — optional, SDK v5 only.
+      # Tells the CloudHSM client daemon how to connect to the cluster.
+      # Only required for deployments that use the client daemon alongside
+      # the PKCS#11 library. Enable via appSecrets.hsmClientCfg.enabled: true.
+      # Created by hsm/setup-secrets.sh when present.
+      # ---------------------------------------------------------------------------
+      - name: cloudhsm-client-cfg
+        configMap:
+          name: {{ dig "hsmClientCfg" "name" "cloudhsm-client-cfg" .Values.appSecrets }}
+          defaultMode: 0644
+          items:
+            - key: cloudhsm_client.cfg
+              path: cloudhsm_client.cfg
       {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
