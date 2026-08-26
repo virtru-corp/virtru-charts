@@ -31,6 +31,13 @@ the `LOG_CONSOLE_ENABLED` environment variable it controls. If you previously
 set `logStdoutEnabled: false`, update your values to `logConsoleEnabled: false`
 or console logging will silently revert to enabled.
 
+**Relevant to users who explicitly omit `kasPublicKeyFile` or `kasPrivateKeyFile`**
+
+The template defaults for `KAS_PUBLIC_KEY_FILE` and `KAS_PRIVATE_KEY_FILE` have been
+updated from `/app/dsp-keys/kas-cert.pem` / `/app/dsp-keys/kas-private.pem` to
+`/app/keys/rsa001.pub` / `/app/keys/rsa001.pem` to match the actual runtime paths.
+Installs that rely on the template default rather than setting these explicitly in
+`values.yaml` should verify the correct path is in use after upgrading.
 ---
 
 ### Assumptions
@@ -215,7 +222,7 @@ The script creates the following resources:
 | `cks-keys` | Secret | `rsa001.pub` |
 | `hsm-pin` | Secret | `pkcs11Pin` (prompted securely) |
 | `cloudhsm-pkcs11-cfg` | ConfigMap | `cloudhsm-pkcs11.cfg` |
-| `cloudhsm-client-cfg` | ConfigMap | `cloudhsm_client.cfg` (optional — only if `appSecrets.hsmClientCfg.enabled: true`) |
+| `cloudhsm-client-cfg` | ConfigMap | `cloudhsm_client.cfg` (optional — created when `cloudhsm_client.cfg` is present in `hsm/`; mounted only when `appSecrets.hsmClientCfg.enabled: true`) |
 
 Verify all resources were created:
 
@@ -407,6 +414,9 @@ console.log('Fingerprint:', fp);
 | appSecrets.virtruKeys.data."rsa001.pem" | string | `"<rsa001 private key>"` | RSA private key. Default mode only — leave blank in HSM mode. |
 | appSecrets.hsmPin | object | `not set` | HSM only: Reference to the `hsm-pin` secret created by `setup-secrets.sh`. |
 | appSecrets.hsmClientCfg | object | `not set` | HSM only: Optional. Set `enabled: true` and `name: cloudhsm-client-cfg` if your cluster requires the CloudHSM client daemon config alongside PKCS#11. SDK v5 does not require this in most deployments. |
+| appSecrets.hsmCaCert | object | `not set` | HSM only: Override the name of the `hsm-ca-cert` secret. Default matches `setup-secrets.sh` output. Override when running multiple CKS releases in the same namespace. |
+| appSecrets.hsmClientTls | object | `not set` | HSM only: Override the name of the `cloudhsm-client-tls` secret. |
+| appSecrets.hsmPkcs11Cfg | object | `not set` | HSM only: Override the name of the `cloudhsm-pkcs11-cfg` ConfigMap. |
 | autoscaling.enabled | bool | `false` | Autoscaling is disabled by default. |
 | autoscaling.maxReplicas | int | `100` | Maximum number of pods. |
 | autoscaling.minReplicas | int | `1` | Minimum number of pods. |

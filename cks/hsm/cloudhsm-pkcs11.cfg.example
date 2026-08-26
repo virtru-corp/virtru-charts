@@ -2,7 +2,7 @@
     "clusters" : [{
         "type": "hsm1",
         "cluster":{
-            "hsm_ca_file": "/opt/cloudhsm/etc/customerCA.crt",
+            "hsm_ca_file": "/opt/cloudhsm/etc/cloudhsm-pkcs11-ro/customerCA.crt",
             "servers":[
                 {
                     "hostname": "<HSM_ENI_IP_1>",

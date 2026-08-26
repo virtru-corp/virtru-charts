@@ -84,6 +84,14 @@ spec:
               name: hsm-ca-cert
               subPath: customerCA.crt
               readOnly: true
+            - mountPath: /opt/cloudhsm/etc/client.crt
+              name: cloudhsm-client-tls
+              subPath: client.crt
+              readOnly: true
+            - mountPath: /opt/cloudhsm/etc/client.key
+              name: cloudhsm-client-key
+              subPath: client.key
+              readOnly: true
             {{- if dig "hsmClientCfg" "enabled" false .Values.appSecrets }}
             - mountPath: /opt/cloudhsm/etc/cloudhsm_client.cfg
               name: cloudhsm-client-cfg

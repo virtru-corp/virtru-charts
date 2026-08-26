@@ -1,0 +1,21 @@
+# cloudhsm_client.cfg — CloudHSM client daemon configuration
+#
+# This file is optional. It is only required if your CloudHSM cluster
+# uses the client daemon alongside the PKCS#11 library. AWS CloudHSM
+# SDK v5 does not require the client daemon in most deployments.
+#
+# To use: copy this file from /opt/cloudhsm/etc/cloudhsm_client.cfg
+# on your Linux server and place it in this directory. The setup-secrets.sh
+# script will detect it and create the cloudhsm-client-cfg ConfigMap.
+# Then set appSecrets.hsmClientCfg.enabled: true in values.yaml.
+#
+# WARNING: Never commit a populated cloudhsm_client.cfg to source control.
+# The .gitignore in this directory excludes *.cfg for this reason.
+
+{
+  "HapgList": [],
+  "HsmList": [],
+  "LogLevel": "INFO",
+  "LogType": "file",
+  "ServerPort": 2223
+}
