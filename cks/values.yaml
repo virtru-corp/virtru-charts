@@ -163,6 +163,8 @@ appConfig:
   # -- Logging configuration.
   logRsyslogEnabled: false
   # -- Maps to LOG_CONSOLE_ENABLED in the ConfigMap.
+  # -- NOTE: renamed from logStdoutEnabled in v2.0.0. Update your override
+  # -- files before running helm upgrade.
   logConsoleEnabled: true
 
   # --------------------------------------------------------------------------
@@ -219,6 +221,8 @@ appConfig:
 
   # --------------------------------------------------------------------------
   # KAS Configuration
+  # Only required when CKS is deployed alongside KAS (DSP mode).
+  # Standalone CKS installs can leave these values as defaults.
   # --------------------------------------------------------------------------
   # -- OAuth2 issuer that mints access tokens KAS verifies on rewrap.
   kasAuthIssuer: https://login.virtru.com/oauth2/default
@@ -243,9 +247,10 @@ appConfig:
   # -- Writable directory KAS uses for runtime metadata (emptyDir in Kubernetes).
   kasMetadataDir: /app/data
 
-  # -- Key ID provisioned by Virtru during DSP org provisioning (a UUID).
-  # -- REQUIRED: this value is enforced at render time. Contact Virtru support
-  # -- for your provisioned UUID — it cannot be chosen or supplied by the user.
+  # -- KAS key ID provisioned by Virtru during DSP org provisioning (a UUID).
+  # -- Only required when KAS is enabled. If not using KAS, the default is safe
+  # -- to leave as-is. If using KAS, contact Virtru support for your provisioned
+  # -- UUID — it cannot be chosen or supplied by the user.
   keyId: ""
   kasPublicKeyFile: /app/keys/rsa001.pub
   kasPrivateKeyFile: /app/keys/rsa001.pem
