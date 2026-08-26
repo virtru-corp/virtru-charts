@@ -51,6 +51,7 @@ cks/
 └── hsm/                    # HSM operator inputs — excluded from helm package via .helmignore
     ├── setup-secrets.sh        # Run this first to create all Kubernetes secrets
     ├── cloudhsm-pkcs11.cfg     # PKCS#11 config — renamed from .example — update with your HSM ENI IPs
+    ├── cloudhsm_client.cfg.example  # Optional — rename and populate if your cluster requires the CloudHSM client daemon
     ├── customerCA.crt.example  # Rename to .crt and replace with your CloudHSM CA cert
     ├── client.crt.example      # Rename to .crt and replace with your client cert
     ├── client.key.example      # Rename to .key and replace with your client private key
@@ -91,6 +92,7 @@ cks/
 | `client.key` | Generated during CloudHSM cluster initialization |
 | `rsa001.pub` | Exported from HSM by key reference (see HSM Installation section) |
 | `cloudhsm-pkcs11.cfg` | Template provided — update with your HSM ENI IPs |
+| `cloudhsm_client.cfg` | Optional — only if your CloudHSM cluster requires the client daemon. Copy from `/opt/cloudhsm/etc/cloudhsm_client.cfg` on your Linux server |
 
 * Security group rule: EKS cluster SG → CloudHSM cluster SG inbound **port 2223 TCP**
 
@@ -181,6 +183,7 @@ Rename each `.example` file and replace its contents with the real value. Update
 cks/hsm/
 ├── setup-secrets.sh          ✓ included
 ├── cloudhsm-pkcs11.cfg       → update <HSM_ENI_IP_1> and <HSM_ENI_IP_2>
+├── cloudhsm_client.cfg       → optional — copy from Linux server if your cluster requires it
 ├── customerCA.crt            → renamed from .example — paste CloudHSM CA cert
 ├── client.crt                → renamed from .example — paste client cert
 ├── client.key                → renamed from .example — paste client private key
@@ -212,6 +215,7 @@ The script creates the following resources:
 | `cks-keys` | Secret | `rsa001.pub` |
 | `hsm-pin` | Secret | `pkcs11Pin` (prompted securely) |
 | `cloudhsm-pkcs11-cfg` | ConfigMap | `cloudhsm-pkcs11.cfg` |
+| `cloudhsm-client-cfg` | ConfigMap | `cloudhsm_client.cfg` (optional — only if `appSecrets.hsmClientCfg.enabled: true`) |
 
 Verify all resources were created:
 
@@ -240,6 +244,15 @@ appConfig:
 ```
 
 Also uncomment the `appSecrets.hsmPin` section.
+
+If your cluster requires the CloudHSM client daemon config, also uncomment and enable `appSecrets.hsmClientCfg`:
+
+```yaml
+appSecrets:
+  hsmClientCfg:
+    name: cloudhsm-client-cfg
+    enabled: true
+```
 
 ### Step 6 — Install
 
@@ -281,6 +294,8 @@ console.log('Fingerprint:', fp);
 
 > **Important:** Key rotation for HSM-backed CKS deployments requires access to your Linux server where CKS + CloudHSM was originally configured. New keys must be generated and validated on the Linux server before being promoted to Kubernetes. The updated public key must then be applied to the cluster to keep the Kubernetes deployment in sync with the HSM.
 
+> **Note:** `customerCA.crt`, `client.crt`, and `client.key` are subPath-mounted and will **not** hot-reload on rotation. A pod restart is required after renewing any of these files. CloudHSM client certs expire annually by default — plan for scheduled restarts during cert renewal.
+
 ### Rotation Steps
 
 **1. Generate the new RSA key pair on the Linux server**
@@ -320,8 +335,6 @@ Update the admin console with the new public key fingerprint before applying cha
 
 **5. Update the `cks-keys` secret in Kubernetes**
 
-Replace the public key in the cluster with the newly exported file:
-
 ```bash
 kubectl create secret generic cks-keys \
   --from-file=rsa001.pub=hsm/rsa002.pub \
@@ -330,8 +343,6 @@ kubectl create secret generic cks-keys \
 ```
 
 **6. Update `values.yaml` if the key label changed**
-
-If you used a new key label in the HSM, update `appConfig.pkcs11KeyLbl` in `values.yaml` and redeploy:
 
 ```bash
 helm upgrade cks . -n virtru -f values.yaml
@@ -349,8 +360,6 @@ const fp = crypto.createHash('sha256').update(der).digest('base64url');
 console.log('Fingerprint:', fp);
 "
 ```
-
-Confirm the printed fingerprint matches what was registered in the Virtru admin console.
 
 ---
 
@@ -393,32 +402,28 @@ Confirm the printed fingerprint matches what was registered in the Virtru admin 
 | appConfig.jwtAuthIssuer | string | `"https://api.virtru.com"` | JWT issuer URL. Must match the `iss` claim in platform tokens. |
 | appConfig.jwtAuthJwksPath | string | `"/acm/api/jwks"` | Path to JWKS endpoint for JWT public key verification. |
 | appSecrets | object | See `values.yaml` | Secrets Management |
-| appSecrets.virtruAuth.data.authTokenJson | string | `"<base64-encoded-JSON-from-your-CKS>"` | Base64-encoded HMAC auth token. See [setup guide](https://support.virtru.com/hc/en-us/articles/17797745877655). |
-| appSecrets.virtruKeys.data."rsa001.pub" | string | `"<rsa001 public key>"` | RSA public key. HSM: export from HSM by key reference. See [setup guide](https://support.virtru.com/hc/en-us/articles/17797745877655). |
+| appSecrets.virtruAuth.data.authTokenJson | string | `"<base64-encoded-JSON-from-your-CKS>"` | Base64-encoded HMAC auth token. |
+| appSecrets.virtruKeys.data."rsa001.pub" | string | `"<rsa001 public key>"` | RSA public key. HSM: export from HSM by key reference. |
 | appSecrets.virtruKeys.data."rsa001.pem" | string | `"<rsa001 private key>"` | RSA private key. Default mode only — leave blank in HSM mode. |
 | appSecrets.hsmPin | object | `not set` | HSM only: Reference to the `hsm-pin` secret created by `setup-secrets.sh`. |
-| autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | Autoscaling is disabled by default. |
+| appSecrets.hsmClientCfg | object | `not set` | HSM only: Optional. Set `enabled: true` and `name: cloudhsm-client-cfg` if your cluster requires the CloudHSM client daemon config alongside PKCS#11. SDK v5 does not require this in most deployments. |
+| autoscaling.enabled | bool | `false` | Autoscaling is disabled by default. |
 | autoscaling.maxReplicas | int | `100` | Maximum number of pods. |
 | autoscaling.minReplicas | int | `1` | Minimum number of pods. |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU threshold for scaling. Default is 80%. |
-| deployment | object | `{"port":9000}` | Internal application port used for the deployment. |
 | deployment.port | int | `9000` | The CKS will use the default internal port 9000. |
 | fullnameOverride | string | `""` | Optional override for the full resource name. |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"containers.virtru.com/cks","tag":""}` | Container image config. For versions see [release notes](https://support.virtru.com/hc/en-us/articles/360034039233). HSM: confirm image tag supports CloudHSM SDK v5. |
-| ingress | object | See `values.yaml` | Ingress Configuration. Enabled by default. |
+| image.repository | string | `"containers.virtru.com/cks"` | Container image. HSM: confirm image tag supports CloudHSM SDK v5. |
 | ingress.hosts[0].host | string | `"fqdn.yourdomain.com"` | Change to match the FQDN of your CKS. |
 | nameOverride | string | `""` | Optional name override for the CKS release. |
 | nodeSelector | object | `{}` | Optional: Specifies node labels for pod placement. HSM: pin to HSM-ready nodes. |
 | podAnnotations | object | `{}` | Optional annotations for pods, useful for monitoring or automation. |
-| podSecurityContext | object | `{}` | Pod-level security context. HSM: do not set `readOnlyRootFilesystem: true`. |
+| podSecurityContext | object | `{}` | Pod-level security context. HSM: set `fsGroup` to match the CloudHSM client library GID. |
 | replicaCount | int | `3` | Number of CKS pod replicas. Default is 3 for HA. |
 | resources | object | `{}` | CPU/memory limits and requests. HSM workloads benefit from defined limits. |
 | revisionHistoryLimit | int | `10` | Number of old deployments retained for rollback purposes. |
 | securityContext | object | `{}` | Container-level security context. HSM: do not set `readOnlyRootFilesystem: true`. |
-| service | object | `{"annotations":{},"port":443,"protocol":"TCP","type":"ClusterIP"}` | Service Configuration. |
 | service.type | string | `"ClusterIP"` | Service type. Use `LoadBalancer` for AWS NLB in HSM/public deployments. |
-| serviceAccount.annotations | object | `{}` | Metadata annotations to add to the service account. |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created. |
-| serviceAccount.name | string | `""` | Service account name. Auto-generated if not set and create is true. |
-| testerPod | object | `{"annotations":{"helm.sh/hook":"test"},"enabled":true}` | Test pod is created by default. |
+| testerPod.enabled | bool | `true` | Test pod is created by default. |
 | tolerations | list | `[]` | Optional: Defines tolerations to allow pods to be scheduled on tainted nodes. |

@@ -150,6 +150,26 @@ kubectl create configmap cloudhsm-pkcs11-cfg \
   --dry-run=client -o yaml | kubectl apply -f -
 echo "  ✓ cloudhsm-pkcs11-cfg"
 
+# -- CloudHSM Client Config (Optional)
+# Only created if cloudhsm_client.cfg exists in the hsm/ directory.
+# Required only for clusters that use the CloudHSM client daemon alongside PKCS#11.
+# SDK v5 does not require this in most deployments.
+# To enable in the chart: set appSecrets.hsmClientCfg.enabled: true in values.yaml.
+if [ -f "$SCRIPT_DIR/cloudhsm_client.cfg" ]; then
+  echo ""
+  echo "Creating configmap: cloudhsm-client-cfg (optional)..."
+  kubectl create configmap cloudhsm-client-cfg \
+    --from-file=cloudhsm_client.cfg="$SCRIPT_DIR/cloudhsm_client.cfg" \
+    -n "$NAMESPACE" \
+    --dry-run=client -o yaml | kubectl apply -f -
+  echo "  ✓ cloudhsm-client-cfg"
+else
+  echo ""
+  echo "  ℹ cloudhsm_client.cfg not found — skipping cloudhsm-client-cfg (optional)"
+  echo "    If your cluster requires the CloudHSM client daemon, copy cloudhsm_client.cfg"
+  echo "    from /opt/cloudhsm/etc/ on your Linux server and re-run this script."
+fi
+
 # -- Summary
 echo ""
 echo "=================================================="
@@ -160,6 +180,6 @@ echo "Secrets:"
 kubectl get secrets -n "$NAMESPACE" | grep -E "hsm-ca-cert|cloudhsm-client-tls|cks-keys|hsm-pin" || true
 echo ""
 echo "ConfigMaps:"
-kubectl get configmaps -n "$NAMESPACE" | grep -E "cloudhsm-pkcs11-cfg" || true
+kubectl get configmaps -n "$NAMESPACE" | grep -E "cloudhsm-pkcs11-cfg|cloudhsm-client-cfg" || true
 echo ""
 echo "Next step: helm upgrade --install cks ../ -n $NAMESPACE -f ../values.yaml"
