@@ -1,3 +1,18 @@
+{{- $jvm := .Values.jvmConfig | default dict -}}
+{{- $base := list "-Djava.library.path=/usr/local/smtp-proxy/dtsearch/bin64" "-Dlog4j.configurationFile=/usr/local/smtp-proxy/smtp-proxy/log4j2.xml" "-Dmail.mime.parameters.strict=false" -}}
+{{- $heap := list -}}
+{{- with $jvm.initialHeapSize -}}
+{{- $heap = append $heap (printf "-Xms%s" .) -}}
+{{- end -}}
+{{- with $jvm.maxHeapSize -}}
+{{- $heap = append $heap (printf "-Xmx%s" .) -}}
+{{- end -}}
+{{- if kindIs "bool" $jvm.heapDumpOnOOM -}}
+{{- $heap = append $heap (ternary "-XX:+HeapDumpOnOutOfMemoryError" "-XX:-HeapDumpOnOutOfMemoryError" $jvm.heapDumpOnOOM) -}}
+{{- end -}}
+{{- with $jvm.heapDumpPath -}}
+{{- $heap = append $heap (printf "-XX:HeapDumpPath=%s" .) -}}
+{{- end -}}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -5,6 +20,10 @@ metadata:
     app: gateway
   name: {{ .Chart.Name }}-base-configs
 data:
+  {{- /* Leave legacy overrides untouched unless JVM settings are explicitly configured. */}}
+  {{- if $heap }}
+  GATEWAY_JAVA_OPTIONS: {{ concat $base $heap | join " " | quote }}
+  {{- end }}
   GATEWAY_ACCOUNTS_URL: {{ .Values.gatewayAccountsUrl }}
   GATEWAY_ACM_URL:  {{ .Values.gatewayAcmUrl }}
   GATEWAY_REMOTE_CONTENT_BASE_URL: {{ .Values.gatewayRemoteContentBaseUrl }}
