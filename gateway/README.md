@@ -161,6 +161,10 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `proxyConfig.httpProxyPort` | `GATEWAY_HTTP_PROXY_PORT` |
 | `proxyConfig.httpsProxyHost` | `GATEWAY_HTTPS_PROXY_HOST` |
 | `proxyConfig.httpsProxyPort` | `GATEWAY_HTTPS_PROXY_PORT` |
+| `jvmConfig.initialHeapSize` | Adds `-Xms` to `GATEWAY_JAVA_OPTIONS` |
+| `jvmConfig.maxHeapSize` | Adds `-Xmx` to `GATEWAY_JAVA_OPTIONS` |
+| `jvmConfig.heapDumpOnOOM` | Adds `-XX:+HeapDumpOnOutOfMemoryError` (true) or `-XX:-HeapDumpOnOutOfMemoryError` (false); null leaves it unchanged |
+| `jvmConfig.heapDumpPath` | Adds `-XX:HeapDumpPath` to `GATEWAY_JAVA_OPTIONS` |
 
 ### `inboundRelayAddresses` values for Gmail and Office 365
 
@@ -203,6 +207,10 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | istioIngress.existingGateway | string | `nil` | Use an existing istio gateway |
 | istioIngress.gatewaySelectors | object | `{"istio":"ingress"}` | Name of istio gateway selector |
 | istioIngress.ingressHostnames | list | `["*"]` | Add FQDN, as best practice. |
+| jvmConfig.initialHeapSize | string | `""` | Initial heap size (`-Xms`), e.g. `"256m"`. Empty preserves existing options. |
+| jvmConfig.maxHeapSize | string | `""` | Maximum heap size (`-Xmx`), e.g. `"1g"`. Leave room for non-heap memory within the container limit. Empty preserves existing options. |
+| jvmConfig.heapDumpOnOOM | boolean or null | `null` | Enable or disable heap dumps on OOM. Null preserves the existing setting. |
+| jvmConfig.heapDumpPath | string | `""` | Writable heap dump directory or filename (`-XX:HeapDumpPath`), e.g. `"/tmp"`. Does not enable dumps by itself. |
 | nameOverride | string | `""` | Optional: Override the default name of the chart and release. |
 | nodeSelector | object | `{}` | Optional: Node selection constraints for scheduling pods. |
 | persistentVolumes | object | `{"storageClassName":"standard","volumeSize":"1Gi"}` | the size of the volume below. |

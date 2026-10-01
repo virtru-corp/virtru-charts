@@ -56,6 +56,17 @@ resources: {}
   #   cpu: 500m
   #   memory: 500Mi
 
+# -- Optional JVM heap settings for all gateway modes. Empty values preserve existing options.
+jvmConfig:
+  # -- Initial heap size (-Xms), e.g. "256m".
+  initialHeapSize: ""
+  # -- Maximum heap size (-Xmx), e.g. "1g". Leave room for non-heap memory within the container limit.
+  maxHeapSize: ""
+  # -- Enable or disable heap dumps on OOM. Null preserves the existing setting.
+  heapDumpOnOOM: null
+  # -- Writable heap dump directory or filename (-XX:HeapDumpPath), e.g. "/tmp".
+  heapDumpPath: ""
+
 # -- Optional: Node selection constraints for scheduling pods.
 nodeSelector: {}  
 
