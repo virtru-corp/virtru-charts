@@ -382,6 +382,16 @@ entries:
     version: 0.7.10
   gateway:
   - apiVersion: v2
+    appVersion: v2.78.0
+    created: "2026-09-21T19:05:42.84605-04:00"
+    description: A Helm chart for Kubernetes
+    digest: f6b4b1ed20e7feef5a83a5394984c6f541a24e9dee1cea180e5856dc129184a5
+    name: gateway
+    type: application
+    urls:
+    - gateway-2.5.7.tgz
+    version: 2.5.7
+  - apiVersion: v2
     appVersion: v2.76.0
     created: "2026-09-22T09:56:42.591722-04:00"
     description: A Helm chart for Kubernetes
