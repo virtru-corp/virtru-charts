@@ -13,6 +13,16 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: v2.5.0
+    created: "2026-10-02T06:39:48.891065-05:00"
+    description: A service for Virtru customers who wish to manage their own keys
+    digest: 49746a865560e2ac14d037e60263de00f70536e5234dfd4ee8921161d702ae17
+    name: cks
+    type: application
+    urls:
+    - cks-1.10.0.tgz
+    version: 1.10.0
+  - apiVersion: v2
+    appVersion: v2.5.0
     created: "2026-09-21T19:05:42.829539-04:00"
     description: A service for Virtru customers who wish to manage their own keys
     digest: 7c48ecaaa4659b14436ce5e93a73b236b419baa236a900038a4e25b22cc4f651
@@ -2007,4 +2017,4 @@ entries:
     urls:
     - sharepoint-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-21T19:05:42.817348-04:00"
+generated: "2026-10-02T06:39:48.890049-05:00"

@@ -70,6 +70,10 @@ You can have multiple RSA keypairs on your CKS as long as they follow the naming
 
 **Note: Indentation matters for a multiline string, ensure proper indentation for your CKS keys secrets.**
 
+#### `externalAppSecrets[].excludeKeys`
+
+Optionally list fields to omit from an external secret before it is exposed to CKS through environment variables and mounted files. Other fields are preserved, and the secret in the external provider is unchanged. For example, `excludeKeys: [KAS_ROOT_KEY]` prevents the bundled KAS from being enabled by that secret. Omitted or empty lists preserve the existing behavior.
+
 ### Installing the CKS
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your CKS. An example command is listed below:

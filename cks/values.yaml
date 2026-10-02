@@ -204,6 +204,9 @@ appSecrets:
 #externalAppSecrets:
 #- name: <external secret object name> #secret object will be named the same.
 #  secretsPath: <path of secret in secret store>
+#  # Optional: omit these fields from the Kubernetes Secret; keep the provider secret unchanged.
+#  excludeKeys:
+#    - KAS_ROOT_KEY
 #  secretStoreRef:
 #    kind: <SecretStore or ClusterSecretStore>
 #    name: <name of secret store>
