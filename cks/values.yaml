@@ -73,6 +73,7 @@ ingress:
   annotations:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  ingressClassName: ""
   hosts:
       # -- Change fqdn.yourdomain.com to match the FQDN of your CKS.
     - host: fqdn.yourdomain.com
