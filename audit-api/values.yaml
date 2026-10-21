@@ -13,12 +13,12 @@ image:
   ## @param image.pullPolicy Image Pull Policy
   pullPolicy: Always
   ## @param image.tag Image tag
-  tag: 0.22.0-8057e1b
+  tag: 0.32.0
 
 ## @section imagePullSecrets Image Pull Secrets - Overrides Global
 imagePullSecrets:
   ## @param imagePullSecrets[0].name Image Pull Secret Name
-  - name: platform-pull-secret
+  - name: audit-api-pull-secret
 ## @section Deployment Parameters
 ## @param nameOverride Override name of the chart
 nameOverride: ""
@@ -29,6 +29,8 @@ config:
   db:
     ## @param config.db.host Postgresql DB Host
     host: "postgresql"
+    ## @param config.db.reader Postgresql DB Host
+    reader: "postgresql"
     ## @param config.db.user Postgresql DB Username
     user: "audit_manager"
     ## @param config.db.port Postgresql DB Port
@@ -37,6 +39,11 @@ config:
     dbName: "audit_database"
     ## @param config.db.sslMode Postgresql SSL Mode
     sslMode: "disable"
+  platform:
+    ## @param config.platform.disableInternalAuth disable internal service auth
+    disableInternalAuth: true
+    ## @param config.platform.defaultOrgId orgId used for queries
+    defaultOrgId:
   secrets:
     ## @param config.secrets.dbPassword Postgresql Database password - used if `config.existingSecret` is blank
     dbPassword:
@@ -74,6 +81,21 @@ service:
   type: ClusterIP
   ## @param service.port port to expose
   port: 8080
+
+## @section Secret Generation Parameters
+secrets:
+  ## @extra secrets.imageCredentials Map of key (pull name) to auth information.  Each key creates a pull cred
+  imageCredentials:
+    ## @extra secrets.imageCredentials.pull-secret Container registry auth for "install name"-pull-secret
+    pull-secret:
+      ## @param secrets.imageCredentials.pull-secret.registry Registry repo
+      registry: ghcr.io
+      ## @param secrets.imageCredentials.pull-secret.username Registry Auth username
+      username: username
+      ## @param secrets.imageCredentials.pull-secret.password Registry Auth password
+      password: password
+      ## @param secrets.imageCredentials.pull-secret.email Registry Auth email
+      email: nope@nah.com
 
 ## @section Ingress Configuration
 ingress:
@@ -211,3 +233,12 @@ fluent-bit:
           tls.verify  off
           Format      json
           Retry_Limit 8
+      [OUTPUT]
+          Name        splunk
+          Match       audit
+          Port        8088
+          Host        <splunk-host>
+          TLS         On
+          TLS.Verify  Off
+          Splunk_Token <token>
+          splunk_send_raw On
