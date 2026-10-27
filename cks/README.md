@@ -7,6 +7,12 @@ This Helm chart will deploy Virtru's Customer Key Server (CKS). You can read thi
 * [Kubernetes Prerequisites](https://support.virtru.com/hc/en-us/articles/5747166730903-CKS-Kubernetes-cluster)
 * [CKS Helm Deployment](https://support.virtru.com/hc/en-us/articles/5746713557015-CKS-Install-Kubernetes-)
 
+### v1.10.0 Cleanup Note
+
+This chart no longer supplies bundled KAS/DSP/database/bootstrap settings or KAS metadata storage. Deployments use the retained CKS endpoints, keys, and authentication settings. Pair this chart with the published CKS-only release by setting `image.tag`; the unchanged default `v2.9.0` image still contains the previous bundle.
+
+Ingress TLS continues to terminate upstream of the chart's HTTP backend listener.
+
 ### v1.2.0 Upgrade Notes
 
 **Relevant to users leveraging `.Values.externalAppSecrets`**
