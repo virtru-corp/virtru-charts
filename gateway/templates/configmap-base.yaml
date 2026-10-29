@@ -51,7 +51,7 @@ data:
   GATEWAY_SMTP_SASL_ENABLED_DOWNSTREAM: "1"
   GATEWAY_SMTP_SASL_SECURITY_OPTIONS: {{ .Values.additionalConfig.saslAuth.smtpDownstream.securityOptions }}
   {{- end }}
-  {{- if eq .Values.additionalConfig.smtpUseTls true }}
+  {{- if eq .Values.additionalConfig.smtpdUseTls true }}
   GATEWAY_SMTPD_SECURITY_LEVEL: {{ .Values.additionalConfig.smtpdSecurityLevel }}
   GATEWAY_SMTPD_USE_TLS: "1"
   {{- if eq .Values.additionalConfig.smtpdTlsComplianceUpstream.enabled true }}
