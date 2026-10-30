@@ -96,6 +96,26 @@ Configure these values if your Gateway needs to route traffic through a proxy se
 
 Note: These settings are only required if your network requires proxy access for external connections. Leave blank if not using a proxy.
 
+#### `extraEnv` (Optional)
+
+Adds extra environment variables to every gateway container. Use it for gateway variables the chart has no dedicated value for. Each entry is a standard Kubernetes env item. Set it in a values file, since `--set` is awkward for lists:
+
+```yaml
+extraEnv:
+  - name: GATEWAY_RELAY_DOMAINS
+    value: "example.com,example.org"
+  - name: GATEWAY_EXAMPLE_SECRET_VALUE
+    valueFrom:
+      secretKeyRef:
+        name: my-secret
+        key: my-key
+```
+
+Entries are added to the end of each container's `env` list. Avoid reusing names the chart already sets:
+
+* Variables the chart sets from its ConfigMaps (for example `GATEWAY_SMTPD_USE_TLS`) are loaded with `envFrom`. Kubernetes gives `env` entries precedence over `envFrom`, so an `extraEnv` entry with the same name silently replaces the chart-managed value.
+* Variables the chart sets directly in `env` (the API token and Amplitude secrets, the proxy settings, and the SASL and X-header secrets) would appear twice in the container. Kubernetes may warn about or reject a duplicate name.
+
 ### Installing the gateway
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your gateway(s). An example command is listed below:
@@ -153,6 +173,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `decryptThenEncrypt` | `GATEWAY_DECRYPT_THEN_ENCRYPT` |
 | `proxyProtocol` | `GATEWAY_PROXY_PROTOCOL` |
 | `verboseLogging` | `GATEWAY_VERBOSE_LOGGING` |
+| `logLevel` | `GATEWAY_LOG_LEVEL` |
 | `cacheSmtpConnections.enabled` | `GATEWAY_SMTP_CACHE_CONNECTIONS` |
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
@@ -195,6 +216,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | autoscaling.maxReplicas | int | `100` | Maximum number of replicas if autoscaling is enabled. |
 | autoscaling.minReplicas | int | `1` | Minimum number of replicas if autoscaling is enabled.  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Optional target average memory usage. |
+| extraEnv | list | `[]` | Optional extra environment variables for every gateway container, as standard Kubernetes env items (name with value or valueFrom). Avoid reusing names the chart already sets; see the README. |
 | fullnameOverride | string | `""` |  |
 | gatewayAccountsUrl | string | `"https://api.virtru.com/accounts"` | URL for Virtru Accounts API. |
 | gatewayAcmUrl | string | `"https://api.virtru.com/acm"` | URL for Virtru ACM API. |
@@ -211,6 +233,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | jvmConfig.maxHeapSize | string | `""` | Maximum heap size (`-Xmx`), e.g. `"1g"`. Leave room for non-heap memory within the container limit. Empty preserves existing options. |
 | jvmConfig.heapDumpOnOOM | boolean or null | `null` | Enable or disable heap dumps on OOM. Null preserves the existing setting. |
 | jvmConfig.heapDumpPath | string | `""` | Writable heap dump directory or filename (`-XX:HeapDumpPath`), e.g. `"/tmp"`. Does not enable dumps by itself. |
+| logLevel | string | `"info"` | logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged. |
 | nameOverride | string | `""` | Optional: Override the default name of the chart and release. |
 | nodeSelector | object | `{}` | Optional: Node selection constraints for scheduling pods. |
 | persistentVolumes | object | `{"storageClassName":"standard","volumeSize":"1Gi"}` | the size of the volume below. |

@@ -229,6 +229,9 @@ additionalConfig:
     enabled: false  
     selector: gw 
 
+# -- logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged.
+logLevel: "info"
+
 # -- Optional proxy configuration for routing traffic through a proxy server.
 # -- Only configure these values if your Gateway needs to route traffic through a proxy.
 proxyConfig:
@@ -240,6 +243,9 @@ proxyConfig:
   httpsProxyHost: ""
   # -- Port for HTTPS proxy (optional, defaults to 443 if host is specified)
   httpsProxyPort: ""
+
+# -- Optional extra environment variables for every gateway container, as standard Kubernetes env items (name with value or valueFrom). Avoid reusing names the chart already sets; see the README.
+extraEnv: []
 
 # -- Optional Istio configurations. Defaults to false.
 istioIngress:
