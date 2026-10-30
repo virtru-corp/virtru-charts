@@ -102,8 +102,8 @@ Adds extra environment variables to every gateway container. Use it for gateway 
 
 ```yaml
 extraEnv:
-  - name: GATEWAY_LOG_LEVEL
-    value: "INFO"
+  - name: GATEWAY_RELAY_DOMAINS
+    value: "example.com,example.org"
   - name: GATEWAY_EXAMPLE_SECRET_VALUE
     valueFrom:
       secretKeyRef:
@@ -173,6 +173,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `decryptThenEncrypt` | `GATEWAY_DECRYPT_THEN_ENCRYPT` |
 | `proxyProtocol` | `GATEWAY_PROXY_PROTOCOL` |
 | `verboseLogging` | `GATEWAY_VERBOSE_LOGGING` |
+| `logLevel` | `GATEWAY_LOG_LEVEL` |
 | `cacheSmtpConnections.enabled` | `GATEWAY_SMTP_CACHE_CONNECTIONS` |
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
@@ -232,6 +233,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | jvmConfig.maxHeapSize | string | `""` | Maximum heap size (`-Xmx`), e.g. `"1g"`. Leave room for non-heap memory within the container limit. Empty preserves existing options. |
 | jvmConfig.heapDumpOnOOM | boolean or null | `null` | Enable or disable heap dumps on OOM. Null preserves the existing setting. |
 | jvmConfig.heapDumpPath | string | `""` | Writable heap dump directory or filename (`-XX:HeapDumpPath`), e.g. `"/tmp"`. Does not enable dumps by itself. |
+| logLevel | string | `"info"` | logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged. |
 | nameOverride | string | `""` | Optional: Override the default name of the chart and release. |
 | nodeSelector | object | `{}` | Optional: Node selection constraints for scheduling pods. |
 | persistentVolumes | object | `{"storageClassName":"standard","volumeSize":"1Gi"}` | the size of the volume below. |

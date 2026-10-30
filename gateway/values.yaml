@@ -229,6 +229,9 @@ additionalConfig:
     enabled: false  
     selector: gw 
 
+# -- logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged.
+logLevel: "info"
+
 # -- Optional proxy configuration for routing traffic through a proxy server.
 # -- Only configure these values if your Gateway needs to route traffic through a proxy.
 proxyConfig:
