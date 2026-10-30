@@ -96,6 +96,23 @@ Configure these values if your Gateway needs to route traffic through a proxy se
 
 Note: These settings are only required if your network requires proxy access for external connections. Leave blank if not using a proxy.
 
+#### `extraEnv` (Optional)
+
+Adds extra environment variables to every gateway container. Use it for gateway variables the chart has no dedicated value for. Each entry is a standard Kubernetes env item:
+
+```yaml
+extraEnv:
+  - name: GATEWAY_LOG_LEVEL
+    value: "INFO"
+  - name: GATEWAY_EXAMPLE_SECRET_VALUE
+    valueFrom:
+      secretKeyRef:
+        name: my-secret
+        key: my-key
+```
+
+Entries are added after the chart's `env` list. Kubernetes applies the last definition of a name, so an entry can override a chart-managed variable such as `GATEWAY_SMTPD_USE_TLS`. Only do this if you understand the effect.
+
 ### Installing the gateway
 
 Use a standard [helm install](https://helm.sh/docs/helm/helm_install/) command to deploy your gateway(s). An example command is listed below:
@@ -195,6 +212,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | autoscaling.maxReplicas | int | `100` | Maximum number of replicas if autoscaling is enabled. |
 | autoscaling.minReplicas | int | `1` | Minimum number of replicas if autoscaling is enabled.  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Optional target average memory usage. |
+| extraEnv | list | `[]` | Optional extra environment variables added to every gateway container. Each entry is a standard Kubernetes env item (name with value or valueFrom). |
 | fullnameOverride | string | `""` |  |
 | gatewayAccountsUrl | string | `"https://api.virtru.com/accounts"` | URL for Virtru Accounts API. |
 | gatewayAcmUrl | string | `"https://api.virtru.com/acm"` | URL for Virtru ACM API. |
