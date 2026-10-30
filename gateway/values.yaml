@@ -241,10 +241,7 @@ proxyConfig:
   # -- Port for HTTPS proxy (optional, defaults to 443 if host is specified)
   httpsProxyPort: ""
 
-# -- Optional extra environment variables added to every gateway container.
-# -- Each entry is a standard Kubernetes env item (name with value or valueFrom).
-# -- Use this for gateway variables the chart has no dedicated value for.
-# -- Entries are added after the chart's env, so they can override chart-managed variables.
+# -- Optional extra environment variables for every gateway container, as standard Kubernetes env items (name with value or valueFrom). Avoid reusing names the chart already sets; see the README.
 extraEnv: []
 
 # -- Optional Istio configurations. Defaults to false.

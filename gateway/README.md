@@ -98,7 +98,7 @@ Note: These settings are only required if your network requires proxy access for
 
 #### `extraEnv` (Optional)
 
-Adds extra environment variables to every gateway container. Use it for gateway variables the chart has no dedicated value for. Each entry is a standard Kubernetes env item:
+Adds extra environment variables to every gateway container. Use it for gateway variables the chart has no dedicated value for. Each entry is a standard Kubernetes env item. Set it in a values file, since `--set` is awkward for lists:
 
 ```yaml
 extraEnv:
@@ -111,7 +111,10 @@ extraEnv:
         key: my-key
 ```
 
-Entries are added after the chart's `env` list. Kubernetes applies the last definition of a name, so an entry can override a chart-managed variable such as `GATEWAY_SMTPD_USE_TLS`. Only do this if you understand the effect.
+Entries are added to the end of each container's `env` list. Avoid reusing names the chart already sets:
+
+* Variables the chart sets from its ConfigMaps (for example `GATEWAY_SMTPD_USE_TLS`) are loaded with `envFrom`. Kubernetes gives `env` entries precedence over `envFrom`, so an `extraEnv` entry with the same name silently replaces the chart-managed value.
+* Variables the chart sets directly in `env` (the API token and Amplitude secrets, the proxy settings, and the SASL and X-header secrets) would appear twice in the container. Kubernetes may warn about or reject a duplicate name.
 
 ### Installing the gateway
 
@@ -212,7 +215,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | autoscaling.maxReplicas | int | `100` | Maximum number of replicas if autoscaling is enabled. |
 | autoscaling.minReplicas | int | `1` | Minimum number of replicas if autoscaling is enabled.  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Optional target average memory usage. |
-| extraEnv | list | `[]` | Optional extra environment variables added to every gateway container. Each entry is a standard Kubernetes env item (name with value or valueFrom). |
+| extraEnv | list | `[]` | Optional extra environment variables for every gateway container, as standard Kubernetes env items (name with value or valueFrom). Avoid reusing names the chart already sets; see the README. |
 | fullnameOverride | string | `""` |  |
 | gatewayAccountsUrl | string | `"https://api.virtru.com/accounts"` | URL for Virtru Accounts API. |
 | gatewayAcmUrl | string | `"https://api.virtru.com/acm"` | URL for Virtru ACM API. |
