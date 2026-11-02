@@ -85,6 +85,12 @@ You may, depending on your email needs, wish to update a few values in this sect
 * `saslAuth.smtpDownstream.enabled` - This will enable SASL auth for your next hop. If you choose to enable this, you will need to create the `gateway-sasl-auth-downstream` file in your secret detailed above
 * `decryptThenEncrypt` - If you are using a multi gateway approach (ex: decrypt email => Scan content => re-encrypt email), this should be set to 1 (true)
 * `dkimSigning` - If you wish to have the gateway DKIM sign your emails, set enabled to `true`. You must have a public DKIM record for the selector you choose with a public key that matches the keys inputted into `appSecrets.dkimSigning`
+* `smtpAllowDomains` - Comma-separated sender domains the gateway accepts mail from (example: `example.com,example.org`, no spaces, no `@`). **When set, mail from any sender domain not on the list is rejected, in every enabled mode.** Leave empty to accept all senders.
+* `relayDomains` - Comma-separated domains the gateway relays mail for. Sets the Postfix `relay_domains` setting.
+* `headerRewrites` - Comma-separated header rewrite rules in `TARGET[: condition] => SOURCE` format. Each rule copies the first value of `SOURCE` into `TARGET` and keeps `SOURCE`. The optional condition is a case-sensitive substring matched against the existing `TARGET` value. Example: `From: secure-reader@virtru.com => Reply-To` copies `Reply-To` into `From` only when `From` contains `secure-reader@virtru.com`.
+* `routingXHeaders` - X-headers the gateway adds to all mail it processes (example: `X-Header-1: value1, X-Header-2: value2`).
+
+All four default to empty, which leaves the setting off.
 
 #### `proxyConfig` (Optional)
 
@@ -102,8 +108,8 @@ Adds extra environment variables to every gateway container. Use it for gateway 
 
 ```yaml
 extraEnv:
-  - name: GATEWAY_RELAY_DOMAINS
-    value: "example.com,example.org"
+  - name: GATEWAY_ORG_REFRESH_INTERVAL
+    value: "60"
   - name: GATEWAY_EXAMPLE_SECRET_VALUE
     valueFrom:
       secretKeyRef:
@@ -174,6 +180,10 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `proxyProtocol` | `GATEWAY_PROXY_PROTOCOL` |
 | `verboseLogging` | `GATEWAY_VERBOSE_LOGGING` |
 | `logLevel` | `GATEWAY_LOG_LEVEL` |
+| `smtpAllowDomains` | `GATEWAY_SMTP_ALLOW_DOMAINS` |
+| `relayDomains` | `GATEWAY_RELAY_DOMAINS` |
+| `headerRewrites` | `GATEWAY_HEADER_REWRITES` |
+| `routingXHeaders` | `GATEWAY_ROUTING_XHEADERS` |
 | `cacheSmtpConnections.enabled` | `GATEWAY_SMTP_CACHE_CONNECTIONS` |
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
@@ -198,7 +208,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalConfig | object | `{"cacheSmtpConnections":{"connectionCacheTimeLimit":"5s","enabled":true},"cks":{"keyProvider":"CKS","sessionKeyExpiry":"360"},"decryptPfpFiles":"1","decryptThenEncrypt":"0","dkimSigning":{"enabled":false,"selector":"gw"},"dlpRuleCache":"30","maxBackoffTime":"45s","maxQueueLifetime":"5m","minBackoffTime":"30s","proxyProtocol":"0","queueRunDelay":"30s","replaceFromEnabled":"1","saslAuth":{"smtpDownstream":{"enabled":false,"securityOptions":"noanonymous"},"smtpdUpstream":{"enabled":false,"mechanisms":"PLAIN"}},"smtpSecurityLevel":"opportunistic","smtpTlsComplianceDownstream":{"compliance":"MEDIUM","enabled":false},"smtpUseTls":true,"smtpdSecurityLevel":"opportunistic","smtpdTlsComplianceUpstream":{"compliance":"MEDIUM","enabled":false},"smtpdUseTls":true,"tlsPolicyMaps":{"enabled":false,"policyMaps":"example.com=>none,example.net=>maybe"},"verboseLogging":"0"}` | See https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for reference. |
+| additionalConfig | object | `{"cacheSmtpConnections":{"connectionCacheTimeLimit":"5s","enabled":true},"cks":{"keyProvider":"CKS","sessionKeyExpiry":"360"},"decryptPfpFiles":"1","decryptThenEncrypt":"0","dkimSigning":{"enabled":false,"selector":"gw"},"dlpRuleCache":"30","headerRewrites":"","maxBackoffTime":"45s","maxQueueLifetime":"5m","minBackoffTime":"30s","proxyProtocol":"0","queueRunDelay":"30s","relayDomains":"","replaceFromEnabled":"1","routingXHeaders":"","saslAuth":{"smtpDownstream":{"enabled":false,"securityOptions":"noanonymous"},"smtpdUpstream":{"enabled":false,"mechanisms":"PLAIN"}},"smtpAllowDomains":"","smtpSecurityLevel":"opportunistic","smtpTlsComplianceDownstream":{"compliance":"MEDIUM","enabled":false},"smtpUseTls":true,"smtpdSecurityLevel":"opportunistic","smtpdTlsComplianceUpstream":{"compliance":"MEDIUM","enabled":false},"smtpdUseTls":true,"tlsPolicyMaps":{"enabled":false,"policyMaps":"example.com=>none,example.net=>maybe"},"verboseLogging":"0"}` | See https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for reference. |
 | affinity | object | `{}` | Optional: Affinity rules for pod scheduling. |
 | appSecrets | object | `{"amplitudeToken":"<your-amplitude-token>","dkimSigning":{"privateKey":"<dkim-private-key>  \n","publicKey":"<dkim-public-key>  \n"},"gatewayApiSecret":"<your-api-secret>","gatewayApiTokenName":"<your-api-token>","headers":{"xHeaderAuthSecret":"<your-auth-secret-123456789>"},"saslAuth":{"smtpDownstream":{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"},"smtpdUpstream":{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"}}}` | a third party secret storage option. |
 | appSecrets.amplitudeToken | string | `"<your-amplitude-token>"` | Token used for Amplitude analytics. Provided by Virtru. |
