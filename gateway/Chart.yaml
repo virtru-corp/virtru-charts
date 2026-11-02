@@ -1,6 +1,6 @@
 apiVersion: v2
-appVersion: v2.79.0
+appVersion: v2.80.0
 description: A Helm chart for Kubernetes
 name: gateway
 type: application
-version: 2.5.9
+version: 2.6.0
