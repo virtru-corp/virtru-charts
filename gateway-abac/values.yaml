@@ -86,10 +86,11 @@ abacCaSecrets: []
   #   keyName: "root-ca.pem"
 # Controls whether to create TDFs using the pre-4.3.0 schema. Set this to create TDFs that can be consumed by DSP versions 2.0.2 and earlier
 abacCreateLegacyTdfs: true
-# -- A list of KAS URLs that are allowed to be used for decryption. This is used in addition to the kas-registry defined in platform policy.
+# -- Deprecated (GAT-2298). Ignored by Gateway versions that include GAT-2298: the Gateway trusts a KAS only if it is in the platform's KAS registry or is the platform's own KAS, and logs an error at startup if this is set.
+# Register additional KAS servers in the KAS registry instead. On older Gateway versions, a non-empty list replaces the registry-derived allowlist rather than adding to it.
 abacKasAllowlist: []
-# -- This setting tells the Gateway whether or not to ignore the `kasAllowlist` when decrypting. If this is set to true, the `kasAllowlist` will be ignored and all KAS servers will be used for decryption.
-# Useful for testing, but should not be used in production because authorization tokens can be sent to malicious KAS servers if gateway processes a maliciously crafted TDF.
+# -- Deprecated (GAT-2298). Ignored by Gateway versions that include GAT-2298: the KAS registry check can no longer be disabled, and the Gateway logs an error at startup if this is set.
+# On older Gateway versions, setting this to true turns off the KAS allowlist check. Never do this in production, because authorization tokens can be sent to malicious KAS servers if the Gateway processes a maliciously crafted TDF.
 abacIgnoreKasAllowlist: false
 
 # -- The mode the gateway should run in, either encrypt or decrypt
