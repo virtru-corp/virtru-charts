@@ -228,6 +228,17 @@ additionalConfig:
   dkimSigning:
     enabled: false  
     selector: gw 
+  # -- Optional. Comma-separated sender domains Postfix accepts mail from. When set, mail from any sender domain not on the list is rejected, in every mode. Maps to GATEWAY_SMTP_ALLOW_DOMAINS.
+  smtpAllowDomains: ""
+  # -- Optional. Comma-separated domains Postfix relays for (Postfix relay_domains). Maps to GATEWAY_RELAY_DOMAINS.
+  relayDomains: ""
+  # -- Optional. Comma-separated header rewrite rules in `TARGET[: condition] => SOURCE` format; see the README. Maps to GATEWAY_HEADER_REWRITES.
+  headerRewrites: ""
+  # -- Optional. X-headers the gateway adds to all mail it processes, e.g. `X-Header-1: value1, X-Header-2: value2`. Maps to GATEWAY_ROUTING_XHEADERS.
+  routingXHeaders: ""
+
+# -- logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged.
+logLevel: "info"
 
 # -- Optional proxy configuration for routing traffic through a proxy server.
 # -- Only configure these values if your Gateway needs to route traffic through a proxy.
@@ -240,6 +251,9 @@ proxyConfig:
   httpsProxyHost: ""
   # -- Port for HTTPS proxy (optional, defaults to 443 if host is specified)
   httpsProxyPort: ""
+
+# -- Optional extra environment variables for every gateway container, as standard Kubernetes env items (name with value or valueFrom). Avoid reusing names the chart already sets; see the README.
+extraEnv: []
 
 # -- Optional Istio configurations. Defaults to false.
 istioIngress:

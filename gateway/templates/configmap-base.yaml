@@ -37,6 +37,7 @@ data:
   QUEUE_RUN_DELAY: {{ .Values.additionalConfig.queueRunDelay }}
   GATEWAY_PROXY_PROTOCOL: {{ .Values.additionalConfig.proxyProtocol | quote }}
   GATEWAY_VERBOSE_LOGGING: {{ .Values.additionalConfig.verboseLogging | quote }}
+  GATEWAY_LOG_LEVEL: {{ .Values.logLevel | default "info" | upper | quote }}
   GATEWAY_ENCRYPTION_KEY_PROVIDER: {{ .Values.additionalConfig.cks.keyProvider }}
   GATEWAY_CKS_SESSION_KEY_EXPIRY_IN_MINS: {{ .Values.additionalConfig.cks.sessionKeyExpiry | quote }}
   GATEWAY_DLP_CACHE_DURATION: {{ .Values.additionalConfig.dlpRuleCache | quote }}
@@ -74,6 +75,18 @@ data:
   {{- end }}
   {{- if eq .Values.additionalConfig.dkimSigning.enabled true }}
   GATEWAY_DKIM_DOMAINS: {{ .Values.additionalConfig.dkimSigning.selector }}._domainkey.{{ .Values.standardConfig.primaryMailingDomain }}
+  {{- end }}
+  {{- with .Values.additionalConfig.smtpAllowDomains }}
+  GATEWAY_SMTP_ALLOW_DOMAINS: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.additionalConfig.relayDomains }}
+  GATEWAY_RELAY_DOMAINS: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.additionalConfig.headerRewrites }}
+  GATEWAY_HEADER_REWRITES: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.additionalConfig.routingXHeaders }}
+  GATEWAY_ROUTING_XHEADERS: {{ . | quote }}
   {{- end }}
 
 

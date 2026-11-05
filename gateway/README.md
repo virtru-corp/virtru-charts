@@ -85,6 +85,12 @@ You may, depending on your email needs, wish to update a few values in this sect
 * `saslAuth.smtpDownstream.enabled` - This will enable SASL auth for your next hop. If you choose to enable this, you will need to create the `gateway-sasl-auth-downstream` file in your secret detailed above
 * `decryptThenEncrypt` - If you are using a multi gateway approach (ex: decrypt email => Scan content => re-encrypt email), this should be set to 1 (true)
 * `dkimSigning` - If you wish to have the gateway DKIM sign your emails, set enabled to `true`. You must have a public DKIM record for the selector you choose with a public key that matches the keys inputted into `appSecrets.dkimSigning`
+* `smtpAllowDomains` - Comma-separated sender domains the gateway accepts mail from (example: `example.com,example.org`, no spaces, no `@`). **When set, mail from any sender domain not on the list is rejected, in every enabled mode.** Leave empty to accept all senders.
+* `relayDomains` - Comma-separated domains the gateway relays mail for. Sets the Postfix `relay_domains` setting.
+* `headerRewrites` - Comma-separated header rewrite rules in `TARGET[: condition] => SOURCE` format. Each rule copies the first value of `SOURCE` into `TARGET` and keeps `SOURCE`. The optional condition is a case-sensitive substring matched against the existing `TARGET` value. Example: `From: secure-reader@virtru.com => Reply-To` copies `Reply-To` into `From` only when `From` contains `secure-reader@virtru.com`.
+* `routingXHeaders` - X-headers the gateway adds to all mail it processes (example: `X-Header-1: value1, X-Header-2: value2`).
+
+All four default to empty, which leaves the setting off.
 
 #### `proxyConfig` (Optional)
 
@@ -95,6 +101,26 @@ Configure these values if your Gateway needs to route traffic through a proxy se
 * `httpsProxyPort` - Port for HTTPS proxy (optional, defaults to 443 if host is specified)
 
 Note: These settings are only required if your network requires proxy access for external connections. Leave blank if not using a proxy.
+
+#### `extraEnv` (Optional)
+
+Adds extra environment variables to every gateway container. Use it for gateway variables the chart has no dedicated value for. Each entry is a standard Kubernetes env item. Set it in a values file, since `--set` is awkward for lists:
+
+```yaml
+extraEnv:
+  - name: GATEWAY_ORG_REFRESH_INTERVAL
+    value: "60"
+  - name: GATEWAY_EXAMPLE_SECRET_VALUE
+    valueFrom:
+      secretKeyRef:
+        name: my-secret
+        key: my-key
+```
+
+Entries are added to the end of each container's `env` list. Avoid reusing names the chart already sets:
+
+* Variables the chart sets from its ConfigMaps (for example `GATEWAY_SMTPD_USE_TLS`) are loaded with `envFrom`. Kubernetes gives `env` entries precedence over `envFrom`, so an `extraEnv` entry with the same name silently replaces the chart-managed value.
+* Variables the chart sets directly in `env` (the API token and Amplitude secrets, the proxy settings, and the SASL and X-header secrets) would appear twice in the container. Kubernetes may warn about or reject a duplicate name.
 
 ### Installing the gateway
 
@@ -153,6 +179,11 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | `decryptThenEncrypt` | `GATEWAY_DECRYPT_THEN_ENCRYPT` |
 | `proxyProtocol` | `GATEWAY_PROXY_PROTOCOL` |
 | `verboseLogging` | `GATEWAY_VERBOSE_LOGGING` |
+| `logLevel` | `GATEWAY_LOG_LEVEL` |
+| `smtpAllowDomains` | `GATEWAY_SMTP_ALLOW_DOMAINS` |
+| `relayDomains` | `GATEWAY_RELAY_DOMAINS` |
+| `headerRewrites` | `GATEWAY_HEADER_REWRITES` |
+| `routingXHeaders` | `GATEWAY_ROUTING_XHEADERS` |
 | `cacheSmtpConnections.enabled` | `GATEWAY_SMTP_CACHE_CONNECTIONS` |
 | `cacheSmtpConnections.connectionCacheTimeLimit` | `GATEWAY_SMTP_CONNECTION_CACHE_TIME_LIMIT` |
 | `dkimSigning.enabled` | N/A, toggles on `GATEWAY_DKIM_DOMAINS` |
@@ -177,7 +208,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalConfig | object | `{"cacheSmtpConnections":{"connectionCacheTimeLimit":"5s","enabled":true},"cks":{"keyProvider":"CKS","sessionKeyExpiry":"360"},"decryptPfpFiles":"1","decryptThenEncrypt":"0","dkimSigning":{"enabled":false,"selector":"gw"},"dlpRuleCache":"30","maxBackoffTime":"45s","maxQueueLifetime":"5m","minBackoffTime":"30s","proxyProtocol":"0","queueRunDelay":"30s","replaceFromEnabled":"1","saslAuth":{"smtpDownstream":{"enabled":false,"securityOptions":"noanonymous"},"smtpdUpstream":{"enabled":false,"mechanisms":"PLAIN"}},"smtpSecurityLevel":"opportunistic","smtpTlsComplianceDownstream":{"compliance":"MEDIUM","enabled":false},"smtpUseTls":true,"smtpdSecurityLevel":"opportunistic","smtpdTlsComplianceUpstream":{"compliance":"MEDIUM","enabled":false},"smtpdUseTls":true,"tlsPolicyMaps":{"enabled":false,"policyMaps":"example.com=>none,example.net=>maybe"},"verboseLogging":"0"}` | See https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for reference. |
+| additionalConfig | object | `{"cacheSmtpConnections":{"connectionCacheTimeLimit":"5s","enabled":true},"cks":{"keyProvider":"CKS","sessionKeyExpiry":"360"},"decryptPfpFiles":"1","decryptThenEncrypt":"0","dkimSigning":{"enabled":false,"selector":"gw"},"dlpRuleCache":"30","headerRewrites":"","maxBackoffTime":"45s","maxQueueLifetime":"5m","minBackoffTime":"30s","proxyProtocol":"0","queueRunDelay":"30s","relayDomains":"","replaceFromEnabled":"1","routingXHeaders":"","saslAuth":{"smtpDownstream":{"enabled":false,"securityOptions":"noanonymous"},"smtpdUpstream":{"enabled":false,"mechanisms":"PLAIN"}},"smtpAllowDomains":"","smtpSecurityLevel":"opportunistic","smtpTlsComplianceDownstream":{"compliance":"MEDIUM","enabled":false},"smtpUseTls":true,"smtpdSecurityLevel":"opportunistic","smtpdTlsComplianceUpstream":{"compliance":"MEDIUM","enabled":false},"smtpdUseTls":true,"tlsPolicyMaps":{"enabled":false,"policyMaps":"example.com=>none,example.net=>maybe"},"verboseLogging":"0"}` | See https://support.virtru.com/hc/en-us/articles/6204097329175-Reference-Kubernetes-Variables for reference. |
 | affinity | object | `{}` | Optional: Affinity rules for pod scheduling. |
 | appSecrets | object | `{"amplitudeToken":"<your-amplitude-token>","dkimSigning":{"privateKey":"<dkim-private-key>  \n","publicKey":"<dkim-public-key>  \n"},"gatewayApiSecret":"<your-api-secret>","gatewayApiTokenName":"<your-api-token>","headers":{"xHeaderAuthSecret":"<your-auth-secret-123456789>"},"saslAuth":{"smtpDownstream":{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"},"smtpdUpstream":{"accounts":"<your-auth-path-smtp-relay.gmail.com=>service-account@example.com=>password>"}}}` | a third party secret storage option. |
 | appSecrets.amplitudeToken | string | `"<your-amplitude-token>"` | Token used for Amplitude analytics. Provided by Virtru. |
@@ -195,6 +226,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | autoscaling.maxReplicas | int | `100` | Maximum number of replicas if autoscaling is enabled. |
 | autoscaling.minReplicas | int | `1` | Minimum number of replicas if autoscaling is enabled.  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Optional target average memory usage. |
+| extraEnv | list | `[]` | Optional extra environment variables for every gateway container, as standard Kubernetes env items (name with value or valueFrom). Avoid reusing names the chart already sets; see the README. |
 | fullnameOverride | string | `""` |  |
 | gatewayAccountsUrl | string | `"https://api.virtru.com/accounts"` | URL for Virtru Accounts API. |
 | gatewayAcmUrl | string | `"https://api.virtru.com/acm"` | URL for Virtru ACM API. |
@@ -211,6 +243,7 @@ A full list of Virtru-specific variables in `values.yaml` can be found below:
 | jvmConfig.maxHeapSize | string | `""` | Maximum heap size (`-Xmx`), e.g. `"1g"`. Leave room for non-heap memory within the container limit. Empty preserves existing options. |
 | jvmConfig.heapDumpOnOOM | boolean or null | `null` | Enable or disable heap dumps on OOM. Null preserves the existing setting. |
 | jvmConfig.heapDumpPath | string | `""` | Writable heap dump directory or filename (`-XX:HeapDumpPath`), e.g. `"/tmp"`. Does not enable dumps by itself. |
+| logLevel | string | `"info"` | logLevel controls how much logging information the gateway outputs. Valid levels are `debug`, `info`, `warn`, `error`. In `debug` mode ciphertexts are logged. |
 | nameOverride | string | `""` | Optional: Override the default name of the chart and release. |
 | nodeSelector | object | `{}` | Optional: Node selection constraints for scheduling pods. |
 | persistentVolumes | object | `{"storageClassName":"standard","volumeSize":"1Gi"}` | the size of the volume below. |
