@@ -1,6 +1,6 @@
 apiVersion: v2
 name: gateway-abac
-description: A Helm chart for the Virtru Data Protection Gateway powered by the Virtru Data Security Platform.
+description: A Helm chart for the Virtru Email Gateway powered by the Virtru Data Security Platform.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
