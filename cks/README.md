@@ -7,6 +7,10 @@ This Helm chart will deploy Virtru's Customer Key Server (CKS). You can read thi
 * [Kubernetes Prerequisites](https://support.virtru.com/hc/en-us/articles/5747166730903-CKS-Kubernetes-cluster)
 * [CKS Helm Deployment](https://support.virtru.com/hc/en-us/articles/5746713557015-CKS-Install-Kubernetes-)
 
+### v2.0.0 Upgrade Notes (Breaking Change)
+
+Version 2 of the CKS chart requires CKS application v3.0.0 and is not compatible with version 2 of the CKS application. After upgrading the application to v3.0.0, you can clean up obsolete KAS/DSP settings in your `values.yaml`.
+
 ### v1.2.0 Upgrade Notes
 
 **Relevant to users leveraging `.Values.externalAppSecrets`**
