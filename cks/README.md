@@ -9,9 +9,7 @@ This Helm chart will deploy Virtru's Customer Key Server (CKS). You can read thi
 
 ### v2.0.0 Upgrade Notes (Breaking Change)
 
-Chart 2.0.0 removes bundled KAS/DSP/database/bootstrap settings and KAS metadata storage. When upgrading from 1.x, remove the obsolete KAS/DSP values from your overrides; deployments that rely on the bundled KAS must migrate to a separate KAS/DSP deployment before upgrading. Deployments use the retained CKS endpoints, keys, and authentication settings. The default image is `containers.virtru.com/cks:v3.0.0`; set `image.tag` to override it.
-
-Ingress TLS continues to terminate upstream of the chart's HTTP backend listener.
+Version 2 of the CKS chart requires CKS application v3.0.0 and is not compatible with version 2 of the CKS application. After upgrading the application to v3.0.0, you can clean up obsolete KAS/DSP settings in your `values.yaml`.
 
 ### v1.2.0 Upgrade Notes
 
