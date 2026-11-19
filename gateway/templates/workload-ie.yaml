@@ -124,6 +124,9 @@ spec:
           - name: GATEWAY_HTTPS_PROXY_PORT
             value: {{ .Values.proxyConfig.httpsProxyPort | quote }}
           {{- end }}
+          {{- with .Values.extraEnv }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
           readinessProbe:
             tcpSocket:
               port: 25
